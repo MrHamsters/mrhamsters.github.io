@@ -9,6 +9,6 @@
 <body bgcolor="#000000">
 	<script src="processing.js"></script>
 	<script src="howler.js"></script>
-	<canvas height="300" width="300" data-processing-sources="test.js"></canvas>
+	<canvas height="300" width="300" data-processing-sources="ProjectInfinity.js"></canvas>
 </body>
 </html>
