@@ -6217,7 +6217,7 @@ var traitfuncs={
 if(options.loadAudio){
 	var bgmn='Title';
 var bgm = new Howl({
-  src: ['Data/Sound/music/Title.ogg'],
+  src: ['Data/Sound/music/title.ogg'],
   autoplay: true,
   loop: true,
   volume: options.music,
