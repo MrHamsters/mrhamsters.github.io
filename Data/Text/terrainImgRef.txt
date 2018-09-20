@@ -1,0 +1,6 @@
+tree.svg
+rock.svg
+log.svg
+shroom.svg
+dead tree.svg
+pillar.svg

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 744.09448819 1052.3622047"
+   id="svg4300"
+   version="1.1"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="bioCapacitor.svg">
+  <defs
+     id="defs4302" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="-15.269622"
+     inkscape:cy="1158.2655"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false" />
+  <metadata
+     id="metadata4305">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <ellipse
+       style="opacity:1;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path3357"
+       cx="-0.29800415"
+       cy="72.644524"
+       rx="181.66762"
+       ry="119.93947" />
+    <ellipse
+       style="opacity:1;fill:#6f916f;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="ellipse3358"
+       cx="-0.24820328"
+       cy="140.28702"
+       rx="136.93427"
+       ry="52.40654" />
+    <circle
+       style="opacity:1;fill:#005522;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path3345"
+       cx="-58.214287"
+       cy="6.7372017"
+       r="17.142857" />
+    <circle
+       style="opacity:1;fill:#005522;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path3347"
+       cx="80.35714"
+       cy="33.880058"
+       r="17.142857" />
+    <circle
+       style="opacity:1;fill:#005522;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path3349"
+       cx="-13.214286"
+       cy="58.880058"
+       r="17.857143" />
+    <circle
+       style="opacity:1;fill:#005522;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path3351"
+       cx="-126.78571"
+       cy="73.880058"
+       r="18.571428" />
+    <circle
+       style="opacity:1;fill:#005522;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path3353"
+       cx="21.785713"
+       cy="-18.977081"
+       r="17.142857" />
+    <circle
+       style="opacity:1;fill:#005522;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path3355"
+       cx="155.35715"
+       cy="63.165779"
+       r="15" />
+    <circle
+       style="opacity:1;fill:#005522;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path3358"
+       cx="-125.35714"
+       cy="16.737202"
+       r="14.285714" />
+    <rect
+       style="fill:#374837;stroke-width:0.9375"
+       id="rect3731"
+       width="69.642853"
+       height="111.16071"
+       x="-30.535715"
+       y="-154.86993" />
+    <rect
+       y="-154.86993"
+       x="-14.464286"
+       height="111.16071"
+       width="37.499992"
+       id="rect3735"
+       style="fill:#00ff00;stroke-width:0.6879369" />
+    <ellipse
+       ry="28.125"
+       rx="54.910717"
+       cy="-166.92351"
+       cx="4.5535717"
+       id="ellipse3737"
+       style="fill:#b3b3b3;stroke-width:0.9375" />
+  </g>
+</svg>

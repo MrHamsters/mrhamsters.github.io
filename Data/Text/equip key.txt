@@ -1,0 +1,7 @@
+LH
+RH
+chest
+helmet
+pants
+shoes
+gloves

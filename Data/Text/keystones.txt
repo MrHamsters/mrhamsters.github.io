@@ -1,0 +1,2649 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+20
+0
+0
+Brawn
+Each point in Power has +0.25% to strength, but -0.15% to intelligence.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0.25/-0.15/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Brain
+Each point in Power has +0.25% to intelligence, but -0.15% to strength.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/-0.15/0.25/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Potency
+Each point in Power has +0.15% to strength and intelligence.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0.15/0.15/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Power Boost
++10 to Power.
+0/0/0/0/0/0/0/0/0/0/0/10/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+36
+0
+0
+Blessing of the Giant
++3 to player size, each point in Power has +0.3% to strength and +0.1% to health.
+0/0/0/0/0/0/0/0/0/3/0/0/0/0
+0.1/0/0.3/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Blessing of the Archon
++3 to player size, each point in Power has +0.3% to intelligence and +0.1% to health.
+0/0/0/0/0/0/0/0/0/3/0/0/0/0
+0.1/0/0/0.3/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Blessing of the Mouse
+-2 to player size and +0.2 to base speed, but each point in Power has -0.05% to strength.
+0/0/0/0/0/0/0/0/0.2/-2/0/0/0/0
+0/0/-0.05/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Blessing of the Roach
+-2 to player size and +0.2 to base speed, but each point in Power has -0.05% to intelligence.
+0/0/0/0/0/0/0/0/0.2/-2/0/0/0/0
+0/0/-0.05/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Power Boost
++14 to Power.
+0/0/0/0/0/0/0/0/0/0/0/14/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+20
+0
+Armored
+Each point in Fortitude has +0.25% to armor, but -0.075% to health, health regen, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/-0.075/-0.075/0/0/0.25/-0.075/0/0/0/0/0/0
+
+Warded
+Each point in Fortitude has +0.25% to resistance, but -0.075% to health, health regen, and armor.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/-0.075/-0.075/0/0/-0.075/0.25/0/0/0/0/0/0
+
+Bulk up
+Each point in Fortitude has +0.25% to health, but -0.075% to health regen, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0.25/-0.075/0/0/-0.075/-0.075/0/0/0/0/0/0
+
+Recovery
+Each point in Fortitude has +0.25% to health regen, but -0.075% to health, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/-0.075/0.25/0/0/-0.075/-0.075/0/0/0/0/0/0
+
+Potency
+Each point in Fortitude has +0.1% to health, health regen, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0.1/0.1/0/0/0.1/0.1/0/0/0/0/0/0
+
+Fortitude Boost
++10 to Fortitude.
+0/0/0/0/0/0/0/0/0/0/0/0/10/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+36
+0
+Blessing of the Giant
++4 to player size, each point in Fortitude has +0.3% to health and +0.1% to strength.
+0/0/0/0/0/0/0/0/0/4/0/0/0/0
+0/0/0/0/0/0/0.3/0/0.1/0/0/0/0/0/0/0/0/0
+
+Blessing of the Archon
++4 to player size, each point in Fortitude has +0.3% to health and +0.1% to intelligence.
+0/0/0/0/0/0/0/0/0/4/0/0/0/0
+0/0/0/0/0/0/0.3/0/0/0.1/0/0/0/0/0/0/0/0
+
+Blessing of the Fly
+-2 to player size and +0.2 to base speed, but each point in Fortitude has -0.05% to health.
+0/0/0/0/0/0/0/0/0.2/-2/0/0/0/0
+0/0/0/0/0/0/-0.05/0/0/0/0/0/0/0/0/0/0/0
+
+Blessing of the Roach
+-2 to player size and +0.2 to base speed, but each point in Fortitude has -0.05% to health regen.
+0/0/0/0/0/0/0/0/0.2/-2/0/0/0/0
+0/0/0/0/0/0/0/-0.05/0/0/0/0/0/0/0/0/0/0
+
+Blessing of the Bat
+-2 to player size and +0.2 to base speed, but each point in Fortitude has -0.05% to armor.
+0/0/0/0/0/0/0/0/0.2/-2/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/-0.05/0/0/0/0/0/0/0
+
+Blessing of the Mouse
+-2 to player size and +0.2 to base speed, but each point in Fortitude has -0.05% to resistance.
+0/0/0/0/0/0/0/0/0.2/-2/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/-0.05/0/0/0/0/0/0
+
+Fortitude Boost
++14 to Fortitude.
+0/0/0/0/0/0/0/0/0/0/0/0/14/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+0
+10
+Celestial Body
++8 to base maximum health.
+8/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Astral Sorcery
++8 to maximum mana.
+0/0/8/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Ferocity
++2 to base strength and intelligence.
+0/0/0/0/2/2/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Thick Skin
++3 to base armor and resistance.
+0/0/0/0/0/0/3/3/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Essence Tap
++0.1 to base health regeneration and +0.1 to mana regeneration.
+0/0.1/0/0.1/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Omnipotency Boost
++5 to Omnipotency.
+0/0/0/0/0/0/0/0/0/0/0/0/0/5
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+0
+18
+Omni Shell
+Generates a damage barrier while out of combat. Shields for up to 9 + 1 per player level, increased by 2% per point in Omnipotency. Maximum shield is additionally increased by 4% of your maximum health (ignores temporary changes). This shield absorbs damage after all other forms of mitigation.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+1/1
+Omni Cannon
+Fires a blast in target direction when you left click, dealing magic damage based on your strength and intelligence to up to 3 enemies. 1 second cooldown, costs 2 mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+2/1
+Omnipotency Boost
++7 to omnipotency.
+0/0/0/0/0/0/0/0/0/0/0/0/0/7
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+0
+25
+Focus: Offense
+Each point in Omnipotency has +0.35% to strength and intelligence, but -0.15% to health, health regen, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/-0.15/-0.15/0.35/0.35/-0.15/-0.15
+
+Focus: Defense
+Each point in Omnipotency has +0.35% to health, health regen, armor, and resistance, but -0.15% to strength and intelligence.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0.35/0.35/-0.15/-0.15/0.35/0.35
+
+Focus: Swiftness
++0.2 to base move speed and +4% haste.
+0/0/0/0/0/0/0/0/0.2/0/0.04/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Omnipotency Boost
++8 to omnipotency.
+0/0/0/0/0/0/0/0/0/0/0/0/0/8
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+15
+15
+0
+Toughness
+Each point in Power has +0.05% to health, health regen, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0.05/0.05/0/0/0.05/0.05/0/0/0/0/0/0/0/0/0/0/0/0
+
+Capability
+Each point in Fortitude has +0.05% to strength and intelligence.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0.05/0.05/0/0/0/0/0/0/0/0
+
+Power
++10 to Power
+0/0/0/0/0/0/0/0/0/0/0/10/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Fortitude
++10 to Fortitude
+0/0/0/0/0/0/0/0/0/0/0/0/10/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+50
+0
+0
+Strength
++5 to base strength.
+0/0/0/0/5/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Intelligence
++5 to base intelligence.
+0/0/0/0/0/5/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Potency
+Each point in Power has +0.2% to strength and intelligence.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0.2/0.2/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Power Boost
++20 to Power.
+0/0/0/0/0/0/0/0/0/0/0/20/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+50
+0
+Health
++18 to base health.
+18/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Health Regeneration
++0.5 to base health regen.
+0/0.5/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Defenses
++4.5 to base armor and resistance.
+0/0/0/0/0/0/4.5/4.5/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Potency
+Each point in Fortitude has +0.15% to health, health regen, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0.15/0.15/0/0/0.15/0.15/0/0/0/0/0/0
+
+Fortitude Boost
++20 to Fortitude.
+0/0/0/0/0/0/0/0/0/0/0/0/20/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+15
+0
+0
+0
+Health
++3 to base health.
+3/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Health Regeneration
++0.1 to base health regen
+0/0.1/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana
++3 to mana.
+0/0/3/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana Regeneration
++0.1 to mana regeneration
+0/0/0/0.1/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Strength
++1 to base strength
+0/0/0/0/1/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Intelligence
++1 to base intelligence
+0/0/0/0/0/1/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Armor
++1.5 to base armor
+0/0/0/0/0/0/1.5/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Resistance
++1.5 to base resistance
+0/0/0/0/0/0/0/1.5/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+70
+0
+0
+0
+Health
++3 to base health.
+3/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Health Regeneration
++0.1 to base health regen
+0/0.1/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana
++3 to mana.
+0/0/3/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana Regeneration
++0.1 to mana regeneration
+0/0/0/0.1/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Strength
++1 to base strength
+0/0/0/0/1/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Intelligence
++1 to base intelligence
+0/0/0/0/0/1/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Armor
++1.5 to base armor
+0/0/0/0/0/0/1.5/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Resistance
++1.5 to base resistance
+0/0/0/0/0/0/0/1.5/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+0
+100
+0
+0
+Brawn Plus
+Each point in Power has +0.35% to strength, but -0.15% to intelligence.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0.35/-0.15/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Brain Plus
+Each point in Power has +0.35% to intelligence, but -0.15% to strength.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/-0.15/0.23/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Potency Plus
+Each point in Power has +0.2% to strength and intelligence.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0.2/0.2/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Power Boost
++26 to Power.
+0/0/0/0/0/0/0/0/0/0/0/26/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+100
+0
+Armored Plus
+Each point in Fortitude has +0.35% to armor, but -0.075% to health, health regen, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/-0.075/-0.075/0/0/0.35/-0.075/0/0/0/0/0/0
+
+Warded Plus
+Each point in Fortitude has +0.35% to resistance, but -0.075% to health, health regen, and armor.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/-0.075/-0.075/0/0/-0.075/0.35/0/0/0/0/0/0
+
+Bulk up Plus
+Each point in Fortitude has +0.35% to health, but -0.075% to health regen, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0.35/-0.075/0/0/-0.075/-0.075/0/0/0/0/0/0
+
+Recovery Plus
+Each point in Fortitude has +0.35% to health regen, but -0.075% to health, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/-0.075/0.35/0/0/-0.075/-0.075/0/0/0/0/0/0
+
+Potency Plus
+Each point in Fortitude has +0.15% to health, health regen, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0.15/0.15/0/0/0.15/0.15/0/0/0/0/0/0
+
+Fortitude Boost
++26 to Fortitude.
+0/0/0/0/0/0/0/0/0/0/0/0/26/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+0
+50
+Omni Shell
+Generates a damage barrier while out of combat. Shields for up to 9 + 1 per player level, increased by 2% per point in Omnipotency. Maximum shield is additionally increased by 4% of your maximum health (ignores temporary changes). This shield absorbs damage after all other forms of mitigation. Increases base barrier value by 50% if you already have Omni Shell.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+1/1
+Omni Cannon
+Fires a blast in target direction when you left click, dealing magic damage based on your strength and intelligence to up to 3 enemies. 1 second cooldown, costs 2 mana. Increases damage by 50% if you already have Omni Cannon.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+2/1
+Omnipotency Boost
++13 to omnipotency.
+0/0/0/0/0/0/0/0/0/0/0/0/0/13
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+176
+0
+Shielded
+Reduces damage taken from hits by 5%.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+3/1
+Dampening
+Reduces true damage over time taken by 15%.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+4/1
+Tenacity
+Recover (6% maximum health + 120% health regeneration) health per second for 3 seconds when you drop below 30% health. 25 second cooldown. A green dot appears next to your health bar when ready.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+5/1
+Reinforced Shell
+Adds 5% maximum health, 20% armor, and 20% resistance (ignores temporary changes) to your maximum Omni Shell barrier capacity, and it now regenerates at a rate of 15% health regeneration. Note that taking this keystone has no effect without Omni Shell.
+Fortitude Boost
++38 to Fortitude.
+0/0/0/0/0/0/0/0/0/0/0/0/38/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+176
+0
+0
+Pentakill
+Getting 5 kills within 5 seconds of eachother grants 1 second of invincibility, 10 SP and 10% of the defeated enemies' XP, as well as restoring 5 mana and 9 + 1 per player level (+2% per point in Power) health. 15 second cooldown after completing a pentakill.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+6/1
+Carnage
+Dealing more than 30% of an enemy's maximum health in a single hit increases your haste by 25% for 2 seconds. Does not stack, but its duration is refreshed by subsequent applications.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+7/1
+Frenzy
+Gain 25% haste, but deal 25% less damage. Hits have a chance to restore 2 mana and grant 2% haste for 5 seconds. Proc chance is doubled (a hit with at least 50% proc power is guaranteed to activate this passive). Mana restoration is capped at 5 per second (affected by your total haste) while haste is capped at 20%. Duration of all haste stacks is refreshed on successful proc.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+20/1
+Force
+Increases damage dealt by 5%.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+8/1
+Power Boost
++38 to Power.
+0/0/0/0/0/0/0/0/0/0/0/38/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+0
+88
+Omni Boost
+Halves the cooldown of Omni Cannon and doubles Omni Shell's recharge rate, while halving its recharge delay.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+9/1
+Spirit Guard
+Dealing at least 25 (scaling up based on enemy level) damage in one hit generates a spirit orb, and killing generates 2. Taking damage from a hit consumes an orb to reduce damage taken by 3 (+10% per player level), increased by 2% per point in Omnipotency, and additionally by 1% of your maximum health. You can store up to 10 orbs at once, and returning to nexus restores them. Orbs are shown below your level.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+10/1
+Spirit Vengeance
+Taking a hit grants 5% haste for 3 seconds. Up to 5 of these instances may be active at once.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+11/1
+Omnipotency Boost
++19 to Omnipotency
+0/0/0/0/0/0/0/0/0/0/0/0/0/19
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+0
+300
+0
+Armored Ultra
+Each point in Fortitude has +0.7% to armor, but -0.1% to health, health regen, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/-0.1/-0.1/0/0/0.7/-0.1/0/0/0/0/0/0
+
+Warded Ultra
+Each point in Fortitude has +0.7% to resistance, but -0.1% to health, health regen, and armor.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/-0.1/-0.1/0/0/-0.1/0.7/0/0/0/0/0/0
+
+Bulk up Ultra
+Each point in Fortitude has +0.7% to health, but -0.1% to health regen, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0.7/-0.1/0/0/-0.1/-0.1/0/0/0/0/0/0
+
+Recovery Ultra
+Each point in Fortitude has +0.7% to health regen, but -0.1% to health, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/-0.1/0.7/0/0/-0.1/-0.1/0/0/0/0/0/0
+
+Potency Ultra
+Each point in Fortitude has +0.25% to health, health regen, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0.25/0.25/0/0/0.25/0.25/0/0/0/0/0/0
+
+Fortitude Boost
++50 to Fortitude.
+0/0/0/0/0/0/0/0/0/0/0/0/50/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0
+300
+0
+0
+Brawn Plus
+Each point in Power has +0.7% to strength, but -0.2% to intelligence.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0.7/-0.2/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Brain Plus
+Each point in Power has +0.7% to intelligence, but -0.2% to strength.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/-0.2/0.7/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Potency Plus
+Each point in Power has +0.35% to strength and intelligence.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0.35/0.35/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Power Boost
++50 to Power.
+0/0/0/0/0/0/0/0/0/0/0/50/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+130
+0
+0
+0
+Health
++3 to base health.
+3/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Health Regeneration
++0.1 to base health regen
+0/0.1/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana
++3 to mana.
+0/0/3/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana Regeneration
++0.1 to mana regeneration
+0/0/0/0.1/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Strength
++1 to base strength
+0/0/0/0/1/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Intelligence
++1 to base intelligence
+0/0/0/0/0/1/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Armor
++1.5 to base armor
+0/0/0/0/0/0/1.5/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Resistance
++1.5 to base resistance
+0/0/0/0/0/0/0/1.5/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+215
+0
+0
+0
+Health
++3 to base health.
+3/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Health Regeneration
++0.1 to base health regen
+0/0.1/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana
++3 to mana.
+0/0/3/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana Regeneration
++0.1 to mana regeneration
+0/0/0/0.1/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Strength
++1 to base strength
+0/0/0/0/1/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Intelligence
++1 to base intelligence
+0/0/0/0/0/1/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Armor
++1.5 to base armor
+0/0/0/0/0/0/1.5/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Resistance
++1.5 to base resistance
+0/0/0/0/0/0/0/1.5/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+265
+0
+0
+0
+Health
++3 to base health.
+3/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Health Regeneration
++0.1 to base health regen
+0/0.1/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana
++3 to mana.
+0/0/3/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana Regeneration
++0.1 to mana regeneration
+0/0/0/0.1/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Strength
++1 to base strength
+0/0/0/0/1/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Intelligence
++1 to base intelligence
+0/0/0/0/0/1/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Armor
++1.5 to base armor
+0/0/0/0/0/0/1.5/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Resistance
++1.5 to base resistance
+0/0/0/0/0/0/0/1.5/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+350
+0
+0
+0
+Health
++3 to base health.
+3/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Health Regeneration
++0.1 to base health regen
+0/0.1/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana
++3 to mana.
+0/0/3/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Mana Regeneration
++0.1 to mana regeneration
+0/0/0/0.1/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Strength
++1 to base strength
+0/0/0/0/1/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Intelligence
++1 to base intelligence
+0/0/0/0/0/1/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Armor
++1.5 to base armor
+0/0/0/0/0/0/1.5/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Resistance
++1.5 to base resistance
+0/0/0/0/0/0/0/1.5/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+0
+0
+0
+150
+Earth
+Each point in Omnipotency has +0.8% to health and health regen, but -0.2% to strength, intelligence, armor, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0.8/0.8/-0.2/-0.2/-0.2/-0.2
+
+Steel
+Each point in Omnipotency has +0.8% to strength and armor, but -0.2% to health, health regen, intelligence, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/-0.2/-0.2/0.8/-0.2/0.8/-0.2
+
+Ether
+Each point in Omnipotency has +0.8% to intelligence and resistance, but -0.2% to health, health regen, strength, and armor.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/-0.2/-0.2/0.8/-0.2/0.8/-0.2
+
+Enchanted Sword
+Each point in Omnipotency has +0.8% to strength and resistance, but -0.2% to health, health regen, intelligence, and armor.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/-0.2/-0.2/0.8/-0.2/-0.2/0.8
+
+Plated Staff
+Each point in Omnipotency has +0.8% to intelligence and armor, but -0.2% to health, health regen, strength, and resistance.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/-0.2/-0.2/-0.2/0.8/0.8/-0.2
+
+Swiftness
++0.3 to base move speed and +6% haste.
+0/0/0/0/0/0/0/0/0.3/0/0.06/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+Omnipotency Boost
++25 to omnipotency.
+0/0/0/0/0/0/0/0/0/0/0/0/0/25
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+
+
+
+
+
+
+
+
+
+
+
+
+38
+0
+0
+0
+Health
++1% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/1
+Health Regeneration
++1% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/1
+Mana
++1% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/1
+Mana Regeneration
++1% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/1
+Strength
++1% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/1
+Intelligence
++1% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/1
+Armor
++1% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/1
+Resistance
++1% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/1
+
+
+
+
+
+
+85
+0
+0
+0
+Health
++1% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/1
+Health Regeneration
++1% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/1
+Mana
++1% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/1
+Mana Regeneration
++1% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/1
+Strength
++1% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/1
+Intelligence
++1% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/1
+Armor
++1% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/1
+Resistance
++1% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/1
+
+
+
+
+
+
+155
+0
+0
+0
+Health
++1% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/1
+Health Regeneration
++1% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/1
+Mana
++1% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/1
+Mana Regeneration
++1% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/1
+Strength
++1% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/1
+Intelligence
++1% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/1
+Armor
++1% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/1
+Resistance
++1% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/1
+
+
+
+
+
+
+400
+0
+0
+0
+Health
++2% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/2
+Health Regeneration
++2% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/2
+Mana
++2% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/2
+Mana Regeneration
++2% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/2
+Strength
++2% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/2
+Intelligence
++2% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/2
+Armor
++2% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/2
+Resistance
++2% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/2
+
+
+
+
+
+
+400
+0
+0
+0
+Health
++2% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/2
+Health Regeneration
++2% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/2
+Mana
++2% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/2
+Mana Regeneration
++2% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/2
+Strength
++2% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/2
+Intelligence
++2% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/2
+Armor
++2% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/2
+Resistance
++2% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/2
+
+
+
+
+
+
+550
+0
+0
+0
+Health
++5% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/5
+Health Regeneration
++5% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/5
+Mana
++5% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/5
+Mana Regeneration
++5% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/5
+All Stats
++1% to all stats
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/1,13/1,14/1,15/1,16/1,17/1,18/1,19/1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+550
+0
+0
+0
+Strength
++5% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/5
+Intelligence
++5% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/5
+Armor
++5% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/5
+Resistance
++5% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/5
+All Stats
++1% to all stats
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/1,13/1,14/1,15/1,16/1,17/1,18/1,19/1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+375
+0
+0
+0
+Health
++2% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/2
+Health Regeneration
++2% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/2
+Mana
++2% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/2
+Mana Regeneration
++2% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/2
+Strength
++2% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/2
+Intelligence
++2% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/2
+Armor
++2% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/2
+Resistance
++2% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/2
+
+
+
+
+
+
+425
+0
+0
+0
+Health
++2% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/2
+Health Regeneration
++2% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/2
+Mana
++2% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/2
+Mana Regeneration
++2% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/2
+Strength
++2% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/2
+Intelligence
++2% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/2
+Armor
++2% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/2
+Resistance
++2% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/2
+
+
+
+
+
+
+450
+0
+0
+0
+Health
++2% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/2
+Health Regeneration
++2% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/2
+Mana
++2% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/2
+Mana Regeneration
++2% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/2
+Strength
++2% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/2
+Intelligence
++2% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/2
+Armor
++2% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/2
+Resistance
++2% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/2
+
+
+
+
+
+
+475
+0
+0
+0
+Health
++2% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/2
+Health Regeneration
++2% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/2
+Mana
++2% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/2
+Mana Regeneration
++2% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/2
+Strength
++2% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/2
+Intelligence
++2% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/2
+Armor
++2% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/2
+Resistance
++2% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/2
+
+
+
+
+
+
+500
+0
+0
+0
+All Stats
++10% to all stats
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/10,13/10,14/10,15/10,16/10,17/10,18/10,19/10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+280
+0
+0
+0
+Health
++1% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/1
+Health Regeneration
++1% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/1
+Mana
++1% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/1
+Mana Regeneration
++1% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/1
+Strength
++1% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/1
+Intelligence
++1% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/1
+Armor
++1% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/1
+Resistance
++1% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/1
+
+
+
+
+
+
+190
+0
+0
+0
+Health
++1% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/1
+Health Regeneration
++1% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/1
+Mana
++1% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/1
+Mana Regeneration
++1% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/1
+Strength
++1% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/1
+Intelligence
++1% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/1
+Armor
++1% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/1
+Resistance
++1% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/1
+
+
+
+
+
+
+235
+0
+0
+0
+Health
++1% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/1
+Health Regeneration
++1% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/1
+Mana
++1% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/1
+Mana Regeneration
++1% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/1
+Strength
++1% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/1
+Intelligence
++1% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/1
+Armor
++1% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/1
+Resistance
++1% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/1
+
+
+
+
+
+
+0
+200
+0
+0
+Health
++3% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/3
+Health Regeneration
++3% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/3
+Mana
++4% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/4
+Mana Regeneration
++4% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/4
+Strength
++5% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/5
+Intelligence
++5% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/5
+Armor
++3% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/3
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/3
+
+
+
+
+
+
+0
+0
+200
+0
+Health
++5% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/5
+Health Regeneration
++5% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/5
+Mana
++4% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/4
+Mana Regeneration
++4% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/4
+Strength
++3% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/3
+Intelligence
++3% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/3
+Armor
++5% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/5
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/5
+
+
+
+
+
+
+0
+0
+0
+100
+Health
++5% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/5
+Health Regeneration
++5% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/5
+Mana
++5% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/5
+Mana Regeneration
++5% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/5
+Strength
++5% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/5
+Intelligence
++5% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/5
+Armor
++5% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/5
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/5
+
+
+
+
+
+
+0
+340
+0
+0
+Health
++3% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/3
+Health Regeneration
++3% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/3
+Mana
++4% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/4
+Mana Regeneration
++4% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/4
+Strength
++5% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/5
+Intelligence
++5% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/5
+Armor
++3% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/3
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/3
+
+
+
+
+
+
+0
+0
+340
+0
+Health
++5% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/5
+Health Regeneration
++5% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/5
+Mana
++4% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/4
+Mana Regeneration
++4% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/4
+Strength
++3% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/3
+Intelligence
++3% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/3
+Armor
++5% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/5
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/5
+
+
+
+
+
+
+0
+0
+0
+170
+Health
++5% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/5
+Health Regeneration
++5% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/5
+Mana
++5% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/5
+Mana Regeneration
++5% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/5
+Strength
++5% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/5
+Intelligence
++5% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/5
+Armor
++5% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/5
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/5
+
+
+
+
+
+
+0
+440
+0
+0
+Health
++3% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/3
+Health Regeneration
++3% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/3
+Mana
++4% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/4
+Mana Regeneration
++4% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/4
+Strength
++5% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/5
+Intelligence
++5% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/5
+Armor
++3% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/3
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/3
+
+
+
+
+
+
+0
+0
+440
+0
+Health
++5% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/5
+Health Regeneration
++5% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/5
+Mana
++4% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/4
+Mana Regeneration
++4% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/4
+Strength
++3% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/3
+Intelligence
++3% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/3
+Armor
++5% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/5
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/5
+
+
+
+
+
+
+0
+0
+0
+220
+Health
++5% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/5
+Health Regeneration
++5% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/5
+Mana
++5% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/5
+Mana Regeneration
++5% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/5
+Strength
++5% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/5
+Intelligence
++5% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/5
+Armor
++5% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/5
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/5
+
+
+
+
+
+
+0
+524
+0
+0
+Health
++3% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/3
+Health Regeneration
++3% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/3
+Mana
++4% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/4
+Mana Regeneration
++4% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/4
+Strength
++5% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/5
+Intelligence
++5% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/5
+Armor
++3% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/3
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/3
+
+
+
+
+
+
+0
+0
+524
+0
+Health
++5% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/5
+Health Regeneration
++5% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/5
+Mana
++4% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/4
+Mana Regeneration
++4% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/4
+Strength
++3% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/3
+Intelligence
++3% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/3
+Armor
++5% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/5
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/5
+
+
+
+
+
+
+0
+0
+0
+262
+Health
++5% to health.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+12/5
+Health Regeneration
++5% to health regen
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+13/5
+Mana
++5% to mana.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+14/5
+Mana Regeneration
++5% to mana regeneration
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+15/5
+Strength
++5% to strength
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+16/5
+Intelligence
++5% to intelligence
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+17/5
+Armor
++5% to armor
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+18/5
+Resistance
++3% to resistance
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+19/5
+
+
+
+
+

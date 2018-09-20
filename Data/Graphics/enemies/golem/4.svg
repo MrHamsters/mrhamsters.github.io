@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="4.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.087500002"
+     inkscape:cx="-1056.7805"
+     inkscape:cy="1386.3817"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       style="fill:#483e37"
+       id="path3343"
+       cx="-123.93503"
+       cy="-82.39917"
+       r="128.20952" />
+    <circle
+       r="128.20952"
+       cy="-82.39917"
+       cx="97.004669"
+       id="circle3345"
+       style="fill:#483e37" />
+    <circle
+       style="fill:#483e37"
+       id="circle3347"
+       cx="-20.722229"
+       cy="103.06115"
+       r="128.20952" />
+    <circle
+       r="128.20952"
+       cy="127.25163"
+       cx="-186.83014"
+       id="circle3349"
+       style="fill:#483e37" />
+    <circle
+       style="fill:#483e37"
+       id="circle3351"
+       cx="155.06192"
+       cy="127.25163"
+       r="128.20952" />
+    <circle
+       style="fill:#483e37"
+       id="circle3355"
+       cx="55.074497"
+       cy="238.52782"
+       r="128.20952" />
+    <circle
+       r="128.20952"
+       cy="-56.595993"
+       cx="-270.60315"
+       id="circle3357"
+       style="fill:#483e37"
+       transform="scale(-1,1)" />
+    <ellipse
+       style="fill:#483e37"
+       id="circle3359"
+       cx="301.90485"
+       cy="-76.945816"
+       rx="128.20952"
+       ry="116.62955"
+       transform="scale(-1,1)" />
+    <circle
+       r="145.14285"
+       cy="-71.916626"
+       cx="-10.239713"
+       id="circle3361"
+       style="fill:#4d4d4d" />
+    <ellipse
+       style="fill:#ffff00"
+       id="circle3363"
+       cx="-57.554291"
+       cy="-169.48488"
+       rx="31.707726"
+       ry="18.546026" />
+    <ellipse
+       ry="18.546026"
+       rx="31.707726"
+       cy="-169.48488"
+       cx="34.941807"
+       id="ellipse3365"
+       style="fill:#ffff00" />
+    <ellipse
+       cy="-170.58424"
+       cx="393.82867"
+       id="circle3367"
+       style="fill:#483e37"
+       rx="89.504753"
+       ry="92.405228"
+       transform="scale(-1,1)" />
+    <ellipse
+       style="fill:#483e37"
+       id="circle3369"
+       cx="394.63507"
+       cy="-281.30402"
+       rx="62.895229"
+       ry="64.933403"
+       transform="scale(-1,1)" />
+    <circle
+       style="fill:#483e37"
+       id="circle3371"
+       cx="389.84781"
+       cy="-48.378563"
+       r="89.504753" />
+    <circle
+       r="62.895229"
+       cy="-34.745914"
+       cx="486.4436"
+       id="circle3373"
+       style="fill:#483e37" />
+    <circle
+       r="128.20952"
+       cy="238.52782"
+       cx="-109.42075"
+       id="circle3375"
+       style="fill:#483e37" />
+  </g>
+</svg>

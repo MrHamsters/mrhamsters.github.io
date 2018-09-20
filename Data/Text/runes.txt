@@ -1,0 +1,140 @@
+Blade Master
+1/75
+39/2
+0
+Shield Master
+1/75
+40/2
+0
+Ranged Master
+1/75
+39/2
+0
+Rod Master
+1/75
+39/2
+0
+Titanium
+1/30
+100/1
+0
+Spectral
+1/30
+101/1
+0
+Void
+1/20
+102/1
+0
+Energising
+1/15
+103/1
+0
+Fluctuating
+1/80
+104/1
+0
+Enhanced
+1/100
+
+10
+Enhanced II
+1/50
+
+15
+Enhanced III
+1/25
+
+20
+Augmented
+2/100
+
+25
+Augmented II
+2/50
+
+30
+Augmented III
+2/25
+
+35
+Astral
+3/100
+
+40
+Astral II
+3/100
+
+45
+Astral III
+3/100
+
+50
+Eldritch
+2/60
+105/1
+0
+Hasted
+1/80
+85/5
+0
+Hasted II
+2/80
+85/7
+0
+Hasted III
+3/80
+85/10
+0
+Verdant
+2/65
+106/1
+0
+Critical
+1/65
+98/5
+0
+Critical II
+2/65
+98/7
+0
+Critical III
+3/65
+98/10
+0
+Runic
+1/40
+107/1
+0
+Adjusting
+1/45
+34/1
+0
+Adjusting II
+2/45
+34/2
+0
+Adjusting III
+3/45
+34/3
+0
+Power Shift
+1/30
+108/1
+0
+Defense Shift
+2/30
+109/1
+0
+Azure
+2/65
+110/1
+0
+Timeless
+2/60
+113/1
+0
+Spectral Vampire
+1/50
+114/1,9/2
+0

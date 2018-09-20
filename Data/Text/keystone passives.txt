@@ -1,0 +1,21 @@
+Omni Shell
+Omni Cannon
+Shielded
+Dampening
+Tenacity
+Pentakill
+Carnage
+Force
+Omni Boost
+Spirit Guard
+Spirit Vengeance
+Health
+Health Regen
+Mana
+Mana Regen
+Strength
+Intelligence
+Armor
+Resistance
+Frenzy
+Reinforced Shell
