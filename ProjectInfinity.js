@@ -1,4 +1,4 @@
-var version="0.4.1";
+var version="0.4.3";
 void setup(){
   size( 1133, 700 );
   strokeWeight( 10 );
@@ -167,7 +167,7 @@ var textinput='';
 var traits={inactive:new Array(),active:new Array(),sprites:new Array(1000),tt:new Array(1000)};
 var traitkey=loadStrings('Data/Text/Traits List.txt');
 var invselect=['',-1];
-var itemdata=loadStrings('Data/Text/items.txt.');
+var itemdata=loadStrings('Data/Text/items.txt');
 for(i=0;i<itemdata.length/10;i+=1){
 	itemdata[i*10+5]=split(itemdata[i*10+5],'/');
 	for(n=0;n<itemdata[i*10+5].length;n+=1){
@@ -185,7 +185,7 @@ for(i=0;i<itemdata.length/10;i+=1){
 		}
 	}
 }
-var prefixdata=loadStrings('Data/Text/prefixes.txt.');
+var prefixdata=loadStrings('Data/Text/prefixes.txt');
 for(i=0;i<prefixdata.length/5;i+=1){
 	prefixdata[i*5+1]=split(prefixdata[i*5+1],'/');
 	prefixdata[i*5+1][0]=Number(prefixdata[i*5+1][0]);
@@ -208,7 +208,7 @@ for(i=0;i<prefixdata.length/5;i+=1){
 		}
 	}
 }
-var suffixdata=loadStrings('Data/Text/suffixes.txt.');
+var suffixdata=loadStrings('Data/Text/suffixes.txt');
 for(i=0;i<suffixdata.length/5;i+=1){
 	suffixdata[i*5+1]=split(suffixdata[i*5+1],'/');
 	suffixdata[i*5+1][0]=Number(suffixdata[i*5+1][0]);
@@ -291,7 +291,7 @@ var getenchsuffixes=function(){
 		}
 	}
 }
-var runedata=loadStrings('Data/Text/runes.txt.');
+var runedata=loadStrings('Data/Text/runes.txt');
 for(i=0;i<runedata.length/4;i+=1){
 	runedata[i*4+1]=split(runedata[i*4+1],'/');
 	runedata[i*4+1][0]=Number(runedata[i*4+1][0]);
@@ -306,14 +306,14 @@ for(i=0;i<runedata.length/4;i+=1){
 	}
 	runedata[i*4+3]=Number(runedata[i*4+3]);
 }
-var souldata=loadStrings('Data/Text/souls.txt.');
+var souldata=loadStrings('Data/Text/souls.txt');
 for(i=0;i<souldata.length;i+=1){
 	souldata[i]=split(souldata[i],'/');
 	for(n=0;n<souldata[i].length;n+=1){
 		souldata[i][n]=Number(souldata[i][n]);
 	}
 }
-var loottables=loadStrings('Data/Text/loot tables.txt.');
+var loottables=loadStrings('Data/Text/loot tables.txt');
 for(i=0;i<loottables.length;i+=1){
 	loottables[i]=split(loottables[i],',');
 	for(n=0;n<loottables[i].length;n+=1){
@@ -1333,7 +1333,7 @@ var getbuffind=function(id){
 	}
 	return(-1);
 }
-var activetraits=loadStrings('Data/Text/active traits.txt.');
+var activetraits=loadStrings('Data/Text/active traits.txt');
 var gettraits = function(){
 	traits.inactive=new Array();
 	traits.active=new Array();
@@ -2006,7 +2006,7 @@ var loadtraits=function(){
 				if(attacktype=="melee"){
 					stemp=(spdmg+smdmg)*player.traits[58]/100;
 					if(player.traits[118]>0){
-						stemp+=plsar(0.05);
+						stemp+=plsar(1);
 					}
 					append(stateffects,{name:'thorn',target:attacker,damage:stemp,run:function(){
 						damage("enemies",stateffects[n].target,stateffects[n].damage,0,0,0,"generic","player",0);
@@ -2024,7 +2024,7 @@ var loadtraits=function(){
 				if(attacktype=="ranged"){
 					stemp=(spdmg+smdmg)*player.traits[59]/100;
 					if(player.traits[118]>0){
-						stemp+=plsar(0.05);
+						stemp+=plsar(1);
 					}
 					append(stateffects,{name:'reflec',target:attacker,damage:stemp,run:function(){
 						damage("enemies",stateffects[n].target,stateffects[n].damage,0,0,0,"generic","player",0);
@@ -6217,7 +6217,7 @@ var traitfuncs={
 if(options.loadAudio){
 	var bgmn='Title';
 var bgm = new Howl({
-  src: ['Data/Sound/music/Title.wav'],
+  src: ['Data/Sound/music/Title.ogg'],
   autoplay: true,
   loop: true,
   volume: options.music,
