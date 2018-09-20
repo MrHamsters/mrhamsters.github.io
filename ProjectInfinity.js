@@ -26,8 +26,8 @@ var terraininfo;
 var inwater=0;
 var skip=0;
 var urf=0;
-var urfim=loadImage('Data/Graphics/miscellaneous/urf.JPG');
-var mrjj=loadImage('Data/Graphics/miscellaneous/mrjj.JPG');
+var urfim=loadImage('Data/Graphics/miscellaneous/urf.jpg');
+var mrjj=loadImage('Data/Graphics/miscellaneous/mrjj.jpg');
 var helpscreen={active:0,help:0};
 var toloadarea=0;
 var options={
@@ -4750,7 +4750,7 @@ var loadArea=function(){
 				placegateway(i,biomedata[11]/2);
 			}
 		}
-		bg=loadImage('Data/Graphics/background/'+player.biomeID+'.PNG');
+		bg=loadImage('Data/Graphics/background/'+player.biomeID+'.png');
 		biomeinforaw='';
 		terraininforaw='';
 		if(options.loadAudio){
