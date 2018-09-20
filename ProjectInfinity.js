@@ -1,4 +1,4 @@
-var version="0.4.3";
+var version="0.4.3b";
 void setup(){
   size( 1133, 700 );
   strokeWeight( 10 );
@@ -12982,6 +12982,9 @@ void mouseMoved(){
 }
 var updateplayerdat=function(){
 	player.stun=0;
+	if(!(player.sp)){
+		player.sp=0;
+	}
 	if(!(player.biomeID)){
 		player.biomeID=1;
 	}
