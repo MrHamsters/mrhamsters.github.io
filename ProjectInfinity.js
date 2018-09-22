@@ -13137,8 +13137,10 @@ void keyPressed(){
 		if(keyCode==8){
 			textinput=textinput.substring(0,textinput.length-1);
 		}
-		else if(ascii[key.code]&textinput.length<20){
-			textinput+=ascii[key.code];
+		else if(ascii[key.code]){
+			if(textinput.length<20){
+				textinput+=ascii[key.code];
+			}
 		}
 	}
 }
