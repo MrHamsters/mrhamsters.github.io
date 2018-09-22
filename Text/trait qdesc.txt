@@ -1,0 +1,115 @@
+Reduces damage taken, but also your speed and damage dealt
+Increases damage dealt and taken
+Increases health regeneration
+Gain health regeneration based on your maximum health
+Use mana to absorb a portion of damage taken
+Active skill (gain a damage reduction shield)
+The more damaged you are, the less damage you take
+Massively increases maximum mana at the cost of mana regeneration
+Heal for a portion of damage dealt
+A portion of your strength applies to Arcane Armor
+Release damaging spores when hit
+Passively generate a shield which absorbs damage
+Active skill (lose mana regeneration and gain a damage shield)
+Active skill (Stun enemies and gain strength and mana regeneration)
+Active skill (Dash in the direction you are facing)
+Regenerate mana faster while moving
+Active skill (Charge up to temporarily increase your strength and intelligence)
+Active skill (Throw a spectral shield which stuns/damages enemies and shields you)
+Flashes when you take a step
+Gain SP on kill
+Not sure how this is here (unimplemented trait)
+Increases XP gain
+Decreases XP gain
+Your health can now exceed your maximum health (decays faster the more you have above maximum)
+Kills heal you and temporarily increase all of your stats
+Strong hits trigger an explosion
+Rapidly regenerate health while out of combat
+Gain a shield which blocks the next attack if you havent taken damage recently
+Stabilizes your movement
+Taking hits increases your defenses
+Taking hits increases your mana regeneration
+Fatal damage leaves you at 1 health and makes you invulnerable (has a cooldown)
+Active skill (Hold to become invulnerable, then knocks back enemies and projectiles)
+Gain stats based on whichever is lowest (the more balanced your stats are, the stronger this is)
+Regenerate health faster the more damaged you are
+Physical hits cause enemies to bleed
+Increases physical damage dealt and reduces damage taken using strength
+Gain damage and evasion if you haven't taken damage recently
+Increases blade-based weapon effectiveness
+Increases shield effectiveness
+Increases certain projectile-based weapons' effectiveness
+Increases rod-type weapon effectiveness
+Increases spear-type weapon effectiveness
+Increases tome-type weapon effectiveness
+Increases  weapon effectiveness
+Increases  weapon effectiveness
+Increases  weapon effectiveness
+Increases  weapon effectiveness
+Increases  weapon effectiveness
+Increases health by displayed %
+Increases health regeneration by displayed %
+Increases mana by displayed %
+Increases mana regeneration by displayed %
+Increases strength by displayed %
+Increases intelligence by displayed %
+Increases armor by displayed %
+Increases resistance by displayed %
+Enemies that attack you in melee take damage
+Enemies that attack you with ranged attacks take damage
+Items found start with free points to spend
+Kills grant reactant
+Increases mana regeneration bonus from resting
+Regenerate health out of combat, can also be used actively for a burst of healing
+Sword attacks create a wave projectile
+Certain ranged weapons' projectiles have a chance to explode
+Spending mana on magic weapon and traits cause mana-leeching explosions
+Mitigating damage taken charges an explosion
+Find more items
+Take less damage from melee, but more from ranged attacks
+Take less damage from ranged attacks, but more from melee
+Reduces physical damage taken
+Reduces magic damage taken
+Gain Mordekaiser's shield
+Active skill (spend health to damage nearby enemies and gain Iron Man shield)
+Replaces mana regeneration with mana orbs scattered randomly
+Active skill (recall boomerangs that haven't started returning already)
+Active skill (blows up active boomerangs)
+Active skill (freezes active boomerangs)
+Increases damage over time dealt
+Reduces damage over time taken
+Slows nearby enemies
+Zaps random enemies
+Burns nearby enemies
+Reduces damage taken (massively reduces true damage taken) but you have 1 maximum health
+Increases action and cooldown recovery speed
+Active skill (temporarily doubles your haste)
+Increases the damage reduction cap for armor and resistance
+Take almost no true damage, but take more damage from other sources
+Standing still recovers mana
+Not sure how this is here (unimplemented trait)
+Gain a guard meter for use with shields
+Regenerates guard meter
+Shields work against damage over time
+Passively block hits (uses guard meter), more effective the higher your movement speed
+Kills and being low on health boost your strength and intelligence
+Deal magic damage on hit (uses your maximum health), gets stronger while in combat
+Alternate between physical and magic damage immunity
+Gain a chance for damage to critically strike, dealing more damage
+Increases critical strike damage
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Active skill (Warp in targetted direction and become unable to take or deal damage)
+Increases health regeneration after taking damage
+Not sure how this is here (rune)
+Not sure how this is here (rune)
+Your size is reduced to minimum

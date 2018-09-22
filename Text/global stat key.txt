@@ -1,0 +1,8 @@
+hp
+mp
+hpregen
+mpregen
+str
+intel
+armor
+res

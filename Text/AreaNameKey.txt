@@ -1,0 +1,4 @@
+Plains
+Forest
+Jungle
+Swamp

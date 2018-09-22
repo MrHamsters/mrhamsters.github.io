@@ -1,0 +1,15 @@
+branch.svg
+goo.svg
+leaf.svg
+fireball.svg
+spore.svg
+shroom.svg
+majik.svg
+shroomball.svg
+ice shard.svg
+fireball mini.svg
+rock.svg
+crystal shard.svg
+nature crystal shard.svg
+nature majik.svg
+sludge.svg

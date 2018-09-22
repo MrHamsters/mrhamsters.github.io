@@ -1,0 +1,556 @@
+Defensive Stance
+[Passive] Reduces all damage taken by 
+13.5
+1.5
+%, but also your speed by 5% and damage dealt by 10%.
+Offensive Stance
+Increases all damage dealt by 
+18
+2
+%, but also damage taken by 15%.
+Starfish
+[Passive] Increases health regeneration by 
+21
+4
+%, but reduces your speed and maximum health by 10%
+Vitality
+[Passive] Grants additional health regeneration equal to 
+0
+0.2
+% of your maximum health.
+Energy Armor
+[Passive] 
+0
+1
+% of damage is taken from mana before health. Mana is protected by intelligence. Absorbtion stops at 10% mana. Each point of Energy Armor also reduces mana damage taken by 0.6%.
+Relic Shield
+[Active] Gives you  
+23
+2
+% damage reduction, 25% slow and 36% increased armor and resistance for 12 seconds. The armor and resistance decays over its duration. Heals you for 15% of your maximum health when it expires. 15 second cooldown. Each point in Shield Mastery increases damage reduction by 1%.
+Grit
+[Passive] Reduces damage taken by up to 
+0
+1
+%, based on missing health.
+Mana Battery
+[Passive] Increases maximum mana by 
+46
+4
+%, but reduces mana regeneration by 8%
+Vampire
+[Passive] Heal for 
+0
+1
+% of all damage dealt.
+Zealot's Oath
+[Passive] Mana damage taken using Energy Armor is additionally reduced by strength at 
+0
+5
+% effectiveness.
+Spores
+[Passive] Getting hit releases 
+0
+1
+ spores which deal magic damage to enemies.
+Shield Generator
+[Passive] Shields you for up to 
+0
+1
+% of your resistance. Takes 8 seconds to charge. Each point in Shield Mastery increases shield by 3%.
+Shield Overload
+[Active] Instantly generates a shield for 
+21
+4
+% of: 75% your resistance + 10% your maximum health, but reduces your mana regeneration by 64%, both decaying to 0% over 6 seconds. 7 second cooldown. Each point in Shield Mastery reduces mana regeneration penalty by 10%.
+Roar
+[Active] Shout furiously, stunning nearby enemies for up to 3 seconds and increasing your strength by 
+21
+9
+% and mana regeneration by 30%, both decaying over 10 seconds. 25 second cooldown.
+Sprint
+[Active] Grants 
+34
+6
+% increased movement speed at the cost of 4 mana to start sprinting and 6 mana/sec after.
+Stamina
+[Passive] Increases mana regeneration by 
+0
+5
+% while moving.
+Focus
+[Active] Increases movement speed by 10%, and strength and intelligence by up to 
+53
+7
+% for 8 seconds, based on charge time (up to 1.5 seconds). 8 second cooldown.
+Spectral Shield
+[Active] Projects an ethereal shield which flies in the target direction for 1 second while deccelerating, then accelerates back toward you. Deals {s0.5+a0.3}-{s0.65+a0.4} physical and {i0.5+r0.3}-{i0.65+r0.4} magic damage to enemies hit, and briefly stuns them. Shields you for {h0.3+a0.12}, decaying over 
+3
+2
+ seconds on return, as well as restoring 40% of your maximum guard meter. Each point in Shield Mastery increases shield value by 10%. 6 second cooldown and 5 mana cost.
+Flash Step
+[Passive] Causes an annoying flash of light with each step, dealing {i0.11}-{i0.15} magic damage to nearby enemies. 
+0
+100
+% increased damage at this trait level.
+Scavenging
+[Passive] Kills award 
+0
+1
+ SP.
+Charged
+[Passive] Stores electricity over 16 seconds. With at least half charge, the next melee attack dealt by or to you discharges stored energy, dealing magic damage to nearby enemies with 
+-3
+4
+ base power and stuns for 3 seconds, proportional to charge %.
+Wisdom
+[Passive] Increases XP gain by 
+0
+1
+%.
+Ignorance
+[Passive] Reduces XP gain by 
+0
+1
+%.
+Overgrowth
+[Passive] Health is no longer capped at maximum. Excess health decays based on your level and current excess health. (
+0
+1
+ decay resistance.)
+Soul Eater
+[Passive] Kills grant 4% movement speed and 
+0
+1
+% to all stats for 20 seconds and heal for 5% maximum health.
+Obliteration
+[Passive] Hits that deal at least 20% of the target's maximum health release a shockwave, dealing {s0.075+i0.075}-{s0.1+i0.1} true damage to nearby enemies. 
+0
+50
+% increased damage at this trait level. The shockwave does not proc on-hits.
+Warmog's Heart
+[Passive] Restores 
+10
+0
+% of your maximum health per second after not taking damage for at least 3 seconds.
+Glacial Ward
+[Passive] Nullifies the first hit you take. Recharges after not being hit for a base of 10 seconds. 
+0
+20
+% increased recharge speed at this trait level.
+Traction
+[Passive] Stabilizes your movement by a factor of 
+0
+1
+.
+Iron Skin
+[Passive] Hits taken increase your armor and resistance by 2% and damage reduction by  
+-0.5
+0.5
+% for 8 seconds, stacking up to 10 times. Taking a hit refreshes duration of all stacks. This damage reduction is capped at 50%.
+Entropy
+[Passive] Hits taken increase your mana regeneration by 
+2
+3
+% for 5 seconds.
+Indestructible
+[Passive] Fatal damage instead brings you to 1 health and grants you 
+0
+1
+ second(s) of invincibility. 60 second cooldown. A blue dot appears next to your health bar when off cooldown.
+Void Barrier
+[Active] Become invulnerable for up to 3 seconds while held. Stuns and launches nearby enemies away from you upon release. 30 second cooldown. 
+-20
+20
+% increased stun duration at this trait level. Immunity to ranged attacks and damage over time persists for 1 second. Ignores haste.
+Equilibrium
+[Passive] Increases your health, health regen, strength, intelligence, armor, and resistance by 
+0
+10
+% of your lowest one. Health is reduced by 40% and health regen multiplied by 20 for this calculation.
+Perseverance
+[Passive] Increases health regeneration rate by 
+0
+5
+% per 100% missing health.
+Serration
+[Passive] Physical damage you deal inflicts bleeding on targets. Deals 
+0
+5
+% of the attack's damage over 4 seconds.
+Overpower
+[Passive] Increases all physical damage dealt by 2% and reduces damage taken from hits by {s0.005} (capped at 80% reduction)
+0
+100
+% increased effect at this trait level.
+Concentration
+[Passive] Increases all damage dealt and dodge chance by 
+0
+4
+% if you haven't taken damage in the past 5 seconds.
+Blade Mastery
+[Mastery] Increases the effectiveness of blade weapons. (Currently 
+0
+1
+ points. Results vary per weapon type. Most effects are capped at 10 points.
+Shield Mastery
+[Mastery] Increases the effectiveness of shields. (Currently 
+0
+1
+ points. Results vary per shield type. Most effects are capped at 10 points.
+Ranged Mastery
+[Mastery] Increases the effectiveness of certain ranged weapons. (Currently 
+0
+1
+ points. Results vary per weapon type. Most effects are capped at 10 points.
+Rod Mastery
+[Mastery] Increases the effectiveness of rod-type weapons - these include wands, scepters, and staves. (Currently 
+0
+1
+ points. Results vary per weapon type. Most effects are capped at 10 points.
+//////////////////////////////////////////////////////
+//////////////////Reserved for masteries//////////////
+//////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////
+Health
+[Stat] Increases maximum health by 
+0
+1
+%.
+Health Regeneration
+[Stat] Increases health regeneration by 
+0
+1
+%.
+Mana
+[Stat] Increases maximum mana by 
+0
+1
+%.
+Mana Regeneration
+[Stat] Increases mana regeneration by 
+0
+1
+%.
+Strength
+[Stat] Increases strength by 
+0
+1
+%.
+Intelligence
+[Stat] Increases intelligence by 
+0
+1
+%.
+Armor
+[Stat] Increases armor by 
+0
+1
+%.
+Resistance
+[Stat] Increases resistance by 
+0
+1
+%.
+Thorns
+[Passive] Reflects 
+0
+1
+% of source damage taken from melee hits as true damage.
+Reflection
+[Passive] Reflects 
+0
+1
+% of source damage taken from ranged hits as true damage.
+Arcanist's Touch
+[Passive] Found items have +
+0
+0.5
+% to all stat rolls.
+Magic Aura
+[Passive] Grants approximately a 
+0
+15
+% chance to find an orb on kill, chance per enemy varies based on soul value (stronger enemies are worth more).
+Meditation
+[Passive] Increases maximum mana regeneration bonus gained from resting by 
+0
+10
+%.
+Arcane Reconstruction
+[Passive] Not taking damage for at least 2 seconds heals you for {i0.01} per second. [Active] Instantly heal for {i0.12}, halved if damage was taken within 2 seconds. 1 second cooldown. Costs 25 mana.
+0
+100
+% increased healing from passive and active at this trait level. Healing is additionally increased by up to 100% over 2 seconds after the passive activates.
+Wind Slash
+[Passive] Sword and sword-like attacks release a projectile that pierces enemies, dealing {s0.325+i0.325} magic damage. 
+-25
+25
+% increased damage at this trait level. Damage is modified based on sword type (faster swords generally deal less damage). The wave's damage decreases as it travels.
+Explosive Munitions
+[Passive] Most of your ranged projectiles have a 
+0
+10
+% chance of exploding, dealing {s0.15+i0.15}-{s0.2+i0.2} physical and magic damage to nearby enemies. Damage is modified based on the projectile (those that are fired faster generally deal less damage).
+Esoteric Anomaly
+[Passive] Every 30 mana spent on magic actions triggers an explosion near you which deals {i0.65}-{i0.75} magic damage and leeches 5 mana to you for each enemy hit, up to 15 mana. Mana cost reductions do not affect gains for calculating mana spent. Lose all charge after not gaining any for 30 seconds. 
+-40
+40
+% increased damage at this trait level.
+Reciprocation
+[Passive] 
+0
+25
+% of prevented damage is stored. After 1.5 seconds of not storing damage, or if the stored damage exceeds your maximum health, an explosion is triggered, dealing the stored damage as magic damage to nearby enemies. Unaffected by intelligence. Damage absorbed by damage shields and mana do not count as damage prevented.
+Fortune
+[Passive] Increases item drops by 
+0
+1
+%.
+Brawler
+[Passive] Reduces damage taken from melee hits by 
+17
+3
+%, but increases it by 25% for ranged.
+Kiter
+[Passive] Reduces damage taken from ranged hits by 
+17
+3
+%, but increases it by 25% for melee.
+Plated
+[Passive] Reduces physical damage taken by 
+0
+1
+%.
+Antimagic
+[Passive] Reduces magic damage taken by 
+0
+1
+%.
+Iron Man
+[Passive] Allows you to store a shield for up to {h0.4x0.5c0.5+i0.8x0.5c0.5} (40% maximum health + 80% intelligence). Rapidly decays if it hasn't been charged recently, but stops at 25% capacity. This shield prevents damage from being taken. 
+-50
+50
+% increased maximum shield at this trait level.
+Siphon of Harvesting
+[Active] Damages all nearby enemies for {i1.3}-{i1.45} magic damage and generates 
+11
+4
+% of maximum Iron Man shield for each enemy hit, plus 25% of the magic damage dealt. 4 second cooldown. Costs 9, + 2 per player level, health to use.
+Traveller's Call
+[Passive] Your mana regeneration is disabled. Instead, mana orbs spawn nearby. Each one restores mana equal to 
+350
+150
+% of your mana regeneration.
+Recall Boomerangs
+[Active] Empowers all boomerangs and increases their speed. Ones that haven't started returning to you yet do so immediately. 
+1.5
+-0.5
+ second cooldown.
+Detonate Boomerangs
+[Active] Blows up all active boomerangs. Each explosion deals {s0.75+i0.75}-{s0.85+i0.85} physical and magic damage to nearby enemies. 
+3
+-1
+ second cooldown.
+Freeze Boomerangs
+[Active] Freezes all active boomerangs, pausing them for 3.5 seconds and stunning enemies near them for up to 1 second (stun can stack if multiple blasts hit). 
+12
+-4
+ second cooldown. Costs 5 mana.
+Intensity
+[Passive] Increases damage over time dealt by 
+0
+1
+%.
+Resilience
+[Passive] Reduces damage over time taken by 
+0
+1
+%.
+Herald of Ice
+[Passive] Withers nearby enemies by 
+120
+60
+% per second, up to 40%. Enemies inside inner range recieve double wither rate, capped at 55%.
+Herald of Lightning
+[Passive] Strikes a random visible enemy with lightning, dealing {s0.175}-{s0.575} physical and {i0.175}-{i0.575} magic damage to nearby enemies, every 4 seconds, increased to once per second if you've killed in the last 8 seconds. 
+-50
+50
+% increased damage at this trait level.
+Herald of Ash
+[Passive] Burns nearby enemies for {s0.06+i0.06} true damage per second. Herald of Ash's damage increases by up to 400%, and all damage you deal by up to 20%, after being in combat for 6 seconds. 
+-100
+100
+% increased damage with Herald of Ash at this trait level.
+Chaos Innoculation
+[Passive] Reduces true damage taken by 40%, and all damage taken by an extra 10%, but your maximum life is 1. Effectiveness of additional trait levels: 
+0
+0
+.
+Haste
+[Passive] All of your non-movement actions and cooldown rates are 
+0
+1
+% faster.
+Timewarp
+[Active] Double the speed of all of your non-movement actions and cooldown rates for 4 seconds. 15 second cooldown. Costs 
+40
+-10
+ mana.
+Nullification
+[Passive] Armor and resistance can now reduce damage by up to 99%, with 
+-1
+2
+% effectiveness beyond the usual 90%.
+Dark Bargain
+[Passive] Reduces true damage taken by 99%, but also increases all post-mitigation damage taken by 
+65
+-5
+%.
+Ingrain
+[Passive] Standing still restores 
+0.4
+0.4
+% of your maximum mana per second for each second you have been standing still. Maximum bonus at 5 seconds, does not decay instantly upon moving.
+EotM
+[
+0
+100
+
+Defender's Might
+[Passive] You now have a guard meter which is capped at 
+0
+1
+% of your maximum health.
+Defender's Stamina
+[Passive] Your guard meter regenerates at a rate of 
+0
+1
+% of your maximum health per 10 seconds while not defending.
+Holy Shield
+[Passive] Guarding now works against damage over time. Effectiveness of additional trait levels: 
+0
+0
+.
+En Garde
+[Passive] Guard meter now has a(n) 
+70
+10
+% chance to automatically block hits, reduced by 1% for every 1% of depleted guard meter.
+Berserking
+[Passive] Gain 
+0
+3
+% strength, intelligence, and movement speed per second for 3 seconds while below 40% health or have killed in the last 3 seconds.
+An Acquired Taste
+[Passive] Deal {h0.01} additional magic damage on hit (modified by the attack's proc coefficient). Damage increases by 100% every second in combat, up to 4 times. These stacks decay twice per second if you haven't dealt damage in over 2 seconds. 
+0
+100
+% increased damage at this trait level.
+Darknik Capacitor
+[Passive] Rotates between physical and magic shields every 5 seconds. While a shield is selected, you are immune to that damage type, but take 
+70
+-10
+% more damage from the other.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Flash Grenade
+[Active] Throws a grenade at the cursor's location. Explodes on contact with an enemy, dealing mixed damage and stunning all entities in an area (including you) for 
+1
+1
+ second(s). Detonates after 3 seconds if it lands instead. Costs 10 mana, 2 second cooldown.
+Stealth
+[Passive] Reduces the range at which enemies detect you by 
+0
+1
+%.
+
+
+
+
+ 
+ 
+Time Warp
+[Active] Reduce active cooldowns by 
+4
+1
+ seconds and recover that time's worth of health and mana over 1 second. 30 second cooldown.
+
+
+
+
+Crowd Control
+[Active] For each nearby enemy, gain 
+9
+1
+% to all stats and a shield for 10% of your maximum health for 10 seconds. Costs 30 mana, 10 second cooldown.
+Ingrain
+[Passive] Standing still grants up to 
+0
+5
+% health and mana regeneration over 5 seconds. Moving decays these bonuses at twice the rate.

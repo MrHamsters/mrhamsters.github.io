@@ -1,0 +1,118 @@
+Defensive Stance
+Offensive Stance
+Starfish
+Vitality
+Arcane Armor
+Relic Shield
+Grit
+Mana Battery
+Vampire
+Zealot's Oath
+Spores
+Energy Shield
+Shield Overload
+Roar
+Dash
+Stamina
+Focus
+Spectral Shield
+Flash Step
+Scavenging
+Charged
+Wisdom
+Ignorance
+Overgrowth
+Soul Eater
+Obliteration
+Warmog's Heart
+Glacial Ward
+Traction
+Matrix Armor
+Entropy
+Indestructible
+Void Barrier
+Equilibrium
+Perseverance
+Serration
+Overpower
+Concentration
+Blade Mastery
+Shield Mastery
+Ranged Mastery
+Rod Mastery
+Spear Mastery
+Tome Mastery
+<Reserved for mastery>
+<Reserved for mastery>
+<Reserved for mastery>
+<Reserved for mastery>
+<Reserved for mastery>
+% Health
+% Health Regen
+% Mana
+% Mana Regen
+% Strength
+% Intelligence
+% Armor
+% Resistance
+Thorns
+Reflection
+Artisan's Touch
+Magic Aura
+Meditation
+Arcane Reconstruction
+Wind Slash
+Explosive Munitions
+Esoteric Anomaly
+Reciprocation
+Fortune
+Brawler
+Kiter
+Plated
+Antimagic
+Iron Man
+Siphon of Harvesting
+Traveller's Call
+Recall Boomerangs
+Detonate Boomerangs
+Freeze Boomerangs
+Intensity
+Resilience
+Herald of Ice
+Herald of Lightning
+Herald of Ash
+Chaos Innoculation
+Haste
+Timewarp
+Nullification
+Dark Bargain
+Ingrain
+Essence of the Manatee
+Defender's Might
+Defender's Stamina
+Holy Shield
+En Garde
+Berserking
+An Acquired Taste
+Darknik Capacitor
+Critical Hit
+Critical Damage
+Titanium
+Spectral
+Void
+Energising
+Fluctuating
+Eldritch
+Verdant
+Runic
+Power Shift
+Defense Shift
+Azure
+Phase Door
+Specter's Cowl
+Timeless
+Essence Vampire
+Ant
+Mending Guard
+Overload
+Augmented Thorns
