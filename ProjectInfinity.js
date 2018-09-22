@@ -1,4 +1,4 @@
-var version="0.4.3b";
+var version="0.4.4b";
 void setup(){
   size( 1133, 700 );
   strokeWeight( 10 );
@@ -26,8 +26,8 @@ var terraininfo;
 var inwater=0;
 var skip=0;
 var urf=0;
-var urfim=loadImage('Data/Graphics/miscellaneous/urf.jpg');
-var mrjj=loadImage('Data/Graphics/miscellaneous/mrjj.jpg');
+var urfim=loadImage('Data/Special/urf.jpg');
+var mrjj=loadImage('Data/Special/mrjj.jpg');
 var helpscreen={active:0,help:0};
 var toloadarea=0;
 var options={
@@ -2006,7 +2006,7 @@ var loadtraits=function(){
 				if(attacktype=="melee"){
 					stemp=(spdmg+smdmg)*player.traits[58]/100;
 					if(player.traits[118]>0){
-						stemp+=plsar(1);
+						stemp+=plsar(0.4);
 					}
 					append(stateffects,{name:'thorn',target:attacker,damage:stemp,run:function(){
 						damage("enemies",stateffects[n].target,stateffects[n].damage,0,0,0,"generic","player",0);
@@ -2024,7 +2024,7 @@ var loadtraits=function(){
 				if(attacktype=="ranged"){
 					stemp=(spdmg+smdmg)*player.traits[59]/100;
 					if(player.traits[118]>0){
-						stemp+=plsar(1);
+						stemp+=plsar(0.4);
 					}
 					append(stateffects,{name:'reflec',target:attacker,damage:stemp,run:function(){
 						damage("enemies",stateffects[n].target,stateffects[n].damage,0,0,0,"generic","player",0);
@@ -2924,7 +2924,7 @@ var loadtraits=function(){
 						ellipseMode(CENTER);
 						ellipse(400+stateffects[n].x-playertemp.x,350+stateffects[n].y-playertemp.y,15,15);}
 						if(pow(playertemp.x-stateffects[n].x,2)+pow(playertemp.y-stateffects[n].y,2)<pow(12+player.size,2)){
-							player.mp+=(3.5+1.5*player.traits[75])*(plsmr(1));
+							player.mp+=(5+1*player.traits[75])*(plsmr(1));
 							stateffects[n].tick=999;
 						}
 					}
@@ -10332,7 +10332,7 @@ showdots[2]=0;
 				keystonefuncs.passives[tfp]();
 			}
 			heal((plshr(1))/60,"regeneration");
-			if(!(player.traits[75]>0)){
+			if(playertemp.inBossFight||!(player.traits[75]>0)){
 				if(player.traits[62]>0){
 					stemp=3*(1+player.traits[62]/10);
 				}
@@ -13132,10 +13132,11 @@ var updateplayerdat=function(){
 	console.log(ascii);
 void keyPressed(){
 	if(!(loaded)){
+		console.log(keyCode);
 		if(keyCode==8){
 			textinput=textinput.substring(0,textinput.length-1);
 		}
-		else if(ascii[key.code]){
+		else if(ascii[key.code]&textinput.length<20){
 			textinput+=ascii[key.code];
 		}
 	}
