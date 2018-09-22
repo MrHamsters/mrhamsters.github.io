@@ -1,4 +1,4 @@
-var version="0.4.4b";
+var version="0.4.5";
 void setup(){
   size( 1133, 700 );
   strokeWeight( 10 );
@@ -159,6 +159,7 @@ var mouselock;
 var traitcd=loadStrings('Data/Text/trait CDs.txt');
 var traitusage=loadStrings('Data/Text/trait usage.txt');
 var attacktt=loadStrings('Data/Text/attack tt.txt');
+var traitqtt=loadStrings('Data/Text/trait qdesc.txt');
 var buffind;
 var cinematic=0;
 var tooltipcache=[-1,""];
@@ -11663,63 +11664,136 @@ showdots[2]=0;
 							if(cursorbox(400+floor(reo/25)*100,495+floor(reo/25)*100,70+(reo%25)*25,90+(reo%25)*25)){
 								stemp=new Array();
 								temp=260;
+								temp2=new Array();
 								if(player.record.prefixes[enchantercache.enchants[reo].id]){
-									append(stemp,"SP to purchase: 50");
+									append(stemp,"Reactant to purchase: 40");
+									append(temp2,[255,200,50]);
 								}
 								else{
-									append(stemp,"Reactant to unlock: "+(round(5000/enchantercache.enchants[reo].dropweight)-40));
+									append(stemp,"SP to unlock: "+(round(2500/enchantercache.enchants[reo].dropweight)-20));
+									append(temp2,[100,100,255]);
 								}
 								append(stemp,"Health: "+prefixdata[enchantercache.enchants[reo].id*5+2][0]);
-								append(stemp,"Mana: "+prefixdata[enchantercache.enchants[reo].id*5+2][1]);
-								append(stemp,"Health Regen: "+prefixdata[enchantercache.enchants[reo].id*5+2][2]);
-								append(stemp,"Mana Regen: "+prefixdata[enchantercache.enchants[reo].id*5+2][3]);
-								append(stemp,"Strength: "+prefixdata[enchantercache.enchants[reo].id*5+2][4]);
-								append(stemp,"Intelligence: "+prefixdata[enchantercache.enchants[reo].id*5+2][5]);
-								append(stemp,"Armor: "+prefixdata[enchantercache.enchants[reo].id*5+2][6]);
-								append(stemp,"Resistance: "+prefixdata[enchantercache.enchants[reo].id*5+2][7]);
-								append(stemp,"Movement Speed: "+prefixdata[enchantercache.enchants[reo].id*5+3]*100+"%");
-								for(greot=0;greot<prefixdata[enchantercache.enchants[reo].id*5+4].length;greot+=1){
-									temp+=20;
-									append(stemp,traitkey[prefixdata[enchantercache.enchants[reo].id*5+4][greot][0]-1]+" + "+prefixdata[enchantercache.enchants[reo].id*5+4][greot][1]);
+								if(prefixdata[enchantercache.enchants[reo].id*5+2][0]<0){
+									append(temp2,[175,0,0]);
 								}
-								if(player.record.prefixes[enchantercache.enchants[reo].id]){
-									tooltipdraw={
-										type:1,
-										x:mouseX,
-										y:mouseY-100,
-										w:300,
-										h:temp,
-										title:enchantercache.enchants[reo].name,
-										tip:stemp,
-										colors:[[100,100,255],0]
-									};
+								else if(prefixdata[enchantercache.enchants[reo].id*5+2][0]>0){
+									append(temp2,[0,150,0]);
 								}
 								else{
-									tooltipdraw={
-										type:1,
-										x:mouseX,
-										y:mouseY-100,
-										w:300,
-										h:temp,
-										title:enchantercache.enchants[reo].name,
-										tip:stemp,
-										colors:[[255,200,50],0]
-									};
+									append(temp2,[255,255,255]);
 								}
+								append(stemp,"Mana: "+prefixdata[enchantercache.enchants[reo].id*5+2][1]);
+								if(prefixdata[enchantercache.enchants[reo].id*5+2][1]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(prefixdata[enchantercache.enchants[reo].id*5+2][1]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Health Regen: "+prefixdata[enchantercache.enchants[reo].id*5+2][2]);
+								if(prefixdata[enchantercache.enchants[reo].id*5+2][2]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(prefixdata[enchantercache.enchants[reo].id*5+2][2]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Mana Regen: "+prefixdata[enchantercache.enchants[reo].id*5+2][3]);
+								if(prefixdata[enchantercache.enchants[reo].id*5+2][3]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(prefixdata[enchantercache.enchants[reo].id*5+2][3]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Strength: "+prefixdata[enchantercache.enchants[reo].id*5+2][4]);
+								if(prefixdata[enchantercache.enchants[reo].id*5+2][4]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(prefixdata[enchantercache.enchants[reo].id*5+2][4]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Intelligence: "+prefixdata[enchantercache.enchants[reo].id*5+2][5]);
+								if(prefixdata[enchantercache.enchants[reo].id*5+2][5]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(prefixdata[enchantercache.enchants[reo].id*5+2][5]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Armor: "+prefixdata[enchantercache.enchants[reo].id*5+2][6]);
+								if(prefixdata[enchantercache.enchants[reo].id*5+2][6]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(prefixdata[enchantercache.enchants[reo].id*5+2][6]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Resistance: "+prefixdata[enchantercache.enchants[reo].id*5+2][7]);
+								if(prefixdata[enchantercache.enchants[reo].id*5+2][7]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(prefixdata[enchantercache.enchants[reo].id*5+2][7]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Movement Speed: "+prefixdata[enchantercache.enchants[reo].id*5+3]*100+"%");
+								if(prefixdata[enchantercache.enchants[reo].id*5+3]<1){
+									append(temp2,[175,0,0]);
+								}
+								else if(prefixdata[enchantercache.enchants[reo].id*5+3]>1){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								for(greot=0;greot<prefixdata[enchantercache.enchants[reo].id*5+4].length;greot+=1){
+									temp+=40;
+									append(stemp,traitkey[prefixdata[enchantercache.enchants[reo].id*5+4][greot][0]-1]+" + "+prefixdata[enchantercache.enchants[reo].id*5+4][greot][1]);
+									append(temp2,[255,255,255]);
+									append(stemp,traitqtt[prefixdata[enchantercache.enchants[reo].id*5+4][greot][0]-1]);
+									append(temp2,[180,180,180]);
+								}
+								tooltipdraw={
+									type:1,
+									x:mouseX,
+									y:mouseY-100,
+									w:650,
+									h:temp,
+									title:enchantercache.enchants[reo].name,
+									tip:stemp,
+									colors:temp2
+								};
 								if(!(mouselock)&mousePressed){
 									mouselock=1;
 									if(mouseButton==LEFT){
 										if(player.record.prefixes[enchantercache.enchants[reo].id]){
-											if(player.sp>=50){
-												player.sp-=50;
+											if(player.reactant>=40){
+												player.reactant-=40;
 												if(options.loadAudio){sfx.enchant.play();}
 												player.inventory.bag[invselect[1]].prefix=enchantercache.enchants[reo].id+1;
 												enchantmode=0;
 											}
 										}
 										else{
-											if(player.reactant>=round(5000/enchantercache.enchants[reo].dropweight)-40){
-												player.reactant-=round(5000/enchantercache.enchants[reo].dropweight)-40;
+											if(player.sp>=round(2500/enchantercache.enchants[reo].dropweight)-20){
+												player.sp-=round(2500/enchantercache.enchants[reo].dropweight)-20;
 												if(options.loadAudio){sfx.click.play();}
 												player.record.prefixes[enchantercache.enchants[reo].id]=1;
 											}
@@ -11749,63 +11823,136 @@ showdots[2]=0;
 							if(cursorbox(400+floor(reo/25)*100,495+floor(reo/25)*100,70+(reo%25)*25,90+(reo%25)*25)){
 								stemp=new Array();
 								temp=260;
+								temp2=new Array();
 								if(player.record.suffixes[enchantercache.enchants[reo].id]){
-									append(stemp,"SP to purchase: 50");
+									append(stemp,"Reactant to purchase: 40");
+									append(temp2,[255,200,50]);
 								}
 								else{
-									append(stemp,"Reactant to unlock: "+(round(5000/enchantercache.enchants[reo].dropweight)-40));
+									append(stemp,"SP to unlock: "+(round(2500/enchantercache.enchants[reo].dropweight)-20));
+									append(temp2,[100,100,255]);
 								}
 								append(stemp,"Health: "+suffixdata[enchantercache.enchants[reo].id*5+2][0]);
-								append(stemp,"Mana: "+suffixdata[enchantercache.enchants[reo].id*5+2][1]);
-								append(stemp,"Health Regen: "+suffixdata[enchantercache.enchants[reo].id*5+2][2]);
-								append(stemp,"Mana Regen: "+suffixdata[enchantercache.enchants[reo].id*5+2][3]);
-								append(stemp,"Strength: "+suffixdata[enchantercache.enchants[reo].id*5+2][4]);
-								append(stemp,"Intelligence: "+suffixdata[enchantercache.enchants[reo].id*5+2][5]);
-								append(stemp,"Armor: "+suffixdata[enchantercache.enchants[reo].id*5+2][6]);
-								append(stemp,"Resistance: "+suffixdata[enchantercache.enchants[reo].id*5+2][7]);
-								append(stemp,"Movement Speed: "+suffixdata[enchantercache.enchants[reo].id*5+3]*100+"%");
-								for(greot=0;greot<suffixdata[enchantercache.enchants[reo].id*5+4].length;greot+=1){
-									temp+=20;
-									append(stemp,traitkey[suffixdata[enchantercache.enchants[reo].id*5+4][greot][0]-1]+" + "+suffixdata[enchantercache.enchants[reo].id*5+4][greot][1]);
+								if(suffixdata[enchantercache.enchants[reo].id*5+2][0]<0){
+									append(temp2,[175,0,0]);
 								}
-								if(player.record.suffixes[enchantercache.enchants[reo].id]){
-									tooltipdraw={
-										type:1,
-										x:mouseX,
-										y:mouseY-100,
-										w:300,
-										h:temp,
-										title:enchantercache.enchants[reo].name,
-										tip:stemp,
-										colors:[[100,100,255],0]
-									};
+								else if(suffixdata[enchantercache.enchants[reo].id*5+2][0]>0){
+									append(temp2,[0,150,0]);
 								}
 								else{
-									tooltipdraw={
-										type:1,
-										x:mouseX,
-										y:mouseY-100,
-										w:300,
-										h:temp,
-										title:enchantercache.enchants[reo].name,
-										tip:stemp,
-										colors:[[255,200,50],0]
-									};
+									append(temp2,[255,255,255]);
 								}
+								append(stemp,"Mana: "+suffixdata[enchantercache.enchants[reo].id*5+2][1]);
+								if(suffixdata[enchantercache.enchants[reo].id*5+2][1]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(suffixdata[enchantercache.enchants[reo].id*5+2][1]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Health Regen: "+suffixdata[enchantercache.enchants[reo].id*5+2][2]);
+								if(suffixdata[enchantercache.enchants[reo].id*5+2][2]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(suffixdata[enchantercache.enchants[reo].id*5+2][2]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Mana Regen: "+suffixdata[enchantercache.enchants[reo].id*5+2][3]);
+								if(suffixdata[enchantercache.enchants[reo].id*5+2][3]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(suffixdata[enchantercache.enchants[reo].id*5+2][3]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Strength: "+suffixdata[enchantercache.enchants[reo].id*5+2][4]);
+								if(suffixdata[enchantercache.enchants[reo].id*5+2][4]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(suffixdata[enchantercache.enchants[reo].id*5+2][4]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Intelligence: "+suffixdata[enchantercache.enchants[reo].id*5+2][5]);
+								if(suffixdata[enchantercache.enchants[reo].id*5+2][5]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(suffixdata[enchantercache.enchants[reo].id*5+2][5]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Armor: "+suffixdata[enchantercache.enchants[reo].id*5+2][6]);
+								if(suffixdata[enchantercache.enchants[reo].id*5+2][6]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(suffixdata[enchantercache.enchants[reo].id*5+2][6]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Resistance: "+suffixdata[enchantercache.enchants[reo].id*5+2][7]);
+								if(suffixdata[enchantercache.enchants[reo].id*5+2][7]<0){
+									append(temp2,[175,0,0]);
+								}
+								else if(suffixdata[enchantercache.enchants[reo].id*5+2][7]>0){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								append(stemp,"Movement Speed: "+suffixdata[enchantercache.enchants[reo].id*5+3]*100+"%");
+								if(suffixdata[enchantercache.enchants[reo].id*5+3]<1){
+									append(temp2,[175,0,0]);
+								}
+								else if(suffixdata[enchantercache.enchants[reo].id*5+3]>1){
+									append(temp2,[0,150,0]);
+								}
+								else{
+									append(temp2,[255,255,255]);
+								}
+								for(greot=0;greot<suffixdata[enchantercache.enchants[reo].id*5+4].length;greot+=1){
+									temp+=40;
+									append(stemp,traitkey[suffixdata[enchantercache.enchants[reo].id*5+4][greot][0]-1]+" + "+suffixdata[enchantercache.enchants[reo].id*5+4][greot][1]);
+									append(temp2,[255,255,255]);
+									append(stemp,traitqtt[suffixdata[enchantercache.enchants[reo].id*5+4][greot][0]-1]);
+									append(temp2,[180,180,180]);
+								}
+								tooltipdraw={
+									type:1,
+									x:mouseX,
+									y:mouseY-100,
+									w:650,
+									h:temp,
+									title:enchantercache.enchants[reo].name,
+									tip:stemp,
+									colors:temp2
+								};
 								if(!(mouselock)&mousePressed){
 									mouselock=1;
 									if(mouseButton==LEFT){
 										if(player.record.suffixes[enchantercache.enchants[reo].id]){
-											if(player.sp>=50){
-												player.sp-=50;
+											if(player.reactant>=40){
+												player.reactant-=40;
 												if(options.loadAudio){sfx.enchant.play();}
 												player.inventory.bag[invselect[1]].suffix=enchantercache.enchants[reo].id+1;
 												enchantmode=0;
 											}
 										}
 										else{
-											if(player.reactant>=round(5000/enchantercache.enchants[reo].dropweight)-40){
-												player.reactant-=round(5000/enchantercache.enchants[reo].dropweight)-40;
+											if(player.sp>=round(2500/enchantercache.enchants[reo].dropweight)-20){
+												player.sp-=round(2500/enchantercache.enchants[reo].dropweight)-20;
 												if(options.loadAudio){sfx.click.play();}
 												player.record.suffixes[enchantercache.enchants[reo].id]=1;
 											}
