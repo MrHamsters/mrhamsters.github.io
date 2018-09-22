@@ -1,5 +1,5 @@
 Copyright 2018 Jonathan Jensen
-This copyright covers everything in this repository, except audio files.
+This copyright covers everything in this repository, except audio files and files located within 'Data/Special'.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
