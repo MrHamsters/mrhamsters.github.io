@@ -13132,8 +13132,6 @@ var updateplayerdat=function(){
 	console.log(ascii);
 void keyPressed(){
 	if(!(loaded)){
-		console.log(keyCode);
-		console.log(textinput.length);
 		if(keyCode==8){
 			textinput=textinput.substring(0,textinput.length-1);
 		}
