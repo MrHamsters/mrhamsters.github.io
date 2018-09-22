@@ -147,7 +147,7 @@ Iron Man
 Siphon of Harvesting
 [Active] Damages all nearby enemies for {i1.3}-{i1.45} magic damage and generates {ox11c4}% of maximum Iron Man shield for each enemy hit, plus 25% of the magic damage dealt. 4 second cooldown. Costs {ox9c0+lx2c0} health.
 Traveller's Call
-[Passive] Your mana regeneration is disabled. Instead, mana orbs spawn nearby. Each one restores mana equal to {ox350c150}% of your mana regeneration.
+[Passive] Your mana regeneration is disabled. Instead, mana orbs spawn nearby. Each one restores mana equal to {ox350c150}% of your mana regeneration. You can still regenerate mana during boss battles.
 Recall Boomerangs
 [Active] Empowers all boomerangs and increases their speed. Ones that haven't started returning to you yet do so immediately. {ox1.5c-0.5} second cooldown.
 Detonate Boomerangs
@@ -233,7 +233,7 @@ Mending Guard
 Overload
 [Active] Spends 30% of your current mana. Gain {ox2.5c0.5}% increased strength and intelligence decaying over 12 seconds for every point of mana above 70 lost. Requires at least 80 mana to use. 20 second cooldown. Can be used mid-action.
 Augmented Thorns
-[Passive] Damage dealt by Thorns and Reflection is increased by {a0.05}.
+[Passive] Damage dealt by Thorns and Reflection is increased by {a0.02}.
 
 
 
