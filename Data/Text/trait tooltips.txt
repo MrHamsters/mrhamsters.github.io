@@ -31,7 +31,7 @@ Dash
 Stamina
 [Passive] Increases mana regeneration rate by {ox0c5}% while moving.
 Focus
-[Active] Increases movement speed by 10%, and strength and intelligence by up to {ox53c7}% for 8 seconds, based on charge time (up to 1.5 seconds). 8 second cooldown.
+[Active] Toggles this trait. Toggle on on at the cost of 10 mana to to drain {ox10.6c-0.6} mana per second and gain 100% increased strength and intelligence.
 Spectral Shield
 [Active] Projects an ethereal shield which flies in the target direction for 1 second while deccelerating, then accelerates back towards you. Deals {s0.5+a0.3}-{s0.65+a0.4} physical and {i0.5+r0.3}-{i0.65+r0.4} magic damage to enemies hit, and briefly stuns them. Grants a {h0.3+a0.12} point damage shield which decays over {ox3c2} seconds on return, as well as restoring 40% of your maximum guard meter. Each point in Shield Mastery increases shield value by 10%. 6 second cooldown and 5 mana cost.
 Flash Step

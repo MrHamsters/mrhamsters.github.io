@@ -14,7 +14,7 @@ Active skill (lose mana regeneration and gain a damage shield)
 Active skill (Stun enemies and gain strength and mana regeneration)
 Active skill (Dash in the direction you are facing)
 Regenerate mana faster while moving
-Active skill (Charge up to temporarily increase your strength and intelligence)
+Active skill (Toggle on to drain mana and increase your strength and intelligence)
 Active skill (Throw a spectral shield which stuns/damages enemies and shields you)
 Flashes when you take a step
 Gain SP on kill
