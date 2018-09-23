@@ -4429,9 +4429,11 @@ var heal=function(healp,healtype){
 		}
 	}
 	player.hp+=healp;
+	if(round(healp)>0){
 	if(healtype=="direct"||healtype=="leech"){
 		var healyr=random(230,270);
 		append(particles,new createparticle(720,healyr,1.5,(250-healyr)/10,0,-(250-healyr)/500,'text',"+"+round(healp),22,0,255,-4,0,255,0));
+	}
 	}
 }
 var spdmg=0;
