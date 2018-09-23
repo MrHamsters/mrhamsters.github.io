@@ -1,8 +1,8 @@
-var version="0.4.5";
+var version="0.4.6";
 void setup(){
-  size( 1133, 700 );
-  strokeWeight( 10 );
-  frameRate( 60 );  
+  size(1133,700);
+  strokeWeight(10);
+  frameRate(60); 
 }
 var ms=0;
 var mslast=0;
@@ -10,17 +10,17 @@ var tick=-1;
 var gametick=-1;
 var buttons=new Array();
 var soundPlayed=false;
-var textinput ="";
+var textinput="";
 var img;
-var cd = 0;
-var loaded = 0;
-var logoY = 150;
-var logoYvelo = 0;
-var logoYlock = 0;
-var logoR = 180;
-var logoRvelo = 0;
-var logoRlock = 0;
-var mode = 0;
+var cd=0;
+var loaded=0;
+var logoY=150;
+var logoYvelo=0;
+var logoYlock=0;
+var logoR=180;
+var logoRvelo=0;
+var logoRlock=0;
+var mode=0;
 var interrain=0;
 var terraininfo;
 var inwater=0;
@@ -43,8 +43,6 @@ var options={
 	//0: frames do not get skipped; if you lag, so does the game  1: game and frames are independent
 	frameskip:1,
 	light:2
-	
-	
 };
 var dmgixtra="";
 var drawcap=8;
@@ -2962,6 +2960,31 @@ var loadtraits=function(){
 			}
 			heal((plshp(1))/1000,"regeneration");
 		}
+		});
+	}
+	if(player.traits[17]>0){
+		append(traitfuncs.passives,function(){
+			if(!(playertemp.focus)){
+				playertemp.focus=0;
+			}
+			if(!(player.traits[17]>0)){
+				if(playertemp.focus){
+					playertemp.str-=1;
+					playertemp.intel-=1;
+				}
+				playertemp.focus=0;
+			}
+			if(playertemp.focus){
+				if(tick%5==0){
+					append(particles,new createparticle(random(390,410),random(340,360),random(-0.1,0.1),random(-0.1,0.1),0,0,'circle','',10,-0.3,255,-15,255,190,0));
+				}
+				player.mp-=(10.6-player.traits[17]*0.6)/60;
+				if(player.mp<0.1){
+					playertemp.focus=0;
+					playertemp.str-=1;
+					playertemp.intel-=1;
+				}
+			}
 		});
 	}
 	if(player.traits[32]>0){
@@ -8264,65 +8287,19 @@ append(doaction,function(lv,hand){
 });
 //Focus
 append(doaction,function(lv,hand){
-	playertemp.action={
-		name:'focus',
-		tick:0,
-		dir:0,
-		level:lv,
-		speedm:0
-	};
-	if(hand=='space'){
-		playertemp.action.code=5;
+	if(playertemp.focus==0&player.mp>10){
+		player.mp-=10;
+		if(options.loadAudio){sfx.focus.play();}
+		playertemp.focus=1;
+		playertemp.str+=1;
+		playertemp.intel+=1;
 	}
-	if(hand=='shift'){
-		playertemp.action.code=4;
-	}
-	if(hand=='q'){
-		playertemp.action.code=6;
-	}
-	if(hand=='e'){
-		playertemp.action.code=7;
-	}
-	playertemp.action.run=function(){
-		ellipseMode(CENTER);
-		fill(255,255,0,210-abs(tick%30-15)*14);
-		ellipse(400,350,abs(tick%30-15)*2.5,abs(tick%30-15)*2.5);
-		playertemp.traitcd[hand]=480;
-		if(playertemp.action.tick>=90||!(input[playertemp.action.code])){
-			playertemp.str+=(0.53+player.traits[17]*0.07)*playertemp.action.tick/90;
-			playertemp.intel+=(0.53+player.traits[17]*0.07)*playertemp.action.tick/90;
-			playertemp.speed+=0.1;
-			append(stateffects,{name:'',tick:0,power:(0.53+player.traits[17]*0.07)*playertemp.action.tick/90,run:function(){
-				if(stateffects[n].tick<380){
-					translate(400,350);
-					rotate(0-stateffects[n].tick/40);
-					fill(255,180,0);
-					ellipseMode(CENTER);
-					ellipse(0,-24,20,20);
-					ellipse(0,24,20,20);
-				}
-				else{
-					translate(400,350);
-					rotate(0-stateffects[n].tick/40);
-					fill(255,180,0,255-(stateffects[n].tick-380)*2.5);
-					ellipseMode(CENTER);
-					ellipse(0,-24,20+(stateffects[n].tick-380)/10,20+(stateffects[n].tick-380)/10);
-					ellipse(0,24,20+(stateffects[n].tick-380)/10,20+(stateffects[n].tick-380)/10);
-				}
-				
-				resetMatrix();
-				if(stateffects[n].tick>=480){
-					playertemp.str-=stateffects[n].power;
-					playertemp.intel-=stateffects[n].power;
-					playertemp.speed-=0.1;
-					stateffects.splice(n,1);
-					n-=1;
-				}
-			}
-			});
-			if(options.loadAudio){sfx.focus.play();}
-			stopaction();
+	else{
+		if(playertemp.focus){
+			playertemp.str-=1;
+			playertemp.intel-=1;
 		}
+		playertemp.focus=0;
 	}
 });
 //Defend
@@ -9614,7 +9591,7 @@ var sfx={
 		fullblock:new Howl({src: ['Data/Sound/sfx/full block.wav'], autoplay: false,loop: false,volume: 0.15,}),
 		pswing:new Howl({src: ['Data/Sound/sfx/pswing.wav'], autoplay: false,loop: false,volume: 0.7,}),
 		pslice:new Howl({src: ['Data/Sound/sfx/pslice.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		focus:new Howl({src: ['Data/Sound/sfx/focus.wav'], autoplay: false,loop: false,volume: 0.7,}),
+		focus:new Howl({src: ['Data/Sound/sfx/focus.ogg'], autoplay: false,loop: false,volume: 0.8,}),
 		sprint:new Howl({src: ['Data/Sound/sfx/sprint.wav'], autoplay: false,loop: false,volume: 0.5,}),
 		mswordswing:new Howl({src: ['Data/Sound/sfx/master sword swing.wav'], autoplay: false,loop: false,volume: 0.7,}),
 		mswordbeam:new Howl({src: ['Data/Sound/sfx/master sword beam.wav'], autoplay: false,loop: false,volume: 0.7,}),
