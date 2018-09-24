@@ -1,4 +1,4 @@
-var version="0.4.6";
+var version="0.4.6b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -451,7 +451,7 @@ window.onkeydown = function (e) {
 			append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
 		}
 	}
-	if(loaded==1&code==73){
+	if(loaded==1&(code==73||code==27)){
 		if(!(ilock)){
 			ilock=1;
 			if(inventory>0){
@@ -659,8 +659,8 @@ window.onkeydown = function (e) {
 						text("-W,A,S,D to move",140,120,500,50);
 						text("-Left click to use the weapon in your left hand.",140,150,500,50);
 						text("-Right click to use the weapon in your right hand.",140,180,500,50);
-						text("-I to open inventory",140,210,500,50);
-						text("-UP (arrow key) to interact with things, such as structures in the nexus and portals.",140,240,530,50);
+						text("-I or ESCAPE to open inventory",140,210,500,50);
+						text("-F or UP (arrow key) to interact with things, such as structures in the nexus and portals.",140,240,530,50);
 						fill(200,170,100,200);
 						text("Note that GUIs (inventory, utility structures in the nexus, etc.) have different help screens.",140,390,530,50);
 						noStroke();
@@ -702,11 +702,11 @@ window.onkeydown = function (e) {
 			}
 		}
 	}
-	if(code==27){
+	/*if(code==27){
 		inventory=0;
 		helpscreen={active:0,help:0};
 		traits={inactive:new Array(),active:new Array(),sprites:new Array(1000),tt:new Array(1000)};
-	}
+	}*/
 	}
 };
 window.onkeyup = function (e) {
@@ -735,7 +735,7 @@ window.onkeyup = function (e) {
     if (code==69) {
 		input[7]=0;
     }
-	if(loaded==1&code==73){
+	if(loaded==1&(code==73||code==27)){
 		invselect=['',-1];
 		ilock=0;
 	}
@@ -5134,7 +5134,7 @@ var getBiomeScripts=function(){
 				playertemp.y-=playertemp.yvelo;
 			}
 			if(!(cinematic||dialoga)){
-				if(keyPressed&keyCode==UP&pow(playertemp.x,2)+pow(playertemp.y+190,2)<pow(62+player.size,2)){
+				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&pow(playertemp.x,2)+pow(playertemp.y+190,2)<pow(62+player.size,2)){
 					getAtlas();
 					inventory=3;
 				}
@@ -5154,7 +5154,7 @@ var getBiomeScripts=function(){
 				playertemp.y-=playertemp.yvelo;
 			}
 			if(!(cinematic||dialoga)){
-				if(keyPressed&keyCode==UP&playertemp.x<275&playertemp.x>125&playertemp.y<-275&playertemp.y>-425){
+				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<275&playertemp.x>125&playertemp.y<-275&playertemp.y>-425){
 					getinventorysprites();
 				tooltipcache[0]=-1;
 					inventory=1;
@@ -5186,7 +5186,7 @@ var getBiomeScripts=function(){
 				playertemp.y-=playertemp.yvelo;
 			}
 			if(!(cinematic||dialoga)){
-				if(keyPressed&keyCode==UP&playertemp.x<50&playertemp.x>-50&playertemp.y<-340&playertemp.y>-420){
+				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<50&playertemp.x>-50&playertemp.y<-340&playertemp.y>-420){
 					getinventorysprites();
 				tooltipcache[0]=-1;
 					inventory=1;
@@ -5219,7 +5219,7 @@ var getBiomeScripts=function(){
 				}
 			}
 			if(!(cinematic||dialoga)){
-				if(keyPressed&keyCode==UP&playertemp.x<-175&playertemp.x>-225&playertemp.y<-325&playertemp.y>-375){		
+				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<-175&playertemp.x>-225&playertemp.y<-325&playertemp.y>-375){		
 					if(player.record.quests[2]<1){
 						cinematic[0]=="dialog";
 						dialoga=1;
@@ -5336,7 +5336,7 @@ var getBiomeScripts=function(){
 		}
 		if(stateffectsg[n].active){
 			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(50+player.size,2)){
-				if(keyPressed&keyCode==UP){
+				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 						stateffectsg[n].active=0;
 						append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,2,100,-2,0,255,0,1));
 						player.hp+=(plshp(1));
@@ -5374,7 +5374,7 @@ var getBiomeScripts=function(){
 				append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,2,100,-2,80,80,0,1));
 			}
 			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
-				if(keyPressed&keyCode==UP){
+				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 					if(player.record.quests[3]==1){
 						player.biomeID=16;
 						playertemp.x=0;
@@ -5435,7 +5435,7 @@ var getBiomeScripts=function(){
 				append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,150,30,0,1));
 			}
 			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
-				if(keyPressed&keyCode==UP){
+				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 					objects=new Array(1);
 					terrain=new Array(0);
 					waters=new Array(0);
@@ -5592,7 +5592,7 @@ var getBiomeScripts=function(){
 											append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,0,90,0,1));
 										}
 										if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
-											if(keyPressed&keyCode==UP){
+											if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 												playertemp.inBossFight=0;
 												loadArea();
 											}
@@ -10230,7 +10230,7 @@ showdots[2]=0;
 					}
 					//Enter GTW
 					if(!(cinematic||dialoga)){
-									if(keyPressed&keyCode==UP&gateways[i].x-playertemp.x>-(60)&
+									if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&gateways[i].x-playertemp.x>-(60)&
 											gateways[i].x-playertemp.x<(60)&
 											gateways[i].y-playertemp.y>-(60)&
 											gateways[i].y-playertemp.y<(60)){
