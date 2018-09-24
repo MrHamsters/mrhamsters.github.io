@@ -5294,6 +5294,7 @@ var getBiomeScripts=function(){
 			stemp=[random(-1700,1700),random(-1700,1700)];
 		}
 		append(stateffectsg,{name:'Restoration Pool',size:35,active:1,x:stemp[0],y:stemp[1],biomelock:player.biomeID,tick:0,run:function(){
+			if(render){
 			translate(stateffectsg[n].x-playertemp.x+400,stateffectsg[n].y-playertemp.y+350);
 			rotate(PI/4);
 			fill(80,80,80);
@@ -5307,6 +5308,7 @@ var getBiomeScripts=function(){
 				ellipse(0,0,40,40);
 			}
 			resetMatrix();
+			}
 		if(stateffectsg[n].x-playertemp.x<-1900||stateffectsg[n].x-playertemp.x>1900||stateffectsg[n].y-playertemp.y<-1900||stateffectsg[n].y-playertemp.y>1900){
 			stateffectsg[n].x=random(-1700,1700)+playertemp.x;
 			stateffectsg[n].y=random(-1700,1700)+playertemp.y;
@@ -5941,16 +5943,22 @@ var getBiomeScripts=function(){
 				for(sr=0;sr<areatemp.rainptc.length;sr+=1){
 					areatemp.rainptc[sr][2]-=1;
 					if(areatemp.rainptc[sr][2]>45){
-						fill(0,0,255,200-(areatemp.rainptc[sr][2]-45)*8);
-						ellipse(areatemp.rainptc[sr][0]-playertemp.x,areatemp.rainptc[sr][1]-playertemp.y,3,3);
+						if(render){
+							fill(0,0,255,200-(areatemp.rainptc[sr][2]-45)*8);
+							ellipse(areatemp.rainptc[sr][0]-playertemp.x,areatemp.rainptc[sr][1]-playertemp.y,3,3);
+						}
 					}
 					else if(areatemp.rainptc[sr][2]>15){
-						fill(0,0,255,200);
-						ellipse(areatemp.rainptc[sr][0]-playertemp.x,areatemp.rainptc[sr][1]-playertemp.y,3,3);
+						if(render){
+							fill(0,0,255,200);
+							ellipse(areatemp.rainptc[sr][0]-playertemp.x,areatemp.rainptc[sr][1]-playertemp.y,3,3);
+						}
 					}
 					else if(areatemp.rainptc[sr][2]>0){
-						fill(0,0,255,areatemp.rainptc[sr][2]*8);
-						ellipse(areatemp.rainptc[sr][0]-playertemp.x,areatemp.rainptc[sr][1]-playertemp.y,areatemp.rainptc[sr][2]/2,areatemp.rainptc[sr][2]/2);
+						if(render){
+							fill(0,0,255,areatemp.rainptc[sr][2]*8);
+							ellipse(areatemp.rainptc[sr][0]-playertemp.x,areatemp.rainptc[sr][1]-playertemp.y,areatemp.rainptc[sr][2]/2,areatemp.rainptc[sr][2]/2);
+						}
 					}
 					else{
 						if(!(playertemp.inBossFight)&random(100)<0.02&areatemp.elementalsc<4){
