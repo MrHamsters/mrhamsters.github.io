@@ -1,4 +1,4 @@
-var version="0.4.6b";
+var version="0.4.7";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -2889,7 +2889,7 @@ var loadtraits=function(){
 	//Passives================================
 	if(player.traits[103]>0){
 		append(traitfuncs.passives,function(){
-			if(player.traits[12]>4){
+			if(player.traits[12]>=5){
 				if(gametick%240==0){
 					playertemp.energising=((plshp(1))*0.004+(plsre(1))*0.05*player.traits[12]-playertemp.energyshield)*(0.18+player.traits[103]*0.02);
 				}
@@ -3470,6 +3470,13 @@ var loadtraits=function(){
 			}
 		}
 		});
+		});
+	}
+	if(player.traits[119]>0){
+		append(traitfuncs.onkill,function(f){
+			if(enemies[i].armor>0||enemies[i].res>0){
+				ts.bonearmor((enemies[i].armor*0.15+0.05*player.traits[119]),(enemies[i].res*0.15+0.05*player.traits[119]));
+			}
 		});
 	}
 }
@@ -7346,6 +7353,32 @@ var ts={
 				}
 			}});
 	},
+	bonearmor:function(armorval,resval){
+		playertemp.armorfb+=armorval;
+		playertemp.resfb+=resval;
+		append(stateffects,{name:'bone armor',armorp:armorval,resp:resval,x:random(-20,20),y:random(-20,20),dir:random(0,2*PI),turn:random(-0.1,0.1),tick:0,run:function(){
+			if(render){
+				translate(400,350);
+				rotate(stateffects[n].dir);
+				fill(120,120,120,200-stateffects[n].tick/9);
+				translate(stateffects[n].x,stateffects[n].y);
+				rotate(stateffects[n].dir/2+gametick/200);
+				rect(-3,-7,6,14,2);
+				stateffects[n].dir+=stateffects[n].turn;
+				resetMatrix();
+			}
+			if(stateffects[n].tick%18==0){
+				playertemp.armorfb-=stateffects[n].armorp/100;
+				playertemp.resfb-=stateffects[n].resp/100;
+			}
+			if(stateffects[n].tick>=1800){
+				stateffects.splice(n,1);
+				n-=1;
+			}
+		}
+		});	
+	},
+	
 };
 var stemp;
 /////////////////////////////PLAYER ACTIONS===========================================================
@@ -9502,6 +9535,31 @@ append(doaction,function(lv,hand){
 else{
 	playertemp.traitcd[hand]=1;
 }
+});
+//Bone Armor
+append(doaction,function(lv,hand){
+	if(player.hp>player.maxhp*0.1){
+		player.hp-=player.maxhp*0.1;
+	playertemp.action={
+		name:'bone armor',
+		tick:0,
+		dir:0,
+		level:lv,
+		speedm:0.5
+	};
+	playertemp.action.run=function(){
+		if(playertemp.action.tick==0){
+			if(options.loadAudio){sfx.hurt.play();}
+			ts.bonearmor(plshp(0.4)+plsst(0.1)+plsin(0.1),plshp(0.4)+plsst(0.1)+plsin(0.1));
+		}
+		if(playertemp.action.tick>=20){
+			stopaction();
+		}
+	}
+	}
+	else{
+		playertemp.traitcd[hand]=1;
+	}
 });
 var dirtoplayerfromobject=function(n){
 	if(objects[n].x-playertemp.x<0){
