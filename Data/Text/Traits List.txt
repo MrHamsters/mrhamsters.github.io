@@ -116,3 +116,4 @@ Ant
 Mending Guard
 Overload
 Augmented Thorns
+Bone Armor

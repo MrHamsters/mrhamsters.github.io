@@ -116,3 +116,4 @@ Your size is reduced to minimum
 Absorbing damage with your guard meter heals you
 Active skill (converts a large portion of your mana into strength and intelligence, more effective with more mana)
 Thorns and Reflection damage is boosted by your armor
+Steal defenses of deceased enemies, use as an Active skill to spend health to boost your defenses

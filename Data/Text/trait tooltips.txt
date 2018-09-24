@@ -234,8 +234,8 @@ Overload
 [Active] Spends 30% of your current mana. Gain {ox2.5c0.5}% increased strength and intelligence decaying over 12 seconds for every point of mana above 70 lost. Requires at least 80 mana to use. 20 second cooldown. Can be used mid-action.
 Augmented Thorns
 [Passive] Damage dealt by Thorns and Reflection is increased by {a0.02}.
-
-
+Bone Armor
+[Passive] Defeated enemies grant you {ox15c5}% of their armor and resistance, decaying over 30 seconds. [Active] Consume 20% of your maximum health to gain a stack of Bone Armor worth {h0.4+s0.1+i0.1} (10 second cooldown).
 
 
 
