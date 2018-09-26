@@ -1,4 +1,4 @@
-var version="0.4.8";
+var version="0.4.8b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -13333,8 +13333,7 @@ var updateplayerdat=function(){
 	console.log(ascii);
 void keyPressed(){
 	if(!(loaded)){
-		console.log(key.code);
-		if(key.code==8){
+		if(key.code==8||key.code==127){
 			textinput=textinput.substring(0,textinput.length-1);
 		}
 		else if(ascii[key.code]){
