@@ -1,4 +1,4 @@
-var version="0.4.7b";
+var version="0.4.8";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -34,6 +34,7 @@ var options={
 	particles:2,
 	dmgindicators:1,
 	music:0.75,
+	sfx:1,
 	autosave:1,
 	//0: disabled  1: normal  2: always shown
 	healthbars:1,
@@ -42,6 +43,7 @@ var options={
 	showmit:1,
 	//0: frames do not get skipped; if you lag, so does the game  1: game and frames are independent
 	frameskip:1,
+	//0: no light effects  1: player light effects  2: all light effects
 	light:2
 };
 var dmgixtra="";
@@ -3102,11 +3104,11 @@ var loadtraits=function(){
 			if(getbuffind(10)>=0){
 				if(render){noFill();
 				strokeWeight(12);
-				stroke(50+playertemp.buffs[getbuffind(10)].pow/((plshp(1)))*180,50+playertemp.buffs[getbuffind(10)].pow/((plshp(1)))*110,50,20+playertemp.buffs[getbuffind(10)].pow/((plshp(1)))*310);
+				stroke(50+playertemp.buffs[getbuffind(10)].pow/((plshp(2)))*180,50+playertemp.buffs[getbuffind(10)].pow/((plshp(2)))*110,50,20+playertemp.buffs[getbuffind(10)].pow/((plshp(2)))*310);
 				ellipseMode(CENTER);
 				ellipse(400,350,25,25);
 				noStroke();}
-				if(playertemp.buffs[getbuffind(10)].pow>=(plshp(1))||playertemp.buffs[getbuffind(10)].dur<3){
+				if(playertemp.buffs[getbuffind(10)].pow>=(plshp(2))||playertemp.buffs[getbuffind(10)].dur<3){
 					append(particles,new createparticle(400,350,0,0,0,0,'circle','',80,4,255,-13,180,180,0));
 					if(options.loadAudio){sfx.bomb.play();}
 					append(objects,{
@@ -4426,11 +4428,11 @@ var losthp=0;
 var takedamage=function(sourcedmg,finaldmg){
 	if(player.traits[67]>0&finaldmg<sourcedmg){
 		if(getbuffind(10)>=0){
-			playertemp.buffs[getbuffind(10)].dur=92;
-			playertemp.buffs[getbuffind(10)].pow+=(sourcedmg-finaldmg)*(player.traits[67]*0.2);
+			playertemp.buffs[getbuffind(10)].dur=93;
+			playertemp.buffs[getbuffind(10)].pow+=(sourcedmg-finaldmg)*(player.traits[67]*0.3);
 		}
 		else{
-			buff(10,122,(sourcedmg-finaldmg)*(player.traits[67]*0.2));
+			buff(10,93,(sourcedmg-finaldmg)*(player.traits[67]*0.3));
 		}
 	}
 }
@@ -5477,8 +5479,8 @@ var getBiomeScripts=function(){
 								y:-250,
 								size:22,
 								name:"Shrek",
-								mhp:7000*nmelvsc(40),
-								hp:7000*nmelvsc(40),
+								mhp:12000*nmelvsc(40),
+								hp:12000*nmelvsc(40),
 								ai:3,
 								dmgmin:1,
 								dmgmax:1,
@@ -5508,6 +5510,7 @@ var getBiomeScripts=function(){
 								soulv:0,
 								spdmod:1,
 								enraged:0,
+								enragec:0,
 								disablehpbar:1,
 								isBoss:1,
 								persistent:1,
@@ -5541,8 +5544,8 @@ var getBiomeScripts=function(){
 										enemies[i].x=375;
 									}
 									bosshpbar={name:"Shrek",val:enemies[i].hp/enemies[i].mhp};
-									if(enemies[i].enraged&tick%12==0){
-										append(particles,new createparticle(enemies[i].x+random(-20,20),enemies[i].y+random(-20,20),0,0,0,0,'circle','',40,-0.5,255,-15,255,0,0,1));
+									if(enemies[i].enraged&tick%8==0){
+										append(particles,new createparticle(enemies[i].x+random(-20,20),enemies[i].y+random(-20,20),0,0,0,0,'circle','',15,-0.2,255,-15,255,0,0,1));
 									}
 										translate(10*(1+enemies[i].height/100),0);
 										shape(enemies[i].spritec.leg,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(180*abs((enemies[i].legtick)%40-20)/20-90));
@@ -5619,204 +5622,178 @@ var getBiomeScripts=function(){
 									i-=1;
 								},
 								aim:function(i){
-									if(enemies[i].cds.charge>0){
-										enemies[i].cds.charge-=1;
+									enemies[i].enragec+=2;
+									if(enemies[i].enraged>0){
+										enemies[i].enragec+=1;
 									}
-									if(enemies[i].cds.earthquake>0){
-										enemies[i].cds.earthquake-=1;
-									}
-									//Move
-									if(enemies[i].action.id==1){
-										if(!(enemies[i].enraged)&enemies[i].hp/enemies[i].mhp<0.3){
-											enemies[i].enraged=1;
-											enemies[i].str*=1.5;
-											enemies[i].speed*=1.5;
+									while(enemies[i].enragec>=2){
+										enemies[i].enragec-=2;
+										if(enemies[i].cds.charge>0){
+											enemies[i].cds.charge-=1;
 										}
-										nmesa.pointatplayer(i);
-										nmesa.displace(i,1);
-										enemies[i].legtick+=1;
-										enemies[i].larmtick+=1;
-										enemies[i].clubd=5*PI/4;
-										enemies[i].clubs=100;
-										enemies[i].height=0;
-										if(enemies[i].cds.earthquake<=0){
-											enemies[i].action.tick=0;
-											enemies[i].action.id=4;
-											enemies[i].cds.earthquake=1200;
-											if(options.loadAudio){sfx.jumpbig.play();}
+										if(enemies[i].cds.earthquake>0){
+											enemies[i].cds.earthquake-=1;
 										}
-										else if(enemies[i].cds.charge<=0){
-											if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(200,2)){
+										//Move
+										if(enemies[i].action.id==1){
+											if(!(enemies[i].enraged)&enemies[i].hp/enemies[i].mhp<0.3){
+												enemies[i].enraged=1;
+												enemies[i].str*=1.5;
+												enemies[i].speed*=1.25;
+											}
+											nmesa.pointatplayer(i);
+											nmesa.displace(i,1);
+											enemies[i].legtick+=1;
+											enemies[i].larmtick+=1;
+											enemies[i].clubd=5*PI/4;
+											enemies[i].clubs=100;
+											enemies[i].height=0;
+											if(enemies[i].cds.earthquake<=0){
 												enemies[i].action.tick=0;
-												enemies[i].action.active=0;
-												enemies[i].action.proc=0;
-												enemies[i].action.id=3;
-												enemies[i].cds.charge=420;
-												if(options.loadAudio){sfx.dashbig.play();}
+												enemies[i].action.id=4;
+												enemies[i].cds.earthquake=1200;
+												if(options.loadAudio){sfx.jumpbig.play();}
+											}
+											else if(enemies[i].cds.charge<=0){
+												if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(200,2)){
+													enemies[i].action.tick=0;
+													enemies[i].action.active=0;
+													enemies[i].action.proc=0;
+													enemies[i].action.id=3;
+													enemies[i].cds.charge=420;
+													if(options.loadAudio){sfx.dashbig.play();}
+												}
+											}
+											else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(40,2)){
+												enemies[i].action.tick=0;
+												enemies[i].action.id=2;
 											}
 										}
-										else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(40,2)){
-											enemies[i].action.tick=0;
-											enemies[i].action.id=2;
-										}
-									}
-									//Swing
-									else if(enemies[i].action.id==2){
-										if(enemies[i].action.tick<10){
-											if(enemies[i].larmtick<30){
-												enemies[i].larmtick=max(10,enemies[i].larmtick%60-1);
-											}
-											else{
-												enemies[i].larmtick=min(50,enemies[i].larmtick%60+1);
-											}
-										}
-										else{
-											if(!((enemies[i].larmtick)%60==30)){
-												if((enemies[i].larmtick)%60>30){
-													enemies[i].larmtick=max(38,enemies[i].larmtick%60-1);
+										//Swing
+										else if(enemies[i].action.id==2){
+											if(enemies[i].action.tick<10){
+												if(enemies[i].larmtick<30){
+													enemies[i].larmtick=max(10,enemies[i].larmtick%60-1);
 												}
 												else{
-													enemies[i].larmtick=min(22,enemies[i].larmtick%60+1);
+													enemies[i].larmtick=min(50,enemies[i].larmtick%60+1);
 												}
 											}
-											if(enemies[i].action.tick<20){
-												enemies[i].clubd-=0.5;
-												enemies[i].clubs-=4;
-											}
-											else if(enemies[i].action.tick==20){
-												if(options.loadAudio){
-													sfx.bomb.play();}
-												append(particles,new createparticle(enemies[i].x+sin(enemies[i].dir)*40,enemies[i].y-cos(enemies[i].dir)*40,0,0,0,0,'circle','',120,-2,255,-13,180,140,0,1));
-												append(objects,{
-													type:'AoE',
-													target:'player',
-													size:60,
-													duration:0,
-													rangetype:"melee",
-													x:enemies[i].x+sin(enemies[i].dir)*40,
-													y:enemies[i].y-cos(enemies[i].dir)*40,
-													pdmgmin:enemies[i].str*13,
-													pdmgmax:enemies[i].str*15,
-													hitc:0,
-													mdmgmin:0,
-													mdmgmax:0,
-													armorE:1,
-													resE:1,
-													procc:2,
-													hits:new Array(999),
-												});
-											}
-											else if(enemies[i].action.tick>40){
-												enemies[i].clubd+=0.075;
-												enemies[i].clubs+=2/3;
-											}
-											if(enemies[i].action.tick>100){
-												enemies[i].action.tick=0;
-												enemies[i].action.id=1;
+											else{
+												if(!((enemies[i].larmtick)%60==30)){
+													if((enemies[i].larmtick)%60>30){
+														enemies[i].larmtick=max(38,enemies[i].larmtick%60-1);
+													}
+													else{
+														enemies[i].larmtick=min(22,enemies[i].larmtick%60+1);
+													}
+												}
+												if(enemies[i].action.tick<20){
+													enemies[i].clubd-=0.5;
+													enemies[i].clubs-=4;
+												}
+												else if(enemies[i].action.tick==20){
+													if(options.loadAudio){
+														sfx.bomb.play();}
+													append(particles,new createparticle(enemies[i].x+sin(enemies[i].dir)*40,enemies[i].y-cos(enemies[i].dir)*40,0,0,0,0,'circle','',120,-2,255,-13,180,140,0,1));
+													append(objects,{
+														type:'AoE',
+														target:'player',
+														size:60,
+														duration:0,
+														rangetype:"melee",
+														source:i,
+														x:enemies[i].x+sin(enemies[i].dir)*40,
+														y:enemies[i].y-cos(enemies[i].dir)*40,
+														pdmgmin:enemies[i].str*13,
+														pdmgmax:enemies[i].str*15,
+														hitc:0,
+														mdmgmin:0,
+														mdmgmax:0,
+														armorE:1,
+														resE:1,
+														procc:2,
+														hits:new Array(999),
+													});
+												}
+												else if(enemies[i].action.tick>40){
+													enemies[i].clubd+=0.075;
+													enemies[i].clubs+=2/3;
+												}
+												if(enemies[i].action.tick>100){
+													enemies[i].action.tick=0;
+													enemies[i].action.id=1;
+												}
 											}
 										}
-									}
-									//Charge
-									else if(enemies[i].action.id==3){
-										enemies[i].legtick+=2;
-										if(enemies[i].action.tick<10){
-											if(enemies[i].larmtick>30){
-												enemies[i].larmtick=max(30,enemies[i].larmtick%60-1);
+										//Charge
+										else if(enemies[i].action.id==3){
+											enemies[i].legtick+=2;
+											if(enemies[i].action.tick<10){
+												if(enemies[i].larmtick>30){
+													enemies[i].larmtick=max(30,enemies[i].larmtick%60-1);
+												}
+												else{
+													enemies[i].larmtick=min(30,enemies[i].larmtick%60+1);
+												}
 											}
 											else{
-												enemies[i].larmtick=min(30,enemies[i].larmtick%60+1);
+												nmesa.displace(i,5);
+												if(enemies[i].action.active){
+													playertemp.x=enemies[i].x+sin(enemies[i].dir)*25;
+													playertemp.y=enemies[i].y-cos(enemies[i].dir)*25;
+												}
+												else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(30+player.size,2)){
+													enemies[i].action.active=1;
+													enemies[i].cds.earthquake-=420;
+													damage('player',0,random(enemies[i].str*6,enemies[i].str*7),0,1,1,"melee",i,0);
+												}
+												if(enemies[i].action.tick>40){
+													enemies[i].action.tick=0;
+													enemies[i].action.id=1;
+												}
 											}
 										}
-										else{
-											nmesa.displace(i,5);
-											if(enemies[i].action.active){
-												playertemp.x=enemies[i].x+sin(enemies[i].dir)*25;
-												playertemp.y=enemies[i].y-cos(enemies[i].dir)*25;
+										//Earthquake
+										else if(enemies[i].action.id==4){
+											if(enemies[i].action.tick<30){
+												if(enemies[i].larmtick<30){
+													enemies[i].larmtick=max(0,enemies[i].larmtick%60-1);
+												}
+												else{
+													enemies[i].larmtick=min(60,enemies[i].larmtick%60+1);
+												}
+												enemies[i].height+=2;
 											}
-											else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(30+player.size,2)){
-												enemies[i].action.active=1;
-												enemies[i].cds.earthquake-=420;
-												damage('player',0,random(enemies[i].str*6,enemies[i].str*7),0,1,1,"melee",i,0);
+											else if(enemies[i].action.tick<50){
+												enemies[i].clubd-=0.25;
+												enemies[i].clubs-=2;
+												enemies[i].height-=3;
 											}
-											if(enemies[i].action.tick>40){
-												enemies[i].action.tick=0;
-												enemies[i].action.id=1;
-											}
-										}
-									}
-									//Earthquake
-									else if(enemies[i].action.id==4){
-										if(enemies[i].action.tick<30){
-											if(enemies[i].larmtick<30){
-												enemies[i].larmtick=max(0,enemies[i].larmtick%60-1);
-											}
-											else{
-												enemies[i].larmtick=min(60,enemies[i].larmtick%60+1);
-											}
-											enemies[i].height+=2;
-										}
-										else if(enemies[i].action.tick<50){
-											enemies[i].clubd-=0.25;
-											enemies[i].clubs-=2;
-											enemies[i].height-=3;
-										}
-										else if(enemies[i].action.tick<200){
-											if(enemies[i].action.tick==50){
-												if(options.loadAudio){sfx.bomb.play();}
-												append(particles,new createparticle(enemies[i].x,enemies[i].y,0,0,0,0,'circle','',120,-2,255,-13,180,140,0,1));
-												append(objects,{
-													type:'AoE',
-													target:'player',
-													size:60,
-													duration:0,
-													rangetype:"melee",
-													x:enemies[i].x,
-													y:enemies[i].y,
-													pdmgmin:enemies[i].str*18,
-													pdmgmax:enemies[i].str*20,
-													hitc:0,
-													mdmgmin:0,
-													mdmgmax:0,
-													armorE:1,
-													resE:1,
-													procc:2,
-													hits:new Array(999),
-													endfunc:function(){
-														if(objects[n].hitc>0){
-															playertemp.speed-=0.6;
-															append(stateffects,{name:'cripple',tick:0,run:function(){
-																if(stateffects[n].tick>=120){
-																	playertemp.speed+=0.6;
-																	stateffects.splice(n,1);
-																	n-=1;
-																}
-															}
-															});
-														}
-													}
-												});
-											}
-											if(enemies[i].action.tick==70){
-												if(options.loadAudio){sfx.earthquake.play();}
-											}
-											if((enemies[i].action.tick+10)%30==0){
-												append(stateffectsg,{name:'Shrek earthquake',source:i,x:enemies[i].x,y:enemies[i].y,size:(enemies[i].action.tick-35)*9,dmg:random(enemies[i].str*17,enemies[i].str*18),tick:0,run:function(){
-													if(render){
-														noFill();
-														strokeWeight(80);
-														if(stateffectsg[n].tick>=45){
-															stroke(170,120,0,255-(stateffectsg[n].tick-45)*17);
-														}
-														else{
-															stroke(255,0,0,stateffectsg[n].tick*3);
-														}
-														ellipse(stateffectsg[n].x-playertemp.x+400,stateffectsg[n].y-playertemp.y+350,stateffectsg[n].size,stateffectsg[n].size);
-														noStroke();
-													}
-													if(stateffectsg[n].tick==45){
-														if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(stateffectsg[n].size/2+40+player.size,2)){
-															if(!(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(stateffectsg[n].size/2-40-player.size,2))){
-																damage('player',0,stateffectsg[n].dmg,0,1,1,"melee",stateffectsg[n].source,0);
+											else if(enemies[i].action.tick<200){
+												if(enemies[i].action.tick==50){
+													if(options.loadAudio){sfx.bomb.play();}
+													append(particles,new createparticle(enemies[i].x,enemies[i].y,0,0,0,0,'circle','',120,-2,255,-13,180,140,0,1));
+													append(objects,{
+														type:'AoE',
+														target:'player',
+														size:60,
+														duration:0,
+														rangetype:"melee",
+														source:i,
+														x:enemies[i].x,
+														y:enemies[i].y,
+														pdmgmin:enemies[i].str*18,
+														pdmgmax:enemies[i].str*20,
+														hitc:0,
+														mdmgmin:0,
+														mdmgmax:0,
+														armorE:1,
+														resE:1,
+														procc:2,
+														hits:new Array(999),
+														endfunc:function(){
+															if(objects[n].hitc>0){
 																playertemp.speed-=0.6;
 																append(stateffects,{name:'cripple',tick:0,run:function(){
 																	if(stateffects[n].tick>=120){
@@ -5828,24 +5805,59 @@ var getBiomeScripts=function(){
 																});
 															}
 														}
-													}
-													if(stateffectsg[n].tick>=60){
-														stateffectsg.splice(n,1);
-														n-=1;
-													}
-												}});
+													});
+												}
+												if(enemies[i].action.tick==70){
+													if(options.loadAudio){sfx.earthquake.play();}
+												}
+												if((enemies[i].action.tick+10)%30==0){
+													append(stateffectsg,{name:'Shrek earthquake',source:i,x:enemies[i].x,y:enemies[i].y,size:(enemies[i].action.tick-35)*9,dmg:random(enemies[i].str*17,enemies[i].str*18),tick:0,run:function(){
+														if(render){
+															noFill();
+															strokeWeight(80);
+															if(stateffectsg[n].tick>=45){
+																stroke(170,120,0,255-(stateffectsg[n].tick-45)*17);
+															}
+															else{
+																stroke(255,0,0,stateffectsg[n].tick*3);
+															}
+															ellipse(stateffectsg[n].x-playertemp.x+400,stateffectsg[n].y-playertemp.y+350,stateffectsg[n].size,stateffectsg[n].size);
+															noStroke();
+														}
+														if(stateffectsg[n].tick==45){
+															if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(stateffectsg[n].size/2+40+player.size,2)){
+																if(!(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(stateffectsg[n].size/2-40-player.size,2))){
+																	damage('player',0,stateffectsg[n].dmg,0,1,1,"melee",stateffectsg[n].source,0);
+																	playertemp.speed-=0.6;
+																	append(stateffects,{name:'cripple',tick:0,run:function(){
+																		if(stateffects[n].tick>=120){
+																			playertemp.speed+=0.6;
+																			stateffects.splice(n,1);
+																			n-=1;
+																		}
+																	}
+																	});
+																}
+															}
+														}
+														if(stateffectsg[n].tick>=60){
+															stateffectsg.splice(n,1);
+															n-=1;
+														}
+													}});
+												}
+											}
+											else if(enemies[i].action.tick<240){
+												enemies[i].clubd+=0.125;
+												enemies[i].clubs+=1;
+											}
+											else{
+												enemies[i].action.tick=0;
+												enemies[i].action.id=1;
 											}
 										}
-										else if(enemies[i].action.tick<240){
-											enemies[i].clubd+=0.125;
-											enemies[i].clubs+=1;
-										}
-										else{
-											enemies[i].action.tick=0;
-											enemies[i].action.id=1;
-										}
+										enemies[i].action.tick+=1;
 									}
-									enemies[i].action.tick+=1;
 								}
 							});
 					append(biomescripts,function(){
@@ -7542,25 +7554,25 @@ append(doaction,function(lv,hand){
 					sprite:sprites.shieldBash,
 					target:'enemy',
 					size:40,
-					speed:6,
+					speed:10,
 					pierce:999,
-					duration:60,
-					stun:45,
+					duration:35,
+					stun:60,
 					sound:sfx.bong,
 					dir:playertemp.action.dir,
 					x:playertemp.x,
 					y:playertemp.y,
-					shieldval:((plsar(1))*0.02+(plshp(1))*0.05)*(1+traitpow/10),
-					pdmgmin:(plsst(1))*10+(plsar(1))*6,
-					pdmgmax:(plsst(1))*13+(plsar(1))*8,
-					mdmgmin:(plsin(1))*10+(plsre(1))*6,
-					mdmgmax:(plsin(1))*13+(plsre(1))*8,
+					shieldval:((plsar(0.01))+(plshp(0.025)+(plsre(0.0005)))*(1+traitpow/10)),
+					pdmgmin:(plsst(10))+(plsar(4)),
+					pdmgmax:(plsst(13))+(plsar(5)),
+					mdmgmin:(plsin(10))+(plsre(4)),
+					mdmgmax:(plsin(13))+(plsre(5)),
 					armorE:1,
 					resE:1,
 					procc:1.2,
 					hits:new Array(999),
 					run:function(){
-						objects[n].speed-=0.1;
+						objects[n].speed-=0.35;
 					},
 					specialdraw:function(){
 						if(options.light){
@@ -7580,36 +7592,33 @@ append(doaction,function(lv,hand){
 								speed:0,
 								pierce:999,
 								duration:999,
-								stun:45,
+								stun:60,
 								sound:sfx.bong,
 								dir:dirtoplayerfromobject(n),
 								x:objects[n].x,
 								y:objects[n].y,
 								shieldval:objects[n].shieldval,
 								caught:0,
-								pdmgmin:(plsst(1))*10+(plsar(1))*6,
-								pdmgmax:(plsst(1))*13+(plsar(1))*8,
-								mdmgmin:(plsin(1))*10+(plsre(1))*6,
-								mdmgmax:(plsin(1))*13+(plsre(1))*8,
+								pdmgmin:(plsst(10))+(plsar(4)),
+								pdmgmax:(plsst(13))+(plsar(5)),
+								mdmgmin:(plsin(10))+(plsre(4)),
+								mdmgmax:(plsin(13))+(plsre(5)),
 								armorE:1,
 								resE:1,
 								procc:1.2,
 								hits:new Array(999),
 								run:function(){
 									objects[n].dir=dirtoplayerfromobject(n);
-									objects[n].speed+=0.2;
+									objects[n].speed+=0.4;
 									if(!(objects[n].caught)){
 									if(pow(playertemp.x-objects[n].x,2)+pow(playertemp.y-objects[n].y,2)<pow(10+player.size+objects[n].speed*2,2)){
 										objects[n].caught=1;
 										objects[n].duration=1;
 										if(options.loadAudio){sfx.shield.play();}
 										playertemp.guard=min((plshp(1))*(player.traits[91]/100)+playertemp.guardmb,playertemp.guard+((plshp(1))*(player.traits[91]/100)+playertemp.guardmb)*0.4);
-										shield(objects[n].shieldval,180+player.traits[18]*120);
-										shield(objects[n].shieldval,150+player.traits[18]*100);
-										shield(objects[n].shieldval,120+player.traits[18]*80);
-										shield(objects[n].shieldval,90+player.traits[18]*60);
-										shield(objects[n].shieldval,60+player.traits[18]*40);
-										shield(objects[n].shieldval,30+player.traits[18]*20);
+										for(crtds=1;crtds<13;crtds+=1){
+											shield(objects[n].shieldval,(180+player.traits[18]*120)*crtds/12);
+										}
 									}
 									}
 								},
@@ -7627,7 +7636,7 @@ append(doaction,function(lv,hand){
 						}
 				});
 		}
-		if(playertemp.action.tick>=10){
+		if(playertemp.action.tick>=20){
 				stopaction();
 		}
 	}
@@ -9628,82 +9637,82 @@ var sprites={
 };
 if(options.loadAudio){
 var sfx={	
-		hurt: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: 0.3,}),
-		hurtpow: new Howl({ src: ['Data/Sound/sfx/hurt.ogg'],autoplay: false, loop: false,  volume: 0.7,}),
-		hurtpow2: new Howl({src: ['Data/Sound/sfx/hurt.ogg'],  autoplay: false,  loop: false, volume: 1,}),
-		hurt2: new Howl({  src: ['Data/Sound/sfx/hurt2.wav'], autoplay: false,loop: false, volume: 0.6,}),
-		death: new Howl({src: ['Data/Sound/sfx/death.wav'], autoplay: false,loop: false,volume: 1,}),
-		swing: new Howl({src: ['Data/Sound/sfx/swing.wav'], autoplay: false, loop: false,volume: 0.65,}),
-		slice: new Howl({  src: ['Data/Sound/sfx/slice.wav'], autoplay: false,  loop: false,volume: 0.55,}),
-		bong: new Howl({ src: ['Data/Sound/sfx/shield hit.wav'], autoplay: false,loop: false, volume: 0.1,}),
-		bow: new Howl({ src: ['Data/Sound/sfx/bow.wav'], autoplay: false,loop: false, volume: 0.7,}),
-		arrow: new Howl({src: ['Data/Sound/sfx/arrow.wav'], autoplay: false, loop: false,volume: 0.7,}),
-		arrowhit: new Howl({ src: ['Data/Sound/sfx/arrow hit.wav'], autoplay: false, loop: false, volume: 0.7,}),
-		shield: new Howl({src: ['Data/Sound/sfx/shield.wav'], autoplay: false,loop: false,volume: 1,}),
-		pop: new Howl({src: ['Data/Sound/sfx/pop.wav'], autoplay: false,loop: false,volume: 0.65,}),
-		water: new Howl({src: ['Data/Sound/sfx/water drop.wav'], autoplay: false,loop: false,volume: 0.2,}),
-		decimatec: new Howl({src: ['Data/Sound/sfx/decimateC.wav'], autoplay: false,loop: false,volume: 1,}),
-		decimateh: new Howl({src: ['Data/Sound/sfx/decimateH.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		MoS:{start:new Howl({src: ['Data/Sound/sfx/MoSstart.wav'], autoplay: false,loop: false,volume: 0.7,}),
-			one:new Howl({src: ['Data/Sound/sfx/MoS1.wav'], autoplay: false,loop: false,volume: 0.7,}),
-			too:new Howl({src: ['Data/Sound/sfx/MoS2.wav'], autoplay: false,loop: false,volume: 0.7,}),
-			three:new Howl({src: ['Data/Sound/sfx/MoS3.wav'], autoplay: false,loop: false,volume: 0.7,}),
-			swing:new Howl({src: ['Data/Sound/sfx/MoSwing.wav'], autoplay: false,loop: false,volume: 0.7,}),
+		hurt: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.3,}),
+		hurtpow: new Howl({ src: ['Data/Sound/sfx/hurt.ogg'],autoplay: false, loop: false,  volume: options.sfx*0.7,}),
+		hurtpow2: new Howl({src: ['Data/Sound/sfx/hurt.ogg'],  autoplay: false,  loop: false, volume: options.sfx*1,}),
+		hurt2: new Howl({  src: ['Data/Sound/sfx/hurt2.wav'], autoplay: false,loop: false, volume: options.sfx*0.6,}),
+		death: new Howl({src: ['Data/Sound/sfx/death.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		swing: new Howl({src: ['Data/Sound/sfx/swing.wav'], autoplay: false, loop: false,volume: options.sfx*0.65,}),
+		slice: new Howl({  src: ['Data/Sound/sfx/slice.wav'], autoplay: false,  loop: false,volume: options.sfx*0.55,}),
+		bong: new Howl({ src: ['Data/Sound/sfx/shield hit.wav'], autoplay: false,loop: false, volume: options.sfx*0.1,}),
+		bow: new Howl({ src: ['Data/Sound/sfx/bow.wav'], autoplay: false,loop: false, volume: options.sfx*0.7,}),
+		arrow: new Howl({src: ['Data/Sound/sfx/arrow.wav'], autoplay: false, loop: false,volume: options.sfx*0.7,}),
+		arrowhit: new Howl({ src: ['Data/Sound/sfx/arrow hit.wav'], autoplay: false, loop: false, volume: options.sfx*0.7,}),
+		shield: new Howl({src: ['Data/Sound/sfx/shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		pop: new Howl({src: ['Data/Sound/sfx/pop.wav'], autoplay: false,loop: false,volume: options.sfx*0.65,}),
+		water: new Howl({src: ['Data/Sound/sfx/water drop.wav'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
+		decimatec: new Howl({src: ['Data/Sound/sfx/decimateC.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		decimateh: new Howl({src: ['Data/Sound/sfx/decimateH.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+		MoS:{start:new Howl({src: ['Data/Sound/sfx/MoSstart.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+			one:new Howl({src: ['Data/Sound/sfx/MoS1.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+			too:new Howl({src: ['Data/Sound/sfx/MoS2.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+			three:new Howl({src: ['Data/Sound/sfx/MoS3.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+			swing:new Howl({src: ['Data/Sound/sfx/MoSwing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
 		},
-		relicshield:new Howl({src: ['Data/Sound/sfx/relic shield.wav'], autoplay: false,loop: false,volume: 1,}),
-		shieldoverload:new Howl({src: ['Data/Sound/sfx/shield overload.wav'], autoplay: false,loop: false,volume: 1,}),
-		roar:new Howl({src: ['Data/Sound/sfx/roar.wav'], autoplay: false,loop: false,volume: 1,}),
-		block:new Howl({src: ['Data/Sound/sfx/block.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		fullblock:new Howl({src: ['Data/Sound/sfx/full block.wav'], autoplay: false,loop: false,volume: 0.15,}),
-		pswing:new Howl({src: ['Data/Sound/sfx/pswing.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		pslice:new Howl({src: ['Data/Sound/sfx/pslice.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		focus:new Howl({src: ['Data/Sound/sfx/focus.ogg'], autoplay: false,loop: false,volume: 0.8,}),
-		sprint:new Howl({src: ['Data/Sound/sfx/sprint.wav'], autoplay: false,loop: false,volume: 0.5,}),
-		mswordswing:new Howl({src: ['Data/Sound/sfx/master sword swing.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		mswordbeam:new Howl({src: ['Data/Sound/sfx/master sword beam.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		mswordhit:new Howl({src: ['Data/Sound/sfx/master sword hit.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		upgrade:new Howl({src: ['Data/Sound/sfx/upgrade.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		enchant:new Howl({src: ['Data/Sound/sfx/enchant.wav'], autoplay: false,loop: false,volume: 0.4,}),
-		obliteration:new Howl({src: ['Data/Sound/sfx/obliteration.wav'], autoplay: false,loop: false,volume: 0.3,}),
-		glacialwardcharge:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'], autoplay: false,loop: false,volume: 0.3,}),
-		glacialwardshatter:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'], autoplay: false,loop: false,volume: 0.3,}),
-		warp:new Howl({src: ['Data/Sound/sfx/warp.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		rapiersw:new Howl({src: ['Data/Sound/sfx/rapier swing.wav'], autoplay: false,loop: false,volume: 0.75,}),
-		voidbarrier:new Howl({src: ['Data/Sound/sfx/void barrier.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		voidbarrierr:new Howl({src: ['Data/Sound/sfx/void barrier release.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		voidblast:new Howl({src: ['Data/Sound/sfx/void blast.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		voidboom:new Howl({src: ['Data/Sound/sfx/void explosion.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		bomb:new Howl({src: ['Data/Sound/sfx/bomb.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		windslash:new Howl({src: ['Data/Sound/sfx/wind slash.wav'], autoplay: false,loop: false,volume: 1,}),
-		minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'], autoplay: false,loop: false,volume: 0.3,}),
-		boomerang:new Howl({src: ['Data/Sound/sfx/boomerang.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		boomerangcatch:new Howl({src: ['Data/Sound/sfx/boomerang catch.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		SoH:new Howl({src: ['Data/Sound/sfx/SoH.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		SoHh:new Howl({src: ['Data/Sound/sfx/SoHh.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		freezeboomers:new Howl({src: ['Data/Sound/sfx/boomerang freeze.wav'], autoplay: false,loop: false,volume: 0.6,}),
-		poison:new Howl({src: ['Data/Sound/sfx/poison.wav'], autoplay: false,loop: false,volume: 0.03,}),
-		energystaff:new Howl({src: ['Data/Sound/sfx/energy bolt.wav'], autoplay: false,loop: false,volume: 0.35,}),
-		energyh:new Howl({src: ['Data/Sound/sfx/energy hit.wav'], autoplay: false,loop: false,volume: 0.11,}),
-		dash:new Howl({src: ['Data/Sound/sfx/dash.wav'], autoplay: false,loop: false,volume: 1,}),
-		burn:new Howl({src: ['Data/Sound/sfx/burn.wav'], autoplay: false,loop: true,volume: 1,}),
-		bleed:new Howl({src: ['Data/Sound/sfx/bleed.wav'], autoplay: false,loop: true,volume: 1,}),
-		poisoned:new Howl({src: ['Data/Sound/sfx/poisoned.wav'], autoplay: false,loop: true,volume: 1,}),
-		raining:new Howl({src: ['Data/Sound/sfx/rain.ogg'], autoplay: false,loop: true,volume: 2,}),
-		plunge:new Howl({src: ['Data/Sound/sfx/plunge.wav'], autoplay: false,loop: false,volume: 1.5,}),
-		eldritch:new Howl({src: ['Data/Sound/sfx/eldritch.wav'], autoplay: false,loop: false,volume: 0.7,}),
-		arcanereconstruction:new Howl({src: ['Data/Sound/sfx/heal.ogg'], autoplay: false,loop: false,volume: 0.9,}),
-		prime:new Howl({src: ['Data/Sound/sfx/distortion.ogg'], autoplay: false,loop: false,volume: 1.3,}),
-		pdoor:new Howl({src: ['Data/Sound/sfx/warp.ogg'], autoplay: false,loop: false,volume: 1.3,}),
-		slash:new Howl({src: ['Data/Sound/sfx/slash.ogg'], autoplay: false,loop: false,volume: 1,}),
-		rapier:new Howl({src: ['Data/Sound/sfx/rapier.ogg'], autoplay: false,loop: false,volume: 0.6,}),
-		click:new Howl({src: ['Data/Sound/sfx/click.ogg'], autoplay: false,loop: false,volume: 0.8,}),
-		click2:new Howl({src: ['Data/Sound/sfx/click2.ogg'], autoplay: false,loop: false,volume: 0.8,}),
-		click3:new Howl({src: ['Data/Sound/sfx/click3.ogg'], autoplay: false,loop: false,volume: 0.8,}),
-		shrek:new Howl({src: ['Data/Sound/sfx/shrek.ogg'], autoplay: false,loop: false,volume: 1,}),
-		shrekdeath:new Howl({src: ['Data/Sound/sfx/shrek death.ogg'], autoplay: false,loop: false,volume: 1,}),
-		dashbig:new Howl({src: ['Data/Sound/sfx/dashbig.ogg'], autoplay: false,loop: false,volume: 1,}),
-		earthquake:new Howl({src: ['Data/Sound/sfx/earthquake.wav'], autoplay: false,loop: false,volume: 1,}),
-		jumpbig:new Howl({src: ['Data/Sound/sfx/jumpbig.ogg'], autoplay: false,loop: false,volume: 1,}),
+		relicshield:new Howl({src: ['Data/Sound/sfx/relic shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		shieldoverload:new Howl({src: ['Data/Sound/sfx/shield overload.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		roar:new Howl({src: ['Data/Sound/sfx/roar.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		block:new Howl({src: ['Data/Sound/sfx/block.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		fullblock:new Howl({src: ['Data/Sound/sfx/full block.wav'], autoplay: false,loop: false,volume: options.sfx*0.15,}),
+		pswing:new Howl({src: ['Data/Sound/sfx/pswing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+		pslice:new Howl({src: ['Data/Sound/sfx/pslice.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+		focus:new Howl({src: ['Data/Sound/sfx/focus.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+		sprint:new Howl({src: ['Data/Sound/sfx/sprint.wav'], autoplay: false,loop: false,volume: options.sfx*0.5,}),
+		mswordswing:new Howl({src: ['Data/Sound/sfx/master sword swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+		mswordbeam:new Howl({src: ['Data/Sound/sfx/master sword beam.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+		mswordhit:new Howl({src: ['Data/Sound/sfx/master sword hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+		upgrade:new Howl({src: ['Data/Sound/sfx/upgrade.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+		enchant:new Howl({src: ['Data/Sound/sfx/enchant.wav'], autoplay: false,loop: false,volume: options.sfx*0.4,}),
+		obliteration:new Howl({src: ['Data/Sound/sfx/obliteration.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+		glacialwardcharge:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+		glacialwardshatter:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+		warp:new Howl({src: ['Data/Sound/sfx/warp.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+		rapiersw:new Howl({src: ['Data/Sound/sfx/rapier swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.75,}),
+		voidbarrier:new Howl({src: ['Data/Sound/sfx/void barrier.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		voidbarrierr:new Howl({src: ['Data/Sound/sfx/void barrier release.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		voidblast:new Howl({src: ['Data/Sound/sfx/void blast.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		voidboom:new Howl({src: ['Data/Sound/sfx/void explosion.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		bomb:new Howl({src: ['Data/Sound/sfx/bomb.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		windslash:new Howl({src: ['Data/Sound/sfx/wind slash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+		boomerang:new Howl({src: ['Data/Sound/sfx/boomerang.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		boomerangcatch:new Howl({src: ['Data/Sound/sfx/boomerang catch.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		SoH:new Howl({src: ['Data/Sound/sfx/SoH.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		SoHh:new Howl({src: ['Data/Sound/sfx/SoHh.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		freezeboomers:new Howl({src: ['Data/Sound/sfx/boomerang freeze.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		poison:new Howl({src: ['Data/Sound/sfx/poison.wav'], autoplay: false,loop: false,volume: options.sfx*0.03,}),
+		energystaff:new Howl({src: ['Data/Sound/sfx/energy bolt.wav'], autoplay: false,loop: false,volume: options.sfx*0.35,}),
+		energyh:new Howl({src: ['Data/Sound/sfx/energy hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.11,}),
+		dash:new Howl({src: ['Data/Sound/sfx/dash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		burn:new Howl({src: ['Data/Sound/sfx/burn.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+		bleed:new Howl({src: ['Data/Sound/sfx/bleed.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+		poisoned:new Howl({src: ['Data/Sound/sfx/poisoned.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+		raining:new Howl({src: ['Data/Sound/sfx/rain.ogg'], autoplay: false,loop: true,volume: options.sfx*2,}),
+		plunge:new Howl({src: ['Data/Sound/sfx/plunge.wav'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
+		eldritch:new Howl({src: ['Data/Sound/sfx/eldritch.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+		arcanereconstruction:new Howl({src: ['Data/Sound/sfx/heal.ogg'], autoplay: false,loop: false,volume: options.sfx*0.9,}),
+		prime:new Howl({src: ['Data/Sound/sfx/distortion.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
+		pdoor:new Howl({src: ['Data/Sound/sfx/warp.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
+		slash:new Howl({src: ['Data/Sound/sfx/slash.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		rapier:new Howl({src: ['Data/Sound/sfx/rapier.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		click:new Howl({src: ['Data/Sound/sfx/click.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+		click2:new Howl({src: ['Data/Sound/sfx/click2.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+		click3:new Howl({src: ['Data/Sound/sfx/click3.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+		shrek:new Howl({src: ['Data/Sound/sfx/shrek.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		shrekdeath:new Howl({src: ['Data/Sound/sfx/shrek death.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		dashbig:new Howl({src: ['Data/Sound/sfx/dashbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		earthquake:new Howl({src: ['Data/Sound/sfx/earthquake.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		jumpbig:new Howl({src: ['Data/Sound/sfx/jumpbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 };
 }
 var anticlipc;
@@ -13324,6 +13333,7 @@ var updateplayerdat=function(){
 	console.log(ascii);
 void keyPressed(){
 	if(!(loaded)){
+		console.log(key.code);
 		if(key.code==8){
 			textinput=textinput.substring(0,textinput.length-1);
 		}
