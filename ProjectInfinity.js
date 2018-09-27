@@ -1,4 +1,4 @@
-var version="0.4.8b";
+var version="0.4.9";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -1434,7 +1434,7 @@ var levelup=function(){
 				}
 			}
 			if(player.sp<35){
-				append(particles,new createparticle(400,200,0,0,0,0,'text','Low SP! Automatic upgrading may not activate next level up!',30,0,255,-3,255,0,0));
+				append(particles,new createparticle(400,200,0,0,0,0,'text','Low SP!',34,0,255,-3,255,0,0));
 			}
 		}
 		loadtraits();
@@ -2463,6 +2463,13 @@ var loadtraits=function(){
 			}
 		});
 	}
+	if(player.traits[94]>0&player.traits[39]>0){
+		append(traitfuncs.damagedealtpostmit,function(){
+			if(atkident=="rapier"){
+				playertemp.guard=min(((plshp(1)))*(player.traits[91]/100)+playertemp.guardmb,playertemp.guard+(pdmg+mdmg)*(min(10,player.traits[39])*0.01));
+			}
+		});
+	}
 	if(player.traits[26]>0){
 		append(traitfuncs.damagedealtpostmit,function(){
 			if((pdmg+mdmg)>=enemies[index].mhp/5&willhit){
@@ -3373,6 +3380,9 @@ var loadtraits=function(){
 	}
 	if(player.traits[94]>0){
 		append(traitfuncs.passives,function(){
+			if(!(playertemp.rapierdasht)){
+				playertemp.rapierdasht=0;
+			}
 			if(!(playertemp.guardmb)){
 				playertemp.guardmb=0;
 			}
@@ -3383,6 +3393,9 @@ var loadtraits=function(){
 					playertemp.guardmb-=playertemp.ongardeb;
 					playertemp.guardmb+=((plshp(1))*0.05+(plsst(1))*0.03)*(max(0,player.speed-4));
 					playertemp.ongardeb=((plshp(1))*0.05+(plsst(1))*0.03)*(max(0,player.speed-4));
+			}
+			if(playertemp.rapierdasht>0){
+				playertemp.rapierdasht-=1;
 			}
 		});
 	}
@@ -4470,13 +4483,20 @@ var heal=function(healp,healtype){
 }
 var spdmg=0;
 var smdmg=0;
+var atkident=0;
 //=============================DAMAGE======================================================
-var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,attackers,proccs){
+var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,attackers,proccs,atkidents){
 	if(pdmgs<0){
 		pdmgs=0;
 	}
 	if(mdmg<0){
 		mdmgs=0;
+	}
+	if(atkidents){
+		atkident=atkidents;
+	}
+	else{
+		atkident="unknown";
 	}
 	pdmg=pdmgs;
 	mdmg=mdmgs;
@@ -8515,92 +8535,152 @@ append(doaction,function(lv,hand){
 });
 //Rapier
 append(doaction,function(lv,hand){
-	spendmana("melee",3,3);
 	playertemp.action={
 		name:'rapier',
 		tick:0,
-		dir:0,
+		dir:targetdir(),
+		diro:targetdir(),
 		level:lv,
 		swingdir:round(random(-0.49,1.49)),
-		speedm:0.4,
-		empowered:0
+		speedm:0.7,
+		empowered:0,
+		hand:hand
 	};
-	if(mouseY<350){
-		playertemp.action.dir=-atan((mouseX-400)/(mouseY-350));
-		playertemp.action.diro=-atan((mouseX-400)/(mouseY-350));
+	if(playertemp.rapierdasht>0){
+		playertemp.action.speedm=0;
+		playertemp.action.name="rapier lunge";
+		playertemp.action.hits=new Array(999);
+		player.mp-=3;
+		spendmana("melee",6,6);
 	}
 	else{
-		playertemp.action.dir=PI-atan((mouseX-400)/(mouseY-350));
-		playertemp.action.diro=PI-atan((mouseX-400)/(mouseY-350));
+		spendmana("melee",3,3);
 	}
-	if(playertemp.action.swingdir){
-		playertemp.action.dir-=1.2;
+	if(mouseButton==LEFT){
+		playertemp.action.mb=0;
 	}
 	else{
-		playertemp.action.dir+=1.2;
+		playertemp.action.mb=1;
 	}
 	playertemp.action.run=function(){
-		if(player.traits[39]>0){
-			traitpow=player.traits[39];
-		}
-		else{
-			traitpow=0;
-		}
-		if(playertemp.action.tick<=8){
-			translate(400,350);
-			rotate(playertemp.action.dir);
-			if(render){shape(sprites.rapier,0,0,30,45);}
-			resetMatrix();
-			fill(100,100,180,10);
-			strokeWeight(10);
-			ellipseMode(CENTER);
-			stroke(100,100,200,20);
-			stroke(100,100,200,20);
-			arc(400,350,75,75,playertemp.action.diro-PI,playertemp.action.diro);
-			noStroke();
-		}
-		if(playertemp.action.swingdir){
-			playertemp.action.dir+=0.3;
-		}
-		else{
-			playertemp.action.dir-=0.3;
-		}
-		if(playertemp.action.tick==1){
-						if(options.loadAudio){
-						sfx.rapier.play();}
-			findbuff(1);
-			if(buffind>=0){
-				removebuff(buffind);
+		if(playertemp.action.name=='rapier'){
+			if(!(mousePressed)){
 				playertemp.action.empowered=1;
+				playertemp.rapierdasht=10;
 			}
-		}
-		
-		if(player.traits[64]>0&playertemp.action.tick==5){
-			ts.windslash(0.55);
-		}
-		if(playertemp.action.tick==4&playertemp.action.empowered==1){
-			for(i=0;i<enemies.length;i+=1){
-				if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(65+enemies[i].size,2)&
-				(enemies[i].x-playertemp.x)*sin(-playertemp.action.diro)+(enemies[i].y-playertemp.y)*cos(-playertemp.action.diro)<0
-				){
-					damage("enemies",i,random(2.2*(plsst(1))*10,2.5*(plsst(1))*10),0,1-min(10,traitpow)/20,1,"melee","player",1);
+			if(playertemp.action.tick==0){
+				if(playertemp.action.swingdir){
+					playertemp.action.dir-=1.2;
+				}
+				else{
+					playertemp.action.dir+=1.2;
+				}
+				if(options.loadAudio){sfx.rapier.play();}
+			}
+			if(playertemp.action.tick<=8){
+				translate(400,350);
+				rotate(playertemp.action.dir);
+				if(render){shape(sprites.rapier,0,0,30,45);}
+				resetMatrix();
+				fill(100,100,180,10);
+				strokeWeight(10);
+				ellipseMode(CENTER);
+				stroke(100,100,200,20);
+				stroke(100,100,200,20);
+				arc(400,350,75,75,playertemp.action.diro-PI,playertemp.action.diro);
+				noStroke();
+			}
+			if(playertemp.action.swingdir){
+				playertemp.action.dir+=0.3;
+			}
+			else{
+				playertemp.action.dir-=0.3;
+			}
+			if(player.traits[64]>0&playertemp.action.tick==5){
+				ts.windslash(0.55);
+			}
+			if(playertemp.action.tick==8){
+				for(i=0;i<enemies.length;i+=1){
+					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(65+enemies[i].size,2)&
+					(enemies[i].x-playertemp.x)*sin(-playertemp.action.diro)+(enemies[i].y-playertemp.y)*cos(-playertemp.action.diro)<0
+					){
+						damage("enemies",i,random(10*(plsst(1)),13*(plsst(1))),0,1,1,"melee","player",0.6,"rapier");
+					}
+				}
+			}
+			if(playertemp.action.tick>=20){
+				if(player.mp>=3&mousePressed&((mouseButton==LEFT&playertemp.action.mb==0)||(mouseButton==RIGHT&playertemp.action.mb==1))){
+					player.mp-=3;
+						playertemp.action.tick=-1;
+						playertemp.action.dir=targetdir();
+						playertemp.action.level=lv;
+						playertemp.action.swingdir=round(random(-0.49,1.49));
+						playertemp.action.speedm=0.7;
+					if(player.mp>=3&playertemp.action.empowered){
+						player.mp-=3;
+						playertemp.action.speedm=0;
+						playertemp.action.hits=new Array(999);
+						playertemp.action.name="rapier lunge";
+					}
+				}
+				else{
+					stopaction();
 				}
 			}
 		}
-		if(playertemp.action.tick==8&playertemp.action.empowered==0){
-			for(i=0;i<enemies.length;i+=1){
-				if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(65+enemies[i].size,2)&
-				(enemies[i].x-playertemp.x)*sin(-playertemp.action.diro)+(enemies[i].y-playertemp.y)*cos(-playertemp.action.diro)<0
-				){
-					damage("enemies",i,random(10*(plsst(1)),13*(plsst(1))),0,1-min(10,traitpow)/20,1,"melee","player",0.6);
+		else{
+			if(render){
+				translate(400,350);
+				rotate(playertemp.action.dir);
+				if(playertemp.action.hand=="LH"){
+					shape(sprites.rapier,-8,-5,30,45);
+				}
+				else{
+					shape(sprites.rapier,8,-5,30,45);
+				}
+				resetMatrix();
+			}
+			if(playertemp.action.tick%3==0){
+				for(i=0;i<enemies.length;i+=1){
+					if(!(playertemp.action.hits[i])){
+						if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(35+enemies[i].size,2)&
+						(enemies[i].x-playertemp.x)*sin(-playertemp.action.dir)+(enemies[i].y-playertemp.y)*cos(-playertemp.action.dir)<0
+						){
+							if(options.loadAudio){sfx.arrowhit.play();}
+							playertemp.action.hits[i]=1;
+							damage("enemies",i,random((plsst(22)),(plsst(28))),0,1,1,"melee","player",1,"rapier");
+						}
+					}
 				}
 			}
-		}
-		if(playertemp.action.tick>=11){
-			playertemp.action.speedm=1;
-		}
-		if(playertemp.action.tick>=(25-min(10,traitpow)/2)*0.75){
-			stopaction();
+			if(playertemp.action.tick==0){
+				if(options.loadAudio){sfx.rapier.play();}
+				buff(2,30,50);
+				append(stateffects,{name:'rapier dash',dir:playertemp.action.dir,tick:0,run:function(){
+					playertemp.xvelo+=2.3*player.speed*sin(stateffects[n].dir)/(stateffects[n].tick+2);
+					playertemp.yvelo-=2.3*player.speed*cos(stateffects[n].dir)/(stateffects[n].tick+2);
+					dowalk(100*player.speed/(stateffects[n].tick+2)/player.size);
+					resetMatrix();
+					if(stateffects[n].tick==2){
+						if(options.loadAudio){sfx.dash.play();}
+					}
+					if(stateffects[n].tick>=25){
+						playertemp.xvelo*=0.6;
+						playertemp.yvelo*=0.6;
+					}
+					if(stateffects[n].tick>=30){
+						stateffects.splice(n,1);
+						n-=1;
+					}
+				}
+				});
+			}
+			if(player.traits[64]>0&playertemp.action.tick==5){
+				ts.windslash(0.75);
+			}
+			if(playertemp.action.tick>=30){
+				stopaction();
+			}
 		}
 	}
 });
@@ -10908,7 +10988,7 @@ showdots[2]=0;
 			fill(150,255,150);
 			textFont(0,40);
 			text('Traits',400,35,200,80);
-			if(playertemp.timesincedamagetaken>=180){
+			if(playertemp.timesincedamagetaken>=60){
 				fill(150+abs(tick%180-90)/3,150+abs(tick%180-90)/3,255);
 			}
 			else{
@@ -11519,7 +11599,7 @@ showdots[2]=0;
 		if(!(player.biomeID==1||playertemp.inBossFight)&!(mouselock)&mousePressed&cursorbox(400,600,605,685)){
 			mouselock=1;
 			if(mouseButton==LEFT){
-				if(playertemp.timesincedamagetaken>=180){
+				if(playertemp.timesincedamagetaken>=60){
 					player.biomeID=1;
 					playertemp.x=0;
 					playertemp.y=0;
