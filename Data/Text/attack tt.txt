@@ -12,7 +12,7 @@ wth
 wth
 [Guard] Raise your shield, causing damage from hits to be absorbed by your guard meter. Can be held indefinitely. Blocking a hit grants counter-attack buff for 1 second upon lowering. Each point in Shield Mastery reduces damage taken while defending by 3%.
 [Master Sword] Swing your Master Sword, hitting all enemies in an arc for {s0.6}-{s0.7} physical damage. If used while at full health, also fires a medium ranged beam which deals {i0.6}-{i0.7} magic damage to the first 2 enemies it hits. No cost to use, but doesn't auto-swing. Each point in Blade Mastery reduces the movement speed penalty of swinging by 10%.
-[Rapier Slash] Slash with your rapier, hitting all enemies in an arc for {s0.5}-{s0.65} physical damage. Consumes counter-attack buff to deal an additional {s0.6} damage. Each point in Blade Mastery reduces attack time by 2% and grants 5% armor penetration.
+[Rapier Slash] Slash with your rapier, hitting all enemies in an arc for {s0.5}-{s0.65} physical damage. Re-clicking during use causes the next strike to be replaced with a lunge. Lunge costs 6 mana and deals {s1.1}-{s1.4} physical damage. You gain 50% damage reduction during lunge. Each point in Blade Mastery leeches 1% of the damage dealt as guard meter.
 wth
 [Void Blast] Fires a blast of dark energy which flies to the targetted location or maximum distance, damaging enemies in its path for {i0.6}-{i0.65} magic damage. Upon arrival, it explodes, dealing {i0.9}-{i1} magic damage in a large area. Stores power for each time the missile or explosion hits, reducing the cooldown of Void Barrier by 1 second upon expiring. Each point in Rod Mastery increases projectile acceleration rate by 10% and explosion radius by 5%.
 wth
