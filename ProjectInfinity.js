@@ -1,4 +1,4 @@
-var version="0.4.9";
+var version="0.4.9b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -8613,6 +8613,7 @@ append(doaction,function(lv,hand){
 					player.mp-=3;
 						playertemp.action.tick=-1;
 						playertemp.action.dir=targetdir();
+						playertemp.action.diro=targetdir();
 						playertemp.action.level=lv;
 						playertemp.action.swingdir=round(random(-0.49,1.49));
 						playertemp.action.speedm=0.7;
@@ -9771,8 +9772,8 @@ var sfx={
 		SoHh:new Howl({src: ['Data/Sound/sfx/SoHh.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
 		freezeboomers:new Howl({src: ['Data/Sound/sfx/boomerang freeze.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
 		poison:new Howl({src: ['Data/Sound/sfx/poison.wav'], autoplay: false,loop: false,volume: options.sfx*0.03,}),
-		energystaff:new Howl({src: ['Data/Sound/sfx/energy bolt.wav'], autoplay: false,loop: false,volume: options.sfx*0.35,}),
-		energyh:new Howl({src: ['Data/Sound/sfx/energy hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.11,}),
+		energystaff:new Howl({src: ['Data/Sound/sfx/energy bolt.wav'], autoplay: false,loop: false,volume: options.sfx*0.22,}),
+		energyh:new Howl({src: ['Data/Sound/sfx/energy hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.1,}),
 		dash:new Howl({src: ['Data/Sound/sfx/dash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
 		burn:new Howl({src: ['Data/Sound/sfx/burn.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
 		bleed:new Howl({src: ['Data/Sound/sfx/bleed.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
