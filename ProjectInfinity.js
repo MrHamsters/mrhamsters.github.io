@@ -1,4 +1,4 @@
-var version="0.5";
+var version="0.5b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -9753,7 +9753,7 @@ append(doaction,function(lv,hand){
 		append(stateffects,{name:'judgment movement',dir:playertemp.action.dir,dirv:playertemp.action.dirv,run:function(){
 			playertemp.xvelo+=0.08*player.speed*sin(stateffects[n].dir);
 			playertemp.yvelo-=0.08*player.speed*cos(stateffects[n].dir);
-			dowalk(50*player.speed/player.size);
+			dowalk(10*player.speed/player.size);
 			lastDir=stateffects[n].dirv;
 			stateffects.splice(n,1);
 			n-=1;
