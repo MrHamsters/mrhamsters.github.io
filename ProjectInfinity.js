@@ -9928,7 +9928,7 @@ var sfx={
 		earthquake:new Howl({src: ['Data/Sound/sfx/earthquake.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
 		jumpbig:new Howl({src: ['Data/Sound/sfx/jumpbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 		judgment:new Howl({src: ['Data/Sound/sfx/judgment.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
-		judgmenthit:new Howl({src: ['Data/Sound/sfx/judgment hit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
+		judgmenthit:new Howl({src: ['Data/Sound/sfx/judgmenthit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
 };
 }
 var anticlipc;
