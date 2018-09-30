@@ -1,4 +1,4 @@
-var version="0.5b";
+var version="0.5c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -9777,7 +9777,7 @@ append(doaction,function(lv,hand){
 			shape(sprites.garensword,0,0,30,45);
 		}
 		resetMatrix();
-		if(playertemp.action.tick%15==0){
+		if(playertemp.action.tick%15==0&playertemp.action.tick>14){
 			for(i=0;i<enemies.length;i+=1){
 				if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
 					damage("enemies",i,random((plsst(8)+plshp(0.2)),(plsst(9)+plshp(0.24))),0,1,1,"melee","player",0.35);
