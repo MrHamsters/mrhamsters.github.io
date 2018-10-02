@@ -1,4 +1,4 @@
-var version="0.5.1";
+var version="0.5.1b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -9751,9 +9751,11 @@ append(doaction,function(lv,hand){
 			if(options.loadAudio){sfx.judgment.play();}
 		}
 		append(stateffects,{name:'judgment movement',dir:playertemp.action.dir,dirv:playertemp.action.dirv,run:function(){
-			playertemp.xvelo+=0.08*player.speed*sin(stateffects[n].dir);
-			playertemp.yvelo-=0.08*player.speed*cos(stateffects[n].dir);
-			dowalk(10*player.speed/player.size);
+			if(!(pow(mouseX-400,2)+pow(mouseY-350,2)<pow(40,2))){
+				playertemp.xvelo+=0.08*player.speed*sin(stateffects[n].dir);
+				playertemp.yvelo-=0.08*player.speed*cos(stateffects[n].dir);
+				dowalk(10*player.speed/player.size);
+			}
 			lastDir=stateffects[n].dirv;
 			stateffects.splice(n,1);
 			n-=1;
@@ -9778,10 +9780,26 @@ append(doaction,function(lv,hand){
 		}
 		resetMatrix();
 		if(playertemp.action.tick%15==0&playertemp.action.tick>14){
+			hits=0;
 			for(i=0;i<enemies.length;i+=1){
 				if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
-					damage("enemies",i,random((plsst(8)+plshp(0.2)),(plsst(9)+plshp(0.24))),0,1,1,"melee","player",0.35);
-					if(options.loadAudio){sfx.judgmenthit.play();}
+					hits+=1;
+				}
+			}
+			if(hits>1){
+				for(i=0;i<enemies.length;i+=1){
+					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
+						damage("enemies",i,random((plsst(8)+plshp(0.2)),(plsst(9)+plshp(0.24))),0,1,1,"melee","player",0.35);
+						if(options.loadAudio){sfx.judgmenthit.play();}
+					}
+				}
+			}
+			else{
+				for(i=0;i<enemies.length;i+=1){
+					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
+						damage("enemies",i,random((plsst(8)+plshp(0.2))*1.33,(plsst(9)+plshp(0.24))*1.33),0,1,1,"melee","player",0.35);
+						if(options.loadAudio){sfx.judgmenthit.play();}
+					}
 				}
 			}
 		}
