@@ -1,4 +1,4 @@
-var version="0.5c";
+var version="0.5.1";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -11809,43 +11809,43 @@ showdots[2]=0;
 					else{
 						shape(inventorysprites[itemdata[player.inventory.bag[invselect[1]].id*10+4]],150,150,259,385);
 					}
-						temp=new Array();
-										if(itemdata[player.inventory.bag[invselect[1]].id*10+8]){
-									for(a=0;a<itemdata[player.inventory.bag[invselect[1]].id*10+8].length;a+=1){
-										append(temp,traitkey[itemdata[player.inventory.bag[invselect[1]].id*10+8][a][0]-1]+' + '+itemdata[player.inventory.bag[invselect[1]].id*10+8][a][1]);
-									}
-								}
-								if(prefixdata[player.inventory.bag[invselect[1]].prefix*5-1]){
-									for(a=0;a<prefixdata[player.inventory.bag[invselect[1]].prefix*5-1].length;a+=1){
-										append(temp,traitkey[prefixdata[player.inventory.bag[invselect[1]].prefix*5-1][a][0]-1]+' + '+prefixdata[player.inventory.bag[invselect[1]].prefix*5-1][a][1]);
-									}
-								}
-								if(suffixdata[player.inventory.bag[invselect[1]].suffix*5-1]){
-									for(a=0;a<suffixdata[player.inventory.bag[invselect[1]].suffix*5-1].length;a+=1){
-										append(temp,traitkey[suffixdata[player.inventory.bag[invselect[1]].suffix*5-1][a][0]-1]+' + '+suffixdata[player.inventory.bag[invselect[1]].suffix*5-1][a][1]);
-									}
-								}
-								temp3=1;
-									temp3=itemdata[player.inventory.bag[invselect[1]].id*10+6];
-								if(player.inventory.bag[invselect[1]].prefix){
-									temp3*=prefixdata[(player.inventory.bag[invselect[1]].prefix-1)*5+3];
-								}
-								if(player.inventory.bag[invselect[1]].suffix){
-									temp3*=suffixdata[(player.inventory.bag[invselect[1]].suffix-1)*5+3];
-								}
-								if(!(temp3==1)){
-									append(temp,'Move Speed: '+(round((temp3-1)*1000))/10+"%");
-								}
-								temp3="";
-								if(player.inventory.bag[invselect[1]].prefix){
-									temp3+=prefixdata[(player.inventory.bag[invselect[1]].prefix-1)*5];
-									temp3+=" ";
-								}
-									temp3+=itemdata[player.inventory.bag[invselect[1]].id*10];
-								if(player.inventory.bag[invselect[1]].suffix){
-									temp3+=" ";
-									temp3+=suffixdata[(player.inventory.bag[invselect[1]].suffix-1)*5];
-								}
+					temp=new Array();
+					if(itemdata[player.inventory.bag[invselect[1]].id*10+8]){
+						for(a=0;a<itemdata[player.inventory.bag[invselect[1]].id*10+8].length;a+=1){
+							append(temp,traitkey[itemdata[player.inventory.bag[invselect[1]].id*10+8][a][0]-1]+' + '+itemdata[player.inventory.bag[invselect[1]].id*10+8][a][1]);
+						}
+					}
+					if(prefixdata[player.inventory.bag[invselect[1]].prefix*5-1]){
+						for(a=0;a<prefixdata[player.inventory.bag[invselect[1]].prefix*5-1].length;a+=1){
+							append(temp,traitkey[prefixdata[player.inventory.bag[invselect[1]].prefix*5-1][a][0]-1]+' + '+prefixdata[player.inventory.bag[invselect[1]].prefix*5-1][a][1]);
+						}
+					}
+					if(suffixdata[player.inventory.bag[invselect[1]].suffix*5-1]){
+						for(a=0;a<suffixdata[player.inventory.bag[invselect[1]].suffix*5-1].length;a+=1){
+							append(temp,traitkey[suffixdata[player.inventory.bag[invselect[1]].suffix*5-1][a][0]-1]+' + '+suffixdata[player.inventory.bag[invselect[1]].suffix*5-1][a][1]);
+						}
+					}
+					temp3=1;
+						temp3=itemdata[player.inventory.bag[invselect[1]].id*10+6];
+					if(player.inventory.bag[invselect[1]].prefix){
+						temp3*=prefixdata[(player.inventory.bag[invselect[1]].prefix-1)*5+3];
+					}
+					if(player.inventory.bag[invselect[1]].suffix){
+						temp3*=suffixdata[(player.inventory.bag[invselect[1]].suffix-1)*5+3];
+					}
+					if(!(temp3==1)){
+						append(temp,'Move Speed: '+(round((temp3-1)*1000))/10+"%");
+					}
+					temp3="";
+					if(player.inventory.bag[invselect[1]].prefix){
+						temp3+=prefixdata[(player.inventory.bag[invselect[1]].prefix-1)*5];
+						temp3+=" ";
+					}
+						temp3+=itemdata[player.inventory.bag[invselect[1]].id*10];
+					if(player.inventory.bag[invselect[1]].suffix){
+						temp3+=" ";
+						temp3+=suffixdata[(player.inventory.bag[invselect[1]].suffix-1)*5];
+					}
 					textFont(0,26-temp3.length/4);
 					fill(0,0,0);
 					text(temp3,40,250);
@@ -11868,8 +11868,16 @@ showdots[2]=0;
 							mouselock=1;
 							if(mouseButton==LEFT){
 								if(options.loadAudio){sfx.click.play();}
-								if(enchantmode>0){
-									enchantmode=0;
+								if(enchantmode>0||enchantmode[0]>0){
+									if(enchantmode[0]==3){
+										enchantmode=1;
+									}
+									else if(enchantmode[0]==4){
+										enchantmode=2;
+									}
+									else{
+										enchantmode=0;
+									}
 								}
 								else{
 									invselect[0]='bag';
@@ -12054,11 +12062,16 @@ showdots[2]=0;
 									mouselock=1;
 									if(mouseButton==LEFT){
 										if(player.record.prefixes[enchantercache.enchants[reo].id]){
-											if(player.reactant>=40){
-												player.reactant-=40;
-												if(options.loadAudio){sfx.enchant.play();}
-												player.inventory.bag[invselect[1]].prefix=enchantercache.enchants[reo].id+1;
-												enchantmode=0;
+											if(player.inventory.bag[invselect[1]].prefix-1==enchantercache.enchants[reo].id){
+													append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Item already has this enchantment!',20,0,255,-2.5,255,0,0));
+											}
+											else{
+												if(player.reactant>=40){
+													enchantmode=[3,enchantercache.enchants[reo].id];
+												}
+												else{
+													append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Not enough reactant!',20,0,255,-2.5,255,0,0));
+												}
 											}
 										}
 										else{
@@ -12066,6 +12079,9 @@ showdots[2]=0;
 												player.sp-=round(2500/enchantercache.enchants[reo].dropweight)-20;
 												if(options.loadAudio){sfx.click.play();}
 												player.record.prefixes[enchantercache.enchants[reo].id]=1;
+											}
+											else{
+												append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Not enough SP!',20,0,255,-2.5,255,0,0));
 											}
 										}
 									}
@@ -12213,11 +12229,16 @@ showdots[2]=0;
 									mouselock=1;
 									if(mouseButton==LEFT){
 										if(player.record.suffixes[enchantercache.enchants[reo].id]){
-											if(player.reactant>=40){
-												player.reactant-=40;
-												if(options.loadAudio){sfx.enchant.play();}
-												player.inventory.bag[invselect[1]].suffix=enchantercache.enchants[reo].id+1;
-												enchantmode=0;
+											if(player.inventory.bag[invselect[1]].suffix-1==enchantercache.enchants[reo].id){
+													append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Item already has this enchantment!',20,0,255,-2.5,255,0,0));
+											}
+											else{
+												if(player.reactant>=40){
+													enchantmode=[4,enchantercache.enchants[reo].id];
+												}
+												else{
+													append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Not enough reactant!',20,0,255,-2.5,255,0,0));
+												}
 											}
 										}
 										else{
@@ -12226,12 +12247,81 @@ showdots[2]=0;
 												if(options.loadAudio){sfx.click.play();}
 												player.record.suffixes[enchantercache.enchants[reo].id]=1;
 											}
+											else{
+												append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Not enough SP!',20,0,255,-2.5,255,0,0));
+											}
 										}
 									}
 								}
 							}
 						}
 						noStroke();
+						textAlign(TOP,LEFT);
+					}
+					else if(enchantmode[0]==3){
+						fill(0,75,75);
+						if(cursorbox(540,840,525,625)){
+							fill(0,150,150);
+							if(!(mouselock)&mousePressed){
+								mouselock=1;
+								if(mouseButton==LEFT){
+									player.reactant-=40;
+									if(options.loadAudio){sfx.enchant.play();}
+									player.inventory.bag[invselect[1]].prefix=enchantmode[1]+1;
+									enchantmode=0;
+								}
+							}
+						}
+						rect(540,525,300,100,30);
+						fill(255,255,255);
+						textFont(0,33);
+						text("Enchant",625,560,250,50);
+						textFont(0,27);
+						fill(0,0,0);
+						textAlign(CENTER);
+						if(player.inventory.bag[invselect[1]].prefix){
+							text(prefixdata[player.inventory.bag[invselect[1]].prefix*5-5],350,180,700,100);
+						}
+						else{
+							text("(No enchantment)",350,180,700,100);
+						}
+						text(prefixdata[enchantmode[1]*5],350,420,700,100);
+						fill(abs(tick%180-90)*120/90,abs(tick%180-90)*120/90,abs(tick%180-90)*120/90);
+						rect(675,240,50,100,4);
+						triangle(655,335,745,335,700,385);
+						textAlign(TOP,LEFT);
+					}
+					else if(enchantmode[0]==4){
+						fill(0,75,75);
+						if(cursorbox(540,840,525,625)){
+							fill(0,150,150);
+							if(!(mouselock)&mousePressed){
+								mouselock=1;
+								if(mouseButton==LEFT){
+									player.reactant-=40;
+									if(options.loadAudio){sfx.enchant.play();}
+									player.inventory.bag[invselect[1]].suffix=enchantmode[1]+1;
+									enchantmode=0;
+								}
+							}
+						}
+						rect(540,525,300,100,30);
+						fill(255,255,255);
+						textFont(0,33);
+						text("Enchant",625,560,250,50);
+						textFont(0,27);
+						fill(0,0,0);
+						textAlign(CENTER);
+						if(player.inventory.bag[invselect[1]].suffix){
+							text(suffixdata[player.inventory.bag[invselect[1]].suffix*5-5],350,180,700,100);
+						}
+						else{
+							text("(No enchantment)",350,180,700,100);
+						}
+						text(suffixdata[enchantmode[1]*5],350,420,700,100);
+						fill(abs(tick%180-90)*120/90,abs(tick%180-90)*120/90,abs(tick%180-90)*120/90);
+						rect(675,240,50,100,4);
+						triangle(655,335,745,335,700,385);
 						textAlign(TOP,LEFT);
 					}
 				}
