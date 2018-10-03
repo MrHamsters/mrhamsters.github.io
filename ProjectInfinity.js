@@ -1,4 +1,4 @@
-var version="0.5.1b";
+var version="0.5.2";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -418,33 +418,51 @@ var ilock=0;
 var hlock=0;
 var invquicksell=0;
 noStroke();
-window.onkeydown = function (e) {
+window.onbeforeunload = function () {
+    return "Really want to quit the game?";
+};
+document.onkeydown = function (e) {
+    e = e || window.event;
+    if (e.ctrlKey) {
+        var c = e.which || e.keyCode;
+        switch (c) {
+            case 83:
+            case 87:
+                e.preventDefault();     
+                e.stopPropagation();
+            break;
+        }
+    }
+};
+window.onkeydown=function(e){
 	if(!(cinematic||dialoga)){
     var code = e.keyCode ? e.keyCode : e.which;
-		
-    if (code == 87) {
-		input[0] =1;
+    if(code==87){
+		input[0]=1;
     }
-    if (code == 65) {
-		input[1] =1;
+    if(code==65){
+		input[1]=1;
     }
-    if (code == 83) {
-		input[2] =1;
+    if(code==83){
+		input[2]=1;
     }
-    if (code == 68) {
-		input[3] =1;
+    if(code==68){
+		input[3]=1;
     }
-    if (code == 16) {
-		input[4] =1;
+    if(code==16){
+		input[4]=1;
     }
-    if (code == 32) {
-		input[5] =1;
+    if(code==32){
+		input[5]=1;
     }
-    if (code == 81) {
-		input[6] =1;
+    if(code==81){
+		input[6]=1;
     }
-    if (code == 69) {
-		input[7] =1;
+    if(code==69){
+		input[7]=1;
+    }
+    if(code==17){
+		input[8]=1;
     }
 	if(code==82){
 		if(loaded==1&player.hp>0){
@@ -661,10 +679,12 @@ window.onkeydown = function (e) {
 						text("-W,A,S,D to move",140,120,500,50);
 						text("-Left click to use the weapon in your left hand.",140,150,500,50);
 						text("-Right click to use the weapon in your right hand.",140,180,500,50);
-						text("-I or ESCAPE to open inventory",140,210,500,50);
-						text("-F or UP (arrow key) to interact with things, such as structures in the nexus and portals.",140,240,530,50);
+						text("-Hold CTRL and click to change stance (if that weapon has different ones).",140,210,500,50);
+						text("   Use with caution: your browser will most likely try to do unwanted things (i.e. CTRL + W will try to close the game).",140,255,500,50);
+						text("-I or ESCAPE to open inventory",140,315,500,50);
+						text("-F or UP (arrow key) to interact with things, such as structures in the nexus and portals.",140,345,530,50);
 						fill(200,170,100,200);
-						text("Note that GUIs (inventory, utility structures in the nexus, etc.) have different help screens.",140,390,530,50);
+						text("Note that GUIs (inventory, utility structures in the nexus, etc.) have different help screens.",140,480,530,50);
 						noStroke();
 					}
 				}
@@ -713,29 +733,32 @@ window.onkeydown = function (e) {
 };
 window.onkeyup = function (e) {
     var code = e.keyCode ? e.keyCode : e.which;
-    if (code==87) {
+    if(code==87){
 		input[0]=0;
     }
-    if (code==65) {
+    if(code==65){
 		input[1]=0;
     }
-    if (code==83) {
+    if(code==83){
 		input[2]=0;
     }
-    if (code==68) {
+    if(code==68){
 		input[3] =0;
     }
-    if (code==16) {
+    if(code==16){
 		input[4]=0;
     }
-    if (code==32) {
+    if(code==32){
 		input[5]=0;
     }
-    if (code==81) {
+    if(code==81){
 		input[6]=0;
     }
-    if (code==69) {
+    if(code==69){
 		input[7]=0;
+    }
+    if(code==17){
+		input[8]=0;
     }
 	if(loaded==1&(code==73||code==27)){
 		invselect=['',-1];
@@ -1721,7 +1744,7 @@ var loadkeystoneps=function(){
 			}
 		});
 		append(keystonefuncs.passives,function(){
-			if(mousePressed&mouseButton==LEFT){
+			if(mousePressed&mouseButton==LEFT&(!(input[8]))){
 				if(playertemp.omnicannon>=60&player.mp>=2){
 					player.mp-=2;
 					playertemp.omnicannon=0;
@@ -3547,8 +3570,38 @@ playertemp.equipstatdata={
 	armor:0,
 	res:0
 };
+var stancelimits=loadStrings("Data/Text/stances.txt");
+var stancecache={LH:{sprite:0,current:0,limit:0},RH:{sprite:0,current:0,limit:0}};
+//GET STANCES and RECALCULATE STATS============
+
 var recalstatcache=0;
 var recalstats=function(){
+	stancecache={LH:{sprite:0,current:0,limit:0},RH:{sprite:0,current:0,limit:0}};
+	if(player.inventory.LH){
+		if(player.inventory.LH.stance){
+			stancecache.LH.current=player.inventory.LH.stance;
+		}
+		if(stancelimits[itemdata[player.inventory.LH.id*10+2]]){
+			stancecache.LH.limit=Number(stancelimits[itemdata[player.inventory.LH.id*10+2]]);
+		}
+		stancecache.LH.sprite=new Array();
+		for(gss=1;gss<=stancecache.LH.limit;gss+=1){
+			append(stancecache.LH.sprite,loadShape("Data/Graphics/stance/"+itemdata[player.inventory.LH.id*10+2]+"/"+gss+".svg"));
+		}
+	}
+	if(player.inventory.RH){
+		if(player.inventory.RH.stance){
+			stancecache.RH.current=player.inventory.RH.stance;
+		}
+		if(stancelimits[itemdata[player.inventory.RH.id*10+2]]){
+			stancecache.RH.limit=Number(stancelimits[itemdata[player.inventory.RH.id*10+2]]);
+		}
+		stancecache.RH.sprite=new Array();
+		for(gss=1;gss<=stancecache.RH.limit;gss+=1){
+			append(stancecache.RH.sprite,loadShape("Data/Graphics/stance/"+itemdata[player.inventory.RH.id*10+2]+"/"+gss+".svg"));
+		}
+	}
+	console.log(stancecache);
 	playertemp.combo={LH:{num:0,timer:1},RH:{num:0,timer:1}};
 	recalstatcache=getequipstat(0);
 	player.maxhp=(player.baseStats.hp+player.keystonestats.hp)*(0.9+player.level/10)+recalstatcache;
@@ -7753,6 +7806,12 @@ append(doaction,function(lv,hand){
 		fired:0,
 		speedm:0.8
 	};
+	if(stancecache[hand].current==1){
+		playertemp.action.autofire=0;
+	}
+	else{
+		playertemp.action.autofire=1;
+	}
 	if(mouseY<350){
 		playertemp.action.dir=-atan((mouseX-400)/(mouseY-350));
 	}
@@ -7760,6 +7819,9 @@ append(doaction,function(lv,hand){
 		playertemp.action.dir=PI-atan((mouseX-400)/(mouseY-350));
 	}
 	playertemp.action.run=function(){
+		if(playertemp.action.tick>60){
+			playertemp.action.tick=60;
+		}
 		if(playertemp.action.tick==1){
 			if(options.loadAudio){sfx.bow.play();}
 		}
@@ -7785,7 +7847,7 @@ append(doaction,function(lv,hand){
 			if(render){shape(sprites.bow,0,0,30,45);}
 		}
 		resetMatrix();
-		if(playertemp.action.tick>=60&!(playertemp.action.fired)){
+		if((playertemp.action.tick>=60&playertemp.action.autofire)&!(playertemp.action.fired)){
 			append(objects,{
 				type:'projectile',
 				sprite:sprites.arrow,
@@ -9964,6 +10026,7 @@ drawcap*=(urf*2+1);
 var render=0;
 var playeractionstock=0;
 var playeractionstockr=0;
+var igclick=0;
 // Main draw loop
 void draw(){
 	cdraw=0;
@@ -9989,11 +10052,13 @@ void draw(){
 	else{
 		drawcount=17*(urf*2+1);
 	}
+	if(!(mousePressed)){
+		igclick=0;
+	}
 while(drawcount>=17&cdraw<=drawcap){
 	drawcount-=17;
 	cdraw+=1;
-	if(drawcount<17
-	){
+	if(drawcount<17){
 		render=1;
 	}
 	else{
@@ -10116,15 +10181,39 @@ showdots[2]=0;
 		}
 		if(playertemp.actionlock<=0){
 			if(playertemp.action.name==0){
-				if(mousePressed&mouseButton==LEFT&player.mp>=itemdata[player.inventory.LH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0]){
-					player.mp-=itemdata[player.inventory.LH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0];
-					doaction[itemdata[player.inventory.LH.id*10+2]](player.inventory.LH.level,'LH');
-					playertemp.timesinceaction=0;
+				if(mousePressed&mouseButton==LEFT){
+					if(input[8]){
+						if(!(igclick)){
+							igclick=1;
+							stancecache.LH.current+=1;
+							if(stancecache.LH.current>=stancecache.LH.limit){
+								stancecache.LH.current=0;
+							}
+							player.inventory.LH.stance=stancecache.LH.current;
+						}
+					}
+					else if(player.mp>=itemdata[player.inventory.LH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0]){
+						player.mp-=itemdata[player.inventory.LH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0];
+						doaction[itemdata[player.inventory.LH.id*10+2]](player.inventory.LH.level,'LH');
+						playertemp.timesinceaction=0;
+					}
 				}
-				if(mousePressed&mouseButton==RIGHT&player.mp>=itemdata[player.inventory.RH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0]){
-					player.mp-=itemdata[player.inventory.RH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0];
-					doaction[itemdata[player.inventory.RH.id*10+2]](player.inventory.RH.level,'RH');
-					playertemp.timesinceaction=0;
+				if(mousePressed&mouseButton==RIGHT){
+					if(input[8]){
+						if(!(igclick)){
+							igclick=1;
+							stancecache.RH.current+=1;
+							if(stancecache.RH.current>=stancecache.RH.limit){
+								stancecache.RH.current=0;
+							}
+							player.inventory.RH.stance=stancecache.RH.current;
+						}
+					}
+					else if(player.mp>=itemdata[player.inventory.RH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0]){
+						player.mp-=itemdata[player.inventory.RH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0];
+						doaction[itemdata[player.inventory.RH.id*10+2]](player.inventory.RH.level,'RH');
+						playertemp.timesinceaction=0;
+					}
 				}
 		}}
 		else{
@@ -10999,60 +11088,69 @@ showdots[2]=0;
 	fill(0,0,0);
 	textFont(0,15);
 	text(biomedata[0],900,675);
+	fill(80,80,12);
+	if(stancecache.LH.sprite){
+		rect(840,450,100,100,10);
+		shape(stancecache.LH.sprite[stancecache.LH.current],890,500,100,150);
+	}
+	if(stancecache.RH.sprite){
+		rect(980,450,100,100,10);
+		shape(stancecache.RH.sprite[stancecache.RH.current],1030,500,100,150);
+	}
 	if(player.activetraits.space>0&player.traits[player.activetraits.space]>0){
 		ellipseMode(CENTER);
 		fill(255,255,0);
-		ellipse(950,500,90,90);
-		shape(playertemp.activetraitsprites.space,950,507,210,315);
+		ellipse(850,600,75,75);
+		shape(playertemp.activetraitsprites.space,850,607,180,270);
 		fill(0,0,255);
 		textFont(0,15);
-		text("SPACE",925,462);
+		text("SPACE",825,572);
 		if(traitcd[player.activetraits.space]>=30){
 			fill(0,0,0,130+playertemp.traitcd.space/traitcd[player.activetraits.space]*125);
 			ellipseMode(CENTER);
-			arc(950,500,90,90,-PI/2-playertemp.traitcd.space/traitcd[player.activetraits.space]*2*PI,-PI/2);
+			arc(850,600,75,75,-PI/2-playertemp.traitcd.space/traitcd[player.activetraits.space]*2*PI,-PI/2);
 		}
 	}
 	if(player.activetraits.shift>0&player.traits[player.activetraits.shift]>0){
 		ellipseMode(CENTER);
 		fill(255,255,0);
-		ellipse(950,600,90,90);
-		shape(playertemp.activetraitsprites.shift,950,607,210,315);
+		ellipse(930,600,75,75);
+		shape(playertemp.activetraitsprites.shift,930,607,180,270);
 		fill(0,0,255);
 		textFont(0,15);
-		text("SHIFT",925,562);
+		text("SHIFT",910,572);
 		if(traitcd[player.activetraits.shift]>=30){
 			fill(0,0,0,130+playertemp.traitcd.shift/traitcd[player.activetraits.shift]*125);
 			ellipseMode(CENTER);
-			arc(950,600,90,90,-PI/2-playertemp.traitcd.shift/traitcd[player.activetraits.shift]*2*PI,-PI/2);
+			arc(930,600,75,75,-PI/2-playertemp.traitcd.shift/traitcd[player.activetraits.shift]*2*PI,-PI/2);
 		}
 	}
 	if(player.activetraits.q>0&player.traits[player.activetraits.q]>0){
 		ellipseMode(CENTER);
 		fill(255,255,0);
-		ellipse(1075,500,90,90);
-		shape(playertemp.activetraitsprites.q,1075,507,210,315);
+		ellipse(1010,600,75,75);
+		shape(playertemp.activetraitsprites.q,1010,607,180,270);
 		fill(0,0,255);
 		textFont(0,30);
-		text("Q",1062,455);
+		text("Q",995,558);
 		if(traitcd[player.activetraits.q]>=30){
 			fill(0,0,0,130+playertemp.traitcd.q/traitcd[player.activetraits.q]*125);
 			ellipseMode(CENTER);
-			arc(1075,500,90,90,-PI/2-playertemp.traitcd.q/traitcd[player.activetraits.q]*2*PI,-PI/2);
+			arc(1010,600,75,75,-PI/2-playertemp.traitcd.q/traitcd[player.activetraits.q]*2*PI,-PI/2);
 		}
 	}
 	if(player.activetraits.e>0&player.traits[player.activetraits.e]>0){
 		ellipseMode(CENTER);
 		fill(255,255,0);
-		ellipse(1075,600,90,90);
-		shape(playertemp.activetraitsprites.e,1075,607,210,315);
+		ellipse(1090,600,75,75);
+		shape(playertemp.activetraitsprites.e,1090,607,180,270);
 		fill(0,0,255);
 		textFont(0,30);
-		text("E",1062,555);
+		text("E",1080,558);
 		if(traitcd[player.activetraits.e]>=30){
 			fill(0,0,0,130+playertemp.traitcd.e/traitcd[player.activetraits.e]*125);
 			ellipseMode(CENTER);
-			arc(1075,600,90,90,-PI/2-playertemp.traitcd.e/traitcd[player.activetraits.e]*2*PI,-PI/2);
+			arc(1090,600,75,75,-PI/2-playertemp.traitcd.e/traitcd[player.activetraits.e]*2*PI,-PI/2);
 		}
 	}
 	textFont(0,15);
