@@ -27,7 +27,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
      inkscape:cx="48.429768"
-     inkscape:cy="1127.0864"
+     inkscape:cy="1126.3891"
      inkscape:document-units="px"
      inkscape:current-layer="g4244"
      showgrid="false"
@@ -57,7 +57,7 @@
        transform="matrix(10.463086,0,0,10.463086,-1852.4595,-1923.2476)">
       <g
          id="g3354"
-         transform="matrix(0,0.75432253,-0.75432253,0,274.17024,51.97881)">
+         transform="matrix(0,0.46807176,-0.46807176,0,237.82462,102.59555)">
         <rect
            ry="0.00066014286"
            rx="0.0076428968"
@@ -175,21 +175,21 @@
       <circle
          style="fill:#00ffff"
          id="path3373"
-         cx="193.02167"
-         cy="182.94614"
-         r="20.480165" />
+         cx="187.47035"
+         cy="183.86331"
+         r="12.70834" />
       <circle
-         r="18.910019"
-         cy="182.9325"
-         cx="193.03531"
+         r="11.734034"
+         cy="183.85486"
+         cx="187.47882"
          id="circle3376"
          style="fill:#0000ff" />
       <circle
          style="fill:#00ffcc"
          id="circle3378"
-         cx="200.12143"
-         cy="175.84637"
-         r="3.5498965" />
+         cx="191.8759"
+         cy="179.45778"
+         r="2.2027795" />
     </g>
   </g>
 </svg>
