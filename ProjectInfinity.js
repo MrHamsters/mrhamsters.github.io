@@ -1,4 +1,4 @@
-var version="0.5.3";
+var version="0.5.3b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -2493,10 +2493,10 @@ var loadtraits=function(){
 	if(player.traits[9]>0){
 		append(traitfuncs.damagedealtpostmit,function(){
 			if(willhit){
-				heal((pdmg+mdmg)*(player.traits[9]*0.01),"leech");
+				heal(min(enemies[index].hp,(pdmg+mdmg))*(player.traits[9]*0.01),"leech");
 			}
 			else{
-				heal((pdmg+mdmg)*(player.traits[9]*0.01),"LoT");
+				heal(min(enemies[index].hp,(pdmg+mdmg))*(player.traits[9]*0.01),"LoT");
 			}
 		});
 	}
@@ -9259,7 +9259,7 @@ append(doaction,function(lv,hand){
 					fast:3,
 					target:'enemy',
 					size:11,
-					speed:50,
+					speed:18,
 					pierce:0,
 					duration:20,
 					sound:sfx.arrowhit,
