@@ -2049,8 +2049,8 @@ Resistance
 
 
 0
-200
 0
+200
 0
 Health
 +3% to health.
@@ -2099,8 +2099,8 @@ Resistance
 
 
 0
-0
 200
+0
 0
 Health
 +5% to health.
@@ -2188,7 +2188,7 @@ Armor
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 18/5
 Resistance
-+3% to resistance
++5% to resistance
 0/0/0/0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 19/5
@@ -2199,8 +2199,8 @@ Resistance
 
 
 0
-340
 0
+340
 0
 Health
 +3% to health.
@@ -2249,8 +2249,8 @@ Resistance
 
 
 0
-0
 340
+0
 0
 Health
 +5% to health.
@@ -2288,7 +2288,7 @@ Armor
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 18/5
 Resistance
-+3% to resistance
++5% to resistance
 0/0/0/0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 19/5
@@ -2338,7 +2338,7 @@ Armor
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 18/5
 Resistance
-+3% to resistance
++5% to resistance
 0/0/0/0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 19/5
@@ -2349,8 +2349,8 @@ Resistance
 
 
 0
-440
 0
+440
 0
 Health
 +3% to health.
@@ -2399,8 +2399,8 @@ Resistance
 
 
 0
-0
 440
+0
 0
 Health
 +5% to health.
@@ -2499,8 +2499,8 @@ Resistance
 
 
 0
-524
 0
+524
 0
 Health
 +3% to health.
@@ -2549,8 +2549,8 @@ Resistance
 
 
 0
-0
 524
+0
 0
 Health
 +5% to health.
@@ -2638,7 +2638,7 @@ Armor
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 18/5
 Resistance
-+3% to resistance
++5% to resistance
 0/0/0/0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 19/5
