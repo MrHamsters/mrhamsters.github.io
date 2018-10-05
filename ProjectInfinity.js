@@ -9817,11 +9817,11 @@ append(doaction,function(lv,hand){
 					y:playertemp.y,
 					pdmgmin:0,
 					pdmgmax:0,
-					mdmgmin:(plsin(8)),
-					mdmgmax:(plsin(10)),
+					mdmgmin:(plsin(7.5)),
+					mdmgmax:(plsin(8)),
 					armorE:1,
 					resE:1,
-					procc:0.45,
+					procc:0.37,
 					hits:new Array(999)
 				});
 			}
