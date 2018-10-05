@@ -8163,7 +8163,7 @@ append(doaction,function(lv,hand){
 			playertemp.action.swingdir=0;
 		}
 		if(player.traits[39]>0){
-			playertemp.action.dmgbonus=plshp(0.03*min(10,player.traits[39]));
+			playertemp.action.dmgbonus=plshp(0.6*min(10,player.traits[39]));
 		}
 		playertemp.action.dir+=(playertemp.action.swingdir-0.5);
 		if(options.loadAudio){sfx.cripplingsw.play();}
