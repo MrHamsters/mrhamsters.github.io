@@ -1,4 +1,4 @@
-var version="0.5.3d";
+var version="0.5.3e";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -8176,6 +8176,19 @@ append(doaction,function(lv,hand){
 						if(hits<1&pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*33,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*33,2)<pow(35+enemies[i].size,2)){
 							hits+=1;
 							enemies[i].spdmod=0.1;
+							append(stateffects,{name:'cripple',target:i,tick:0,run:function(){
+								if(enemies[stateffects[n].target]){
+									enemies[stateffects[n].target].spdmod=0.1;
+									if(stateffects[n].tick>=90*(1-enemies[stateffects[n].target].tenacity/100)){
+										stateffects.splice(n,1);
+										n-=1;
+									}
+								}
+								else{
+									stateffects.splice(n,1);
+									n-=1;
+								}
+							}});
 							damage("enemies",i,random((plsst(35)),(plsst(38)))+playertemp.action.dmgbonus,0,1,1,"melee","player",1.3);
 							if(enemies[i].hp<=0){
 								player.mp+=4;
