@@ -1,4 +1,4 @@
-var version="0.5.3c";
+var version="0.5.3d";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -4670,10 +4670,10 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				if(player.mp>plsmp(0.1)){
 					manadmg=0;
 					if(player.traits[10]>0){
-						stemp=[max(0,(1-player.traits[5]/100)/(1+(max(0,plsmp-100)*player.traits[5])/10000)),(plsin(0.01)+plshp(0.005)+plsst(0.001)*player.traits[10])];
+						stemp=[max(0,(1-player.traits[5]/200)/(1+(max(0,plsmp-100)*player.traits[5])/5000)),(plsin(0.005)+plshp(0.002)+plsst(0.0005)*player.traits[10])];
 					}
 					else{
-						stemp=[max(0,(1-player.traits[5]/100)/(1+(max(0,plsmp-100)*player.traits[5])/10000)),(plsin(0.01)+plshp(0.05))];
+						stemp=[max(0,(1-player.traits[5]/200)/(1+(max(0,plsmp-100)*player.traits[5])/5000)),(plsin(0.005)+plshp(0.02))];
 					}
 					if(player.mp-plsmp(0.1)>pdmg*(1-stemp[0])/stemp[1]){
 						player.mp-=pdmg*(1-stemp[0])/stemp[1];
@@ -9848,6 +9848,7 @@ append(doaction,function(lv,hand){
 		}
 		spendmana("magic",2,2);
 		playertemp.action.run=function(){
+			playertemp.timesinceaction=0;
 			if(player.traits[42]>0){
 				traitpow=player.traits[42];
 			}
