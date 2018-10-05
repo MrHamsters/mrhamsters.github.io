@@ -95,7 +95,7 @@ svg
 xbow
 0/0/0/0/3/0/0/0
 1.04
-3
+2
 
 9
 Warmog's Armor
@@ -155,7 +155,7 @@ svg
 darius axe
 11/-2/0.2/-0.5/6/0/0/0
 1
-9
+4
 
 12
 Nightfall
@@ -555,7 +555,7 @@ svg
 energyStaff
 0/2/0/0.15/0/2/0/1
 1
-2
+0
 
 9
 Dreadnought Armor
