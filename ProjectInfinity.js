@@ -4670,10 +4670,10 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				if(player.mp>plsmp(0.1)){
 					manadmg=0;
 					if(player.traits[10]>0){
-						stemp=[max(0,(1-player.traits[5]/200)/(1+(max(0,plsmp-100)*player.traits[5])/5000)),(plsin(0.005)+plshp(0.002)+plsst(0.0005)*player.traits[10])];
+						stemp=[max(0,(1-player.traits[5]/200)/(1+(max(0,plsmp-100)*player.traits[5])/5000)),(plsin(0.01)+plshp(0.02)+plsst(0.0005)*player.traits[10])];
 					}
 					else{
-						stemp=[max(0,(1-player.traits[5]/200)/(1+(max(0,plsmp-100)*player.traits[5])/5000)),(plsin(0.005)+plshp(0.02))];
+						stemp=[max(0,(1-player.traits[5]/200)/(1+(max(0,plsmp-100)*player.traits[5])/5000)),(plsin(0.01)+plshp(0.02))];
 					}
 					if(player.mp-plsmp(0.1)>pdmg*(1-stemp[0])/stemp[1]){
 						player.mp-=pdmg*(1-stemp[0])/stemp[1];
