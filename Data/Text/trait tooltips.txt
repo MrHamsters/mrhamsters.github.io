@@ -203,7 +203,7 @@ Spectral
 Void
 [Passive] Reduces true damage taken by {ox8c2}%.
 Energising
-[Passive] Recharges {ox18c2}% of your missing energy shield over 1 second every 4 seconds. If you have less than 5 points in Energy Shield, this instead generates a {h0.0032x18c2+r0.04x18c2} point shield for 4 seconds.
+[Passive] Recharges {ox18c2}% of your missing energy shield over 1 second every 4 seconds. If you have less than 10 points in Energy Shield, this instead generates a {h0.0032x18c2+r0.02x18c2} point shield for 4 seconds.
 Fluctuating
 [Passive] Every 15 seconds, increases physical damage dealt by {ox22c3}% for 5 seconds, then magic damage for the next 5 seconds, then all damage for the next 3 seconds.
 Eldritch
