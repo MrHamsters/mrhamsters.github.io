@@ -3035,7 +3035,7 @@ var loadtraits=function(){
 			}
 			else{
 				if(gametick%240==0){
-					shield(((plshp(1))*0.0032+(plsre(1))*0.004)*(18+player.traits[103]*2),240);
+					shield(((plshp(1))*0.0032+(plsre(1))*0.02)*(18+player.traits[103]*2),240);
 				}
 			}
 		});
