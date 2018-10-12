@@ -2579,11 +2579,13 @@ var loadtraits=function(){
 	///////////POST DAMAGE % MODIFIERS===============================
 	if(player.traits[9]>0){
 		append(traitfuncs.damagedealtpostmit,function(){
-			if(willhit){
-				heal(min(enemies[index].hp,(pdmg+mdmg))*(player.traits[9]*0.01),"leech");
-			}
-			else{
-				heal(min(enemies[index].hp,(pdmg+mdmg))*(player.traits[9]*0.01),"LoT");
+			if(enemies[index].hp>0){
+				if(willhit){
+					heal(min(enemies[index].hp,(pdmg+mdmg))*(player.traits[9]*0.01),"leech");
+				}
+				else{
+					heal(min(enemies[index].hp,(pdmg+mdmg))*(player.traits[9]*0.01),"LoT");
+				}
 			}
 		});
 	}
@@ -4604,35 +4606,37 @@ var takedamage=function(sourcedmg,finaldmg){
 	}
 }
 var heal=function(healp,healtype){
-	if(player.traits[106]>0){
-		healp*=1.13+player.traits[106]*0.02;
-	}
-	if(player.traits[111]>0){
-		if(playertemp.phasedoor>0){
-			if(healtype=="regeneration"||healtype=="HoT"||healtype=="LoT"){
-				healp*=0.25;
-			}
-			else{
-				healp*=0.5;
+	if(healp>0){
+		if(player.traits[106]>0){
+			healp*=1.13+player.traits[106]*0.02;
+		}
+		if(player.traits[111]>0){
+			if(playertemp.phasedoor>0){
+				if(healtype=="regeneration"||healtype=="HoT"||healtype=="LoT"){
+					healp*=0.25;
+				}
+				else{
+					healp*=0.5;
+				}
 			}
 		}
-	}
-	if(player.traits[113]>0){
-		healp*=0.85;
-	}
-	//Post-modifiers
-	if(player.traits[114]>0){
-		if(healtype=="leech"){
-			shield(healp*0.9*(1.45+player.traits[114]*0.05),180);
-			healp*=0.1;
+		if(player.traits[113]>0){
+			healp*=0.85;
 		}
-	}
-	player.hp+=healp;
-	if(round(healp)>0){
-	if(healtype=="direct"||healtype=="leech"){
-		var healyr=random(230,270);
-		append(particles,new createparticle(720,healyr,1.5,(250-healyr)/10,0,-(250-healyr)/500,'text',"+"+round(healp),22,0,255,-4,0,255,0));
-	}
+		//Post-modifiers
+		if(player.traits[114]>0){
+			if(healtype=="leech"){
+				shield(healp*0.9*(1.45+player.traits[114]*0.05),180);
+				healp*=0.1;
+			}
+		}
+		player.hp+=healp;
+		if(round(healp)>0){
+		if(healtype=="direct"||healtype=="leech"){
+			var healyr=random(230,270);
+			append(particles,new createparticle(720,healyr,1.5,(250-healyr)/10,0,-(250-healyr)/500,'text',"+"+round(healp),22,0,255,-4,0,255,0));
+		}
+		}
 	}
 }
 var spdmg=0;
