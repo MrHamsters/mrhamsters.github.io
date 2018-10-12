@@ -1360,7 +1360,6 @@ var getloot=function(f){
 	}
 }
 var renderinventory=function(){
-	ellipseMode(CENTER);
 			for(x=0;x<15;x+=1){
 			for(n=0;n<15;n+=1){
 				if(invselect[1]==15*x+n){
@@ -1414,6 +1413,7 @@ var renderinventory=function(){
 						noStroke();
 					}
 					else{
+						ellipseMode(CENTER);
 						if(player.inventory.bag[15*x+n].prefix){
 							fill(prefixdata[player.inventory.bag[15*x+n].prefix*5-4][2][0],prefixdata[player.inventory.bag[15*x+n].prefix*5-4][2][1],prefixdata[player.inventory.bag[15*x+n].prefix*5-4][2][2],abs(tick%180-90)*3);
 							ellipse(655+30*n,130+30*x,10,10);
