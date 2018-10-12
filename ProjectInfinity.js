@@ -1,4 +1,4 @@
-var version="0.5.3f";
+var version="0.5.4";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -1025,6 +1025,83 @@ var artisanmbox=function(stat,y){
 		}
 	}
 }
+var renderequips=function(interact){
+	rectMode(CORNER);
+	fill(20,20,40);
+	rect(500,175,50,50,2);
+	rect(500,250,50,50,2);
+	rect(500,325,50,50,2);
+	rect(500,400,50,50,2);
+	rect(425,250,50,50,2);
+	rect(575,250,50,50,2);
+	rect(575,325,50,50,2);
+	renderequipslot("LH",425,250,interact);
+	renderequipslot("RH",575,250,interact);
+	renderequipslot("helmet",500,175,interact);
+	renderequipslot("chest",500,250,interact);
+	renderequipslot("pants",500,325,interact);
+	renderequipslot("shoes",500,400,interact);
+	renderequipslot("gloves",575,325,interact);
+}
+var renderequipslot=function(slot,x,y,interact){
+	if(player.inventory[slot]){
+		if(player.inventory[slot].rune){
+			if(player.inventory[slot].runet==1){
+				fill(20,20,180);
+			}
+			if(player.inventory[slot].runet==2){
+				fill(140,20,140);
+			}
+			if(player.inventory[slot].runet==3){
+				fill(150,150,0);
+			}
+			rect(x,y,50,50,2);
+		}
+		ellipseMode(CENTER);
+		if(player.inventory[slot].prefix){
+			fill(prefixdata[player.inventory[slot].prefix*5-4][2][0],prefixdata[player.inventory[slot].prefix*5-4][2][1],prefixdata[player.inventory[slot].prefix*5-4][2][2],abs(tick%180-90)*3);
+			ellipse(x+8,y+8,16,16);
+		}
+		if(player.inventory[slot].suffix){
+			fill(suffixdata[player.inventory[slot].suffix*5-4][2][0],suffixdata[player.inventory[slot].suffix*5-4][2][1],suffixdata[player.inventory[slot].suffix*5-4][2][2],abs(tick%180-90)*3);
+			ellipse(x+42,y+42,16,16);
+		}
+		shape(inventorysprites[itemdata[player.inventory[slot].id*10+4]],x+25,y+25,75,110);
+		if(interact){
+			if(cursorbox(x,x+50,y,y+50)){
+				equiptooltip(slot);
+				if(!(mouselock)&mousePressed&mouseButton==LEFT){
+						mouselock=1;
+					if(invselect[0]=='anvil'){
+						if(player.sp>=5&player.inventory[slot].level<player.level){
+						if(options.loadAudio){
+						sfx.upgrade.play();}
+							player.sp-=5;
+							player.inventory[slot].level+=1;
+									recalstats();
+						}
+					}
+					else if(slot=="LH"||slot=="RH"){
+						if(options.loadAudio){sfx.click3.play();}
+						swapitems('LH','','RH','');
+						getstances();
+					}
+				}
+				if(!(mouselock)&mousePressed&mouseButton==RIGHT){
+					mouselock=1;
+					if(findemptyslot()>-1){
+						if(options.loadAudio){sfx.click3.play();}
+						swapitems(slot,'','bag',findemptyslot());
+						loadtraits();
+						recalstats();
+						getstances();
+						getplayersprite();
+					}
+				}
+			}
+		}
+	}
+}
 var artisanpbox=function(stat,y){
 	if(player.inventory.bag[invselect[1]].freepts){
 		fill(200,220,200);
@@ -1282,7 +1359,8 @@ var getloot=function(f){
 		}
 	}
 }
-var renderinventory= function(){
+var renderinventory=function(){
+	ellipseMode(CENTER);
 			for(x=0;x<15;x+=1){
 			for(n=0;n<15;n+=1){
 				if(invselect[1]==15*x+n){
@@ -1336,6 +1414,15 @@ var renderinventory= function(){
 						noStroke();
 					}
 					else{
+						if(player.inventory.bag[15*x+n].prefix){
+							fill(prefixdata[player.inventory.bag[15*x+n].prefix*5-4][2][0],prefixdata[player.inventory.bag[15*x+n].prefix*5-4][2][1],prefixdata[player.inventory.bag[15*x+n].prefix*5-4][2][2],abs(tick%180-90)*3);
+							ellipse(655+30*n,130+30*x,10,10);
+						}
+						if(player.inventory.bag[15*x+n].suffix){
+							fill(suffixdata[player.inventory.bag[15*x+n].suffix*5-4][2][0],suffixdata[player.inventory.bag[15*x+n].suffix*5-4][2][1],suffixdata[player.inventory.bag[15*x+n].suffix*5-4][2][2],abs(tick%180-90)*3);
+							ellipse(670+30*n,145+30*x,10,10);
+						}
+						
 						if(render){shape(inventorysprites[itemdata[player.inventory.bag[15*x+n].id*10+4]],662+30*n,137+30*x,37,55);}
 					}
 				}
@@ -4670,7 +4757,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				if(player.mp>plsmp(0.1)){
 					manadmg=0;
 					if(player.traits[10]>0){
-						stemp=[max(0,(1-player.traits[5]/200)/(1+(max(0,plsmp-100)*player.traits[5])/5000)),(plsin(0.01)+plshp(0.02)+plsst(0.0005)*player.traits[10])];
+						stemp=[max(0,(1-player.traits[5]/200)/(1+(max(0,plsmp-100)*player.traits[5])/5000)),(plsin(0.01)+plshp(0.02)+plsst(min(0.01,0.0015*player.traits[10])))];
 					}
 					else{
 						stemp=[max(0,(1-player.traits[5]/200)/(1+(max(0,plsmp-100)*player.traits[5])/5000)),(plsin(0.01)+plshp(0.02))];
@@ -11627,105 +11714,7 @@ showdots[2]=0;
 				}
 			}
 		rectMode(CORNER);
-		fill(20,20,40);
-		rect(500,175,50,50,2);
-		rect(500,250,50,50,2);
-		rect(500,325,50,50,2);
-		rect(500,400,50,50,2);
-		rect(425,250,50,50,2);
-		rect(575,250,50,50,2);
-		rect(575,325,50,50,2);
-		if(player.inventory.LH){
-		if(player.inventory.LH.rune){
-			if(player.inventory.LH.runet==1){
-				fill(20,20,180);
-			}
-			if(player.inventory.LH.runet==2){
-				fill(140,20,140);
-			}
-			if(player.inventory.LH.runet==3){
-				fill(150,150,0);
-			}
-			rect(425,250,50,50,2);
-		}}
-		if(player.inventory.RH){
-		if(player.inventory.RH.rune){
-			if(player.inventory.RH.runet==1){
-				fill(20,20,180);
-			}
-			if(player.inventory.RH.runet==2){
-				fill(140,20,140);
-			}
-			if(player.inventory.RH.runet==3){
-				fill(150,150,0);
-			}
-			rect(575,250,50,50,2);
-		}}
-		if(player.inventory.helmet){
-		if(player.inventory.helmet.rune){
-			if(player.inventory.helmet.runet==1){
-				fill(20,20,180);
-			}
-			if(player.inventory.helmet.runet==2){
-				fill(140,20,140);
-			}
-			if(player.inventory.helmet.runet==3){
-				fill(150,150,0);
-			}
-			rect(500,175,50,50,2);
-		}}
-		if(player.inventory.chest){
-		if(player.inventory.chest.rune){
-			if(player.inventory.chest.runet==1){
-				fill(20,20,180);
-			}
-			if(player.inventory.chest.runet==2){
-				fill(140,20,140);
-			}
-			if(player.inventory.chest.runet==3){
-				fill(150,150,0);
-			}
-			rect(500,250,50,50,2);
-		}}
-		if(player.inventory.pants){
-		if(player.inventory.pants.rune){
-			if(player.inventory.pants.runet==1){
-				fill(20,20,180);
-			}
-			if(player.inventory.pants.runet==2){
-				fill(140,20,140);
-			}
-			if(player.inventory.pants.runet==3){
-				fill(150,150,0);
-			}
-			rect(500,325,50,50,2);
-		}}
-		if(player.inventory.shoes){
-		if(player.inventory.shoes.rune){
-			if(player.inventory.shoes.runet==1){
-				fill(20,20,180);
-			}
-			if(player.inventory.shoes.runet==2){
-				fill(140,20,140);
-			}
-			if(player.inventory.shoes.runet==3){
-				fill(150,150,0);
-			}
-			rect(500,400,50,50,2);
-		}}
-		if(player.inventory.gloves){
-		if(player.inventory.gloves.rune){
-			if(player.inventory.gloves.runet==1){
-				fill(20,20,180);
-			}
-			if(player.inventory.gloves.runet==2){
-				fill(140,20,140);
-			}
-			if(player.inventory.gloves.runet==3){
-				fill(150,150,0);
-			}
-			rect(575,325,50,50,2);
-		}}
+		renderequips(1);
 		renderinventory();
 		for(x=0;x<15;x+=1){
 			for(n=0;n<15;n+=1){
@@ -11833,220 +11822,6 @@ showdots[2]=0;
 				}
 			}
 		}
-		
-		if(player.inventory.LH){
-			shape(inventorysprites[itemdata[player.inventory.LH.id*10+4]],450,275,75,110);
-			if(cursorbox(425,475,250,300)){
-				equiptooltip('LH');
-				if(!(mouselock)&mousePressed&mouseButton==LEFT){
-						mouselock=1;
-					if(invselect[0]=='anvil'){
-						if(player.sp>=5&player.inventory.LH.level<player.level){
-						if(options.loadAudio){
-						sfx.upgrade.play();}
-							player.sp-=5;
-							player.inventory.LH.level+=1;
-									recalstats();
-						}
-					}
-					else{
-						if(options.loadAudio){sfx.click3.play();}
-						swapitems('LH','','RH','');
-						getstances();
-					}
-				}
-				if(!(mouselock)&mousePressed&mouseButton==RIGHT){
-					mouselock=1;
-					if(findemptyslot()>-1){
-						if(options.loadAudio){sfx.click3.play();}
-						swapitems('LH','','bag',findemptyslot());
-						loadtraits();
-						recalstats();
-						getstances();
-						getplayersprite();
-					}
-				}
-			}
-		}
-		if(player.inventory.RH){
-			shape(inventorysprites[itemdata[player.inventory.RH.id*10+4]],600,275,75,110);
-			if(cursorbox(575,625,250,300)){
-				equiptooltip('RH');
-				if(!(mouselock)&mousePressed&mouseButton==LEFT){
-						mouselock=1;
-					if(invselect[0]=='anvil'){
-						if(player.sp>=5&player.inventory.RH.level<player.level){
-						if(options.loadAudio){
-						sfx.upgrade.play();}
-							player.sp-=5;
-							player.inventory.RH.level+=1;
-							recalstats();
-						}
-					}
-					else{
-						if(options.loadAudio){sfx.click3.play();}
-						swapitems('RH','','LH','');
-						getstances();
-					}
-				}
-				if(!(mouselock)&mousePressed&mouseButton==RIGHT){
-					mouselock=1;
-					if(findemptyslot()>-1){
-						if(options.loadAudio){sfx.click3.play();}
-					swapitems('RH','','bag',findemptyslot());
-						loadtraits();
-						recalstats();
-						getstances();
-						getplayersprite();
-					}
-				}
-			}
-		}
-		if(player.inventory.helmet){
-			shape(inventorysprites[itemdata[player.inventory.helmet.id*10+4]],525,200,75,110);
-			if(cursorbox(500,550,175,225)){
-				equiptooltip('helmet');
-				if(!(mouselock)&mousePressed&mouseButton==LEFT){
-					mouselock=1;
-					if(invselect[0]=='anvil'){
-						if(player.sp>=5&player.inventory.helmet.level<player.level){
-							if(options.loadAudio){
-								sfx.upgrade.play();
-							}
-							player.sp-=5;
-							player.inventory.helmet.level+=1;
-							recalstats();
-						}
-					}
-				}
-				if(!(mouselock)&mousePressed&mouseButton==RIGHT){
-					mouselock=1;
-					if(findemptyslot()>-1){
-						if(options.loadAudio){sfx.click3.play();}
-						swapitems('helmet','','bag',findemptyslot());
-						loadtraits();
-						recalstats();
-						getplayersprite();
-					}
-				}
-			}
-		}
-		if(player.inventory.chest){
-			shape(inventorysprites[itemdata[player.inventory.chest.id*10+4]],525,275,75,110);
-			if(cursorbox(500,550,250,300)){
-				equiptooltip('chest');
-				if(!(mouselock)&mousePressed&mouseButton==LEFT){
-					mouselock=1;
-					if(invselect[0]=='anvil'){
-						if(player.sp>=5&player.inventory.chest.level<player.level){
-							if(options.loadAudio){
-								sfx.upgrade.play();
-							}
-							player.sp-=5;
-							player.inventory.chest.level+=1;
-							recalstats();
-						}
-					}
-				}
-				if(!(mouselock)&mousePressed&mouseButton==RIGHT){
-					mouselock=1;
-					if(findemptyslot()>-1){
-						if(options.loadAudio){sfx.click3.play();}
-						swapitems('chest','','bag',findemptyslot());
-						loadtraits();
-						recalstats();
-						getplayersprite();
-					}
-				}
-			}
-		}
-		if(player.inventory.pants){
-			shape(inventorysprites[itemdata[player.inventory.pants.id*10+4]],525,350,75,110);
-			if(cursorbox(500,550,325,375)){
-				equiptooltip('pants');
-				if(!(mouselock)&mousePressed&mouseButton==LEFT){
-					mouselock=1;
-					if(invselect[0]=='anvil'){
-						if(player.sp>=5&player.inventory.pants.level<player.level){
-							if(options.loadAudio){
-								sfx.upgrade.play();
-							}
-							player.sp-=5;
-							player.inventory.pants.level+=1;
-							recalstats();
-						}
-					}
-				}
-				if(!(mouselock)&mousePressed&mouseButton==RIGHT){
-					mouselock=1;
-					if(findemptyslot()>-1){
-						if(options.loadAudio){sfx.click3.play();}
-						swapitems('pants','','bag',findemptyslot());
-						loadtraits();
-						recalstats();
-						getplayersprite();
-					}
-				}
-			}
-		}
-		if(player.inventory.shoes){
-			shape(inventorysprites[itemdata[player.inventory.shoes.id*10+4]],525,425,75,110);
-			if(cursorbox(500,550,400,450)){
-				equiptooltip('shoes');
-				if(!(mouselock)&mousePressed&mouseButton==LEFT){
-					mouselock=1;
-					if(invselect[0]=='anvil'){
-						if(player.sp>=5&player.inventory.shoes.level<player.level){
-							if(options.loadAudio){
-								sfx.upgrade.play();
-							}
-							player.sp-=5;
-							player.inventory.shoes.level+=1;
-							recalstats();
-						}
-					}
-				}
-				if(!(mouselock)&mousePressed&mouseButton==RIGHT){
-					mouselock=1;
-					if(findemptyslot()>-1){
-						if(options.loadAudio){sfx.click3.play();}
-						swapitems('shoes','','bag',findemptyslot());
-						loadtraits();
-						recalstats();
-						getplayersprite();
-					}
-				}
-			}
-		}
-		if(player.inventory.gloves){
-			shape(inventorysprites[itemdata[player.inventory.gloves.id*10+4]],600,350,75,110);
-			if(cursorbox(575,625,325,375)){
-				equiptooltip('gloves');
-				if(!(mouselock)&mousePressed&mouseButton==LEFT){
-					mouselock=1;
-					if(invselect[0]=='anvil'){
-						if(player.sp>=5&player.inventory.gloves.level<player.level){
-							if(options.loadAudio){
-								sfx.upgrade.play();
-							}
-							player.sp-=5;
-							player.inventory.gloves.level+=1;
-							recalstats();
-						}
-					}
-				}
-				if(!(mouselock)&mousePressed&mouseButton==RIGHT){
-					mouselock=1;
-					if(findemptyslot()>-1){
-						if(options.loadAudio){sfx.click3.play();}
-						swapitems('gloves','','bag',findemptyslot());
-						loadtraits();
-						recalstats();
-						getplayersprite();
-					}
-				}
-			}
-		}
 		if(cursorbox(375,475,150,235)){
 			tooltipdraw={
 				type:0,
@@ -12134,6 +11909,11 @@ showdots[2]=0;
 			fill(150,80,150);
 			textFont(0,35);
 			text('Enchanter',500,20);
+			if(!(player.inventory.bag[invselect[1]])){
+				fill(abs(tick%240-120),0,abs(tick%240-120));
+				textFont(0,17);
+				text('Select an item from your inventory to browse enchantments',650,85);
+			}
 			fill(100,0,130);
 			rect(65,55,180,180,8);
 				if(invselect[1]>=0){
@@ -12690,6 +12470,7 @@ showdots[2]=0;
 				}
 				
 				if(!(player.inventory.bag[invselect[1]])){
+					renderequips(1);
 					renderinventory();
 					for(x=0;x<15;x+=1){
 						for(n=0;n<15;n+=1){
@@ -12701,8 +12482,51 @@ showdots[2]=0;
 									mouselock=1;
 									if(mouseButton==LEFT){
 										if(options.loadAudio){sfx.click2.play();}
-											invselect[0]='bag';
-											invselect[1]=15*x+n;
+										invselect[0]='bag';
+										invselect[1]=15*x+n;
+									}
+									else{
+										if(player.inventory.bag[15*x+n]){
+											if(player.inventory.bag[15*x+n].level<=player.level){
+												if(options.loadAudio){sfx.click3.play();}
+												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='weapon'){
+													if(!(player.inventory.LH)){
+														swapitems('bag',15*x+n,'LH','');
+														getstances();
+													}
+													else if(!(player.inventory.RH)){
+														swapitems('bag',15*x+n,'RH','');
+														getstances();
+													}
+													else{
+														swapitems('bag',15*x+n,'LH','');
+														getstances();
+													}
+												}
+												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='chest'){
+													swapitems('bag',15*x+n,'chest','');
+												}
+												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='helmet'){
+													swapitems('bag',15*x+n,'helmet','');
+												}
+												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='pants'){
+													swapitems('bag',15*x+n,'pants','');
+												}
+												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='gloves'){
+													swapitems('bag',15*x+n,'gloves','');
+												}
+												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='shoes'){
+													swapitems('bag',15*x+n,'shoes','');
+												}
+												loadtraits();
+												recalstats();
+												getplayersprite();
+											}
+											else{
+												append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Your level is too low to equip this!',20,0,255,-3,255,0,0));
+											}
+										}
+										invselect=['',-1];
 									}
 								}
 							}
