@@ -17,7 +17,7 @@ Mana Battery
 Vampire
 [Passive] Heal for {ox0c1}% of all damage dealt.
 Zealot's Oath
-[Passive] Adds {s0.0005} to Arcane Armor's mana damage division.
+[Passive] Adds the lower of {s0.0015} and {s0.01} to Arcane Armor's mana damage division.
 Spores
 [Passive] Getting hit releases {ox0c1} spores which deal {i0.35}-{i0.4} magic damage to enemies.
 Energy Shield
