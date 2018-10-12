@@ -2626,7 +2626,7 @@ var loadtraits=function(){
 					enemies[index].dots=new Array();
 				}
 				append(enemies[index].dots,{
-					pdmg:pdmg*player.traits[36]/6000*(enemies[index].lv+9)/0.5,
+					pdmg:pdmg*player.traits[36]/12000,
 					mdmg:0,
 					armorE:0,
 					resE:0,
@@ -4621,12 +4621,12 @@ var heal=function(healp,healtype){
 		healp*=0.85;
 	}
 	//Post-modifiers
-	/*if(player.traits[114]>0){
+	if(player.traits[114]>0){
 		if(healtype=="leech"){
 			shield(healp*0.9*(1.45+player.traits[114]*0.05),180);
 			healp*=0.1;
 		}
-	}*/
+	}
 	player.hp+=healp;
 	if(round(healp)>0){
 	if(healtype=="direct"||healtype=="leech"){
