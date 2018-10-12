@@ -1,4 +1,4 @@
-var version="0.5.4";
+var version="0.5.4b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -3022,7 +3022,7 @@ var loadtraits=function(){
 	//Passives================================
 	if(player.traits[103]>0){
 		append(traitfuncs.passives,function(){
-			if(player.traits[12]>=5){
+			if(player.traits[12]>=10){
 				if(gametick%240==0){
 					playertemp.energising=((plshp(1))*0.004+(plsre(1))*0.05*player.traits[12]-playertemp.energyshield)*(0.18+player.traits[103]*0.02);
 				}
@@ -3035,7 +3035,7 @@ var loadtraits=function(){
 			}
 			else{
 				if(gametick%240==0){
-				shield(((plshp(1))*0.0032+(plsre(1))*0.004),240);
+					shield(((plshp(1))*0.0032+(plsre(1))*0.004)*(18+player.traits[103]*2),240);
 				}
 			}
 		});
