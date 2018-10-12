@@ -1,4 +1,4 @@
-var version="0.5.4bt";
+var version="0.5.4b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -4621,12 +4621,12 @@ var heal=function(healp,healtype){
 		healp*=0.85;
 	}
 	//Post-modifiers
-	/*if(player.traits[114]>0){
+	if(player.traits[114]>0){
 		if(healtype=="leech"){
 			shield(healp*0.9*(1.45+player.traits[114]*0.05),180);
-			healp*=0.1;
+			//healp*=0.1;
 		}
-	}*/
+	}
 	player.hp+=healp;
 	if(round(healp)>0){
 	if(healtype=="direct"||healtype=="leech"){
