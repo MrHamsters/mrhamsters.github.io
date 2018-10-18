@@ -1,14 +1,28 @@
-<!doctype html>
-
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>Project Infinity</title>
-
+<style>
+html,body,canvas{
+	margin:0;
+	padding:0;
+	background: black;
+	display:block;
+	color:rgb(255,255,255);
+	font-family: Verdana, sans-serif;
+	font-size:18px;
+}
+.page{
+	margin:0 auto;
+	width:1133px;
+}
+</style>
 </head>
-<body bgcolor="#000000">
+<body>
 	<script src="processing.js"></script>
 	<script src="howler.js"></script>
-	<canvas height="300" width="300" data-processing-sources="ProjectInfinity.js"></canvas>
+	<div class="page">
+		<canvas id="canvas" width="0" height="0" data-processing-sources="ProjectInfinity.js">No canvas support</canvas>
+		<p><a href="https://discord.gg/EQE7VRn">Join the official Discord!</a></p>
+	</div>
 </body>
 </html>
