@@ -156,7 +156,7 @@ darius axe
 11/-2/0.2/-0.5/6/0/0/0
 1
 4
-
+36/2
 12
 Nightfall
 weapon
