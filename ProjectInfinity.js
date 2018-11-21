@@ -1,4 +1,4 @@
-var version="0.5.4c";
+var version="0.6";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -421,6 +421,12 @@ var getEnemyData=function(){
 			enemydata[i*30+22][n][0]=Number(enemydata[i*30+22][n][0]);
 			enemydata[i*30+22][n][1]=Number(enemydata[i*30+22][n][1]);
 			enemydata[i*30+22][n][2]=Number(enemydata[i*30+22][n][2]);
+		}
+		if(enemydata[i*30+28]){
+			enemydata[i*30+28]=split(enemydata[i*30+28],'|');
+			for(n=0;n<enemydata[i*30+28].length;n+=1){
+				enemydata[i*30+28][n]=split(enemydata[i*30+28][n],',');
+			}
 		}
 	}
 	enemyinforaw='';
@@ -876,6 +882,8 @@ function createenemy(ID){
 	this.ppd=enemydata[ID*30+24];
 	this.soulv=Number(enemydata[ID*30+25]);
 	this.spdmod=1;
+	this.ts={};
+	this.tstatus=new Array();
 	if(player.traits[90]>0){
 		this.haste+=player.traits[90];
 	}
@@ -897,7 +905,348 @@ function createenemy(ID){
 	this.ondespawn=function(i){
 		defaultenemy(i,450);	
 	};
+	this.traits={
+		damagetaken:new Array(),
+		damagedealt:new Array(),
+		passive:new Array(),
+		ondeath:new Array(),
+	};
+	if(enemydata[ID*30+28]){
+		for(aea=0;aea<enemydata[ID*30+28].length;aea+=1){
+			if(enemydata[ID*30+28][aea][0]==1){
+				append(this.traits.damagetaken,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
+			}
+			else if(enemydata[ID*30+28][aea][0]==2){
+				append(this.traits.damagedealt,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
+			}
+			else if(enemydata[ID*30+28][aea][0]==3){
+				append(this.traits.passive,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
+			}
+			else if(enemydata[ID*30+28][aea][0]==4){
+				append(this.traits.ondeath,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
+			}
+		}
+	}
 }
+var applyNMETrait=[
+	//0: damage taken mod
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		args[1]=Number(args[1]);
+		args[2]=Number(args[2]);
+		return(
+			function(){
+				if(armorE>0){
+					pdmg*=args[0];
+				}
+				else{
+					pdmg*=args[2];
+				}
+				if(resE>0){
+					mdmg*=args[1];
+				}
+				else{
+					mdmg*=args[2];
+				}
+			}
+		);
+	},
+	//1: damage taken from hits mod
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		args[1]=Number(args[1]);
+		args[2]=Number(args[2]);
+		return(
+			function(){
+				if(willhit){
+					if(armorE>0){
+						pdmg*=args[0];
+					}
+					else{
+						pdmg*=args[2];
+					}
+					if(resE>0){
+						mdmg*=args[1];
+					}
+					else{
+						mdmg*=args[2];
+					}
+				}
+			}
+		);
+	},
+	//2: DoT taken mod
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		args[1]=Number(args[1]);
+		args[2]=Number(args[2]);
+		return(
+			function(){
+				if(attacktype=="DoT"){
+					if(armorE>0){
+						pdmg*=args[0];
+					}
+					else{
+						pdmg*=args[2];
+					}
+					if(resE>0){
+						mdmg*=args[1];
+					}
+					else{
+						mdmg*=args[2];
+					}
+				}
+			}
+		);
+	},
+	//3: fly-scatter
+	function(args){
+		args=split(args,"/");
+		return(
+			function(){
+				if(!(enemies[index].ts.scattering)){
+					if(willhit){
+						enemies[index].ts.scattering=1;
+						append(enemies[index].tstatus,{name:'fly-scatter',tick:0,dir:random(PI*2),run:function(){
+							enemies[i].spdmod=min(enemies[i].spdmod,0.1);
+							enemies[i].tstatus[d].tick+=1;
+							if(enemies[i].stun<=0){
+								enemies[i].x+=cos(enemies[i].tstatus[d].dir)*args[0];
+								enemies[i].y+=sin(enemies[i].tstatus[d].dir)*args[0];
+							}
+							if(enemies[i].tstatus[d].tick>=args[1]){
+								enemies[i].ts.scattering=0;
+								enemies[i].tstatus.splice(d,1);
+								d-=1;
+							}
+						}
+						});
+					}
+				}
+			}
+		);
+	},
+	//4: reform
+	function(args){
+		args=split(args,"/");
+		return(
+			function(){
+				if(willhit){
+					stemp=0;
+					if(pdmg>0){
+						if(armorE>0){
+							stemp+=pdmg*args[0]/100;
+						}
+						else{
+							stemp+=pdmg*args[2]/100;
+						}
+					}
+					if(mdmg>0){
+						if(resE>0){
+							stemp+=mdmg*args[1]/100;
+						}
+						else{
+							stemp+=mdmg*args[2]/100;
+						}
+					}
+					append(enemies[index].tstatus,{name:'reform',tick:0,theal:stemp,run:function(){
+						enemies[i].hp=min(enemies[i].mhp,enemies[i].hp+enemies[i].tstatus[d].theal/args[3]);
+						enemies[i].tstatus[d].tick+=1;
+						if(enemies[i].tstatus[d].tick>=args[3]){
+							enemies[i].tstatus.splice(d,1);
+							d-=1;
+						}
+					}
+					});
+				}
+			}
+		);
+	},
+	//5: barrier
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		args[1]=Number(args[1]);
+		args[2]=Number(args[2]);
+		args[3]=Number(args[3]);
+		args[4]=Number(args[4]);
+		args[5]=Number(args[5]);
+		args[6]=Number(args[6]);
+		args[7]=Number(args[7]);
+		args[8]=Number(args[8]);
+		args[9]=Number(args[9]);
+		return(
+			function(){
+				if(!(enemies[i].ts.barrierstartup)){
+					enemies[i].ts.barrierstartup=1;
+					enemies[i].ts.barriercd=args[9];
+					enemies[i].ts.barrier=0;
+				}
+				enemies[i].ts.barriercd-=1;
+				if(enemies[i].ts.barriercd<=0){
+					enemies[i].ts.barriercd=args[1];
+					enemies[i].ts.barrier=args[0]+1;
+				}
+				if(enemies[i].ts.barrier>0){
+					enemies[i].ts.barrier-=1;
+					if(render){
+						noFill();
+						strokeWeight(args[2]/3);
+						stroke(args[3],args[4],args[5],args[6]+((args[7]-args[6])*(abs(tick%args[8]-(args[8]/2))/args[8])*2));
+						ellipseMode(CENTER);
+						ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,args[2],args[2]);
+						noStroke();
+					}
+				}
+			}
+		);
+	},
+	//6: barrier effect
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		args[1]=Number(args[1]);
+		args[2]=Number(args[2]);
+		return(
+			function(){
+				if(enemies[index].ts.barrier>0){
+					if(armorE>0){
+						pdmg*=args[0];
+					}
+					else{
+						pdmg*=args[2];
+					}
+					if(resE>0){
+						mdmg*=args[1];
+					}
+					else{
+						mdmg*=args[2];
+					}
+				}
+			}
+		);
+	},
+	//7: wooden shell
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		args[1]=Number(args[1]);
+		args[2]=Number(args[2]);
+		return(
+			function(){
+				if(!(enemies[i].ts.woodenshellstartup)){
+					enemies[i].ts.woodenshellstartup=1;
+					enemies[i].ts.woodenshell=args[0];
+				}
+				if(enemies[i].ts.woodenshell>0){
+					if(render){
+						translate(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350);
+						rotate(tick/60);
+						fill(180,100,0,150+abs(tick%200-100));
+						for(stf=0;stf<enemies[i].ts.woodenshell;stf+=1){
+							rotate(PI*2/enemies[i].ts.woodenshell);
+							rect(-5,-args[1],6*args[2],4*args[2]);
+						}
+						resetMatrix();
+					}
+				}
+			}
+		);
+	},
+	//8: wooden shell effect
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		args[1]=Number(args[1]);
+		args[2]=Number(args[2]);
+		args[3]=Number(args[3]);
+		args[4]=Number(args[4]);
+		args[5]=Number(args[5]);
+		return(
+			function(){
+				if(enemies[index].ts.woodenshell>0){
+					if(willhit){
+						enemies[index].ts.woodenshell-=1;
+						sfx.woodenshell.play();
+						if(armorE>0){
+							pdmg*=args[0];
+						}
+						else{
+							pdmg*=args[2];
+						}
+						if(resE>0){
+							mdmg*=args[1];
+						}
+						else{
+							mdmg*=args[2];
+						}
+					}
+					else{
+						if(armorE>0){
+							pdmg*=args[3];
+						}
+						else{
+							pdmg*=args[5];
+						}
+						if(resE>0){
+							mdmg*=args[4];
+						}
+						else{
+							mdmg*=args[5];
+						}
+					}
+				}
+			}
+		);
+	},
+	//9: augmented dash
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		for(sta=2;sta<args.length;sta+=1){
+			args[sta]=Number(args[sta]);
+		}
+		//Flame Aura
+		if(args[0]==1){
+			return(
+				function(){
+					if(!(enemies[i].ts.flameaurastartup)){
+						enemies[i].ts.flameaurastartup=1;
+						enemies[i].ts.flameaura=0;
+						enemies[i].ts.cflameaura=1;
+					}
+					if(enemies[i].action.id==3&enemies[i].ts.cflameaura){
+						enemies[i].ts.flameaura=args[4];
+						enemies[i].ts.cflameaura=0;
+						if(args[1]){
+							sfx[args[1]].play();
+						}
+					}
+					if(!(enemies[i].action.id==3)){
+						enemies[i].ts.cflameaura=1;
+					}
+					if(enemies[i].ts.flameaura>0){
+						enemies[i].ts.flameaura-=1;
+						if(tick%4==0){
+							append(particles,new createparticle(enemies[i].x+random(-20,20),enemies[i].y+random(-20,20),random(-3,3),random(-3,3),random(-0.3,0.3),random(-0.3,0.3),'circle','',args[3]/5,-args[3]/300,200,-10,random(200,255),random(180,235),120,1));
+						}
+						if(render){
+							fill(args[5],args[6],args[7],args[6]+((args[7]-args[6])*(abs(tick%args[8]-(args[8]/2))/args[8])*2));
+							ellipseMode(CENTER);
+							ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,args[3]*2,args[3]*2);
+						}
+						if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(args[3]+player.size,2)){
+							damage("player",0,nmelvsc(enemies[i].lv)*args[2]/120,nmelvsc(enemies[i].lv)*args[2]/120,0,0,"DoT",i,0);
+						}
+					}
+				}
+			);
+		}
+	},
+];
 var defaultenemy=function(i,mindistance){
 	temp=-1;
 	while(temp<0){
@@ -4689,6 +5038,15 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 		pdmgs*=0.05;
 		mdmgs*=0.05;
 		dmgmultbr=1;
+		if(enemies[attacker]){
+			if(enemies[attacker].traits){
+				if(enemies[attacker].traits.damagedealt){
+					for(tdd=0;tdd<enemies[attacker].traits.damagedealt.length;tdd+=1){
+						enemies[attacker].traits.damagedealt[tdd]();
+					}
+				}
+			}
+		}
 		for(r=0;r<playertemp.buffs.length;r+=1){
 			if(playertemp.buffs[r].id==2){
 				dmgmultbr*=((100-playertemp.buffs[r].pow)/100);
@@ -4864,6 +5222,13 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 			}
 			for(tfoh=0;tfoh<keystonefuncs.onhit.length;tfoh+=1){
 				keystonefuncs.onhit[tfoh]();
+			}
+		}
+		if(enemies[index].traits){
+			if(enemies[index].traits.damagetaken){
+				for(tdd=0;tdd<enemies[index].traits.damagetaken.length;tdd+=1){
+					enemies[index].traits.damagetaken[tdd]();
+				}
 			}
 		}
 		pdmg=max(pdmg/10,pdmg-enemies[index].armor/10*armorE);
@@ -6295,7 +6660,7 @@ var getBiomeScripts=function(){
 									playertemp.hpregen+=1;
 									if(options.loadAudio){sfx.pop.play();}
 									append(stateffects,{name:'aqua blessing',tick:0,run:function(){
-										if(stateffects[n].tick>=600){
+										if(stateffects[n].tick>=900){
 											playertemp.mpregen-=1;
 											playertemp.hpregen-=1;
 											stateffects.splice(n,1);
@@ -6358,7 +6723,60 @@ var getBiomeScripts=function(){
 										enemies[i].action.defmove=1;
 										nmesa.move(i);
 									}
-								}
+								},
+								ts:{
+									charge:-120
+								},
+								traits:{
+									damagetaken:new Array(),
+									damagedealt:new Array(),
+									passive:[
+										function(){
+											enemies[i].ts.charge+=1;
+											if(enemies[i].ts.charge>=40){
+												enemies[i].ts.charge=0;
+												append(objects,{
+													type:'projectile',
+													vfx:1,
+													draw:function(){
+														fill(0,0,255,objects[n].duration*1.4);
+														ellipseMode(CENTER);
+														ellipse(0,0,19+(tick%30-15)/5,19+(tick%30-15)/5);
+													},
+													target:'player',
+													size:15,
+													speed:0.2,
+													duration:180,
+													sound:sfx.energyh,
+													dir:enemies[i].dir,
+													x:enemies[i].x,
+													y:enemies[i].y,
+													pdmgmin:0,
+													pdmgmax:0,
+													mdmgmin:enemies[i].intel*15,
+													mdmgmax:enemies[i].intel*17,
+													armorE:1,
+													resE:1,
+													procc:0.8,
+													xdrift:random(-2,2),
+													ydrift:random(-2,2),
+													hits:new Array(999),
+													run:function(){
+														objects[n].x+=objects[n].xdrift;
+														objects[n].y+=objects[n].ydrift;
+														objects[n].mdmgmin*=0.99;
+														objects[n].mdmgmax*=0.99;
+														objects[n].xdrift*=0.98;
+														objects[n].ydrift*=0.98;
+														objects[n].speed=min(7,objects[n].speed*1.03);
+													}
+												});
+											}
+											
+										}
+									],
+									ondeath:new Array(),
+								},
 							});
 						}
 						areatemp.rainptc.splice(sr,1);
@@ -8108,19 +8526,29 @@ append(doaction,function(lv,hand){
 					objects[n].mdmgmax+=objects[n].dmggain*3;
 				},
 				endfunc:function(){
-					append(stateffects,{name:'puddle',pow:((plsin(1))*0.01+(plshp(1))*0.005),mult:(1+(objects[n].timer/100)*4),x:objects[n].x,y:objects[n].y,tick:0,run:function(){
-						fill(50,50,255,300-stateffects[n].tick);
-						ellipseMode(CENTER);
-						ellipse(400+stateffects[n].x-playertemp.x,350+stateffects[n].y-playertemp.y,30,30);
-						if(pow(playertemp.x-stateffects[n].x,2)+pow(playertemp.y-stateffects[n].y,2)<pow(18+player.size,2)){
-							heal(stateffects[n].mult*stateffects[n].pow/60,"HoT");
-							player.mp+=stateffects[n].mult*0.01;
-						}
-						if(stateffects[n].tick>=300){
-							stateffects.splice(n,1);
-							n-=1;
-						}
-					}});
+					if(!(playertemp.bubblewandrestpools)){
+						playertemp.bubblewandrestpools=0;
+					}
+					if(random(1)>0.94+0.02*min(2,playertemp.bubblewandrestpools)){
+						playertemp.bubblewandrestpools+=1;
+						append(stateffects,{name:'puddle',pow:((plsin(0.05))+(plshp(0.025))),mult:(1+(objects[n].timer/50)),x:objects[n].x,y:objects[n].y,tick:0,run:function(){
+							fill(50,50,255,200*((480-stateffects[n].tick)/480));
+							ellipseMode(CENTER);
+							ellipse(400+stateffects[n].x-playertemp.x,350+stateffects[n].y-playertemp.y,80,80);
+							if(pow(playertemp.x-stateffects[n].x,2)+pow(playertemp.y-stateffects[n].y,2)<pow(40+player.size,2)){
+								heal(stateffects[n].mult*stateffects[n].pow/60,"HoT");
+								player.mp+=stateffects[n].mult*0.1;
+							}
+							if(stateffects[n].tick%90==0&stateffects[n].tick<380){
+								append(particles,new createparticle(stateffects[n].x,stateffects[n].y,0,0,0,0,'circle','',5,1,200,-2,0,255,120,1));
+							}
+							if(stateffects[n].tick>=480){
+								playertemp.bubblewandrestpools-=1;
+								stateffects.splice(n,1);
+								n-=1;
+							}
+						}});
+					}
 				}
 			});
 			
@@ -8166,21 +8594,27 @@ append(doaction,function(lv,hand){
 						sprite:sprites.bolt,
 						target:'enemy',
 						size:14,
-						speed:11,
+						speed:13,
 						pierce:0,
-						duration:35,
+						duration:30,
 						sound:sfx.arrowhit,
 						dir:playertemp.action.dir+xbowsh/3.5,
 						x:playertemp.x,
 						y:playertemp.y,
-						pdmgmin:(plsst(6.5)),
-						pdmgmax:(plsst(7.5)),
+						pdmgmin:(plsst(7)),
+						pdmgmax:(plsst(8)),
 						mdmgmin:0,
 						mdmgmax:0,
 						armorE:1,
 						resE:1,
 						procc:0.2,
 						hits:new Array(999),
+						run:function(){
+							if(objects[n].duration>15){
+								objects[n].pdmgmin*=1.02;
+								objects[n].pdmgmax*=1.02;
+							}
+						},
 						endfunc:function(){
 							if(player.traits[65]>0){
 								ts.explosivemunitions(0.4);
@@ -8197,13 +8631,13 @@ append(doaction,function(lv,hand){
 					size:14,
 					speed:11,
 					pierce:0,
-					duration:35,
+					duration:30,
 					sound:sfx.arrowhit,
 					dir:playertemp.action.dir,
 					x:playertemp.x,
 					y:playertemp.y,
-					pdmgmin:(plsst(13)),
-					pdmgmax:(plsst(15)),
+					pdmgmin:(plsst(16)),
+					pdmgmax:(plsst(19)),
 					mdmgmin:0,
 					mdmgmax:0,
 					armorE:1,
@@ -8228,7 +8662,7 @@ append(doaction,function(lv,hand){
 			rotate(playertemp.action.dir);
 			if(render){shape(sprites.xbow,0,0,30,45);}
 			resetMatrix();
-		if(playertemp.action.tick>=20-min(10,traitpow)){
+		if(playertemp.action.tick>=20-(min(10,traitpow)*0.8)){
 			stopaction();
 		}
 	}
@@ -9897,13 +10331,13 @@ append(doaction,function(lv,hand){
 				shape(sprites.energystaff,0,0,30,45);
 				resetMatrix();
 				noFill();
-				stroke(255,255,255,100+min(255,player.mp/plsmp(0.002))*abs(playertemp.action.tick%6-3)/3);
+				stroke(255,255,255,100+min(255,player.mp/plsmp(0.002))*abs(playertemp.action.tick%5-2.5)/2.5);
 				strokeWeight(50*(1+min(10,traitpow)/10));
 				line(400+sin(playertemp.action.dir)*40,350-cos(playertemp.action.dir)*40,400+sin(playertemp.action.dir)*300,350-cos(playertemp.action.dir)*300);
 				noStroke();
 			}
-			if(playertemp.action.tick>1&playertemp.action.tick%6==0&player.mp>=2){
-				player.mp-=2;
+			if(playertemp.action.tick>1&playertemp.action.tick%5==0&player.mp>=1.5){
+				player.mp-=1.5;
 				spendmana("magic",2,2);
 				append(objects,{
 					type:'projectile',
@@ -9921,8 +10355,8 @@ append(doaction,function(lv,hand){
 					y:playertemp.y,
 					pdmgmin:0,
 					pdmgmax:0,
-					mdmgmin:(plsin(7.5)),
-					mdmgmax:(plsin(8)),
+					mdmgmin:(plsin(6)),
+					mdmgmax:(plsin(7)),
 					armorE:1,
 					resE:1,
 					procc:0.37,
@@ -10329,6 +10763,8 @@ var sfx={
 		cripplingst:new Howl({src: ['Data/Sound/sfx/cripplingStrike.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
 		energyls:new Howl({src: ['Data/Sound/sfx/energyLS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
 		energylf:new Howl({src: ['Data/Sound/sfx/energyLF.ogg'], autoplay: false,loop: true,volume: options.sfx*0.8,}),
+		woodenshell:new Howl({src: ['Data/Sound/sfx/woodenshell.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+		dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
 };
 }
 var anticlipc;
@@ -10690,7 +11126,28 @@ showdots[2]=0;
 				}
 			}
 		}
+		if(enemies[i].tstatus){
+			for(d=0;d<enemies[i].tstatus.length;d+=1){
+				if(enemies[i].tstatus[d]){
+					enemies[i].tstatus[d].run(i);
+				}
+			}
+		}
+		if(enemies[i].traits){
+			if(enemies[i].traits.passive){
+				for(tdd=0;tdd<enemies[i].traits.passive.length;tdd+=1){
+					enemies[i].traits.passive[tdd]();
+				}
+			}
+		}
 		if(enemies[i].hp<=0){
+			if(enemies[i].traits){
+				if(enemies[i].traits.ondeath){
+					for(tdd=0;tdd<enemies[i].traits.ondeath.length;tdd+=1){
+						enemies[i].traits.ondeath[tdd]();
+					}
+				}
+			}
 			playertemp.timesincekill=0;
 			append(particles,new createparticle(enemies[i].x,enemies[i].y,0,0,0,-0.1,'circle','',20,-0.3,255,-6,200,0,140,1));
 			if(enemies[i].reactant){
