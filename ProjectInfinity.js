@@ -1,4 +1,4 @@
-var version="0.6";
+var version="0.6.1";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -39,7 +39,7 @@ var options={
 	//0: disabled  1: normal  2: always shown
 	healthbars:1,
 	loadAudio:1,
-	//0: normal dmg ind  1: reduction by armor and res  2: total reduction
+	//0: normal dmg ind  1: reduction by armor and res (disabled)  2: total reduction
 	showmit:1,
 	//0: frames do not get skipped; if you lag, so does the game  1: game and frames are independent
 	frameskip:1,
@@ -906,15 +906,17 @@ function createenemy(ID){
 		defaultenemy(i,450);	
 	};
 	this.traits={
-		damagetaken:new Array(),
+		damagetakenpoa:new Array(),
 		damagedealt:new Array(),
 		passive:new Array(),
 		ondeath:new Array(),
+		damagetakenpra:new Array(),
+		drawover:new Array(),
 	};
 	if(enemydata[ID*30+28]){
 		for(aea=0;aea<enemydata[ID*30+28].length;aea+=1){
 			if(enemydata[ID*30+28][aea][0]==1){
-				append(this.traits.damagetaken,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
+				append(this.traits.damagetakenpoa,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
 			}
 			else if(enemydata[ID*30+28][aea][0]==2){
 				append(this.traits.damagedealt,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
@@ -924,6 +926,12 @@ function createenemy(ID){
 			}
 			else if(enemydata[ID*30+28][aea][0]==4){
 				append(this.traits.ondeath,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
+			}
+			else if(enemydata[ID*30+28][aea][0]==5){
+				append(this.traits.damagetakenpra,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
+			}
+			else if(enemydata[ID*30+28][aea][0]==6){
+				append(this.traits.drawover,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
 			}
 		}
 	}
@@ -1071,18 +1079,11 @@ var applyNMETrait=[
 		args[0]=Number(args[0]);
 		args[1]=Number(args[1]);
 		args[2]=Number(args[2]);
-		args[3]=Number(args[3]);
-		args[4]=Number(args[4]);
-		args[5]=Number(args[5]);
-		args[6]=Number(args[6]);
-		args[7]=Number(args[7]);
-		args[8]=Number(args[8]);
-		args[9]=Number(args[9]);
 		return(
 			function(){
 				if(!(enemies[i].ts.barrierstartup)){
 					enemies[i].ts.barrierstartup=1;
-					enemies[i].ts.barriercd=args[9];
+					enemies[i].ts.barriercd=args[2];
 					enemies[i].ts.barrier=0;
 				}
 				enemies[i].ts.barriercd-=1;
@@ -1092,14 +1093,6 @@ var applyNMETrait=[
 				}
 				if(enemies[i].ts.barrier>0){
 					enemies[i].ts.barrier-=1;
-					if(render){
-						noFill();
-						strokeWeight(args[2]/3);
-						stroke(args[3],args[4],args[5],args[6]+((args[7]-args[6])*(abs(tick%args[8]-(args[8]/2))/args[8])*2));
-						ellipseMode(CENTER);
-						ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,args[2],args[2]);
-						noStroke();
-					}
 				}
 			}
 		);
@@ -1246,6 +1239,118 @@ var applyNMETrait=[
 			);
 		}
 	},
+	//10: barrier draw
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		args[1]=Number(args[1]);
+		args[2]=Number(args[2]);
+		args[3]=Number(args[3]);
+		args[4]=Number(args[4]);
+		args[5]=Number(args[5]);
+		args[6]=Number(args[6]);
+		return(
+			function(){
+				if(enemies[i].ts.barrier>0){
+					fill(args[1],args[2],args[3],args[4]+((args[5]-args[4])*(abs(tick%args[6]-(args[6]/2))/args[6])*2));
+					ellipseMode(CENTER);
+					ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,args[0],args[0]);
+				}
+			}
+		);
+	},
+	//11: shatter shield
+	function(args){
+		args=split(args,"/");
+		for(sta=0;sta<args.length;sta+=1){
+			args[sta]=Number(args[sta]);
+		}
+		return(
+			function(){
+				if(!(enemies[i].ts.shattershieldstartup)){
+					enemies[i].ts.shattershieldstartup=1;
+					enemies[i].ts.shattershieldcd=args[0];
+					enemies[i].ts.shattershield=1;
+				}
+				if(enemies[i].ts.shattershield){
+					if(render){
+						noFill();
+						strokeWeight(args[1]/4);
+						stroke(args[2],args[3],args[4],args[5]+((args[6]-args[5])*(abs(tick%args[7]-(args[7]/2))/args[7])*2));
+						ellipseMode(CENTER);
+						ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,args[1],args[1]);
+						noStroke();
+					}
+				}
+				else{
+					enemies[i].ts.shattershieldcd-=1;
+					if(enemies[i].ts.shattershieldcd<=0){
+						enemies[i].ts.shattershieldcd=args[0];
+						enemies[i].ts.shattershield=1;
+					}
+				}
+			}
+		);
+	},
+	//12: shatter shield effects
+	function(args){
+		args=split(args,"/");
+		args[0]=Number(args[0]);
+		args[1]=Number(args[1]);
+		args[2]=Number(args[2]);
+		args[3]=Number(args[3]);
+		args[4]=split(args[4],"+");
+		args[4][0]=Number(args[4][0]);
+		args[4][1]=Number(args[4][1]);
+		args[5]=Number(args[5]);
+		args[6]=Number(args[6]);
+		args[7]=Number(args[7]);
+		args[8]=Number(args[8]);
+		return(
+			function(){
+				if(enemies[index].ts.shattershield){
+					if(armorE>0){
+						pdmg*=args[0];
+					}
+					else{
+						pdmg*=args[2];
+					}
+					if(resE>0){
+						mdmg*=args[1];
+					}
+					else{
+						mdmg*=args[2];
+					}
+					if(willhit){
+						if((pdmg+mdmg)>nmelvsc(enemies[index].lv)*args[3]){
+							enemies[index].ts.shattershield=0;
+							sfx.shattershield.play();
+							append(particles,new createparticle(enemies[i].x,enemies[i].y,0,0,0,0,'circle','',args[5]*1.5,args[5]/40,200,-5,args[6],args[7],args[8],1));
+							append(objects,{
+								type:'AoE',
+								target:'player',
+								size:args[5],
+								duration:0,
+								rangetype:"melee",
+								source:index,
+								x:enemies[index].x,
+								y:enemies[index].y,
+								pdmgmin:nmelvsc(enemies[index].lv)*args[4][0],
+								pdmgmax:nmelvsc(enemies[index].lv)*args[4][0],
+								mdmgmin:nmelvsc(enemies[index].lv)*args[4][1],
+								mdmgmax:nmelvsc(enemies[index].lv)*args[4][1],
+								hitc:0,
+								armorE:1,
+								resE:1,
+								procc:0,
+								hits:new Array(999),
+							});
+						}
+					}
+				}
+			}
+		);
+	},
 ];
 var defaultenemy=function(i,mindistance){
 	temp=-1;
@@ -1255,7 +1360,7 @@ var defaultenemy=function(i,mindistance){
 			temp=temp2;
 		}
 	}
-	enemies[i] = new createenemy(temp);
+	enemies[i]=new createenemy(temp);
 	while(enemies[i].x-playertemp.x<mindistance&enemies[i].x-playertemp.x>-mindistance&enemies[i].y-playertemp.y>-mindistance&enemies[i].y-playertemp.y<mindistance){
 		enemies[i].x=random(playertemp.x-1000,playertemp.x+1000);
 		enemies[i].y=random(playertemp.y-1000,playertemp.y+1000);
@@ -3504,11 +3609,11 @@ var loadtraits=function(){
 				if(playertemp.buffs[getbuffind(9)].pow>=30){
 					playertemp.buffs[getbuffind(9)].pow-=30;
 					stemp=[random(-70,70),random(-70,70)];
-					append(particles,new createparticle(stemp[0]+playertemp.x,stemp[1]+playertemp.y,0,0,0,0,'circle','',60,3,255,-13,100,0,100,1));
+					append(particles,new createparticle(stemp[0]+playertemp.x,stemp[1]+playertemp.y,0,0,0,0,'circle','',80,4,255,-13,100,0,100,1));
 					append(objects,{
 						type:'AoE',
 						target:'enemy',
-						size:90,
+						size:120,
 						duration:0,
 						rangetype:"ranged",
 						sound:sfx.obliteration,
@@ -5225,14 +5330,21 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 			}
 		}
 		if(enemies[index].traits){
-			if(enemies[index].traits.damagetaken){
-				for(tdd=0;tdd<enemies[index].traits.damagetaken.length;tdd+=1){
-					enemies[index].traits.damagetaken[tdd]();
+			if(enemies[index].traits.damagetakenpra){
+				for(tdd=0;tdd<enemies[index].traits.damagetakenpra.length;tdd+=1){
+					enemies[index].traits.damagetakenpra[tdd]();
 				}
 			}
 		}
 		pdmg=max(pdmg/10,pdmg-enemies[index].armor/10*armorE);
 		mdmg=max(mdmg/10,mdmg-enemies[index].res/10*resE);
+		if(enemies[index].traits){
+			if(enemies[index].traits.damagetakenpoa){
+				for(tdd=0;tdd<enemies[index].traits.damagetakenpoa.length;tdd+=1){
+					enemies[index].traits.damagetakenpoa[tdd]();
+				}
+			}
+		}
 		//POST MITIGATION============
 		for(tfddpm=0;tfddpm<traitfuncs.damagedealtpostmit.length;tfddpm+=1){
 			traitfuncs.damagedealtpostmit[tfddpm]();
@@ -8594,15 +8706,15 @@ append(doaction,function(lv,hand){
 						sprite:sprites.bolt,
 						target:'enemy',
 						size:14,
-						speed:13,
+						speed:12,
 						pierce:0,
 						duration:30,
 						sound:sfx.arrowhit,
 						dir:playertemp.action.dir+xbowsh/3.5,
 						x:playertemp.x,
 						y:playertemp.y,
-						pdmgmin:(plsst(7)),
-						pdmgmax:(plsst(8)),
+						pdmgmin:(plsst(6.5)),
+						pdmgmax:(plsst(7.5)),
 						mdmgmin:0,
 						mdmgmax:0,
 						armorE:1,
@@ -8613,11 +8725,12 @@ append(doaction,function(lv,hand){
 							if(objects[n].duration>15){
 								objects[n].pdmgmin*=1.02;
 								objects[n].pdmgmax*=1.02;
+								objects[n].procc*=1.02;
 							}
 						},
 						endfunc:function(){
 							if(player.traits[65]>0){
-								ts.explosivemunitions(0.4);
+								ts.explosivemunitions(objects[n].procc*1.9);
 							}
 						}
 					});
@@ -10763,7 +10876,8 @@ var sfx={
 		cripplingst:new Howl({src: ['Data/Sound/sfx/cripplingStrike.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
 		energyls:new Howl({src: ['Data/Sound/sfx/energyLS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
 		energylf:new Howl({src: ['Data/Sound/sfx/energyLF.ogg'], autoplay: false,loop: true,volume: options.sfx*0.8,}),
-		woodenshell:new Howl({src: ['Data/Sound/sfx/woodenshell.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+		woodenshell:new Howl({src: ['Data/Sound/sfx/woodenshell.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+		shattershield:new Howl({src: ['Data/Sound/sfx/shattershield.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 		dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
 };
 }
@@ -11195,13 +11309,21 @@ showdots[2]=0;
 						enemies[i].draw(i);
 					}
 					resetMatrix();
+					if(enemies[i].traits){
+						if(enemies[i].traits.drawover){
+							for(tdd=0;tdd<enemies[i].traits.drawover.length;tdd+=1){
+								enemies[i].traits.drawover[tdd]();
+							}
+						}
+					}
 					if(!(enemies[i].disablehpbar)&(options.healthbars==2||(options.healthbars==1&enemies[i].hp<enemies[i].mhp))){
 						translate(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350);
 						fill(0,0,0);
 						rect(-15,-10-enemies[i].size,30,5);
 						fill(0,200,0);
 						rect(-15,-10-enemies[i].size,enemies[i].hp/enemies[i].mhp*30,5);
-				}}
+					}
+				}
 				
 			}
 				resetMatrix();
