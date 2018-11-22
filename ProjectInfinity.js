@@ -1,4 +1,4 @@
-var version="0.6.1b";
+var version="0.6.1c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -8706,7 +8706,7 @@ append(doaction,function(lv,hand){
 						sprite:sprites.bolt,
 						target:'enemy',
 						size:14,
-						speed:12,
+						speed:11,
 						pierce:0,
 						duration:30,
 						sound:sfx.arrowhit,
@@ -8742,7 +8742,7 @@ append(doaction,function(lv,hand){
 					sprite:sprites.bolt,
 					target:'enemy',
 					size:14,
-					speed:11,
+					speed:12,
 					pierce:0,
 					duration:30,
 					sound:sfx.arrowhit,
@@ -10452,7 +10452,7 @@ append(doaction,function(lv,hand){
 			}
 			if(playertemp.action.tick>1&playertemp.action.tick%5==0&player.mp>=1.5){
 				player.mp-=1.5;
-				spendmana("magic",2,2);
+				spendmana("magic",1.5,1.5);
 				append(objects,{
 					type:'projectile',
 					vfx:1,
@@ -10483,8 +10483,8 @@ append(doaction,function(lv,hand){
 			}
 		}
 	}
-	else if(player.mp>=2){
-		player.mp-=2;
+	else if(player.mp>=1.5){
+		player.mp-=1.5;
 		playertemp.action={
 			name:'energy bolt',
 			tick:0,
@@ -10498,7 +10498,7 @@ append(doaction,function(lv,hand){
 		else{
 			playertemp.action.dir=PI-atan((mouseX-400)/(mouseY-350));
 		}
-		spendmana("magic",2,2);
+		spendmana("magic",1.5,1.5);
 		playertemp.action.run=function(){
 			playertemp.timesinceaction=0;
 			if(player.traits[42]>0){
@@ -10511,11 +10511,11 @@ append(doaction,function(lv,hand){
 				if(options.loadAudio){sfx.energystaff.play();}
 			}
 			if(mouseY<350){
-					playertemp.action.dir=-atan((mouseX-400)/(mouseY-350));
-				}
-				else{
-					playertemp.action.dir=PI-atan((mouseX-400)/(mouseY-350));
-				}
+				playertemp.action.dir=-atan((mouseX-400)/(mouseY-350));
+			}
+			else{
+				playertemp.action.dir=PI-atan((mouseX-400)/(mouseY-350));
+			}
 			translate(400,350);
 			rotate(playertemp.action.dir);
 			if(render){shape(sprites.energystaff,0,0,30,45);}
@@ -10526,7 +10526,7 @@ append(doaction,function(lv,hand){
 					type:'projectile',
 					vfx:1,
 					draw:function(){
-						fill(100+objects[n].duration*7,100+objects[n].duration*7,100+objects[n].duration*7);
+						fill(100+objects[n].duration*8,100+objects[n].duration*8,100+objects[n].duration*8);
 						ellipseMode(CENTER);
 						ellipse(0,0,10+(tick%30-15)/3,10+(tick%30-15)/3);
 						if(options.light){
@@ -10538,9 +10538,9 @@ append(doaction,function(lv,hand){
 					},
 					target:'enemy',
 					size:15,
-					speed:7,
+					speed:10,
 					pierce:0,
-					duration:45*(1+min(10,traitpow)/20),
+					duration:35*(1+min(10,traitpow)/20),
 					sound:sfx.energyh,
 					dir:playertemp.action.dir,
 					curve:0.1-spp/5,
@@ -10573,7 +10573,7 @@ append(doaction,function(lv,hand){
 				});
 				}
 			}
-			if(playertemp.action.tick>=30*(1-min(0.6,(player.mp/(plsmp(1)))*0.6))){
+			if(playertemp.action.tick>=30*(1-min(0.7,(player.mp/(plsmp(1)))*0.7))){
 				stopaction();
 			}
 		}
