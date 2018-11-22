@@ -1,4 +1,4 @@
-var version="0.6.1";
+var version="0.6.1b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -10431,6 +10431,7 @@ append(doaction,function(lv,hand){
 		if(options.loadAudio){sfx.energyls.play();}
 		if(options.loadAudio){sfx.energylf.play();}
 		playertemp.action.run=function(){
+			playertemp.timesinceaction=0;
 			if(player.traits[42]>0){
 				traitpow=player.traits[42];
 			}
