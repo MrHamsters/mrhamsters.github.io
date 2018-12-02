@@ -1,4 +1,4 @@
-var version="0.7b";
+var version="0.7c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -9209,8 +9209,8 @@ append(doaction,function(lv,hand){
 				rotate(playertemp.action.dir);
 				shape(sprites.bubblewand,0,0,30,45);
 				resetMatrix();
-				if(playertemp.action.tick>=20){
-					if(playertemp.action.tick>=150){
+				if(playertemp.action.tick>=30){
+					if(playertemp.action.tick>=200){
 						fill(100,0,255,130+abs(tick%60-30)*3);
 					}
 					else{
@@ -9221,13 +9221,13 @@ append(doaction,function(lv,hand){
 					fill(100,100,200,100);
 				}
 				ellipseMode(CENTER);
-				ellipse(400,350,30+(tick%60)/4+min(15,playertemp.action.tick/10),30+(tick%60)/4+min(15,playertemp.action.tick/10));
+				ellipse(400,350,30+(tick%60)/4+min(20,playertemp.action.tick/10),30+(tick%60)/4+min(20,playertemp.action.tick/10));
 			}
 			if(player.mp<=0||!(mousePressed&playertemp.aquabubble)){
-				if(playertemp.action.tick>=20){
+				if(playertemp.action.tick>=30){
 					for(i=0;i<enemies.length;i+=1){
 						if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(140+enemies[i].size,2)){
-							damage("enemies",i,0,random((plsin(min(150,playertemp.action.tick)/2)),(plsin(1.1*min(150,playertemp.action.tick)/2))),1,1,"ranged","player",min(150,playertemp.action.tick)/40,["impact","water"]);
+							damage("enemies",i,0,random((plsin(min(200,playertemp.action.tick)/2)),(plsin(1.1*min(200,playertemp.action.tick)/2))),1,1,"ranged","player",min(200,playertemp.action.tick)/40,["impact","water"]);
 							hits+=1;
 						}
 					}
@@ -12080,8 +12080,10 @@ showdots[2]=0;
 							objects[n].y-playertemp.y<objects[n].size+player.size){
 								objects[n].duration=0;
 								damage('player',0,random(objects[n].pdmgmin,objects[n].pdmgmax),random(objects[n].mdmgmin,objects[n].mdmgmax),objects[n].armorE,objects[n].resE,"ranged",objects[n].source,objects[n].procc,getprojprops(objects[n].properties));
-								if(willhit&objects[n].oh){
-									nmeonhit(objects[n].oh.effect,objects[n].oh.chance,objects[n].oh.power,objects[n].oh.duration);
+								if(objects[n].oh){
+									if(willhit){
+										nmeonhit(objects[n].oh.effect,objects[n].oh.chance,objects[n].oh.power,objects[n].oh.duration);
+									}
 								}
 								if(objects[n].stun){
 									player.stun+=objects[n].stun;
