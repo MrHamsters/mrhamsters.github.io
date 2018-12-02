@@ -33,7 +33,7 @@ Fatal damage leaves you at 1 health and makes you invulnerable (has a cooldown)
 Active skill (Hold to become invulnerable, then knocks back enemies and projectiles)
 Gain stats based on whichever is lowest (the more balanced your stats are, the stronger this is)
 Regenerate health faster the more damaged you are
-Physical hits cause enemies to bleed
+Slashing hits cause enemies to bleed
 Increases physical damage dealt and reduces damage taken using strength
 Gain damage and evasion if you haven't taken damage recently
 Increases blade-based weapon effectiveness
@@ -114,6 +114,98 @@ Not sure how this is here (rune)
 Not sure how this is here (rune)
 Your size is reduced to minimum
 Absorbing damage with your guard meter heals you
-Active skill (converts a large portion of your mana into strength and intelligence, more effective with more mana)
+Active skill (converts a large portion of your mana into strength and intelligence)
 Thorns and Reflection damage is boosted by your armor
 Steal defenses of deceased enemies, use as an Active skill to spend health to boost your defenses
+Deal more fire damage
+Deal more water damage
+Deal more earth damage
+Deal more nature damage
+Deal more poison damage
+Deal more electric damage
+Deal more cold damage
+Deal more wind damage
+Deal more arcane damage
+Deal more light damage
+Deal more void damage
+Deal more slash damage
+Deal more pierce damage
+Deal more burn damage
+Deal more ignite damage
+Deal more bleed damage
+Deal more explosion damage
+Deal more reflected damage
+Deal more thorns damage
+Deal more impact damage
+Deal more vghbjnkmfsdhjkm damage
+Deal more vghbjnkmfsdhjkm damage
+Deal more vghbjnkmfsdhjkm damage
+Deal more vghbjnkmfsdhjkm damage
+Deal more vghbjnkmfsdhjkm damage
+Deal more vghbjnkmfsdhjkm damage
+Deal more vghbjnkmfsdhjkm damage
+Deal more vghbjnkmfsdhjkm damage
+Deal more vghbjnkmfsdhjkm damage
+Deal more vghbjnkmfsdhjkm damage
+Increases fire defense
+Increases water defense
+Increases earth defense
+Increases nature defense
+Increases poison defense
+Increases electric defense
+Increases cold defense
+Increases wind defense
+Increases arcane defense
+Increases light defense
+Increases void defense
+Increases slash defense
+Increases pierce defense
+Increases burn defense
+Increases ignite defense
+Increases bleed defense
+Increases explosion defense
+Increases reflected defense
+Increases thorns defense
+Increases impact defense
+Increases vghbjnkmfsdhjkm defense
+Increases vghbjnkmfsdhjkm defense
+Increases vghbjnkmfsdhjkm defense
+Increases vghbjnkmfsdhjkm defense
+Increases vghbjnkmfsdhjkm defense
+Increases vghbjnkmfsdhjkm defense
+Increases vghbjnkmfsdhjkm defense
+Increases vghbjnkmfsdhjkm defense
+Increases vghbjnkmfsdhjkm defense
+Increases vghbjnkmfsdhjkm defense
+Decreases fire defense
+Decreases water defense
+Decreases earth defense
+Decreases nature defense
+Decreases poison defense
+Decreases electric defense
+Decreases cold defense
+Decreases wind defense
+Decreases arcane defense
+Decreases light defense
+Decreases void defense
+Decreases slash defense
+Decreases pierce defense
+Decreases burn defense
+Decreases ignite defense
+Decreases bleed defense
+Decreases explosion defense
+Decreases reflected defense
+Decreases thorns defense
+Decreases impact defense
+Decreases vghbjnkmfsdhjkm defense
+Decreases vghbjnkmfsdhjkm defense
+Decreases vghbjnkmfsdhjkm defense
+Decreases vghbjnkmfsdhjkm defense
+Decreases vghbjnkmfsdhjkm defense
+Decreases vghbjnkmfsdhjkm defense
+Decreases vghbjnkmfsdhjkm defense
+Decreases vghbjnkmfsdhjkm defense
+Decreases vghbjnkmfsdhjkm defense
+Decreases vghbjnkmfsdhjkm defense
+
+Limits mana capacity

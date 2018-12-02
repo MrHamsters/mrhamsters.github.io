@@ -19,7 +19,7 @@ Vampire
 Zealot's Oath
 [Passive] Adds the lower of {s0.0015} and {s0.01} to Arcane Armor's mana damage division.
 Spores
-[Passive] Getting hit releases {ox0c1} spores which deal {i0.35}-{i0.4} magic damage to enemies.
+[Passive] Getting hit releases {ox0c1} spores which deal {i0.35}-{i0.4} magic poison damage to enemies.
 Energy Shield
 [Passive] Generate {p0.008x0c1+r0.0008x0c1} energy shield per second, up to {h0.004x0c1+r0.05x0c1}. Recharge accelerates the longer you dont take damage (maximum bonus is 400% at 8 seconds). Each point in Shield Mastery accelerates recharge bonus by 10%.
 Shield Overload
@@ -35,7 +35,7 @@ Focus
 Spectral Shield
 [Active] Projects an ethereal shield which flies in the target direction for 1 second while deccelerating, then accelerates back towards you. Deals {s0.5+a0.2}-{s0.65+a0.25} physical and {i0.5+r0.2}-{i0.65+r0.25} magic damage to enemies hit, and briefly stuns them. Grants a {h0.3+a0.12+r0.06} point damage shield which decays over {ox3c2} seconds on return, as well as restoring 40% of your maximum guard meter. Each point in Shield Mastery increases shield value by 10%. 6 second cooldown and 5 mana cost.
 Flash Step
-[Passive] Causes an annoying flash of light with each step, dealing {i0.22x0c1}-{i0.3x0c1} magic damage to nearby enemies. Damage is modified by your player size. Each step costs 1 mana. Disabled while below half mana.
+[Passive] Causes an annoying flash of light with each step, dealing {i0.22x0c1}-{i0.3x0c1} magic light damage to nearby enemies. Damage is modified by your player size. Each step costs 1 mana. Disabled while below half mana.
 Scavenging
 [Passive] Kills award {ox0c1} SP.
 Charged
@@ -49,11 +49,11 @@ Overgrowth
 Soul Eater
 [Passive] Kills grant 4% movement speed and {ox0c1}% to all stats for 20 seconds and heal for 5% maximum health.
 Obliteration
-[Passive] Hits that deal at least 20% of the target's maximum health release a shockwave, dealing {s0.075x0.5c0.5+i0.075x0.5c0.5}-{s0.1x0.5c0.5+i0.1x0.5c0.5} true damage to nearby enemies. The shockwave does not proc on-hits.
+[Passive] Hits that deal at least 20% of the target's maximum health release a shockwave, dealing {s0.075x0.5c0.5+i0.075x0.5c0.5}-{s0.1x0.5c0.5+i0.1x0.5c0.5} true void damage to nearby enemies. The shockwave does not proc on-hits.
 Warmog's Heart
 [Passive] Restores {h0.1} health per second after not taking damage for at least 4 seconds.
 Glacial Ward
-[Passive] Nullifies the first hit you take. Recharges after not being hit for a base of 10 seconds. {ox0c20}% increased recharge speed at this trait level.
+[Passive] Avoids the first hit you take while releasing an icy blast which freezes nearby enemies for up to {ox0c0.4} seconds. Recharges after not being hit for a base of 10 seconds. {ox0c20}% increased recharge speed at this trait level.
 Traction
 [Passive] Stabilizes your movement by a factor of {ox0c1}.
 Matrix Armor
@@ -69,9 +69,9 @@ Equilibrium
 Perseverance
 [Passive] Increases health regeneration rate by {ox0c5}% per 100% missing health.
 Serration
-[Passive] Physical damage you deal inflicts bleeding on targets. Deals {ox0c5}% of the attack's damage over 4 seconds.
+[Passive] Inflict bleeding using hits with slash damage for {ox0c5}% of the hit's damage over 5 seconds.
 Overpower
-[Passive] Increases all physical damage dealt by {ox0c2}% and reduces damage taken from hits by {s0.01x0c1} (capped at 70% reduction against physical damage and 60% for magic).
+[Passive] Increases all physical damage dealt by {ox0c2}% and reduces damage taken from hits by {s0.015x0c1} (capped at 70% reduction against physical damage and 60% for magic).
 Concentration
 [Passive] Increases all damage dealt by {ox0c3}% and dodge chance by {ox0c5}% if you haven't taken damage in the past 5 seconds.
 Blade Mastery
@@ -113,9 +113,9 @@ Armor
 Resistance
 [Stat] Increases resistance by {ox0c1}%.
 Thorns
-[Passive] Reflects {ox0c1}% of source damage taken from melee hits as true damage.
+[Passive] Reflects {ox0c1}% of source damage taken from melee hits as true thorns-reflected damage.
 Reflection
-[Passive] Reflects {ox0c1}% of source damage taken from ranged hits as true damage.
+[Passive] Reflects {ox0c1}% of source damage taken from ranged hits as true thorns-reflected damage.
 Artisan's Touch
 [Passive] Found items start with {ox0c1} free point(s) to be assigned at the Artisan's Bench.
 Magic Aura
@@ -125,13 +125,13 @@ Meditation
 Arcane Reconstruction
 [Passive] Not taking damage for at least 2 seconds heals you for {i0.01x0c1} per second. [Active] Instantly heal for {i0.12x0c1}, halved if damage was taken within 2 seconds. 1 second cooldown. Costs 25 mana. Healing is increased by up to 100% over 2 seconds after the passive activates.
 Wind Slash
-[Passive] Sword and sword-like attacks release a projectile that pierces enemies, dealing {s0.325x0.75c0.25+i0.325x0.75c0.25} magic damage. Damage is modified based on sword type (faster swords generally deal less damage). The wave's damage decreases as it travels.
+[Passive] Sword and sword-like attacks release a projectile that pierces enemies, dealing {s0.325x0.75c0.25+i0.325x0.75c0.25} magic wind damage. Damage is modified based on sword type (faster swords generally deal less damage). The wave's damage decreases as it travels.
 Explosive Munitions
-[Passive] Most of your ranged projectiles have a {ox0c10}% chance of exploding, dealing {s0.15+i0.15}-{s0.2+i0.2} physical and magic damage to nearby enemies. Damage is modified based on the projectile (those that are fired faster generally deal less damage).
+[Passive] Most of your ranged projectiles have a {ox0c10}% chance of exploding, dealing {s0.15+i0.15}-{s0.2+i0.2} physical and magic explosion damage to nearby enemies. Damage is modified based on the projectile (those that are fired faster generally deal less damage).
 Esoteric Anomaly
-[Passive] Every 30 mana spent on magic actions triggers an explosion near you which deals {i0.65x0.6c0.4}-{i0.75x0.6c0.4} magic damage and leeches 5 mana to you for each enemy hit, up to 15 mana. Mana cost reductions do not affect gains for calculating mana spent. Lose all charge after not gaining any for 30 seconds.
+[Passive] Every 30 mana spent on magic actions triggers an explosion near you which deals {i0.65x0.6c0.4}-{i0.75x0.6c0.4} magic arcane damage and leeches 5 mana to you for each enemy hit, up to 15 mana. Mana cost reductions do not affect gains for calculating mana spent. Lose all charge after not gaining any for 30 seconds.
 Reciprocation
-[Passive] {ox0c3}% of prevented damage is stored. After 1.5 seconds of not storing damage, or if the stored damage exceeds {h2}, an explosion is triggered, dealing the stored damage as magic damage to nearby enemies. All forms of damage mitigation, including health extensions, counts as preventing damage for this.
+[Passive] {ox0c3}% of prevented damage is stored. After 1.5 seconds of not storing damage, or if the stored damage exceeds {h2}, an explosion is triggered, dealing the stored damage as magic fire-explsion-reflected damage to nearby enemies. All forms of damage mitigation, including health extensions, counts as preventing damage for this.
 Fortune
 [Passive] Increases item drops by {ox0c1}%.
 Brawler
@@ -151,7 +151,7 @@ Traveller's Call
 Recall Boomerangs
 [Active] Empowers all boomerangs and increases their speed. Ones that haven't started returning to you yet do so immediately. {ox1.5c-0.5} second cooldown.
 Detonate Boomerangs
-[Active] Blows up all active boomerangs. Each explosion deals {s0.75+i0.75}-{s0.85+i0.85} physical and magic damage to nearby enemies. {ox3c-1} second cooldown.
+[Active] Blows up all active boomerangs. Each explosion deals {s0.75+i0.75}-{s0.85+i0.85} physical and magic explosion damage to nearby enemies. {ox3c-1} second cooldown.
 Freeze Boomerangs
 [Active] Freezes all active boomerangs, pausing them for 3.5 seconds and stunning enemies near them for up to 1 second (stun can stack if multiple blasts hit). {ox12c-4} second cooldown. Costs 5 mana.
 Intensity
@@ -159,11 +159,11 @@ Intensity
 Resilience
 [Passive] Reduces damage over time taken by {ox0c1}%.
 Herald of Ice
-[Passive] Withers nearby enemies by {ox120c60}% per second, up to 40%. Enemies inside inner range recieve double wither rate, capped at 55%.
+[Passive] Withers nearby enemies by {ox120c60}% per second, up to 40%. Enemies inside inner range recieve double wither rate, capped at 55%. Increases cold damage you deal by 10%.
 Herald of Lightning
-[Passive] Strikes a random visible enemy with lightning, dealing {s0.175x0.5c0.5}-{s0.575x0.5c0.5} physical and {i0.175x0.5c0.5}-{i0.575x0.5c0.5} magic damage to nearby enemies, every 4 seconds, increased to once per second if you've killed in the last 8 seconds. 
+[Passive] Strikes a random visible enemy with lightning, dealing {s0.175x0.5c0.5}-{s0.575x0.5c0.5} physical and {i0.175x0.5c0.5}-{i0.575x0.5c0.5} magic electric damage to nearby enemies, every 4 seconds, increased to once per second if you've killed in the last 8 seconds. Increases electric damage you deal by 5%, increased to 15% if you've killed in the last 8 seconds.
 Herald of Ash
-[Passive] Burns nearby enemies for {s0.06x0c1+i0.06x0c1} true damage per second. Herald of Ash's damage increases by up to 400%, and all damage you deal by up to 20%, after being in combat for 6 seconds.
+[Passive] Burns nearby enemies for {s0.06x0c1+i0.06x0c1} true fire-burn damage per second. Herald of Ash's damage increases by up to 400%, and all damage you deal by up to 10% (increased to 25% for fire damage and 20% for explosion damage), after being in combat for 6 seconds.
 Chaos Innoculation
 [Passive] Reduces true damage taken by 40%, and all damage taken by an extra 10%, but your maximum life is 1.
 Haste
@@ -207,7 +207,7 @@ Energising
 Fluctuating
 [Passive] Every 15 seconds, increases physical damage dealt by {ox22c3}% for 5 seconds, then magic damage for the next 5 seconds, then all damage for the next 3 seconds.
 Eldritch
-[Passive] Every 100 mana you spend (before modifications) triggers a wave of expanding energy which deals {i2.5}-{i2.8} magic damage to enemies hit. You gain {ox1c2} mana per enemy hit at the end of its travel, up 20. A bar appears below your mana showing its charge.
+[Passive] Every 100 mana you spend (before modifications) triggers a wave of expanding energy which deals {i2.5}-{i2.8} magic void damage to enemies hit. You gain {ox1c2} mana per enemy hit at the end of its travel, up 20. A bar appears below your mana showing its charge.
 Verdant
 [Passive] Increases all healing recieved by {ox13c2}%.
 Runic
@@ -236,6 +236,122 @@ Augmented Thorns
 [Passive] Damage dealt by Thorns and Reflection is increased by {a0.02}.
 Bone Armor
 [Passive] Defeated enemies grant you {ox15c5}% of their armor and resistance, decaying over 30 seconds. [Active] Consume 20% of your maximum health to gain a stack of Bone Armor worth {h0.4+s0.1+i0.1} (10 second cooldown).
+Fire Mastery
+[Passive] Increases fire damage dealt by {ox0c1}%.
+Water Mastery
+[Passive] Increases water damage dealt by {ox0c1}%.
+Earth Mastery
+[Passive] Increases earth damage dealt by {ox0c1}%.
+Nature Mastery
+[Passive] Increases nature damage dealt by {ox0c1}%.
+Poison Mastery
+[Passive] Increases poison damage dealt by {ox0c1}%.
+Electric Mastery
+[Passive] Increases electric damage dealt by {ox0c1}%.
+Cold Mastery
+[Passive] Increases cold damage dealt by {ox0c1}%.
+Wind Mastery
+[Passive] Increases wind damage dealt by {ox0c1}%.
+Arcane Mastery
+[Passive] Increases arcane damage dealt by {ox0c1}%.
+Light Mastery
+[Passive] Increases light damage dealt by {ox0c1}%.
+Void Mastery
+[Passive] Increases void damage dealt by {ox0c1}%.
+Slash Mastery
+[Passive] Increases slash damage dealt by {ox0c1}%.
+Pierce Mastery
+[Passive] Increases pierce damage dealt by {ox0c1}%.
+Burn Mastery
+[Passive] Increases burn damage dealt by {ox0c1}%.
+Ignite Mastery
+[Passive] Increases ignite damage dealt by {ox0c1}%.
+Bleed Mastery
+[Passive] Increases bleed damage dealt by {ox0c1}%.
+Explosion Mastery
+[Passive] Increases explosion damage dealt by {ox0c1}%.
+Reflection Mastery
+[Passive] Increases reflection damage dealt by {ox0c1}%.
+Thorns Mastery
+[Passive] Increases thorns damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+ Mastery
+[Passive] Increases  damage dealt by {ox0c1}%.
+Fire Resistance
+[Passive] Divides fire damage taken by {ox1c0.01}.
+Water Resistance
+[Passive] Divides water damage taken by {ox1c0.01}.
+Earth Resistance
+[Passive] Divides earth damage taken by {ox1c0.01}.
+Nature Resistance
+[Passive] Divides nature damage taken by {ox1c0.01}.
+Poison Resistance
+[Passive] Divides poison damage taken by {ox1c0.01}.
+Electric Resistance
+[Passive] Divides electric damage taken by {ox1c0.01}.
+Cold Resistance
+[Passive] Divides cold damage taken by {ox1c0.01}.
+Wind Resistance
+[Passive] Divides wind damage taken by {ox1c0.01}.
+Arcane Resistance
+[Passive] Divides arcane damage taken by {ox1c0.01}.
+Light Resistance
+[Passive] Divides light damage taken by {ox1c0.01}.
+Void Resistance
+[Passive] Divides void damage taken by {ox1c0.01}.
+Slash Resistance
+[Passive] Divides slash damage taken by {ox1c0.01}.
+Pierce Resistance
+[Passive] Divides pierce damage taken by {ox1c0.01}.
+Burn Resistance
+[Passive] Divides burn damage taken by {ox1c0.01}.
+Ignite Resistance
+[Passive] Divides ignite damage taken by {ox1c0.01}.
+Bleed Resistance
+[Passive] Divides bleed damage taken by {ox1c0.01}.
+Explosion Resistance
+[Passive] Divides explosion damage taken by {ox1c0.01}.
+Reflection Resistance
+[Passive] Divides reflection damage taken by {ox1c0.01}.
+Thorns Resistance
+[Passive] Divides thorns damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
+ Resistance
+[Passive] Divides  damage taken by {ox1c0.01}.
 
 
 
@@ -260,6 +376,50 @@ Bone Armor
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Aqua Affinity
+[Passive] Halves the slowing effect of water. Also, gain an additional {ox0c1} mana per second while in water.
+Reserved Mana
+[Passive] Your mana cannot go above {ox100c-1}% of maximum.
 
 
 

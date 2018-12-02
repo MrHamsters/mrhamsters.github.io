@@ -138,3 +138,55 @@ Spectral Vampire
 1/50
 114/1,9/2
 0
+Fire Rune
+1/40
+120/4,150/8
+0
+Water Rune
+1/40
+121/4,151/8
+0
+Earth Rune
+1/40
+122/4,152/8
+0
+Nature Rune
+1/40
+123/4,153/8
+0
+Poison Rune
+2/40
+124/5,154/10
+0
+Electric Rune
+1/40
+125/4,155/8
+0
+Cold Rune
+1/40
+126/4,156/8
+0
+Wind Rune
+1/40
+127/4,157/8
+0
+Arcane Rune
+2/40
+128/5,158/10
+0
+Light Rune
+2/40
+129/5,159/10
+0
+Void Rune
+2/40
+130/5,160/10
+0
+Slash Rune
+1/40
+131/4,161/6
+0
+Pierce Rune
+1/40
+132/4,162/6
+0
