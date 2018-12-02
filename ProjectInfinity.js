@@ -1,4 +1,4 @@
-var version="0.7";
+var version="0.7b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -5288,7 +5288,7 @@ var equiptooltip=function(slot,bagnum){
 			}
 			if(prefixdata[player.inventory[slot].prefix*5-1]){
 				for(a=0;a<prefixdata[player.inventory[slot].prefix*5-1].length;a+=1){
-					if(itemdata[player.inventory[slot].id*10+8][a][0]<150||itemdata[player.inventory[slot].id*10+8][a][0]>209){
+					if(prefixdata[player.inventory[slot].prefix*5-1][a][0]-1<150||prefixdata[player.inventory[slot].prefix*5-1][a][0]-1>209){
 						append(temp,traitkey[prefixdata[player.inventory[slot].prefix*5-1][a][0]-1]+' + '+prefixdata[player.inventory[slot].prefix*5-1][a][1]);
 						temp4+=20;
 					}
@@ -5296,7 +5296,7 @@ var equiptooltip=function(slot,bagnum){
 			}
 			if(suffixdata[player.inventory[slot].suffix*5-1]){
 				for(a=0;a<suffixdata[player.inventory[slot].suffix*5-1].length;a+=1){
-					if(itemdata[player.inventory[slot].id*10+8][a][0]<150||itemdata[player.inventory[slot].id*10+8][a][0]>209){
+					if(suffixdata[player.inventory[slot].suffix*5-1][a][0]-1<150||suffixdata[player.inventory[slot].suffix*5-1][a][0]-1>209){
 						append(temp,traitkey[suffixdata[player.inventory[slot].suffix*5-1][a][0]-1]+' + '+suffixdata[player.inventory[slot].suffix*5-1][a][1]);
 						temp4+=20;
 					}
@@ -7080,6 +7080,7 @@ var getBiomeScripts=function(){
 								anc:0,
 								andir:1,
 								anf:3,
+								tstatus:new Array(),
 								imgtype:3,
 								reactant:4,
 								deathtimers:0,
