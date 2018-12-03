@@ -1,4 +1,4 @@
-var version="0.7.1";
+var version="0.7.1b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -1358,7 +1358,7 @@ var applyNMETrait=[
 								armorE:1,
 								resE:1,
 								procc:0,
-								properties:["earth","reflected"],
+								properties:["earth","reflected","explosion"],
 								hits:new Array(999),
 							});
 						}
@@ -8383,8 +8383,10 @@ append(nmem,function(i){
 	round(random(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][1]*enemies[i].dmgmin*enemies[i].str,enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][2]*enemies[i].dmgmax*enemies[i].str)),
 	round(random(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][3]*enemies[i].dmgmin*enemies[i].intel,enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][4]*enemies[i].dmgmax*enemies[i].intel)),
 	enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][5],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][6],"melee",i,1,enemydata[enemies[i].sprite*30+12+enemies[i].action.num][7]);
-	if(willhit&enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6]){
-		nmeonhit(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][0],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][1],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][2]*nmelvsc(enemies[i].lv),enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][3]);
+	if(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6]){
+		if(willhit){
+			nmeonhit(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][0],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][1],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][2]*nmelvsc(enemies[i].lv),enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][3]);
+		}
 	}
 	endnmeaction(i,enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][0]);
 });
@@ -8440,8 +8442,10 @@ append(nmem,function(i){
 		round(random(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][3]*enemies[i].dmgmin*enemies[i].str,enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][4]*enemies[i].dmgmax*enemies[i].str)),
 		round(random(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][5]*enemies[i].dmgmin*enemies[i].intel,enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][6]*enemies[i].dmgmax*enemies[i].intel)),
 		enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][8],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][9],"melee",i,1,enemydata[enemies[i].sprite*30+12+enemies[i].action.num][7]);
-		if(willhit&enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6]){
-			nmeonhit(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][0],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][1],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][2]*nmelvsc(enemies[i].lv),enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][3]);
+		if(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6]){
+			if(willhit){
+				nmeonhit(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][0],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][1],enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][2]*nmelvsc(enemies[i].lv),enemydata[enemies[i].sprite*30+12+enemies[i].action.num][6][3]);
+			}
 		}
 		enemies[i].action.timeout=0;
 	}
@@ -9165,9 +9169,9 @@ append(doaction,function(lv,hand){
 						if(!(playertemp.bubblewandrestpools)){
 							playertemp.bubblewandrestpools=0;
 						}
-						if(random(1)>0.94+0.02*min(2,playertemp.bubblewandrestpools)){
+						if(random(1)>0.9+0.09*min(1,playertemp.bubblewandrestpools)){
 							playertemp.bubblewandrestpools+=1;
-							append(stateffects,{name:'puddle',pow:((plsin(0.05))+(plshp(0.025))),mult:(1+(objects[n].timer/50)),x:objects[n].x,y:objects[n].y,tick:0,run:function(){
+							append(stateffects,{name:'puddle',pow:((plsin(0.05))+(plshp(0.025))),counts:1,mult:(1+(objects[n].timer/50)),x:objects[n].x,y:objects[n].y,tick:0,run:function(){
 								fill(50,50,255,200*((480-stateffects[n].tick)/480));
 								ellipseMode(CENTER);
 								ellipse(400+stateffects[n].x-playertemp.x,350+stateffects[n].y-playertemp.y,80,80);
@@ -9178,8 +9182,14 @@ append(doaction,function(lv,hand){
 								if(stateffects[n].tick%90==0&stateffects[n].tick<380){
 									append(particles,new createparticle(stateffects[n].x,stateffects[n].y,0,0,0,0,'circle','',5,1,200,-2,0,255,120,1));
 								}
-								if(stateffects[n].tick>=480){
+								if(stateffects[n].tick>=360&stateffects[n].counts){
 									playertemp.bubblewandrestpools-=1;
+									stateffects[n].counts=0;
+								}
+								if(stateffects[n].tick>=480){
+									if(stateffects[n].counts){
+										playertemp.bubblewandrestpools-=1;
+									}
 									stateffects.splice(n,1);
 									n-=1;
 								}
