@@ -1,4 +1,4 @@
-var version="0.7c";
+var version="0.7.1";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -2092,6 +2092,14 @@ var targetdir=function(){
 		return(PI-atan((mouseX-400)/(mouseY-350)));
 	}
 }
+var targetdirfs=function(x,y){
+	if(mouseY<y){
+		return(-atan((mouseX-x)/(mouseY-y)));
+	}
+	else{
+		return(PI-atan((mouseX-x)/(mouseY-y)));
+	}
+}
 var getkeystone=function(){
 	for(gks=1;keystoneselec[0]==0&gks<1+keystones.length/50;gks+=1){
 		if(player.record.keystones[gks]==0){
@@ -3512,25 +3520,31 @@ var loadtraits=function(){
 		});
 		append(traitfuncs.damagetaken,function(){
 		if(playertemp.aquabubble>0){
-			stemp=plshp(0.075)+plsin(0.15);
-			if(pdmg>stemp){
-				pdmg-=stemp;
-				stemp=0;
+			if(willhit){
+				stemp=plshp(0.075)+plsin(0.15);
+				if(pdmg>stemp){
+					pdmg-=stemp;
+					stemp=0;
+				}
+				else{
+					stemp-=pdmg;
+					pdmg=0;
+				}
+				if(mdmg>stemp){
+					mdmg-=stemp;
+					stemp=0;
+				}
+				else{
+					stemp-=mdmg;
+					mdmg=0;
+				}
+				if(pdmg+mdmg>0){
+					playertemp.aquabubble=0;
+				}
 			}
 			else{
-				stemp-=pdmg;
-				pdmg=0;
-			}
-			if(mdmg>stemp){
-				mdmg-=stemp;
-				stemp=0;
-			}
-			else{
-				stemp-=mdmg;
-				mdmg=0;
-			}
-			if(pdmg+mdmg>0){
-				playertemp.aquabubble=0;
+				pdmg/=2;
+				mdmg/=2;
 			}
 		}
 		});
@@ -5413,6 +5427,14 @@ var getprojprops=function(props){
 var spdmg=0;
 var smdmg=0;
 var atkprop=0;
+var clearobjects=function(){
+	for(n=1;n<objects.length;n+=1){
+		if(objects[n].deleted){
+			objects[n].deleted();
+		}
+	}
+	objects=new Array(1);
+}
 //=============================DAMAGE======================================================
 var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,attackers,proccs,atkprops){
 	if(pdmgs<0){
@@ -5739,7 +5761,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 }
 //////////////////////////////LOAD//////////////////////////////////////=======================================
 var loadArea=function(){
-	objects = new Array(1);
+	clearobjects();
 	if(options.loadAudio){sfx.raining.stop();}
 	areatemp={
 		raining:0,
@@ -6512,7 +6534,7 @@ var getBiomeScripts=function(){
 			}
 			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
-					objects=new Array(1);
+					clearobjects();
 					terrain=new Array(0);
 					waters=new Array(0);
 					enemies=new Array(0);
@@ -10391,9 +10413,9 @@ append(doaction,function(lv,hand){
 				hits:new Array(999),
 				specialdraw:function(){
 					if(options.light){
-						fill(0,0,0,2);
+						fill(0,0,0,1+abs(tick%30-15)/10);
 						ellipseMode(CENTER);
-						for(cal=0;cal<80;cal+=1){
+						for(cal=0;cal<50+abs(tick%24-12)*4;cal+=1){
 							ellipse(0,0,cal,cal);
 						}
 					}
@@ -11356,6 +11378,163 @@ append(doaction,function(lv,hand){
 		}
 	}
 });
+//Ethereal Knives
+append(doaction,function(lv,hand){
+	playertemp.action={
+		name:'ethereal knives',
+		tick:0,
+		dir:0,
+		level:lv,
+		speedm:1,
+		charge:0,
+		knives:0
+	};
+	if(!(playertemp.etherealknives)){
+		playertemp.etherealknives=0;
+	}
+	playertemp.action.run=function(){
+		playertemp.action.dir=targetdir();
+		playertemp.timesinceaction=0;
+		if(player.traits[39]>0){
+			traitpow=player.traits[39];
+		}
+		else{
+			traitpow=0;
+		}
+		if(player.mp>=0.15*(1-min(10,traitpow)*0.04)){
+			player.mp-=0.15*(1-min(10,traitpow)*0.04);
+			spendmana("magic",0.15,0.15*(1-min(10,traitpow)*0.04));
+			playertemp.action.charge+=1;
+		}
+		if(playertemp.action.charge>=6){
+			playertemp.action.charge-=6;
+			if(options.loadAudio){sfx.etherknife.play();}
+			append(objects,{
+				type:'projectile',
+				vfx:1,
+				pierce:999,
+				draw:function(){
+					rotate((objects[n].arcturn-0.5)*objects[n].duration);
+					noFill();
+					strokeWeight(12);
+					stroke(200,0,200,150+objects[n].duration*4);
+					ellipseMode(CENTER);
+					arc(0,0,25,25,0,PI*0.05*objects[n].duration);
+					noStroke();
+					if(options.light){
+						fill(255,50,255,4);
+						for(cal=0;cal<30;cal+=1){
+							ellipse(0,0,cal*2,cal*2);
+						}
+					}
+				},
+				target:'enemy',
+				size:22,
+				speed:6,
+				duration:random(16,24),
+				arcturn:round(random(1)),
+				sound:sfx.etherknifeh,
+				dir:playertemp.action.dir+random(-0.33,0.33),
+				x:playertemp.x,
+				y:playertemp.y,
+				allowpausedrun:1,
+				prime:0,
+				triggered:0,
+				phase:0,
+				pdmgmin:0,
+				pdmgmax:0,
+				mdmgmin:(plsin(5)),
+				mdmgmax:(plsin(6)),
+				armorE:1,
+				resE:1,
+				procc:0.16,
+				properties:["arcane","slash"],
+				hits:new Array(999),
+				run:function(){
+					if(!(objects[n].phase)){
+						if(!(mousePressed)){
+							objects[n].triggered=1;
+						}
+						if(objects[n].triggered){
+							objects[n].prime+=1;
+						}
+						if(objects[n].countstl){
+							objects[n].paused=999;
+							objects[n].duration=999;
+							if(objects[n].prime>=30){
+								if(objects[n].cutsfx){
+									if(options.loadAudio){sfx.ethercut.play();}
+								}
+								objects[n].paused=0;
+								objects[n].phase=1;
+								objects[n].duration=10;
+								objects[n].fast=4;
+								objects[n].speed=44;
+								objects[n].size=15;
+								objects[n].mdmgmin=plsin(3);
+								objects[n].mdmgmax=plsin(4);
+								objects[n].resE=0.7;
+								objects[n].procc=0.2;
+								objects[n].dir=targetdirfs(objects[n].x-playertemp.x+400,objects[n].y-playertemp.y+350);
+								objects[n].hits=new Array(999);
+								append(objects[n].properties,"pierce");
+								objects[n].draw=function(){
+									fill(150,0,150,objects[n].duration*25);
+									ellipseMode(CENTER);
+									ellipse(0,0,12,12);
+									if(options.light){
+										fill(255,50,255,objects[n].duration/3);
+										for(cal=0;cal<30;cal+=1){
+											ellipse(0,0,cal*2,cal*2);
+										}
+									}
+								}
+							}
+						}
+						else{
+							if(objects[n].duration<=1&playertemp.etherealknives<20){
+								if(playertemp.etherealknives<1){
+									objects[n].cutsfx=1;
+								}
+								playertemp.etherealknives+=1;
+								objects[n].countstl=1;
+								objects[n].paused=999;
+								objects[n].duration=999;
+								objects[n].draw=function(){
+									fill(150,0,150,150+objects[n].duration*4);
+									ellipseMode(CENTER);
+									ellipse(0,0,12,12);
+									if(options.light){
+										fill(255,50,255,18);
+										for(cal=0;cal<5;cal+=1){
+											ellipse(0,0,cal*10,cal*10);
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				endfunc:function(){
+					if(objects[n].countstl){
+						playertemp.etherealknives-=1;
+					}
+				},
+				deleted:function(){
+					if(objects[n].countstl){
+						playertemp.etherealknives-=1;
+					}
+				}
+			});
+			append(particles,new createparticle(400+sin(playertemp.action.dir)*17,350-cos(playertemp.action.dir)*17,0,0,0,0,'circle','',40,-2,150,-8,150+random(105),50,150+random(105)));
+				
+			}
+		if(!(mousePressed)){
+			stopaction();
+		}
+	}
+});
+
 var dirtoplayerfromobject=function(n){
 	if(objects[n].x-playertemp.x<0){
 		return(atan((objects[n].y-playertemp.y)/(objects[n].x-playertemp.x))+PI/2);
@@ -11505,6 +11684,9 @@ var sfx={
 		dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
 		aquabubble:new Howl({src: ['Data/Sound/sfx/aquabubble.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
 		aquabubbleburst:new Howl({src: ['Data/Sound/sfx/aquabubbleburst.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
+		etherknife:new Howl({src: ['Data/Sound/sfx/etherknife.ogg'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
+		etherknifeh:new Howl({src: ['Data/Sound/sfx/etherknifehit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+		ethercut:new Howl({src: ['Data/Sound/sfx/ethercut.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 };
 }
 var anticlipc;
