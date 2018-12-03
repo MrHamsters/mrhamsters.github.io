@@ -1,4 +1,4 @@
-var version="0.7.1b";
+var version="0.7.1c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -11453,8 +11453,8 @@ append(doaction,function(lv,hand){
 				phase:0,
 				pdmgmin:0,
 				pdmgmax:0,
-				mdmgmin:(plsin(5)),
-				mdmgmax:(plsin(6)),
+				mdmgmin:(plsin(6)),
+				mdmgmax:(plsin(7)),
 				armorE:1,
 				resE:1,
 				procc:0.16,
