@@ -24,7 +24,7 @@ wth
 
 [Venom Strike] Stab with your ancient fang, hitting all enemies in a small arc for {s0.7125+i0.2375}-{s0.8625+i0.2875} physical poison-pierce damage and creating a pool of venom, dealing {i0.45} magic poison damage per second to enemies on it while withering them by 210% per second up to 40%, lasting 4 seconds. If at least one enemy is hit by the blade, the pool gains 150% increased damage and wither rate, and 25% size, but halved duration. Each point in Blade Mastery reduces attack time by 4%.
 nani
-[Energy Bolt] Fires 2 bolts of energy, which fly forward in a serpentine path and deal {i0.425}-{i0.525} magic arcane-light damage to the first enemy they hit. Attacks up to 150% faster, proportional to your current mana %. Each point in Rod Mastery increases projectile duration by 5%. [Energy Laser] Fires a beam of energy, frequently dealing {i0.4}-{i0.5} magic light damage to enemies caught in it. Burns a lot of mana. Each point in Rod Mastery increases beam width by 10%.
+[Energy Bolt] Fires 2 bolts of energy, which fly forward in a serpentine path and deal {i0.425}-{i0.525} magic arcane-light damage to the first enemy they hit. Attacks up to 150% faster, proportional to your current mana %. Each point in Rod Mastery increases projectile duration by 5%. [Energy Laser] Fires a beam of energy, frequently dealing {i0.15}-{i0.2} magic light damage with 70% resistance penetration to enemies caught in it. Burns a lot of mana. Each point in Rod Mastery increases beam width by 10%.
 pd
 ol
 ba
