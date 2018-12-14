@@ -13,3 +13,4 @@ crystal shard.svg
 nature crystal shard.svg
 nature majik.svg
 sludge.svg
+bone.svg

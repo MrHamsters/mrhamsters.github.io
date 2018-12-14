@@ -209,3 +209,4 @@ Impact Weakness
  Weakness
 Aqua Affinity
 Mana Reservation
+Soul Inversion

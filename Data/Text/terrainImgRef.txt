@@ -4,3 +4,4 @@ log.svg
 shroom.svg
 dead tree.svg
 pillar.svg
+house.svg

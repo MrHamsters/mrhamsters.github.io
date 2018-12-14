@@ -608,3 +608,23 @@ etherknife
 0
 158/2,160/3
 14
+Spellbook
+weapon
+32
+svg
+spelltome
+0/2/0/0.1/0/1/0/0
+0.99
+0
+63/1,158/1,180/3,181/4
+10
+Helmet Shoes
+shoes
+
+svg
+helmetshoes
+0/0/0/0/0/0/3/3
+0.98
+
+212/1
+13

@@ -37,50 +37,50 @@ Fluctuating
 Enhanced
 1/100
 
-10
+15
 Enhanced II
 1/50
 
-15
+20
 Enhanced III
 1/25
 
-20
+25
 Augmented
 2/100
 
-25
+30
 Augmented II
 2/50
 
-30
+35
 Augmented III
 2/25
 
-35
+40
 Astral
 3/100
 
-40
+45
 Astral II
 3/100
 
-45
+50
 Astral III
 3/100
 
-50
+55
 Eldritch
 2/60
 105/1
 0
 Hasted
 1/80
-85/5
+85/6
 0
 Hasted II
 2/80
-85/7
+85/8
 0
 Hasted III
 3/80
@@ -92,11 +92,11 @@ Verdant
 0
 Critical
 1/65
-98/5
+98/6
 0
 Critical II
 2/65
-98/7
+98/8
 0
 Critical III
 3/65
@@ -140,53 +140,69 @@ Spectral Vampire
 0
 Fire Rune
 1/40
-120/4,150/8
+120/4,150/10
 0
 Water Rune
 1/40
-121/4,151/8
+121/4,151/10
 0
 Earth Rune
 1/40
-122/4,152/8
+122/4,152/10
 0
 Nature Rune
 1/40
-123/4,153/8
+123/4,153/10
 0
 Poison Rune
 2/40
-124/5,154/10
+124/5,154/12
 0
 Electric Rune
 1/40
-125/4,155/8
+125/4,155/10
 0
 Cold Rune
 1/40
-126/4,156/8
+126/4,156/10
 0
 Wind Rune
 1/40
-127/4,157/8
+127/4,157/10
 0
 Arcane Rune
 2/40
-128/5,158/10
+128/5,158/12
 0
 Light Rune
 2/40
-129/5,159/10
+129/5,159/12
 0
 Void Rune
 2/40
-130/5,160/10
+130/5,160/12
 0
 Slash Rune
 1/40
-131/4,161/6
+131/4,161/7
 0
 Pierce Rune
 1/40
-132/4,162/6
+132/4,162/7
+0
+Spear Master
+1/75
+43/2
+0
+Tome Master
+1/75
+44/2
+0
+Impact Rune
+1/40
+139/4,169/7
+0
+Explosion Rune
+2/40
+136/5,166/12
 0

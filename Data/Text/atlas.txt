@@ -77,3 +77,8 @@ Wastelands
 440
 430
 
+
+Undead Suburbs
+440
+510
+
