@@ -819,13 +819,13 @@ Recover (6% maximum health + 120% health regeneration) health per second for 3 s
 5/1
 Reinforced Shell
 Adds 5% maximum health, 20% armor, and 20% resistance (ignores temporary changes) to your maximum Omni Shell barrier capacity, and it now regenerates at a rate of 15% health regeneration. Note that taking this keystone has no effect without Omni Shell.
+0/0/0/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+21/1
 Fortitude Boost
 +38 to Fortitude.
 0/0/0/0/0/0/0/0/0/0/0/0/38/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
-
-
-
 
 
 

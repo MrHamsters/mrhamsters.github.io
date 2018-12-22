@@ -210,3 +210,14 @@ Impact Weakness
 Aqua Affinity
 Mana Reservation
 Soul Inversion
+Physical Augment
+Magic Augment
+Armor Penetration
+Resistance Penetration
+Hardened Armor
+Polished Armor
+Earthen Strike
+Natural Strike
+Honed Edge
+Heavy Impact
+Shattering Steel

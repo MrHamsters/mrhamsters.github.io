@@ -23,11 +23,11 @@ Spores
 Energy Shield
 [Passive] Generate {p0.008x0c1+r0.0008x0c1} energy shield per second, up to {h0.004x0c1+r0.05x0c1}. Recharge accelerates the longer you dont take damage (maximum bonus is 400% at 8 seconds). Each point in Shield Mastery accelerates recharge bonus by 10%.
 Shield Overload
-[Active] Instantly generates a {r0.0075x42c8+h0.001x42c8} point damage shield, but reduces your mana regeneration by 64%, both decaying over 6 seconds. 15 second cooldown. Each point in Shield Mastery reduces mana regeneration penalty by 10%. Can be used mid-action.
+[Active] Instantly generates a {r0.0075x42c8+h0.001x42c8} point damage shield which decays over 6 seconds while doubling your Energy Shield recharge for 2 seconds, but reduces your mana regeneration by 64%, decaying over 8 seconds. 15 second cooldown. Each point in Shield Mastery reduces mana regeneration penalty by 10%. Can be used mid-action.
 Roar
-[Active] Shout furiously, stunning nearby enemies for up to 3 seconds and increasing your strength by {ox21c9}% and mana regeneration by 30%, both decaying over 10 seconds. 25 second cooldown. Can be used mid-action.
+[Active] Shout furiously, regaining 15% of your missing mana, stunning nearby enemies for up to 3 seconds while increasing your strength by {ox10c10}%, mana regeneration by 30%, and haste by 15%, all decaying over 10 seconds. 20 second cooldown. Can be used mid-action.
 Dash
-[Active] Dash swiftly in the direction you are currently facing. Dash speed is reduced by action speed modifier at 50% effectiveness. Your normal movement speed is reduced by 100% during dash. {ox1.05c-0.05} second cooldown. Costs {ox4.5c-0.5} mana. Can be used mid-action.
+[Active] Dash swiftly in the direction you are currently facing. Dash speed is reduced by action speed modifier at 25% effectiveness. Your normal movement speed is reduced by 100% during dash. {ox1.25c-0.05} second cooldown. Costs {ox4.5c-0.5} mana. Can be used mid-action.
 Stamina
 [Passive] Increases mana regeneration rate by {ox0c5}% while moving.
 Focus
@@ -69,7 +69,7 @@ Equilibrium
 Perseverance
 [Passive] Increases health regeneration rate by {ox0c5}% per 100% missing health.
 Serration
-[Passive] Inflict bleeding using hits with slash damage for {ox0c5}% of the hit's damage over 5 seconds.
+[Passive] Slashing and piercing hits have a {ox0c5}% chance to cause bleeding over 5 seconds. Deals physical damage. Bleeding caused by slashing hits deal 100% of the hit's total damage while piercing hits only deal 50%.
 Overpower
 [Passive] Increases all melee damage dealt by {ox0c2}% (increased to {ox0c3}% for impact damage) and reduces damage taken from hits by {s0.015x0c1} (capped at 70% reduction against physical damage and 60% for magic and true).
 Concentration
@@ -205,7 +205,7 @@ Void
 Energising
 [Passive] Recharges {ox22c3}% of your missing energy shield over 1 second every 4 seconds. If you have less than 20 points in Energy Shield, this instead generates a {h0.0016x27c3+r0.01x27c3} point shield for 4 seconds.
 Fluctuating
-[Passive] Every 15 seconds, increases physical damage dealt by {ox22c3}% for 5 seconds, then magic damage for the next 5 seconds, then all damage for the next 3 seconds.
+[Passive] Every 15 seconds, adds {s0.01x22c3} physical damage dealt to hits while increasing physical damage dealt with DoT by {ox22c3}% for 5 seconds, then magic damage ({i0.01x22c3} with hits) for the next 5 seconds, then all damage ({s0.01x14c2} physical + {i0.01x14c2} magic for hits) for the next 3 seconds.
 Eldritch
 [Passive] Every 100 mana you spend (before modifications) triggers a wave of expanding energy which deals {i2.5}-{i2.8} magic void damage to enemies hit. You gain {ox1c2} mana per enemy hit at the end of its travel, up 20. A bar appears below your mana showing its charge.
 Verdant
@@ -422,6 +422,31 @@ Reserved Mana
 [Passive] Your mana cannot go above {ox100c-1}% of maximum.
 Soul Inversion
 [Passive] Damage shields instead heal you based on its durability and duration (a 2 second shield will heal you for 100% of its durability). Healing instead shields you for 3 seconds. Your armor applies to magic damage instead of physical. Your resistance applies to physical damage instead of magic.
+Physical Augment
+[Passive] Adds {s0.01} physical damage (per 100% proc power) to hits.
+Magic Augment
+[Passive] Adds {i0.01} magic damage (per 100% proc power) to hits.
+Armor Penetration
+[Passive] Your damage ignores {ox0c1}% of the target's armor. (Stacks multiplicatively with other penetration bonuses.)
+Resistance Penetration
+[Passive] Your damage ignores {ox0c1}% of the target's resistance. (Stacks multiplicatively with other penetration bonuses.)
+Hardened Armor
+[Passive] Your armor is {ox0c1}% more effective. (Stacks multiplicatively with other armor effectiveness modifiers.)
+Polished Armor
+[Passive] Your resistance is {ox0c1}% more effective. (Stacks multiplicatively with other resistance effectiveness modifiers.)
+Earthen Strike
+[Passive] Your hits generate stacks for this passive. After reaching stacks worth {ox600c-200}% proc power, your next hit gains earth property and {s0.5} physical damage.
+Natural Strike
+[Passive] Your hits generate stacks for this passive. After reaching stacks worth {ox600c-200}% proc power, your next hit gains nature property and {i0.5} magic damage.
+Honed Edge
+[Passive] Piercing hits ignore {ox0c5}% of the target's armor and resistance. (Stacks multiplicatively with other penetration bonuses.)
+Heavy Impact
+[Passive] Impact hits stun in proportion to how much damage is dealt (up to {ox0c1} second(s) of stun per 100% health lost by target, 25 times more effective against bosses)
+Shattering Steel
+[Passive] Your hits generate stacks for this passive. After reaching stacks worth {ox600c-200}% proc power, your next hit gains pierce property and {a0.17} physical damage.
+
+
+
 
 
 

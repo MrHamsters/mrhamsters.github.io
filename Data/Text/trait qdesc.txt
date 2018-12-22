@@ -33,7 +33,7 @@ Fatal damage leaves you at 1 health and makes you invulnerable (has a cooldown)
 Active skill (Hold to become invulnerable, then knocks back enemies and projectiles)
 Gain stats based on whichever is lowest (the more balanced your stats are, the stronger this is)
 Regenerate health faster the more damaged you are
-Slashing hits cause enemies to bleed
+Slashing and piercing hits cause enemies to bleed
 Increases physical damage dealt and reduces damage taken using strength
 Gain damage and evasion if you haven't taken damage recently
 Increases blade-based weapon effectiveness
@@ -209,3 +209,15 @@ Decreases vghbjnkmfsdhjkm defense
 Decreases vghbjnkmfsdhjkm defense
 
 Limits mana capacity
+Swaps shields and healing, as well as armor and resistance effects
+Adds physical damage to hits
+Adds magic damage to hits
+Ignore a portion of enemies' armor
+Ignore a portion of enemies' resistance
+Increases your armor's effectiveness
+Increases your resistance's effectiveness
+Charges additional physical earth damage on hits
+Charges additional magic nature damage on hits
+Piercing hits gain armor and resistance penetration
+Impact hits stun
+Charges additional physical pierce damage (based on armor) on hits
