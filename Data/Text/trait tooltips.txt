@@ -41,9 +41,9 @@ Scavenging
 Charged
 [Unused] Stores electricity over 16 seconds. With at least half charge, the next melee attack dealt by or to you discharges stored energy, dealing magic damage to nearby enemies with x base power and stuns for 3 seconds, proportional to charge %.
 Wisdom
-[Passive] Increases XP gain by {ox0c1}%.
+[Passive] Increases XP gained from kills by {ox0c1}%.
 Ignorance
-[Passive] Reduces XP gain by {ox0c1}%.
+[Passive] Reduces XP gain from kills by {ox0c1}%.
 Overgrowth
 [Passive] Health is no longer capped at maximum. Excess health decays based on your level and current excess health. Decay rate is divided by {oxc01}.
 Soul Eater
@@ -145,7 +145,7 @@ Antimagic
 Iron Man
 [Passive] Allows you to store a shield for up to {h0.4x0.5c0.5+i0.8x0.5c0.5}. Rapidly decays if it hasn't been charged recently, but stops at 25% capacity. This shield prevents damage from being taken.
 Siphon of Harvesting
-[Active] Damages all nearby enemies for {i1.3}-{i1.45} magic damage and generates {ox11c4}% of maximum Iron Man shield for each enemy hit, plus 25% of the magic damage dealt. 4 second cooldown. Costs {ox9c0+lx2c0} health.
+[Active] Damages all nearby enemies for {i1.3}-{i1.45} magic damage and generates {ox11c4}% of maximum Iron Man shield for each enemy hit, plus 25% of the magic damage dealt. 4 second cooldown. Costs {ox9c0+lx1c0} health.
 Traveller's Call
 [Passive] Your mana regeneration is disabled. Instead, mana orbs spawn nearby. Each one restores mana equal to {ox350c150}% of your mana regeneration. You can still regenerate mana during boss battles.
 Recall Boomerangs
