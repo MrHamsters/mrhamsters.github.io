@@ -1,4 +1,4 @@
-var version="0.7.4";
+var version="0.7.4b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -6953,18 +6953,18 @@ var getBiomeScripts=function(){
 							ellipse(challengearena.x-playertemp.x+400,challengearena.y-playertemp.y+350,1370,1370);
 							noStroke();
 							if(pow(playertemp.x-challengearena.x,2)+pow(playertemp.y-challengearena.y,2)>pow(700,2)||!(player.biomeID==stateffectsg[n].bid)||playertemp.inBossFight==1){
-								player.xp+=round(floor(challengearena.souls/10)*(pow(1.1,min(player.level,biomedata[9]+floor(challengearena.souls/100)*2))));
-								player.sp+=floor(challengearena.souls/10)*30;
-								player.reactant+=floor(challengearena.souls/10)*10;
-								append(particles,new createparticle(50,100,0,-0.5,0,0,'text','+ '+floor(challengearena.souls/10)*30+' SP',22,0,255,-1.5,130,130,220));
-								append(particles,new createparticle(50,200,0,-0.5,0,0,'text','+ '+floor(challengearena.souls/10)*10+' Reactant',22,0,255,-1.5,160,130,50));
+								player.xp+=round((challengearena.souls/10+max(0,(challengearena.souls-1000)/10))*(pow(1.1,min(player.level,biomedata[9]+floor(challengearena.souls/100)))));
+								player.sp+=floor(challengearena.souls/100)*30;
+								player.reactant+=floor(challengearena.souls/100)*10;
+								append(particles,new createparticle(50,100,0,0.5,0,0,'text','+ '+floor(challengearena.souls/100)*30+' SP',22,0,255,-1.5,130,130,220));
+								append(particles,new createparticle(50,200,0,0.5,0,0,'text','+ '+floor(challengearena.souls/100)*10+' Reactant',22,0,255,-1.5,160,130,50));
 								challengearena={
 									active:0,
 									souls:0,
 									x:0,
 									y:0
 								};
-								if(options.loadAudio){
+								if(options.loadAudio&!(playertemp.inBossFight)){
 									bgm.stop();
 									bgmn=biomedata[6];
 									bgm = new Howl({
@@ -10437,7 +10437,7 @@ append(doaction,function(lv,hand){
 	playertemp.str+=0.1+player.traits[14]*0.1;
 	playertemp.mpregen+=0.3;
 	playertemp.haste+=0.15;
-	playertemp.mp+=(plsmp(1)-player.mp)*0.15;
+	player.mp+=(plsmp(1)-player.mp)*0.15;
 	append(stateffects,{name:'roar',tick:0,pow:0.1+player.traits[14]*0.1,run:function(){
 		playertemp.str-=stateffects[n].pow/600;
 		playertemp.mpregen-=0.0005;
@@ -15845,6 +15845,17 @@ void mouseClicked(){
 			}
 		}
 		else{
+			if(mouseX<80&mouseY<80){
+				if(options.loadAudio){
+					bgmn='Title';
+					bgm = new Howl({
+					  src: ['Data/Sound/music/title.ogg'],
+					  autoplay: true,
+					  loop: true,
+					  volume: options.music,
+					});
+				}
+			}
 			if(mouseX>1080&mouseX<1120&mouseY>12&mouseY<52){
 				if(urf){
 					urf=0;
