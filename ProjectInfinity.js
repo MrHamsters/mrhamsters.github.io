@@ -1,4 +1,4 @@
-var version="0.7.4test1";
+var version="0.7.4";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -15845,17 +15845,6 @@ void mouseClicked(){
 			}
 		}
 		else{
-			if(mouseX<80&mouseY<80){
-				if(options.loadAudio){
-					bgmn='Title';
-					bgm = new Howl({
-					  src: ['Data/Sound/music/title.ogg'],
-					  autoplay: true,
-					  loop: true,
-					  volume: options.music,
-					});
-				}
-			}
 			if(mouseX>1080&mouseX<1120&mouseY>12&mouseY<52){
 				if(urf){
 					urf=0;
