@@ -82,13 +82,13 @@ Ranged Mastery
 [Mastery] Increases the effectiveness of certain ranged weapons. Results vary per weapon type. Most effects are capped at 10 points.
 Rod Mastery
 [Mastery] Increases the effectiveness of rod-type weapons - these include wands, scepters, and staves. Results vary per weapon type. Most effects are capped at 10 points.
+Spear Mastery
+[Mastery] Increases the effectiveness of spear-type weapons. Results vary per weapon type. Most effects are capped at 10 points.
 Tome Mastery
 [Mastery] Increases the effectiveness of tome-type weapons. Results vary per weapon type. Most effects are capped at 10 points.
 //////////////////////////////////////////////////////
 //////////////////Reserved for masteries//////////////
 //////////////////////////////////////////////////////
-
-
 
 
 
