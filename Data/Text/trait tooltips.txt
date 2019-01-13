@@ -47,7 +47,7 @@ Ignorance
 Overgrowth
 [Passive] Health is no longer capped at maximum. Excess health decays based on your level and current excess health. Decay rate is divided by {oxc01}.
 Soul Eater
-[Passive] Kills grant 4% movement speed and {ox0c1}% to all stats for 20 seconds and heal for 5% maximum health.
+[Passive] Kills grant 2% movement speed, 1% haste, and {ox5c3}% of the killed enemy's strength and intelligence, decaying over 30 seconds, and heal for 3% maximum health.
 Obliteration
 [Passive] Hits that deal at least 20% of the target's maximum health release a shockwave, dealing {s0.075x0.5c0.5+i0.075x0.5c0.5}-{s0.1x0.5c0.5+i0.1x0.5c0.5} true void damage to nearby enemies. The shockwave does not proc on-hits.
 Warmog's Heart
@@ -219,7 +219,7 @@ Defense Shift
 Azure
 [Passive] Increases the power of normal damage shields recieved by {ox17c3}%.
 Phase Door
-[Active] Dash at hyper speed in the targetted direction. Upon use, your existence becomes unstable; health regeneration and heal-over-time effects are reduced by 75% while other healing effects are halved, you cannot take or deal damage, or be hit for 3 seconds. 2 second cooldown. Attempting to use Phase Door again during this effect deals near-fatal damage to yourself, removes your mana, and increases Phase Door's cooldown to 10 seconds. Can be used mid-action.
+[Active] Stun nearby enemies for up to 2 seconds, then dash at hyper speed in the targetted direction. Upon use, your existence becomes unstable; you have 50% increased movement speed, health regeneration and heal-over-time effects are reduced by 75% while other healing effects are halved, you cannot take or deal damage, or be hit for 3 seconds. 15 second cooldown. Can be used mid-action.
 Specter's Cowl
 [Passive] Increases health regeneration by 20% for 3 seconds after taking damage. Duration is refreshed upon taking more damage, but this effect does not stack.
 Timeless
@@ -235,7 +235,7 @@ Overload
 Augmented Thorns
 [Passive] Damage dealt by Thorns and Reflection is increased by {a0.02}.
 Bone Armor
-[Passive] Defeated enemies grant you {ox15c5}% of their armor and resistance, decaying over 30 seconds. [Active] Consume 20% of your maximum health to gain a stack of Bone Armor worth {h0.4+s0.1+i0.1} (10 second cooldown).
+[Passive] Defeated enemies grant you {ox7c4}% of their armor and resistance, decaying over 30 seconds. Each active stack of Bone Armor also reduces damage taken from hits by 1% (multiplicative). [Active] Consume 10% of your maximum health to gain 3 stacks of Bone Armor, each worth {h0.2+s0.05+i0.05} (10 second cooldown).
 Fire Mastery
 [Passive] Increases fire damage dealt by {ox0c1}%.
 Water Mastery

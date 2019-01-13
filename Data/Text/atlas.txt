@@ -82,3 +82,7 @@ Undead Suburbs
 440
 510
 
+
+Haunted Derelict
+440
+550

@@ -63,7 +63,7 @@ Increases mana regeneration bonus from resting
 Regenerate health out of combat, can also be used actively for a burst of healing
 Sword attacks create a wave projectile
 Certain ranged weapons' projectiles have a chance to explode
-Spending mana on magic weapon and traits cause mana-leeching explosions
+Spending mana on magic weapons and traits cause mana-leeching explosions
 Mitigating damage taken charges an explosion
 Find more items
 Take less damage from melee, but more from ranged attacks
