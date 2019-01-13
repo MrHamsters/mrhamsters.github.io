@@ -14310,11 +14310,11 @@ showdots[2]=0;
 								if(player.inventory.bag[i]){
 									if(!(player.inventory.bag[i].lock)){
 										if(player.inventory.bag[i]){
-											if(player.inventory.bag[invselect[1]].rune){
-												player.sp+=itemdata[player.inventory.bag[invselect[1]].id*10+9]+pow(player.inventory.bag[invselect[1]].runet,2)*50;
+											if(player.inventory.bag[i].rune){
+												player.sp+=itemdata[player.inventory.bag[i].id*10+9]+pow(player.inventory.bag[i].runet,2)*50;
 											}
 											else{
-												player.sp+=itemdata[player.inventory.bag[invselect[1]].id*10+9];
+												player.sp+=itemdata[player.inventory.bag[i].id*10+9];
 											}
 										}
 										player.inventory.bag[i]=0;
