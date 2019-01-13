@@ -1,4 +1,4 @@
-var version="0.7.5";
+var version="0.7.5b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -9542,9 +9542,9 @@ append(doaction,function(lv,hand){
 			ts.windslash(0.85);
 		}
 		if(playertemp.action.tick==15){
-			if(!(enemies[i].invinci>0)){
-				hits=0;
-				for(i=0;i<enemies.length;i+=1){
+			hits=0;
+			for(i=0;i<enemies.length;i+=1){
+				if(!(enemies[i].invinci>0)){
 					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)&
 					(enemies[i].x-playertemp.x)*sin(-playertemp.action.diro)+(enemies[i].y-playertemp.y)*cos(-playertemp.action.diro)<0
 					){
@@ -9561,7 +9561,7 @@ append(doaction,function(lv,hand){
 							damage("enemies",i,random(20*(plsst(1)),22*(plsst(1))),0,1,1,"melee","player",1,["slash"]);
 						}
 					}
-			}
+				}
 			}
 			if(hits>=1){
 				if(playertemp.bswordc==2){
