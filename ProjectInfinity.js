@@ -1,4 +1,4 @@
-var version="0.7.5c";
+var version="0.7.5d";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -91,6 +91,9 @@ var playertemp={
 	armorfb:0,
 	resfb:0,
 	haste:1,
+	stun:0,
+	stunres:0,
+	lastarea:-1,
 	rcostm:[1,1],
 	timesincedamagetaken:999,
 	timesincehittaken:999,
@@ -6304,7 +6307,7 @@ var loadArea=function(){
 	}
 }
 var nmelvsc=function (nmelv){
-	return ((0.9+nmelv/10)*(1+nmelv/100)*(0.6+min(100,max(0,nmelv-30))*0.012));
+	return ((0.9+nmelv/10)*(1+nmelv/100)*(0.6+(min(100,max(0,nmelv-30))+min(100,max(0,nmelv/2-50)))*0.012));
 }
 var placegateway=function(i,mindistance){
 	gateways[i].x = playertemp.x+random(-biomedata[11],biomedata[11]);
@@ -6318,6 +6321,10 @@ var placegateway=function(i,mindistance){
 	}
 	else{
 		gateways[i].exists=1;
+	}
+	if(playertemp.lastarea==gateways[i].dest){
+		gateways[i].x=random(-40,40);
+		gateways[i].y=random(-40,40);
 	}
 }
 var defaultterrain=function(i,mindistance){
@@ -6857,9 +6864,9 @@ var getBiomeScripts=function(){
 		while(stemp[0]<200&stemp[0]>-200&stemp[1]<200&stemp[1]>-200){
 			stemp=[random(-1700,1700),random(-1700,1700)];
 		}
-		append(stateffectsg,{name:'Restoration Pool',size:35,active:1,x:stemp[0],y:stemp[1],biomelock:player.biomeID,tick:0,run:function(){
+		append(terraineffects,{name:'Restoration Pool',size:35,active:1,x:stemp[0],y:stemp[1],biomelock:player.biomeID,tick:0,run:function(){
 			if(render){
-			translate(stateffectsg[n].x-playertemp.x+400,stateffectsg[n].y-playertemp.y+350);
+			translate(terraineffects[n].x-playertemp.x+400,terraineffects[n].y-playertemp.y+350);
 			rotate(PI/4);
 			fill(80,80,80);
 			rect(-35,-35,70,70);
@@ -6867,58 +6874,69 @@ var getBiomeScripts=function(){
 			rect(-35,-35,70,70);
 			fill(20,20,20);
 			ellipse(0,0,40,40);
-			if(stateffectsg[n].active){
+			if(terraineffects[n].active){
 				fill(55+abs(tick%100-50)*4,55+abs(tick%300-150)*4/3,55+abs(tick%200-100)*2,155+abs(tick%50-25)*4);
 				ellipse(0,0,40,40);
 			}
 			resetMatrix();
 			}
-		if(stateffectsg[n].x-playertemp.x<-1900||stateffectsg[n].x-playertemp.x>1900||stateffectsg[n].y-playertemp.y<-1900||stateffectsg[n].y-playertemp.y>1900){
-			stateffectsg[n].x=random(-1700,1700)+playertemp.x;
-			stateffectsg[n].y=random(-1700,1700)+playertemp.y;
-			stateffectsg[n].active=1;
-			while(stateffectsg[n].x-playertemp.x<400&stateffectsg[n].x-playertemp.x>-400&stateffectsg[n].y-playertemp.y<350&stateffectsg[n].y-playertemp.y>-350){
-				stateffectsg[n].x=random(-1700,1700)+playertemp.x;
-				stateffectsg[n].y=random(-1700,1700)+playertemp.y;
+		if(terraineffects[n].x-playertemp.x<-1900||terraineffects[n].x-playertemp.x>1900||terraineffects[n].y-playertemp.y<-1900||terraineffects[n].y-playertemp.y>1900){
+			terraineffects[n].x=random(-1700,1700)+playertemp.x;
+			terraineffects[n].y=random(-1700,1700)+playertemp.y;
+			terraineffects[n].active=1;
+			while(terraineffects[n].x-playertemp.x<400&terraineffects[n].x-playertemp.x>-400&terraineffects[n].y-playertemp.y<350&terraineffects[n].y-playertemp.y>-350){
+				terraineffects[n].x=random(-1700,1700)+playertemp.x;
+				terraineffects[n].y=random(-1700,1700)+playertemp.y;
 			}
 		}
-		if(stateffectsg[n].x-playertemp.x>-(stateffectsg[n].size+player.size)&
-			stateffectsg[n].x-playertemp.x<(stateffectsg[n].size+player.size)&
-			stateffectsg[n].y-playertemp.y>-(stateffectsg[n].size+player.size)&
-			stateffectsg[n].y-playertemp.y<(stateffectsg[n].size+player.size)){
-			if(abs(playertemp.x-stateffectsg[n].x)>abs(playertemp.y-stateffectsg[n].y)){
-				if(playertemp.x-stateffectsg[n].x>0){
+		if(terraineffects[n].x-playertemp.x>-(terraineffects[n].size+player.size)&
+			terraineffects[n].x-playertemp.x<(terraineffects[n].size+player.size)&
+			terraineffects[n].y-playertemp.y>-(terraineffects[n].size+player.size)&
+			terraineffects[n].y-playertemp.y<(terraineffects[n].size+player.size)){
+			if(abs(playertemp.x-terraineffects[n].x)>abs(playertemp.y-terraineffects[n].y)){
+				if(playertemp.x-terraineffects[n].x>0){
 					//right
-					playertemp.x=stateffectsg[n].x+(stateffectsg[n].size+player.size);
+					playertemp.x=terraineffects[n].x+(terraineffects[n].size+player.size);
 				}
 				else{
 					//left
-					playertemp.x=stateffectsg[n].x-(stateffectsg[n].size+player.size);
+					playertemp.x=terraineffects[n].x-(terraineffects[n].size+player.size);
 				}
 			}
 			else{
-				if(playertemp.y-stateffectsg[n].y>0){
+				if(playertemp.y-terraineffects[n].y>0){
 					//down
-					playertemp.y=stateffectsg[n].y+(stateffectsg[n].size+player.size);
+					playertemp.y=terraineffects[n].y+(terraineffects[n].size+player.size);
 				}
 				else{
 					//up
-					playertemp.y=stateffectsg[n].y-(stateffectsg[n].size+player.size);
+					playertemp.y=terraineffects[n].y-(terraineffects[n].size+player.size);
 				}
 			}
 		}
-		if(stateffectsg[n].active){
-			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(50+player.size,2)){
+		if(terraineffects[n].active){
+			if(pow(playertemp.x-terraineffects[n].x,2)+pow(playertemp.y-terraineffects[n].y,2)<pow(50+player.size,2)){
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
-						stateffectsg[n].active=0;
-						append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,2,100,-2,0,255,0,1));
+						terraineffects[n].active=0;
+						append(particles,new createparticle(terraineffects[n].x,terraineffects[n].y,0,0,0,0,'circle','',25,2,100,-2,0,255,0,1));
 						player.hp+=(plshp(1));
 						player.mp+=(plsmp(1));
+						playertemp.mpregen+=3;
+						playertemp.hpregen+=3;
+						append(stateffects,{name:'restoration',tick:0,run:function(){
+							playertemp.mpregen-=0.025;
+							playertemp.hpregen-=0.025;
+							if(stateffects[n].tick>=1200){
+								stateffects.splice(n,1);
+								n-=1;
+							}
+						}
+						});
 				}
 			}
 		}
-		if(!(player.biomeID==stateffectsg[n].biomelock)||playertemp.inBossFight==1){
-			stateffectsg.splice(n,1);
+		if(!(player.biomeID==terraineffects[n].biomelock)||playertemp.inBossFight==1){
+			terraineffects.splice(n,1);
 			n-=1;
 		}
 		}});
@@ -6926,9 +6944,9 @@ var getBiomeScripts=function(){
 		while(stemp[0]<200&stemp[0]>-200&stemp[1]<200&stemp[1]>-200){
 			stemp=[random(-2150,2150),random(-2150,2150)];
 		}
-		append(stateffectsg,{name:'Challenge Arena',size:35,active:1,x:stemp[0],y:stemp[1],biomelock:player.biomeID,tick:0,run:function(){
+		append(terraineffects,{name:'Challenge Arena',size:35,active:1,x:stemp[0],y:stemp[1],biomelock:player.biomeID,tick:0,run:function(){
 			if(render){
-			translate(stateffectsg[n].x-playertemp.x+400,stateffectsg[n].y-playertemp.y+350);
+			translate(terraineffects[n].x-playertemp.x+400,terraineffects[n].y-playertemp.y+350);
 			rotate(PI/4);
 			rectMode(CENTER);
 			fill(0,0,0);
@@ -6940,42 +6958,42 @@ var getBiomeScripts=function(){
 			resetMatrix();
 			rectMode(CORNER);
 			}
-		if(stateffectsg[n].x-playertemp.x<-2150||stateffectsg[n].x-playertemp.x>2150||stateffectsg[n].y-playertemp.y<-2150||stateffectsg[n].y-playertemp.y>2150){
-			stateffectsg[n].x=random(-2150,2150)+playertemp.x;
-			stateffectsg[n].y=random(-2150,2150)+playertemp.y;
-			stateffectsg[n].active=1;
-			while(stateffectsg[n].x-playertemp.x<400&stateffectsg[n].x-playertemp.x>-400&stateffectsg[n].y-playertemp.y<350&stateffectsg[n].y-playertemp.y>-350){
-				stateffectsg[n].x=random(-2150,2150)+playertemp.x;
-				stateffectsg[n].y=random(-2150,2150)+playertemp.y;
+		if(terraineffects[n].x-playertemp.x<-2150||terraineffects[n].x-playertemp.x>2150||terraineffects[n].y-playertemp.y<-2150||terraineffects[n].y-playertemp.y>2150){
+			terraineffects[n].x=random(-2150,2150)+playertemp.x;
+			terraineffects[n].y=random(-2150,2150)+playertemp.y;
+			terraineffects[n].active=1;
+			while(terraineffects[n].x-playertemp.x<400&terraineffects[n].x-playertemp.x>-400&terraineffects[n].y-playertemp.y<350&terraineffects[n].y-playertemp.y>-350){
+				terraineffects[n].x=random(-2150,2150)+playertemp.x;
+				terraineffects[n].y=random(-2150,2150)+playertemp.y;
 			}
 		}
-		if(stateffectsg[n].x-playertemp.x>-(stateffectsg[n].size+player.size)&
-			stateffectsg[n].x-playertemp.x<(stateffectsg[n].size+player.size)&
-			stateffectsg[n].y-playertemp.y>-(stateffectsg[n].size+player.size)&
-			stateffectsg[n].y-playertemp.y<(stateffectsg[n].size+player.size)){
-			if(abs(playertemp.x-stateffectsg[n].x)>abs(playertemp.y-stateffectsg[n].y)){
-				if(playertemp.x-stateffectsg[n].x>0){
+		if(terraineffects[n].x-playertemp.x>-(terraineffects[n].size+player.size)&
+			terraineffects[n].x-playertemp.x<(terraineffects[n].size+player.size)&
+			terraineffects[n].y-playertemp.y>-(terraineffects[n].size+player.size)&
+			terraineffects[n].y-playertemp.y<(terraineffects[n].size+player.size)){
+			if(abs(playertemp.x-terraineffects[n].x)>abs(playertemp.y-terraineffects[n].y)){
+				if(playertemp.x-terraineffects[n].x>0){
 					//right
-					playertemp.x=stateffectsg[n].x+(stateffectsg[n].size+player.size);
+					playertemp.x=terraineffects[n].x+(terraineffects[n].size+player.size);
 				}
 				else{
 					//left
-					playertemp.x=stateffectsg[n].x-(stateffectsg[n].size+player.size);
+					playertemp.x=terraineffects[n].x-(terraineffects[n].size+player.size);
 				}
 			}
 			else{
-				if(playertemp.y-stateffectsg[n].y>0){
+				if(playertemp.y-terraineffects[n].y>0){
 					//down
-					playertemp.y=stateffectsg[n].y+(stateffectsg[n].size+player.size);
+					playertemp.y=terraineffects[n].y+(terraineffects[n].size+player.size);
 				}
 				else{
 					//up
-					playertemp.y=stateffectsg[n].y-(stateffectsg[n].size+player.size);
+					playertemp.y=terraineffects[n].y-(terraineffects[n].size+player.size);
 				}
 			}
 		}
-		if(stateffectsg[n].active&!(challengearena.active)){
-			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(50+player.size,2)){
+		if(terraineffects[n].active&!(challengearena.active)){
+			if(pow(playertemp.x-terraineffects[n].x,2)+pow(playertemp.y-terraineffects[n].y,2)<pow(50+player.size,2)){
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 					for(rae=0;rae<enemies.length;rae+=1){
 						enemies[rae].x+=9999;
@@ -6991,26 +7009,26 @@ var getBiomeScripts=function(){
 						volume: options.music,
 						});
 					}
-						stateffectsg[n].active=0;
-						append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,40,100,-2,150,0,0,1));
+						terraineffects[n].active=0;
+						append(particles,new createparticle(terraineffects[n].x,terraineffects[n].y,0,0,0,0,'circle','',25,40,100,-2,150,0,0,1));
 						challengearena={
 							active:1,
 							souls:0,
-							x:stateffectsg[n].x,
-							y:stateffectsg[n].y
+							x:terraineffects[n].x,
+							y:terraineffects[n].y
 						};
-						stateffectsg[n].x+=9999;
-						append(stateffectsg,{name:'challenge arena line',bid:player.biomeID,tick:0,run:function(){
+						terraineffects[n].x+=9999;
+						append(terraineffects,{name:'challenge arena line',bid:player.biomeID,tick:0,run:function(){
 							fill(255,0,0,200);
 							textFont(0,25);
 							text("Tier: "+floor(challengearena.souls/100),12,25);
 							noFill();
-							stroke(190,0,0,stateffectsg[n].tick*3);
+							stroke(190,0,0,terraineffects[n].tick*3);
 							strokeWeight(30);
 							ellipseMode(CENTER);
 							ellipse(challengearena.x-playertemp.x+400,challengearena.y-playertemp.y+350,1370,1370);
 							noStroke();
-							if(pow(playertemp.x-challengearena.x,2)+pow(playertemp.y-challengearena.y,2)>pow(700,2)||!(player.biomeID==stateffectsg[n].bid)||playertemp.inBossFight==1){
+							if(pow(playertemp.x-challengearena.x,2)+pow(playertemp.y-challengearena.y,2)>pow(700,2)||!(player.biomeID==terraineffects[n].bid)||playertemp.inBossFight==1){
 								player.xp+=round((challengearena.souls/10+max(0,(challengearena.souls-1000)/10))*(pow(1.1,min(player.level,biomedata[9]+floor(challengearena.souls/100)))));
 								player.sp+=floor(challengearena.souls/100)*30;
 								player.reactant+=floor(challengearena.souls/100)*10;
@@ -7032,15 +7050,15 @@ var getBiomeScripts=function(){
 									volume: options.music,
 									});
 								}
-								stateffectsg.splice(n,1);
+								terraineffects.splice(n,1);
 								n-=1;
 							}
 						}});
 				}
 			}
 		}
-		if(!(player.biomeID==stateffectsg[n].biomelock)||playertemp.inBossFight==1){
-			stateffectsg.splice(n,1);
+		if(!(player.biomeID==terraineffects[n].biomelock)||playertemp.inBossFight==1){
+			terraineffects.splice(n,1);
 			n-=1;
 		}
 		}});
@@ -7072,6 +7090,7 @@ var getBiomeScripts=function(){
 			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 					if(player.record.quests[3]==1){
+						playertemp.lastarea=player.biomeID;
 						player.biomeID=16;
 						playertemp.x=0;
 						playertemp.y=0;
@@ -7295,6 +7314,7 @@ var getBiomeScripts=function(){
 									if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
 										if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 											playertemp.inBossFight=0;
+											playertemp.lastarea=-1;
 											loadArea();
 										}
 									}
@@ -7891,6 +7911,12 @@ var getBiomeScripts=function(){
 										else{
 											enemies[pae].x=areatemp.derelictbuildings[ddb].x-100-enemies[pae].size;
 										}
+										if(enemies[pae].y>playertemp.y){
+											enemies[pae].letsturn={dur:10,dir:PI/2};
+										}
+										else{
+											enemies[pae].letsturn={dur:10,dir:3*PI/2};
+										}
 									}
 									else{
 										if(enemies[pae].y>areatemp.derelictbuildings[ddb].y){
@@ -7898,6 +7924,52 @@ var getBiomeScripts=function(){
 										}
 										else{
 											enemies[pae].y=areatemp.derelictbuildings[ddb].y-100-enemies[pae].size;
+										}
+										if(enemies[pae].x>playertemp.x){
+											enemies[pae].letsturn={dur:10,dir:PI};
+										}
+										else{
+											enemies[pae].letsturn={dur:10,dir:0};
+										}
+									}
+								}
+							}
+							for(pae=0;pae<gateways.length;pae+=1){
+								if(gateways[pae].x>areatemp.derelictbuildings[ddb].x-125&gateways[pae].x<areatemp.derelictbuildings[ddb].x+125&gateways[pae].y>areatemp.derelictbuildings[ddb].y-125&gateways[pae].y<areatemp.derelictbuildings[ddb].y+125){
+									if(abs(gateways[pae].x-areatemp.derelictbuildings[ddb].x)>abs(gateways[pae].y-areatemp.derelictbuildings[ddb].y)){
+										if(gateways[pae].x>areatemp.derelictbuildings[ddb].x){
+											gateways[pae].x=areatemp.derelictbuildings[ddb].x+125;
+										}
+										else{
+											gateways[pae].x=areatemp.derelictbuildings[ddb].x-125;
+										}
+									}
+									else{
+										if(gateways[pae].y>areatemp.derelictbuildings[ddb].y){
+											gateways[pae].y=areatemp.derelictbuildings[ddb].y+125;
+										}
+										else{
+											gateways[pae].y=areatemp.derelictbuildings[ddb].y-125;
+										}
+									}
+								}
+							}
+							for(pae=0;pae<terraineffects.length;pae+=1){
+								if(terraineffects[pae].x>areatemp.derelictbuildings[ddb].x-125&terraineffects[pae].x<areatemp.derelictbuildings[ddb].x+125&terraineffects[pae].y>areatemp.derelictbuildings[ddb].y-125&terraineffects[pae].y<areatemp.derelictbuildings[ddb].y+125){
+									if(abs(terraineffects[pae].x-areatemp.derelictbuildings[ddb].x)>abs(terraineffects[pae].y-areatemp.derelictbuildings[ddb].y)){
+										if(terraineffects[pae].x>areatemp.derelictbuildings[ddb].x){
+											terraineffects[pae].x=areatemp.derelictbuildings[ddb].x+125;
+										}
+										else{
+											terraineffects[pae].x=areatemp.derelictbuildings[ddb].x-125;
+										}
+									}
+									else{
+										if(terraineffects[pae].y>areatemp.derelictbuildings[ddb].y){
+											terraineffects[pae].y=areatemp.derelictbuildings[ddb].y+125;
+										}
+										else{
+											terraineffects[pae].y=areatemp.derelictbuildings[ddb].y-125;
 										}
 									}
 								}
@@ -9038,6 +9110,12 @@ var nmesa={
 		}
 		else{
 			enemies[i].dir=atan((enemies[i].y-playertemp.y)/(enemies[i].x-playertemp.x))-PI/2;
+		}
+		if(enemies[i].letsturn){
+			if(enemies[i].letsturn.dur>0){
+				enemies[i].letsturn.dur-=1;
+				enemies[i].dir=enemies[i].letsturn.dir;
+			}
 		}
 	},
 	displace:function(i,mult){
@@ -12880,187 +12958,195 @@ showdots[2]=0;
 	}
 	///////////////PLAYER CONTROLS=================================================
 	///////WALK============================
-	playeractionstock+=player.haste*playertemp.haste;
-	playertemp.cspeed=max(0,player.speed*playertemp.speed*playertemp.wspeed*playertemp.action.speedm);
-	if(!(inventory)){
-		if(keyPressed&movelock==0&(input[0]||input[1]||input[2]||input[3])){
-			playertemp.timesincemove=0;
-			if(player.traits[16]>0){
-				player.mp+=player.mpregen/1200*(min(20,player.traits[16]));
-			}
-			if(inwater){
-				player.mp-=0.03;
-			}
-			dowalk(2*playertemp.cspeed*6/player.size);
-			if(input[0]){
-				if(input[1]){
-					playertemp.xvelo-=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
-					playertemp.yvelo-=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+	if(playertemp.stun>0){
+		playertemp.stun-=1+playertemp.stunres/10;
+		playertemp.stunres+=1;
+	}
+	else{
+		playertemp.stunres=max(0,playertemp.stunres-1);
+		playeractionstock+=player.haste*playertemp.haste;
+		playertemp.cspeed=max(0,player.speed*playertemp.speed*playertemp.wspeed*playertemp.action.speedm);
+		if(!(inventory)){
+			if(keyPressed&movelock==0&(input[0]||input[1]||input[2]||input[3])){
+				playertemp.timesincemove=0;
+				if(player.traits[16]>0){
+					player.mp+=player.mpregen/1200*(min(20,player.traits[16]));
+				}
+				if(inwater){
+					player.mp-=0.03;
+				}
+				dowalk(2*playertemp.cspeed*6/player.size);
+				if(input[0]){
+					if(input[1]){
+						playertemp.xvelo-=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+						playertemp.yvelo-=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+					}
+					else if(input[3]){
+						playertemp.xvelo+=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+						playertemp.yvelo-=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+					}
+					else{
+						playertemp.yvelo-=playertemp.cspeed*(1-player.traction*playertemp.traction);
+					}
 				}
 				else if(input[3]){
-					playertemp.xvelo+=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
-					playertemp.yvelo-=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+					if(input[2]){
+						playertemp.xvelo+=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+						playertemp.yvelo+=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+					}
+					else{
+						playertemp.xvelo+=playertemp.cspeed*(1-player.traction*playertemp.traction);
+					}
 				}
-				else{
-					playertemp.yvelo-=playertemp.cspeed*(1-player.traction*playertemp.traction);
+				else if(input[2]){
+					if(input[1]){
+						playertemp.xvelo-=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+						playertemp.yvelo+=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+					}
+					else{
+						playertemp.yvelo+=playertemp.cspeed*(1-player.traction*playertemp.traction);
+					}
 				}
-			}
-			else if(input[3]){
-				if(input[2]){
-					playertemp.xvelo+=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
-					playertemp.yvelo+=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
+				else if(input[1]){
+						playertemp.xvelo-=playertemp.cspeed*(1-player.traction*playertemp.traction);
 				}
-				else{
-					playertemp.xvelo+=playertemp.cspeed*(1-player.traction*playertemp.traction);
-				}
-			}
-			else if(input[2]){
-				if(input[1]){
-					playertemp.xvelo-=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
-					playertemp.yvelo+=playertemp.cspeed*.7*(1-player.traction*playertemp.traction);
-				}
-				else{
-					playertemp.yvelo+=playertemp.cspeed*(1-player.traction*playertemp.traction);
-				}
-			}
-			else if(input[1]){
-					playertemp.xvelo-=playertemp.cspeed*(1-player.traction*playertemp.traction);
-			}
-		}
-		else{
-			if(playertemp.walktick>-playertemp.cspeed&playertemp.walktick<playertemp.cspeed){
-				playertemp.walktick=0;
-			}
-			else if(playertemp.walktick<0){
-				playertemp.walktick+=playertemp.cspeed;
 			}
 			else{
-				playertemp.walktick-=playertemp.cspeed;
+				if(playertemp.walktick>-playertemp.cspeed&playertemp.walktick<playertemp.cspeed){
+					playertemp.walktick=0;
+				}
+				else if(playertemp.walktick<0){
+					playertemp.walktick+=playertemp.cspeed;
+				}
+				else{
+					playertemp.walktick-=playertemp.cspeed;
+				}
+				
 			}
-			
-		}
-		if(playertemp.xvelo<0.01&playertemp.xvelo>-0.01){
-			playertemp.xvelo=0;
-		}
-		if(playertemp.yvelo<0.01&playertemp.yvelo>-0.01){
-			playertemp.yvelo=0;
-		}
-		while(playeractionstock>=1){
-			playeractionstock-=1;
-			playeractionstockr+=1;
-		//PLAYER ACTIONS========================================================================
-		if(playertemp.combo.LH.timer>0){
-			playertemp.combo.LH.timer-=1;
-		}
-		else if(!(playertemp.combo.LH.num==0)){
-			playertemp.combo.LH={num:0,timer:1};
-		}
-		if(playertemp.combo.RH.timer>0){
-			playertemp.combo.RH.timer-=1;
-		}
-		else if(!(playertemp.combo.RH.num==0)){
-			playertemp.combo.RH={num:0,timer:1};
-		}
-		if(playertemp.traitcd.shift>0){
-			playertemp.traitcd.shift-=1;
-		}
-		if(playertemp.traitcd.space>0){
-			playertemp.traitcd.space-=1;
-		}
-		if(playertemp.traitcd.q>0){
-			playertemp.traitcd.q-=1;
-		}
-		if(playertemp.traitcd.e>0){
-			playertemp.traitcd.e-=1;
-		}
-		if(playertemp.actionlock<=0){
-			if(playertemp.action.name==0){
-				if(mousePressed&mouseButton==LEFT){
-					if(input[8]){
-						if(!(igclick)){
-							igclick=1;
-							stemp=stancecache.LH.current;
-							stancecache.LH.current+=1;
-							if(stancecache.LH.current>=stancecache.LH.limit){
-								stancecache.LH.current=0;
+			if(playertemp.xvelo<0.01&playertemp.xvelo>-0.01){
+				playertemp.xvelo=0;
+			}
+			if(playertemp.yvelo<0.01&playertemp.yvelo>-0.01){
+				playertemp.yvelo=0;
+			}
+			while(playeractionstock>=1){
+				playeractionstock-=1;
+				playeractionstockr+=1;
+				//PLAYER ACTIONS========================================================================
+				if(playertemp.combo.LH.timer>0){
+					playertemp.combo.LH.timer-=1;
+				}
+				else if(!(playertemp.combo.LH.num==0)){
+					playertemp.combo.LH={num:0,timer:1};
+				}
+				if(playertemp.combo.RH.timer>0){
+					playertemp.combo.RH.timer-=1;
+				}
+				else if(!(playertemp.combo.RH.num==0)){
+					playertemp.combo.RH={num:0,timer:1};
+				}
+				if(playertemp.traitcd.shift>0){
+					playertemp.traitcd.shift-=1;
+				}
+				if(playertemp.traitcd.space>0){
+					playertemp.traitcd.space-=1;
+				}
+				if(playertemp.traitcd.q>0){
+					playertemp.traitcd.q-=1;
+				}
+				if(playertemp.traitcd.e>0){
+					playertemp.traitcd.e-=1;
+				}
+				if(playertemp.actionlock<=0){
+					if(playertemp.action.name==0){
+						if(mousePressed&mouseButton==LEFT){
+							if(input[8]){
+								if(!(igclick)){
+									igclick=1;
+									stemp=stancecache.LH.current;
+									stancecache.LH.current+=1;
+									if(stancecache.LH.current>=stancecache.LH.limit){
+										stancecache.LH.current=0;
+									}
+									if(!(stemp==stancecache.LH.current)){
+										if(options.loadAudio){sfx.click3.play();}
+									}
+									player.inventory.LH.stance=stancecache.LH.current;
+								}
 							}
-							if(!(stemp==stancecache.LH.current)){
-								if(options.loadAudio){sfx.click3.play();}
+							else if(player.mp>=itemdata[player.inventory.LH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0]){
+								player.mp-=itemdata[player.inventory.LH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0];
+								doaction[itemdata[player.inventory.LH.id*10+2]](player.inventory.LH.level,'LH');
+								playertemp.timesinceaction=0;
 							}
-							player.inventory.LH.stance=stancecache.LH.current;
+						}
+						if(mousePressed&mouseButton==RIGHT){
+							if(input[8]){
+								if(!(igclick)){
+									igclick=1;
+									stemp=stancecache.RH.current;
+									stancecache.RH.current+=1;
+									if(stancecache.RH.current>=stancecache.RH.limit){
+										stancecache.RH.current=0;
+									}
+									if(!(stemp==stancecache.RH.current)){
+										if(options.loadAudio){sfx.click3.play();}
+									}
+									player.inventory.RH.stance=stancecache.RH.current;
+								}
+							}
+							else if(player.mp>=itemdata[player.inventory.RH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0]){
+								player.mp-=itemdata[player.inventory.RH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0];
+								doaction[itemdata[player.inventory.RH.id*10+2]](player.inventory.RH.level,'RH');
+								playertemp.timesinceaction=0;
+							}
+						}
+				}}
+				else{
+					playertemp.actionlock-=1;
+				}
+				if(playertemp.traitcd.shift<=0&input[4]){
+					if(player.activetraits.shift){
+						if(player.traits[player.activetraits.shift]){
+							if(traitusage[player.activetraits.shift-1]==1||(playertemp.actionlock<=0&playertemp.action.name==0)){
+								playertemp.traitcd.shift=traitcd[player.activetraits.shift];
+								doaction[activetraits[player.activetraits.shift]](player.traits[player.activetraits.shift],'shift');
+								playertemp.timesinceaction=0;
+							}
 						}
 					}
-					else if(player.mp>=itemdata[player.inventory.LH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0]){
-						player.mp-=itemdata[player.inventory.LH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0];
-						doaction[itemdata[player.inventory.LH.id*10+2]](player.inventory.LH.level,'LH');
-						playertemp.timesinceaction=0;
-					}
 				}
-				if(mousePressed&mouseButton==RIGHT){
-					if(input[8]){
-						if(!(igclick)){
-							igclick=1;
-							stemp=stancecache.RH.current;
-							stancecache.RH.current+=1;
-							if(stancecache.RH.current>=stancecache.RH.limit){
-								stancecache.RH.current=0;
+				if(playertemp.traitcd.space<=0&input[5]){
+					if(player.activetraits.space){
+						if(player.traits[player.activetraits.space]){
+							if(traitusage[player.activetraits.space-1]==1||(playertemp.actionlock<=0&playertemp.action.name==0)){
+								playertemp.traitcd.space=traitcd[player.activetraits.space];
+								doaction[activetraits[player.activetraits.space]](player.traits[player.activetraits.space],'space');
+								playertemp.timesinceaction=0;
 							}
-							if(!(stemp==stancecache.RH.current)){
-								if(options.loadAudio){sfx.click3.play();}
-							}
-							player.inventory.RH.stance=stancecache.RH.current;
 						}
 					}
-					else if(player.mp>=itemdata[player.inventory.RH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0]){
-						player.mp-=itemdata[player.inventory.RH.id*10+7]*player.rcostm[0]*playertemp.rcostm[0];
-						doaction[itemdata[player.inventory.RH.id*10+2]](player.inventory.RH.level,'RH');
-						playertemp.timesinceaction=0;
+				}
+				if(playertemp.traitcd.q<=0&input[6]){
+					if(player.activetraits.q){
+						if(player.traits[player.activetraits.q]){
+							if(traitusage[player.activetraits.q-1]==1||(playertemp.actionlock<=0&playertemp.action.name==0)){
+								playertemp.traitcd.q=traitcd[player.activetraits.q];
+								doaction[activetraits[player.activetraits.q]](player.traits[player.activetraits.q],'q');
+								playertemp.timesinceaction=0;
+							}
+						}
 					}
 				}
-		}}
-		else{
-			playertemp.actionlock-=1;
-		}
-		if(playertemp.traitcd.shift<=0&input[4]){
-			if(player.activetraits.shift){
-				if(player.traits[player.activetraits.shift]){
-					if(traitusage[player.activetraits.shift-1]==1||(playertemp.actionlock<=0&playertemp.action.name==0)){
-						playertemp.traitcd.shift=traitcd[player.activetraits.shift];
-						doaction[activetraits[player.activetraits.shift]](player.traits[player.activetraits.shift],'shift');
-						playertemp.timesinceaction=0;
-					}
-				}
-			}
-		}
-		if(playertemp.traitcd.space<=0&input[5]){
-			if(player.activetraits.space){
-				if(player.traits[player.activetraits.space]){
-					if(traitusage[player.activetraits.space-1]==1||(playertemp.actionlock<=0&playertemp.action.name==0)){
-						playertemp.traitcd.space=traitcd[player.activetraits.space];
-						doaction[activetraits[player.activetraits.space]](player.traits[player.activetraits.space],'space');
-						playertemp.timesinceaction=0;
-					}
-				}
-			}
-		}
-		if(playertemp.traitcd.q<=0&input[6]){
-			if(player.activetraits.q){
-				if(player.traits[player.activetraits.q]){
-					if(traitusage[player.activetraits.q-1]==1||(playertemp.actionlock<=0&playertemp.action.name==0)){
-						playertemp.traitcd.q=traitcd[player.activetraits.q];
-						doaction[activetraits[player.activetraits.q]](player.traits[player.activetraits.q],'q');
-						playertemp.timesinceaction=0;
-					}
-				}
-			}
-		}
-		if(playertemp.traitcd.e<=0&input[7]){
-			if(player.activetraits.e){
-				if(player.traits[player.activetraits.e]){
-					if(traitusage[player.activetraits.e-1]==1||(playertemp.actionlock<=0&playertemp.action.name==0)){
-						playertemp.traitcd.e=traitcd[player.activetraits.e];
-						doaction[activetraits[player.activetraits.e]](player.traits[player.activetraits.e],'e');
-						playertemp.timesinceaction=0;
+				if(playertemp.traitcd.e<=0&input[7]){
+					if(player.activetraits.e){
+						if(player.traits[player.activetraits.e]){
+							if(traitusage[player.activetraits.e-1]==1||(playertemp.actionlock<=0&playertemp.action.name==0)){
+								playertemp.traitcd.e=traitcd[player.activetraits.e];
+								doaction[activetraits[player.activetraits.e]](player.traits[player.activetraits.e],'e');
+								playertemp.timesinceaction=0;
+							}
+						}
 					}
 				}
 			}
@@ -13070,7 +13156,6 @@ showdots[2]=0;
 		playertemp.x+=playertemp.xvelo;
 		playertemp.yvelo*=player.traction*playertemp.traction;
 		playertemp.y+=playertemp.yvelo;
-	}
 	}
 	////////////////////////=================MainDisplay===================//////////////////////////////////////////////
 	if(render){fill(biomedata[2][0],biomedata[2][1],biomedata[2][2]);
@@ -13466,7 +13551,7 @@ showdots[2]=0;
 									}
 								}
 								if(objects[n].stun){
-									player.stun+=objects[n].stun;
+									playertemp.stun=max(playertemp.stun,objects[n].stun);
 								}
 							}
 					}
@@ -13496,7 +13581,7 @@ showdots[2]=0;
 							damage('player',0,random(objects[n].pdmgmin,objects[n].pdmgmax),random(objects[n].mdmgmin,objects[n].mdmgmax),objects[n].armorE,objects[n].resE,objects[n].rangetype,objects[n].source,objects[n].procc,getprojprops(objects[n].properties));
 							objects[n].hitc+=1;
 							if(objects[n].stun){
-								player.stun+=objects[n].stun;
+								playertemp.stun=max(playertemp.stun,objects[n].stun);
 							}
 						}
 				}
@@ -13559,6 +13644,7 @@ showdots[2]=0;
 											gateways[i].x-playertemp.x<(60)&
 											gateways[i].y-playertemp.y>-(60)&
 											gateways[i].y-playertemp.y<(60)){
+												playertemp.lastarea=player.biomeID;
 												player.biomeID=gateways[i].dest;
 												playertemp.x=0;
 												playertemp.y=0;
@@ -13580,6 +13666,11 @@ showdots[2]=0;
 		}
 	}
 	skip=0;
+	//==============Terrain-type effects (i.e. biome scripts)====
+	for(n=0;n<terraineffects.length;n+=1){
+		terraineffects[n].tick+=1;
+		terraineffects[n].run();
+	}
 	//==============Grounded stat effects====
 	for(n=0;n<stateffectsg.length;n+=1){
 		stateffectsg[n].tick+=1;
@@ -14083,6 +14174,16 @@ showdots[2]=0;
 			ellipseMode(CENTER);
 			arc(1090,600,75,75,-PI/2-playertemp.traitcd.e/traitcd[player.activetraits.e]*2*PI,-PI/2);
 		}
+	}
+	if(playertemp.stun>0){
+		strokeWeight(10);
+		stroke(255,255,160);
+		fill(255,255,160,100);
+		rect(775,430,1100,260,20);
+		strokeWeight(20);
+		line(775,430,1045,690);
+		line(775,690,1045,430);
+		noStroke();
 	}
 	textFont(0,15);
 	fill(255,100,150);
@@ -15748,6 +15849,7 @@ showdots[2]=0;
 						colors:0
 					};
 					if(mousePressed){
+						playertemp.lastarea=-1;
 						player.biomeID=atlasbiomes[i][0];
 						toloadarea=1;
 						inventory=0;
