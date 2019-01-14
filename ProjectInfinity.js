@@ -153,6 +153,7 @@ var temp4;
 var objects = new Array(1);
 var stateffects = new Array(1);
 var stateffectsg = new Array();
+var terraineffects = new Array();
 var inventory=0;
 var inventorysprites={};
 var equipkey=loadStrings('Data/Text/equip key.txt');
