@@ -7912,11 +7912,11 @@ var getBiomeScripts=function(){
 										else{
 											enemies[pae].x=areatemp.derelictbuildings[ddb].x-100-enemies[pae].size;
 										}
-										if(enemies[pae].y>playertemp.y){
-											enemies[pae].letsturn={dur:10,dir:PI/2};
+										if(playertemp.y+enemies[pae].y-2*areatemp.derelictbuildings[ddb].y>0){
+											enemies[pae].letsturn={dur:10,dir:PI};
 										}
 										else{
-											enemies[pae].letsturn={dur:10,dir:3*PI/2};
+											enemies[pae].letsturn={dur:10,dir:0};
 										}
 									}
 									else{
@@ -7926,11 +7926,11 @@ var getBiomeScripts=function(){
 										else{
 											enemies[pae].y=areatemp.derelictbuildings[ddb].y-100-enemies[pae].size;
 										}
-										if(enemies[pae].x>playertemp.x){
-											enemies[pae].letsturn={dur:10,dir:PI};
+										if(playertemp.x+enemies[pae].x-2*areatemp.derelictbuildings[ddb].x>0){
+											enemies[pae].letsturn={dur:10,dir:PI/2};
 										}
 										else{
-											enemies[pae].letsturn={dur:10,dir:0};
+											enemies[pae].letsturn={dur:10,dir:3*PI/2};
 										}
 									}
 								}
