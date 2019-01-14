@@ -6926,7 +6926,7 @@ var getBiomeScripts=function(){
 						append(stateffects,{name:'restoration',tick:0,run:function(){
 							playertemp.mpregen-=0.025;
 							playertemp.hpregen-=0.025;
-							if(stateffects[n].tick>=120){
+							if(stateffects[n].tick>=1200){
 								stateffects.splice(n,1);
 								n-=1;
 							}
