@@ -1,4 +1,4 @@
-var version="0.7.5d";
+var version="0.7.5e";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -4435,7 +4435,7 @@ var loadtraits=function(){
 						target:'enemy',
 						size:50,
 						duration:0,
-						rangetype:"generic",
+						rangetype:"ranged",
 						sound:sfx.obliteration,
 						x:enemies[stemp].x,
 						y:enemies[stemp].y,
@@ -4445,7 +4445,7 @@ var loadtraits=function(){
 						mdmgmax:((plsin(1)))*1.15*10*(0.5+player.traits[82]/2),
 						armorE:1,
 						resE:1,
-						procc:0.7,
+						procc:0.5,
 						properties:["electric"],
 						hits:new Array(999)
 					});
@@ -6925,8 +6925,8 @@ var getBiomeScripts=function(){
 						playertemp.mpregen+=3;
 						playertemp.hpregen+=3;
 						append(stateffects,{name:'restoration',tick:0,run:function(){
-							playertemp.mpregen-=0.025;
-							playertemp.hpregen-=0.025;
+							playertemp.mpregen-=0.0025;
+							playertemp.hpregen-=0.0025;
 							if(stateffects[n].tick>=1200){
 								stateffects.splice(n,1);
 								n-=1;
@@ -7836,7 +7836,7 @@ var getBiomeScripts=function(){
 									passive:[
 										function(){
 											enemies[i].ts.charge+=1;
-											if(enemies[i].ts.charge>=40){
+											if(enemies[i].ts.charge>=20){
 												enemies[i].ts.charge=0;
 												append(objects,{
 													type:'projectile',
@@ -7855,8 +7855,9 @@ var getBiomeScripts=function(){
 													y:enemies[i].y,
 													pdmgmin:0,
 													pdmgmax:0,
-													mdmgmin:enemies[i].intel*15,
-													mdmgmax:enemies[i].intel*17,
+													mdmgmin:enemies[i].intel*4,
+													mdmgmax:enemies[i].intel*4.3,
+													mdmgloss:enemies[i].intel*0.012,
 													armorE:1,
 													resE:1,
 													procc:0.8,
@@ -7867,11 +7868,11 @@ var getBiomeScripts=function(){
 													run:function(){
 														objects[n].x+=objects[n].xdrift;
 														objects[n].y+=objects[n].ydrift;
-														objects[n].mdmgmin*=0.99;
-														objects[n].mdmgmax*=0.99;
+														objects[n].mdmgmin-=objects[n].mdmgloss;
+														objects[n].mdmgmax-=objects[n].mdmgloss;
 														objects[n].xdrift*=0.98;
 														objects[n].ydrift*=0.98;
-														objects[n].speed=min(7,objects[n].speed*1.03);
+														objects[n].speed=min(6,objects[n].speed*1.025);
 													}
 												});
 											}
@@ -14207,10 +14208,10 @@ showdots[2]=0;
 					playertemp.inBossFight=0;
 					player.hp=(plshp(1));
 					player.mp=(plsmp(1));
-					player.xp-=round(player.xpr/5);
+					player.xp-=round(player.xpr*(max(0.1,min(player.level,100)/100)));
 					dots=new Array();
 					if(player.xp<0){
-						player.xp=0
+						player.xp=0;
 					}
 					player.biomeID=1;
 					playertemp.x=0;
