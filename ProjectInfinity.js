@@ -1,4 +1,4 @@
-var version="0.7.5test version";
+var version="0.7.5e";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -955,7 +955,6 @@ function createenemy(ID){
 		range:0,
 		timeout:0
 	};
-	this.aspdm=1;
 	this.haste=1;
 	this.xp=enemydata[ID*30+19];
 	this.ppv=enemydata[ID*30+23];
@@ -992,7 +991,6 @@ function createenemy(ID){
 		ondeath:new Array(),
 		damagetakenpra:new Array(),
 		drawover:new Array(),
-		channel:[new Array(),new Array(),new Array(),new Array(),new Array()],
 	};
 	if(enemydata[ID*30+28]){
 		for(aea=0;aea<enemydata[ID*30+28].length;aea+=1){
@@ -1016,21 +1014,6 @@ function createenemy(ID){
 			}
 			else if(enemydata[ID*30+28][aea][0]==6){
 				append(this.traits.drawover,applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
-			}
-			else if(enemydata[ID*30+28][aea][0]==7){
-				append(this.traits.channel[0],applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
-			}
-			else if(enemydata[ID*30+28][aea][0]==8){
-				append(this.traits.channel[1],applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
-			}
-			else if(enemydata[ID*30+28][aea][0]==9){
-				append(this.traits.channel[2],applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
-			}
-			else if(enemydata[ID*30+28][aea][0]==10){
-				append(this.traits.channel[3],applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
-			}
-			else if(enemydata[ID*30+28][aea][0]==11){
-				append(this.traits.channel[4],applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
 			}
 		}
 	}
@@ -1545,7 +1528,7 @@ var applyNMETrait=[
 				}
 			);
 		},
-	//16: stealth cancel
+	//15: stealth cancel
 		function(args){
 			args=split(args,"/");
 			for(sta=0;sta<args.length;sta+=1){
@@ -1556,24 +1539,6 @@ var applyNMETrait=[
 					if(enemies[i].action.id==args[0]){
 						enemies[i].stealth=0;
 						enemies[i].ts.stealthcd=args[1];
-					}
-				}
-			);
-		},
-	//17: channel particles
-		function(args){
-			args=split(args,"/");
-			for(sta=0;sta<args.length;sta+=1){
-				args[sta]=Number(args[sta]);
-			}
-			return(
-				function(){
-					if(enemies[i].action.id==6){
-						if(tick%args[0]==0){
-							if(enemies[i].x-playertemp.x<400){
-								append(particles,new createparticle(enemies[i].x+random(-enemies[i].size*2,enemies[i].size*2),enemies[i].y+random(-enemies[i].size*2,enemies[i].size*2),0,0,0,0,'circle','',args[4],args[5],args[6],args[7],args[1],args[2],args[3],1));
-							}
-						}
 					}
 				}
 			);
@@ -1676,25 +1641,15 @@ var getinventorysprites=function(){
 	inventorysprites={meta:1};
 	for(i=0;i<player.inventory.bag.length;i+=1){
 		if(player.inventory.bag[i]){
-			if(!(inventorysprites[itemdata[player.inventory.bag[i].id*10+4]])){
-				if(itemdata[player.inventory.bag[i].id*10+3]=='svg'){
-					inventorysprites[itemdata[player.inventory.bag[i].id*10+4]]=loadShape('Data/Graphics/inventory/'+itemdata[player.inventory.bag[i].id*10+4]+'.svg');
-				}
-				else if(itemdata[player.inventory.bag[i].id*10+3]=='img'){
-					inventorysprites[itemdata[player.inventory.bag[i].id*10+4]]=loadImage('Data/Graphics/inventory/'+itemdata[player.inventory.bag[i].id*10+4]);
-				}
+			if(!(inventorysprites[itemdata[player.inventory.bag[i].id*10+4]])&itemdata[player.inventory.bag[i].id*10+3]=='svg'){
+				inventorysprites[itemdata[player.inventory.bag[i].id*10+4]]=loadShape('Data/Graphics/inventory/'+itemdata[player.inventory.bag[i].id*10+4]+'.svg');
 			}
 		}
 	}
 	for(i=0;i<equipkey.length;i+=1){
 		if(player.inventory[equipkey[i]]){
-			if(!(inventorysprites[itemdata[player.inventory[equipkey[i]].id*10+4]])){
-				if(itemdata[player.inventory[equipkey[i]].id*10+3]=='svg'){
-					inventorysprites[itemdata[player.inventory[equipkey[i]].id*10+4]]=loadShape('Data/Graphics/inventory/'+itemdata[player.inventory[equipkey[i]].id*10+4]+'.svg');
-				}
-				else if(itemdata[player.inventory[equipkey[i]].id*10+3]=='img'){
-					inventorysprites[itemdata[player.inventory[equipkey[i]].id*10+4]]=loadImage('Data/Graphics/inventory/'+itemdata[player.inventory[equipkey[i]].id*10+4]);
-				}
+			if(!(inventorysprites[itemdata[player.inventory[equipkey[i]].id*10+4]])&itemdata[player.inventory[equipkey[i]].id*10+3]=='svg'){
+				inventorysprites[itemdata[player.inventory[equipkey[i]].id*10+4]]=loadShape('Data/Graphics/inventory/'+itemdata[player.inventory[equipkey[i]].id*10+4]+'.svg');
 			}
 		}
 	}
@@ -1835,12 +1790,6 @@ var renderequipslot=function(slot,x,y,interact){
 		if(player.inventory[slot].suffix){
 			fill(suffixdata[player.inventory[slot].suffix*5-4][2][0],suffixdata[player.inventory[slot].suffix*5-4][2][1],suffixdata[player.inventory[slot].suffix*5-4][2][2],abs(tick%180-90)*3);
 			ellipse(x+42,y+42,16,16);
-		}
-		if(itemdata[player.inventory[slot].id*10+3]=="svg"){
-			shape(inventorysprites[itemdata[player.inventory[slot].id*10+4]],662+30*n,137+30*x,37,55);
-		}
-		else if(itemdata[player.inventory[slot].id*10+3]=="img"){
-			image(inventorysprites[itemdata[player.inventory[slot].id*10+4]],662+30*n,137+30*x,37,55);
 		}
 		shape(inventorysprites[itemdata[player.inventory[slot].id*10+4]],x+25,y+25,75,110);
 		if(interact){
@@ -2225,14 +2174,7 @@ var renderinventory=function(){
 							ellipse(670+30*n,145+30*x,10,10);
 						}
 						
-						if(render){
-							if(itemdata[player.inventory.bag[invselect[1]].id*10+3]=="svg"){
-								shape(inventorysprites[itemdata[player.inventory.bag[15*x+n].id*10+4]],662+30*n,137+30*x,37,55);
-							}
-							else if(itemdata[player.inventory.bag[invselect[1]].id*10+3]=="img"){
-								image(inventorysprites[itemdata[player.inventory.bag[15*x+n].id*10+4]],662+30*n,137+30*x,37,55);
-							}
-						}
+						if(render){shape(inventorysprites[itemdata[player.inventory.bag[15*x+n].id*10+4]],662+30*n,137+30*x,37,55);}
 					}
 				}
 			}
@@ -3462,13 +3404,13 @@ var loadtraits=function(){
 		append(traitfuncs.damagetaken,function(){
 			if(willhit){
 				if(playertemp.bonearmor>0){
-					pdmg*=pow(0.98,min(25,playertemp.bonearmor));
-					mdmg*=pow(0.98,min(25,playertemp.bonearmor));
+					pdmg*=pow(0.985,playertemp.bonearmor);
+					mdmg*=pow(0.985,playertemp.bonearmor);
 				}
 			}
 		});
 		append(traitfuncs.onkill,function(f){
-			ts.bonearmor((enemies[f].armor*(0.03+0.05*player.traits[119])/enemies[f].boost),(enemies[f].res*(0.03+0.05*player.traits[119])/enemies[f].boost));
+			ts.bonearmor((enemies[f].armor*(0.1+0.05*player.traits[119])/enemies[f].boost),(enemies[f].res*(0.1+0.05*player.traits[119])/enemies[f].boost));
 		});
 	}
 	if(player.traits[79]>0){
@@ -4727,19 +4669,11 @@ var loadtraits=function(){
 	if(player.traits[25]>0){
 		append(traitfuncs.onkill,function(f){
 		heal((plshp(0.03)),"direct");
-		if(!(playertemp.souleater)){
-			playertemp.souleater=1;
-		}
-		else{
-			playertemp.souleater+=1;
-		}
-		if(playertemp.souleater<=25){
-			playertemp.speed+=0.02;
-			playertemp.haste+=0.01;
-		}
-		playertemp.strfb+=enemies[f].str*(0.02+player.traits[25]*0.05)/enemies[f].boost;
-		playertemp.intelfb+=enemies[f].intel*(0.02+player.traits[25]*0.05)/enemies[f].boost;
-		append(stateffects,{name:'soul eater',x:random(-20,20),y:random(-20,20),dir:random(0,2*PI),turn:random(-0.1,0.1),tick:0,strb:enemies[f].str*(0.02+player.traits[25]*0.05)/enemies[f].boost,intelb:enemies[f].intel*(0.02+player.traits[25]*0.05)/enemies[f].boost,run:function(){
+		playertemp.speed+=0.01;
+		playertemp.haste+=0.01;
+		playertemp.strfb+=enemies[f].str*(0.06+player.traits[25]*0.05)/enemies[f].boost;
+		playertemp.intelfb+=enemies[f].intel*(0.06+player.traits[25]*0.05)/enemies[f].boost;
+		append(stateffects,{name:'soul eater',x:random(-20,20),y:random(-20,20),dir:random(0,2*PI),turn:random(-0.1,0.1),tick:0,strb:enemies[f].str*(0.06+player.traits[25]*0.05)/enemies[f].boost,intelb:enemies[f].intel*(0.06+player.traits[25]*0.05)/enemies[f].boost,run:function(){
 			playertemp.strfb-=stateffects[n].strb/1800;
 			playertemp.intelfb-=stateffects[n].intelb/1800;
 			if(stateffects[n].tick<1680){
@@ -4758,11 +4692,8 @@ var loadtraits=function(){
 				resetMatrix();
 			}
 			if(stateffects[n].tick>=1800){
-				(playertemp.souleater<=25){
-					playertemp.speed-=0.02;
-					playertemp.haste-=0.01;
-				}
-				playertemp.souleater-=1;
+				playertemp.speed-=0.01;
+				playertemp.haste-=0.01;
 				stateffects.splice(n,1);
 				n-=1;
 			}
@@ -7255,7 +7186,6 @@ var getBiomeScripts=function(){
 							name:"Shrek",
 							mhp:12000*nmelvsc(47),
 							hp:12000*nmelvsc(47),
-							aspdm:1,
 							boost:1,
 							ai:3,
 							exists:1,
@@ -7772,7 +7702,6 @@ var getBiomeScripts=function(){
 								hp:round(170*temp),
 								ai:2,
 								exists:1,
-								aspdm:1,
 								de:1,
 								propertydmods:setcustomprop("water:0.2/slash:0.8/pierce:0.8/impact:0.85/cold:1.2/wind:1.2/electric:1.5"),
 								dmgmin:1,
@@ -9192,8 +9121,8 @@ var nmesa={
 		}
 	},
 	displace:function(i,mult){
-		enemies[i].x+=enemies[i].speed*enemies[i].aspdm*sin(enemies[i].dir)*enemies[i].spdmod*mult;
-		enemies[i].y-=enemies[i].speed*enemies[i].aspdm*cos(enemies[i].dir)*enemies[i].spdmod*mult;
+		enemies[i].x+=enemies[i].speed*sin(enemies[i].dir)*enemies[i].spdmod*mult;
+		enemies[i].y-=enemies[i].speed*cos(enemies[i].dir)*enemies[i].spdmod*mult;
 	}
 };
 var nmeactr;
@@ -9268,7 +9197,6 @@ var endnmeaction=function(i,stun){
 		enemies[i].action.timeout=0;
 	}
 	enemies[i].stun+=stun;
-	enemies[i].aspdm=1;
 }
 /////////ENEMY MOVESET============================================================================
 var nmem= new Array();
@@ -9461,20 +9389,7 @@ append(nmem,function(i){
 				endnmeaction(i,0);
 		}
 	}
-});
-//6:CHANNEL===
-append(nmem,function(i){
-	enemies[i].action.timeout=2+enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][0];
-	enemies[i].aspdm=Number(enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][3]);
-	if(enemies[i].action.timeout<=2||enemies[i].stun>0){
-		if(enemies[i].action.timeout<=2){
-			for(tdd=0;tdd<enemies[i].traits.channel[enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][4]].length;tdd+=1){
-				enemies[i].traits.channel[enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][4]][tdd]();
-			}
-		}
-		endnmeaction(i,enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][1]);
-	}
-});
+	});
 var spendmana=function(spendtype,basempspent,mpspent){
 	if(spendtype=="magic"){
 		if(player.traits[66]>0){
@@ -12948,8 +12863,8 @@ var sfx={
 		dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
 		aquabubble:new Howl({src: ['Data/Sound/sfx/aquabubble.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
 		aquabubbleburst:new Howl({src: ['Data/Sound/sfx/aquabubbleburst.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
-		etherknife:new Howl({src: ['Data/Sound/sfx/etherknife.ogg'], autoplay: false,loop: false,volume: options.sfx*0.14,}),
-		etherknifeh:new Howl({src: ['Data/Sound/sfx/etherknifehit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+		etherknife:new Howl({src: ['Data/Sound/sfx/etherknife.ogg'], autoplay: false,loop: false,volume: options.sfx*0.17,}),
+		etherknifeh:new Howl({src: ['Data/Sound/sfx/etherknifehit.ogg'], autoplay: false,loop: false,volume: options.sfx*1.2,}),
 		ethercut:new Howl({src: ['Data/Sound/sfx/ethercut.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 		incinerates:new Howl({src: ['Data/Sound/sfx/incineratestart.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 		incineratel:new Howl({src: ['Data/Sound/sfx/incinerateloop.ogg'], autoplay: false,loop: true,volume: options.sfx*1,}),
@@ -14264,8 +14179,8 @@ showdots[2]=0;
 	}
 	if(playertemp.stun>0){
 		strokeWeight(10);
-		stroke(255,255,160,150);
-		fill(255,255,160,75);
+		stroke(255,255,160);
+		fill(255,255,160,100);
 		rect(775,430,1100,260,20);
 		strokeWeight(20);
 		line(775,430,1045,690);
@@ -14773,11 +14688,8 @@ showdots[2]=0;
 						}
 						noStroke();
 					}
-					else if(itemdata[player.inventory.bag[invselect[1]].id*10+3]=="svg"){
+					else{
 						shape(inventorysprites[itemdata[player.inventory.bag[invselect[1]].id*10+4]],150,150,259,385);
-					}
-					else if(itemdata[player.inventory.bag[invselect[1]].id*10+3]=="img"){
-						image(inventorysprites[itemdata[player.inventory.bag[invselect[1]].id*10+4]],150,150,259,385);
 					}
 					temp=new Array();
 					dptemp=new Array(99);
@@ -15552,11 +15464,8 @@ showdots[2]=0;
 						}
 						noStroke();
 					}
-					else if(itemdata[player.inventory.bag[invselect[1]].id*10+3]=="svg"){
+					else{
 						shape(inventorysprites[itemdata[player.inventory.bag[invselect[1]].id*10+4]],150,150,259,385);
-					}
-					else if(itemdata[player.inventory.bag[invselect[1]].id*10+3]=="img"){
-						image(inventorysprites[itemdata[player.inventory.bag[invselect[1]].id*10+4]],150,150,259,385);
 					}
 								temp3=1;
 									temp3=itemdata[player.inventory.bag[invselect[1]].id*10+6];
