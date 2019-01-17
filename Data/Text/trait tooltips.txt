@@ -13,7 +13,7 @@ Relic Shield
 Grit
 [Passive] Reduces damage taken by up to {ox0c1}%, based on missing health.
 Mana Battery
-[Passive] Increases maximum mana by {ox46c4}%, but reduces mana regeneration by 8%
+[Passive] Increases maximum mana by {ox46c4}%, but reduces mana regeneration by 8%.
 Vampire
 [Passive] Heal for {ox0c1}% of all damage dealt.
 Zealot's Oath
@@ -47,7 +47,7 @@ Ignorance
 Overgrowth
 [Passive] Health is no longer capped at maximum. Excess health decays based on your level and current excess health. Decay rate is divided by {oxc01}.
 Soul Eater
-[Passive] Kills grant 2% movement speed, 1% haste, and {ox6c5}% of the killed enemy's base strength and intelligence, decaying over 30 seconds, and heal for 3% maximum health.
+[Passive] Kills grant 2% movement speed (up to 50%), 1% haste (up to 25%), and {ox2c5}% of the killed enemy's base strength and intelligence, decaying over 30 seconds, and heal for 3% maximum health.
 Obliteration
 [Passive] Hits that deal at least 20% of the target's maximum health release a shockwave, dealing {s0.075x0.5c0.5+i0.075x0.5c0.5}-{s0.1x0.5c0.5+i0.1x0.5c0.5} true void damage to nearby enemies. The shockwave does not proc on-hits.
 Warmog's Heart
@@ -235,7 +235,7 @@ Overload
 Augmented Thorns
 [Passive] Damage dealt by Thorns and Reflection is increased by {a0.02}.
 Bone Armor
-[Passive] Killing enemies grant you {ox10c5}% of their base armor and resistance, decaying over 30 seconds. Each active stack of Bone Armor also reduces damage taken from hits by 1% (multiplicative). [Active] Consume 10% of your maximum health to gain 3 stacks of Bone Armor, each worth {h0.2+s0.05+i0.05} (10 second cooldown).
+[Passive] Killing enemies grant you {ox3c5}% of their base armor and resistance, decaying over 30 seconds. Each active stack of Bone Armor also reduces damage taken from hits by 2% (multiplicative, capped at 25 stacks). [Active] Consume 10% of your maximum health to gain 3 stacks of Bone Armor, each worth {h0.2+s0.05+i0.05} (10 second cooldown).
 Fire Mastery
 [Passive] Increases fire damage dealt by {ox0c1}%.
 Water Mastery
