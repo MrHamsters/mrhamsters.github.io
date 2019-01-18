@@ -1,4 +1,4 @@
-var version="0.7.7";
+var version="0.7.7b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -777,7 +777,7 @@ var openhelpscreen=function(introkey){
 				text("-Enemies slain will increase the Tier (displayed in the upper left corner of the screen)",140,240,500,50);
 				text("-The current Tier increases the power of enemies when they spawn",140,280,500,50);
 				text("-When the arena ends, you are rewarded with XP, SP, and reactant",140,320,500,50);
-				text("-Rewards are proportional to the Tier reached",140,350,500,50);
+				text("-Rewards are proportional to the Tier reached",140,355,500,50);
 				text("-Arena can be ended early by leaving the red circle",140,375,500,50);
 				noStroke();
 			}
@@ -9411,19 +9411,19 @@ var statpanel=function(){
 						if(prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-1<150||prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-1>209){
 						}
 						else if(prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-1<180){
-							if(tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-1-150]){
-								tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-1-150]-=prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][1];
+							if(tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-150]){
+								tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-150]-=prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-1-150]=-prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][1];
+								tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-150]=-prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][1];
 							}
 						}
 						else{
-							if(tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-1-180]){
-								tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-1-180]+=prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][1];
+							if(tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-180]){
+								tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-180]+=prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-1-180]=+prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][1];
+								tooltipdefc[prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][0]-180]=+prefixdata[player.inventory[tooltipdefi].prefix*5-1][a][1];
 							}
 						}
 					}
@@ -9433,19 +9433,19 @@ var statpanel=function(){
 						if(suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-1<150||suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-1>209){
 						}
 						else if(suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-1<180){
-							if(tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-1-150]){
-								tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-1-150]-=suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][1];
+							if(tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-150]){
+								tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-150]-=suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-1-150]=-suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][1];
+								tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-150]=-suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][1];
 							}
 						}
 						else{
-							if(tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-1-180]){
-								tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-1-180]+=suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][1];
+							if(tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-180]){
+								tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-180]+=suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-1-180]=+suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][1];
+								tooltipdefc[suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][0]-180]=+suffixdata[player.inventory[tooltipdefi].suffix*5-1][a][1];
 							}
 						}
 					}
