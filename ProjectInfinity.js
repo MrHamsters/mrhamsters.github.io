@@ -1,4 +1,4 @@
-var version="0.7.6";
+var version="0.7.7";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -243,6 +243,32 @@ for(i=0;i<suffixdata.length/5;i+=1){
 		}
 	}
 }
+/*var suffixdata=loadStrings('Data/Text/suffixes.txt');
+for(i=0;i<suffixdata.length/5;i+=1){
+	suffixdata[i*5+1]=split(suffixdata[i*5+1],'/');
+	suffixdata[i*5+1][0]=Number(suffixdata[i*5+1][0]);
+	suffixdata[i*5+1][1]=Number(suffixdata[i*5+1][1]);
+	suffixdata[i*5+1][2]=split(suffixdata[i*5+1][2],',');
+	suffixdata[i*5+1][2][0]=Number(suffixdata[i*5+1][2][0]);
+	suffixdata[i*5+1][2][1]=Number(suffixdata[i*5+1][2][1]);
+	suffixdata[i*5+1][2][2]=Number(suffixdata[i*5+1][2][2]);
+	if(suffixdata[i*5+1][3]){
+		suffixdata[i*5+1][3]=split(suffixdata[i*5+1][3],',');
+	}
+	suffixdata[i*5+2]=split(suffixdata[i*5+2],'/');
+	for(n=0;n<suffixdata[i*5+2].length;n+=1){
+		suffixdata[i*5+2][n]=Number(suffixdata[i*5+2][n]);
+	}
+	suffixdata[i*5+3]=Number(suffixdata[i*5+3]);
+	if(suffixdata[i*5+4]){
+		suffixdata[i*5+4]=split(suffixdata[i*5+4],',');
+		for(n=0;n<suffixdata[i*5+4].length;n+=1){
+			suffixdata[i*5+4][n]=split(suffixdata[i*5+4][n],'/');
+			suffixdata[i*5+4][n][0]=Number(suffixdata[i*5+4][n][0]);
+			suffixdata[i*5+4][n][1]=Number(suffixdata[i*5+4][n][1]);
+		}
+	}
+}*/
 var getenchkeyspotp=function(i){
 	for(n=0;n<enchanter.prefix.length;n+=1){
 		if(prefixdata[i*5+1][1]>enchanter.prefix[n].lv){
@@ -525,7 +551,7 @@ document.onkeydown=function(e){
     }
 };
 window.onkeydown=function(e){
-	if(!(cinematic||dialoga)){
+	if(!((cinematic&!(keyCode==72))||dialoga)){
     var code = e.keyCode ? e.keyCode : e.which;
     if(code==87){
 		input[0]=1;
@@ -581,7 +607,13 @@ window.onkeydown=function(e){
 					inventype=1;
 					invquicksell=0;
 					getinventorysprites();
-					helpscreen={active:0,help:0};
+					if(!(player.intro.inventory)){
+						openhelpscreen();
+						player.intro.inventory=1;
+					}
+					else{
+						helpscreen={active:0,help:0};
+					}
 				}
 			}
 		}
@@ -590,194 +622,18 @@ window.onkeydown=function(e){
 		if(!(hlock)){
 			hlock=1;
 			if(helpscreen.active){
+				/*if(cinematic){
+					if(cinematic[0]){
+						if(cinematic[0]=="help"){
+							cinematic=0;
+							buff(2,60,100);
+						}
+					}
+				}*/
 				helpscreen={active:0,help:0};
 			}
 			else{
-				if(inventory==1){
-					if(inventype==1){
-						helpscreen.active=1;
-						helpscreen.help=function(){
-							fill(0,0,50,160);
-							rect(5,5,1123,790,40);
-							textAlign(CENTER,CENTER);
-							fill(255,255,255);
-							textFont(0,30);
-							text("Inventory Help",1133/2-150,0,300,40);
-							noFill();
-							strokeWeight(12);
-							noFill();
-							stroke(0,80,0,200);
-							rect(495,170,60,60,5);
-							rect(495,245,60,60,5);
-							rect(495,320,60,60,5);
-							rect(495,395,60,60,5);
-							rect(570,320,60,60,5);
-							textFont(0,20);
-							fill(60,110,60,200);
-							text("Right click an equipped item to unequip it.",420,420,200,150);
-							
-							noFill();
-							stroke(0,255,0,200);
-							rect(420,245,60,60,5);
-							rect(570,245,60,60,5);
-							textFont(0,20);
-							fill(120,255,120,200);
-							text("Left click a weapon to swap left and right hands.",420,290,200,150);
-							
-							noFill();
-							stroke(200,0,200,200);
-							rect(20,410,260,80,5);
-							fill(255,120,255,200);
-							textFont(0,18);
-							text("Spend PP for powerful stat increases here. PP is gained by levelling up and killing enemies. Check the infuser in the nexus after spending enough PP to recieve special bonuses.",20,430,400,240);
-							
-							noFill();
-							stroke(200,200,200,200);
-							rect(390,35,220,100,10);
-							fill(255,255,255,200);
-							textFont(0,20);
-							text("View traits gained from your equipment here.",400,45,200,80);
-							noFill();
-							stroke(170,140,0,200);
-							rect(645,120,450,450,10);
-							fill(255,220,100,200);
-							textFont(0,16);
-							textAlign(LEFT,TOP);
-							text("Hover over an item to see its stats.",660,130,500,50);
-							text("Hold shift while hovering to see item description.",680,155,500,50);
-							text("Hold control while hovering to see item stat rolls.",680,180,500,50);
-							text("Hold any other key while hovering to compare stats with your currently equipped item for that item type.",680,205,400,70);
-							text("Left click an item to select it.",660,270,500,50);
-							text("Press DELETE to sell the item for SP.",680,295,500,50);
-							text("Press TAB to lock/unlock the item. Items cannot be sold while locked.",680,320,400,50);
-							text("Left click another inventory slot to move the item.",680,360,500,50);
-							text("Right click an item to equip it.",660,410,500,50);
-							noStroke();
-						}
-					}
-					else if(inventype==2){
-						helpscreen.active=1;
-						helpscreen.help=function(){
-							fill(0,0,50,160);
-							rect(5,5,1123,790,40);
-							textAlign(CENTER,CENTER);
-							fill(255,255,255);
-							textFont(0,30);
-							text("Enchanter Help",100,0,933,50);
-							textFont(0,22);
-							fill(255,255,255,200);
-							text("Select an item in your inventory to browse available enchantments.",33,100,1100,600);
-							textAlign(LEFT,TOP);
-							noStroke();
-						}
-					}
-					else if(inventype==3){
-						helpscreen.active=1;
-						helpscreen.help=function(){
-							fill(0,0,50,160);
-							rect(5,5,1123,790,40);
-							textAlign(CENTER,CENTER);
-							fill(255,255,255);
-							textFont(0,30);
-							text("Infuser Help",100,0,933,50);
-							noFill();
-							strokeWeight(20);
-							stroke(255,255,255);
-							rect(661,270,160,160,30);
-							noStroke();
-							textFont(0,22);
-							fill(255,255,255,200);
-							text("Click to check for eligible keystones. If it flashes red, there are none available to you until investing more PP into passives.",400,100,200,550);
-							textAlign(LEFT,TOP);
-							noStroke();
-						}
-					}
-					else if(inventype==4){
-						helpscreen.active=1;
-						helpscreen.help=function(){
-							fill(0,0,50,160);
-							rect(5,5,1123,790,40);
-							textAlign(CENTER,CENTER);
-							fill(255,255,255);
-							textFont(0,30);
-							text("Artisan Bench Help",100,0,933,50);
-							
-							textFont(0,22);
-							fill(255,255,255,200);
-							text("Select an item in your inventory to modify its stat rolls.",33,100,1100,600);
-							
-							textAlign(LEFT,TOP);
-							noStroke();
-						}
-					}
-				}
-				else if(inventory==2){
-					helpscreen.active=1;
-					helpscreen.help=function(){
-						fill(0,0,50,160);
-						rect(5,5,1123,790,40);
-						textAlign(CENTER,CENTER);
-						fill(255,255,255);
-						textFont(0,30);
-						text("Traits Help",100,0,933,50);
-						
-						textFont(0,20);
-						fill(200,200,255,200);
-						text("Active traits appear here. These can be used in game for various effects, but must be equipped. To equip one, hover over it and press a corresponding key (Space, Shift, Q, or E). Equipped active traits appear beneath your XP bar in game with their remaining cooldowns.",50,100,250,400);
-						
-						textFont(0,22);
-						fill(200,255,0,200);
-						text("Passive traits appear here. These are always equipped. Hover over them to see what bonuses they are granting you.",390,100,510,400);
-						
-						textFont(0,20);
-						fill(255,255,255,200);
-						text("Equipped active traits appear here. These can be unequipped by clicking on them.",950,100,170,400);
-					
-						textAlign(LEFT,TOP);
-						noStroke();
-					}
-				}
-				else if(inventory==3){
-					helpscreen.active=1;
-					helpscreen.help=function(){
-						fill(0,0,50,160);
-						rect(5,5,1123,790,40);
-						textAlign(CENTER,CENTER);
-						fill(255,255,255);
-						textFont(0,30);
-						text("Atlas Help",100,0,933,50);
-						
-						textFont(0,22);
-						fill(255,255,255,200);
-						text("This is a map of all the chartable areas you have discovered so far. Once you have killed enough enemies in normal areas, it will become unlocked. You may click on these to travel to the area. Areas that no longer grant PP (although specific enemies may continue to) appear blue.",33,100,1100,600);
-						
-						textAlign(LEFT,TOP);
-						noStroke();
-					}
-				}
-				else{
-					helpscreen.active=1;
-					helpscreen.help=function(){
-						fill(0,0,50,140);
-						rect(105,5,600,590,40);
-						textAlign(CENTER,CENTER);
-						fill(255,220,100,200);
-						textFont(0,22);
-						textAlign(LEFT,TOP);
-						text("Controls",370,70,500,50);
-						textFont(0,18);
-						text("-W,A,S,D to move",140,120,500,50);
-						text("-Left click to use the weapon in your left hand.",140,150,500,50);
-						text("-Right click to use the weapon in your right hand.",140,180,500,50);
-						text("-Hold CTRL and click to change stance (if that weapon has different ones).",140,210,500,50);
-						text("   Use with caution: your browser will most likely try to do unwanted things (i.e. CTRL + W will try to close the game).",140,255,500,50);
-						text("-I or ESCAPE to open inventory",140,315,500,50);
-						text("-F or UP (arrow key) to interact with things, such as structures in the nexus and portals.",140,345,530,50);
-						fill(200,170,100,200);
-						text("Note that GUIs (inventory, utility structures in the nexus, etc.) have different help screens.",140,480,530,50);
-						noStroke();
-					}
-				}
+				openhelpscreen();
 			}
 		}
 	}
@@ -857,6 +713,317 @@ window.onkeyup = function (e) {
 	if(loaded==1&code==72){
 		hlock=0;
 	}
+};
+var openhelpscreen=function(introkey){
+	helpscreen.active=1;
+	if(introkey){
+		if(introkey=="portals"){
+			helpscreen.help=function(){
+				fill(0,0,50,100);
+				rect(105,5,600,350,40);
+				textAlign(LEFT,TOP);
+				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,150);
+				textFont(0,19);
+				text("Press H to close this help screen",420,40,500,50);
+				fill(255,220,100,200);
+				textFont(0,22);
+				text("Portals",370,70,500,50);
+				textFont(0,18);
+				text("-Press F or the UP arrow key while near the portal to enter it",140,120,500,50);
+				text("-Portals are colored based on their level relative to yours",140,150,500,50);
+				text("-Blue portals are very low level",140,180,500,50);
+				text("-Purple portals are near your level (you'll get the most XP from these areas)",140,210,500,50);
+				text("-Red portals are far above your level (you'll likely die in these areas)",140,250,500,50);
+				text("-Enemies give XP based on the lower of your level and their own",140,290,550,50);
+				text("(Defeating enemies above your level yields the same XP as enemies at the same level as you)",140,310,500,50);
+				noStroke();
+			}
+		}
+		else if(introkey=="restorationshrine"){
+			helpscreen.help=function(){
+				fill(0,0,50,100);
+				rect(105,5,600,250,40);
+				textAlign(LEFT,TOP);
+				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,150);
+				textFont(0,19);
+				text("Press H to close this help screen",420,40,500,50);
+				fill(255,220,100,200);
+				textFont(0,22);
+				text("Restoration Shrines",310,70,500,50);
+				textFont(0,18);
+				text("-Press F or the UP arrow key while near the restoration shrine to use it",140,105,500,50);
+				text("-These can only be used once (the pool in them changes color if it can still be used)",140,150,500,50);
+				text("-Fully restores your health and mana",140,195,500,50);
+				text("-Greatly increases your regeneration for a while",140,220,500,50);
+				noStroke();
+			}
+		}
+		else if(introkey=="challengearena"){
+			helpscreen.help=function(){
+				fill(0,0,50,100);
+				rect(105,5,600,400,40);
+				textAlign(LEFT,TOP);
+				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,150);
+				textFont(0,19);
+				text("Press H to close this help screen",420,40,500,50);
+				fill(255,220,100,200);
+				textFont(0,22);
+				text("Challenge Arenas",330,70,500,50);
+				textFont(0,18);
+				text("-Press F or the UP arrow key while near the challenge arena to activate it",140,120,500,50);
+				text("-These can only be used once (disappears on use)",140,160,500,50);
+				text("-Starts challenge arena",140,180,500,50);
+				text("-Enemies will spawn within the boundaries of the arena",140,210,500,50);
+				text("-Enemies slain will increase the Tier (displayed in the upper left corner of the screen)",140,240,500,50);
+				text("-The current Tier increases the power of enemies when they spawn",140,280,500,50);
+				text("-When the arena ends, you are rewarded with XP, SP, and reactant",140,320,500,50);
+				text("-Rewards are proportional to the Tier reached",140,350,500,50);
+				text("-Arena can be ended early by leaving the red circle",140,375,500,50);
+				noStroke();
+			}
+		}
+		else if(introkey=="enchantnotice"){
+			helpscreen.help=function(){
+				fill(0,0,50,100);
+				rect(105,5,600,590,40);
+				textAlign(LEFT,TOP);
+				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,150);
+				textFont(0,19);
+				text("Press H to close this help screen",420,40,500,50);
+				fill(255,220,100,200);
+				textFont(0,22);
+				text("Enchanter Notice",330,70,500,50);
+				textFont(0,18);
+				textAlign(CENTER);
+				text("It seems you have some SP and reactant to spend on enchantments. Visit the Enchanter to browse enchantments!",140,120,550,300);
+				ellipseMode(CENTER);
+				fill(40,0,50);
+				ellipse(400,300,60,60);
+				rect(375,275,30,30);
+				rect(425,275,30,30);
+				rect(375,325,30,30);
+				rect(425,325,30,30);
+				fill(min(255,max(0,255-pow(pow(playertemp.x-200,2)+pow(playertemp.y+350,2),0.5))),min(255,max(0,255-pow(pow(playertemp.x-200,2)+pow(playertemp.y+350,2),0.5)*2)),min(255,max(0,255-pow(pow(playertemp.x-200,2)+pow(playertemp.y+350,2),0.5))));
+				ellipse(400,300,35,35);
+				noStroke();
+				textAlign(LEFT,TOP);
+			}
+		}
+	}
+	else{
+		if(inventory==1){
+			if(inventype==1){
+				helpscreen.help=function(){
+					fill(0,0,50,160);
+					rect(5,5,1123,790,40);
+					textAlign(CENTER,CENTER);
+					fill(255,255,255);
+					textFont(0,30);
+					text("Inventory Help",1133/2-150,0,300,40);
+					noFill();
+					strokeWeight(12);
+					noFill();
+					stroke(0,80,0,200);
+					rect(495,170,60,60,5);
+					rect(495,245,60,60,5);
+					rect(495,320,60,60,5);
+					rect(495,395,60,60,5);
+					rect(570,320,60,60,5);
+					textFont(0,20);
+					fill(60,110,60,200);
+					text("Right click an equipped item to unequip it.",420,420,200,150);
+					
+					noFill();
+					stroke(0,255,0,200);
+					rect(420,245,60,60,5);
+					rect(570,245,60,60,5);
+					textFont(0,20);
+					fill(120,255,120,200);
+					text("Left click a weapon to swap left and right hands.",420,290,200,150);
+					
+					noFill();
+					stroke(0,0,200,200);
+					rect(375,140,100,100,5);
+					textFont(0,18);
+					fill(120,120,255,200);
+					text("Left click to enter upgrading mode (right click to exit). Then, left click items to upgrade them. Holding shift when clicking upgrades them as much as possible. Right click the Upgrade items button to enable automatic upgrading (upgrades your equipped items on level-up).",150,100,200,200);
+					
+					noFill();
+					stroke(255,100,0,200);
+					rect(5,400,340,140,5);
+					textFont(0,18);
+					fill(255,150,50,200);
+					text("These are your damage property defenses.",50,420,200,100);
+					
+					noFill();
+					stroke(200,0,200,200);
+					rect(20,560,260,80,5);
+					fill(255,120,255,200);
+					textFont(0,18);
+					text("Spend PP for powerful stat increases here. PP is gained by levelling up and killing enemies. Check the infuser in the nexus after spending enough PP to recieve special bonuses.",285,500,400,240);
+					
+					noFill();
+					stroke(200,200,200,200);
+					rect(390,35,220,100,10);
+					fill(255,255,255,200);
+					textFont(0,20);
+					text("View traits gained from your equipment here.",400,45,200,80);
+					noFill();
+					stroke(170,140,0,200);
+					rect(645,120,450,450,10);
+					fill(255,220,100,200);
+					textFont(0,16);
+					textAlign(LEFT,TOP);
+					text("Hover over an item to see its stats.",660,130,500,50);
+					text("Hold shift while hovering to see item description.",680,155,500,50);
+					text("Hold control while hovering to see item stat rolls.",680,180,500,50);
+					text("Hold any other key while hovering to compare stats with your currently equipped item for that item type.",680,205,400,70);
+					text("Left click an item to select it.",660,270,500,50);
+					text("Press DELETE to sell the item for SP.",680,295,500,50);
+					text("Press TAB to lock/unlock the item. Items cannot be sold while locked.",680,320,400,50);
+					text("Left click another inventory slot to move the item.",680,360,500,50);
+					text("Right click an item to equip it.",660,410,500,50);
+					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+					textFont(0,19);
+					text("Press H to toggle this help screen",820,30,500,50);
+					noStroke();
+				}
+			}
+			else if(inventype==2){
+				helpscreen.help=function(){
+					fill(0,0,50,160);
+					rect(5,5,1123,790,40);
+					textAlign(CENTER,CENTER);
+					fill(255,255,255);
+					textFont(0,30);
+					text("Enchanter Help",100,0,933,50);
+					textFont(0,22);
+					fill(255,255,255,200);
+					text("Select an item in your inventory to browse available enchantments. Enchantments are unlocked as you level up, and some enchantments are restricted to a specific equipment slot (i.e. weapon, helmet, etc.). Once you purchase an enchantment for SP, it is unlocked permanently. However, you will then need to pay reactant each time you place the enchantment on an item.",33,100,1100,600);
+					textAlign(LEFT,TOP);
+					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+					textFont(0,19);
+					text("Press H to toggle this help screen",820,30,500,50);
+					noStroke();
+				}
+			}
+			else if(inventype==3){
+				helpscreen.help=function(){
+					fill(0,0,50,160);
+					rect(5,5,1123,790,40);
+					textAlign(CENTER,CENTER);
+					fill(255,255,255);
+					textFont(0,30);
+					text("Infuser Help",100,0,933,50);
+					noFill();
+					strokeWeight(20);
+					stroke(255,255,255);
+					rect(661,270,160,160,30);
+					noStroke();
+					textFont(0,22);
+					fill(255,255,255,200);
+					text("Click to check for eligible keystones. If it flashes red, there are none available to you until investing more PP into passives.",400,100,200,550);
+					textAlign(LEFT,TOP);
+					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+					textFont(0,19);
+					text("Press H to toggle this help screen",820,30,500,50);
+					noStroke();
+				}
+			}
+			else if(inventype==4){
+				helpscreen.help=function(){
+					fill(0,0,50,160);
+					rect(5,5,1123,790,40);
+					textAlign(CENTER,CENTER);
+					fill(255,255,255);
+					textFont(0,30);
+					text("Artisan Bench Help",100,0,933,50);
+					
+					textFont(0,22);
+					fill(255,255,255,200);
+					text("Select an item in your inventory to modify its stat rolls.",33,100,1100,600);
+					
+					textAlign(LEFT,TOP);
+					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+					textFont(0,19);
+					text("Press H to toggle this help screen",820,30,500,50);
+					noStroke();
+				}
+			}
+		}
+		else if(inventory==2){
+			helpscreen.help=function(){
+				fill(0,0,50,160);
+				rect(5,5,1123,790,40);
+				textAlign(CENTER,CENTER);
+				fill(255,255,255);
+				textFont(0,30);
+				text("Traits Help",100,0,933,50);
+				
+				textFont(0,20);
+				fill(200,200,255,200);
+				text("Active traits appear here. These can be used in game for various effects, but must be equipped. To equip one, hover over it and press a corresponding key (Space, Shift, Q, or E). Equipped active traits appear beneath your weapon stances in game with their remaining cooldowns.",50,100,250,400);
+				
+				textFont(0,22);
+				fill(200,255,0,200);
+				text("Passive traits appear here. These are always equipped. Hover over them to see what bonuses they are granting you.",390,100,510,400);
+				
+				textFont(0,20);
+				fill(255,255,255,200);
+				text("Equipped active traits appear here. These can be unequipped by clicking on them.",950,100,170,400);
+			
+				textAlign(LEFT,TOP);
+				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+				textFont(0,19);
+				text("Press H to toggle this help screen",820,30,500,50);
+				noStroke();
+			}
+		}
+		else if(inventory==3){
+			helpscreen.help=function(){
+				fill(0,0,50,160);
+				rect(5,5,1123,790,40);
+				textAlign(CENTER,CENTER);
+				fill(255,255,255);
+				textFont(0,30);
+				text("Atlas Help",100,0,933,50);
+				
+				textFont(0,22);
+				fill(255,255,255,200);
+				text("This is a map of all the chartable areas you have discovered so far. Once you have killed enough enemies in normal areas, it will become unlocked. You may click on these to travel to the area. Areas that no longer grant PP (although specific enemies may continue to) appear blue.",33,100,1100,600);
+				
+				textAlign(LEFT,TOP);
+				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+				textFont(0,19);
+				text("Press H to toggle this help screen",820,30,500,50);
+				noStroke();
+			}
+		}
+		else{
+			helpscreen.help=function(){
+				fill(0,0,50,140);
+				rect(105,5,600,590,40);
+				textAlign(LEFT,TOP);
+				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+				textFont(0,19);
+				text("Press H to toggle this help screen",420,40,500,50);
+				fill(255,220,100,200);
+				textFont(0,22);
+				text("Controls",370,70,500,50);
+				textFont(0,18);
+				text("-W,A,S,D to move",140,120,500,50);
+				text("-Left click to use the weapon in your left hand.",140,150,500,50);
+				text("-Right click to use the weapon in your right hand.",140,180,500,50);
+				text("-Hold CTRL and click to change stance (if that weapon has different ones).",140,210,500,50);
+				text("   Use with caution: your browser will most likely try to do unwanted things (i.e. CTRL + W will try to close the game).",140,255,500,50);
+				text("-I or ESCAPE to open inventory",140,315,500,50);
+				text("-F or UP (arrow key) to interact with things, such as structures in the nexus and portals.",140,345,530,50);
+				fill(200,170,100,200);
+				text("Note that GUIs (inventory, utility structures in the nexus, etc.) have different help screens.",140,480,530,50);
+				noStroke();
+			}
+		}
+	}	
 };
 int[]msglog = new int[0];
 append(msglog,0);
@@ -2319,26 +2486,88 @@ var renderinventory=function(){
 			}
 		}
 		}
+var interactinventory=function(){
+	for(x=0;x<15;x+=1){
+		for(n=0;n<15;n+=1){
+			if(cursorbox(650+30*n,675+30*n,125+30*x,150+30*x)){
+				if(player.inventory.bag[15*x+n]){
+					equiptooltip('bag',15*x+n);
+				}
+				if(!(mouselock)&mousePressed){
+					mouselock=1;
+					if(mouseButton==LEFT){
+						if(options.loadAudio){sfx.click2.play();}
+						invselect[0]='bag';
+						invselect[1]=15*x+n;
+					}
+					else{
+						if(player.inventory.bag[15*x+n]){
+							if(player.inventory.bag[15*x+n].level<=player.level){
+								if(options.loadAudio){sfx.click3.play();}
+								if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='weapon'){
+									if(!(player.inventory.LH)){
+										swapitems('bag',15*x+n,'LH','');
+										getstances();
+									}
+									else if(!(player.inventory.RH)){
+										swapitems('bag',15*x+n,'RH','');
+										getstances();
+									}
+									else{
+										swapitems('bag',15*x+n,'LH','');
+										getstances();
+									}
+								}
+								if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='chest'){
+									swapitems('bag',15*x+n,'chest','');
+								}
+								if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='helmet'){
+									swapitems('bag',15*x+n,'helmet','');
+								}
+								if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='pants'){
+									swapitems('bag',15*x+n,'pants','');
+								}
+								if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='gloves'){
+									swapitems('bag',15*x+n,'gloves','');
+								}
+								if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='shoes'){
+									swapitems('bag',15*x+n,'shoes','');
+								}
+								loadtraits();
+								recalstats();
+								getplayersprite();
+							}
+							else{
+								append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Your level is too low to equip this!',20,0,255,-3,255,0,0));
+							}
+						}
+						invselect=['',-1];
+					}
+				}
+			}
+		}
+	}
+}
 var getplayersprite=function(){
-		VRPlayer={leg:{}};
-			if(player.inventory.chest){
-				VRPlayer.main=loadShape('Data/Graphics/player/main/'+itemdata[player.inventory.chest.id*10+2]);
-			}
-			else{
-				VRPlayer.main=loadShape('Data/Graphics/player/main/'+"armorless.svg");
-			}
-			if(player.inventory.helmet){
-				VRPlayer.head=loadShape('Data/Graphics/player/head/'+itemdata[player.inventory.helmet.id*10+2]);
-			}
-			else{
-				VRPlayer.head=loadShape('Data/Graphics/player/head/'+"armorless.svg");
-			}
-			if(player.inventory.pants){
-				VRPlayer.leg=loadShape('Data/Graphics/player/leg/'+itemdata[player.inventory.pants.id*10+2]);
-			}
-			else{
-				VRPlayer.leg=loadShape('Data/Graphics/player/leg/'+"armorless.svg");
-			}
+	VRPlayer={leg:{}};
+		if(player.inventory.chest){
+			VRPlayer.main=loadShape('Data/Graphics/player/main/'+itemdata[player.inventory.chest.id*10+2]);
+		}
+		else{
+			VRPlayer.main=loadShape('Data/Graphics/player/main/'+"armorless.svg");
+		}
+		if(player.inventory.helmet){
+			VRPlayer.head=loadShape('Data/Graphics/player/head/'+itemdata[player.inventory.helmet.id*10+2]);
+		}
+		else{
+			VRPlayer.head=loadShape('Data/Graphics/player/head/'+"armorless.svg");
+		}
+		if(player.inventory.pants){
+			VRPlayer.leg=loadShape('Data/Graphics/player/leg/'+itemdata[player.inventory.pants.id*10+2]);
+		}
+		else{
+			VRPlayer.leg=loadShape('Data/Graphics/player/leg/'+"armorless.svg");
+		}
 }
 var getbuffind=function(id){
 	for(r=0;r<playertemp.buffs.length;r+=1){
@@ -6535,23 +6764,8 @@ var savegame=function(){
 var dialog=0;
 var dialoga=0;
 var killquests=new Array();
-//biome funcs
-var getBiomeScripts=function(){
-	biomescripts=new Array();
-	killquests=new Array();
-	//Intro
-	if(player.biomeID==1){
-		if(!(player.record.quests[1])){
-			if(player.level<2){
-				player.record.quests[1]=0;
-			}
-			else{
-				player.record.quests[1]=1;
-			}
-		}
-		if(player.record.quests[1]<1){
-			cinematic[0]=="dialog";
-			dialoga=1;
+var convergingdialog={
+	intro:function(){
 			dialog=function(){
 				sdialogb({
 					speaker:"Unknown Voice",
@@ -6623,6 +6837,13 @@ var getBiomeScripts=function(){
 													cinematic[0]=0;
 													dialoga=0;
 													savegame();
+													if(!(player.intro.basics)&player.enableintro){
+														openhelpscreen();
+														player.intro.basics=1;
+													}
+													else{
+														helpscreen={active:0,help:0};
+													}
 												}
 											},
 											{
@@ -6633,6 +6854,13 @@ var getBiomeScripts=function(){
 													cinematic[0]=0;
 													dialoga=0;
 													savegame();
+													if(!(player.intro.basics)&player.enableintro){
+														openhelpscreen();
+														player.intro.basics=1;
+													}
+													else{
+														helpscreen={active:0,help:0};
+													}
 												}
 											},
 										]
@@ -6675,6 +6903,13 @@ var getBiomeScripts=function(){
 													cinematic[0]=0;
 													dialoga=0;
 													savegame();
+													if(!(player.intro.basics)&player.enableintro){
+														openhelpscreen();
+														player.intro.basics=1;
+													}
+													else{
+														helpscreen={active:0,help:0};
+													}
 												}
 											},
 											{
@@ -6685,6 +6920,13 @@ var getBiomeScripts=function(){
 													cinematic[0]=0;
 													dialoga=0;
 													savegame();
+													if(!(player.intro.basics)&player.enableintro){
+														openhelpscreen();
+														player.intro.basics=1;
+													}
+													else{
+														helpscreen={active:0,help:0};
+													}
 												}
 											},
 										]
@@ -6727,6 +6969,13 @@ var getBiomeScripts=function(){
 													cinematic[0]=0;
 													dialoga=0;
 													savegame();
+													if(!(player.intro.basics)&player.enableintro){
+														openhelpscreen();
+														player.intro.basics=1;
+													}
+													else{
+														helpscreen={active:0,help:0};
+													}
 												}
 											},
 											{
@@ -6737,6 +6986,13 @@ var getBiomeScripts=function(){
 													cinematic[0]=0;
 													dialoga=0;
 													savegame();
+													if(!(player.intro.basics)&player.enableintro){
+														openhelpscreen();
+														player.intro.basics=1;
+													}
+													else{
+														helpscreen={active:0,help:0};
+													}
 												}
 											},
 										]
@@ -6779,6 +7035,13 @@ var getBiomeScripts=function(){
 													cinematic[0]=0;
 													dialoga=0;
 													savegame();
+													if(!(player.intro.basics)&player.enableintro){
+														openhelpscreen();
+														player.intro.basics=1;
+													}
+													else{
+														helpscreen={active:0,help:0};
+													}
 												}
 											},
 											{
@@ -6789,6 +7052,13 @@ var getBiomeScripts=function(){
 													cinematic[0]=0;
 													dialoga=0;
 													savegame();
+													if(!(player.intro.basics)&player.enableintro){
+														openhelpscreen();
+														player.intro.basics=1;
+													}
+													else{
+														helpscreen={active:0,help:0};
+													}
 												}
 											},
 										]
@@ -6796,6 +7066,48 @@ var getBiomeScripts=function(){
 								}
 							}
 						},
+					]
+				});
+			}
+		
+	}
+};
+//biome funcs
+var getBiomeScripts=function(){
+	biomescripts=new Array();
+	killquests=new Array();
+	//Intro
+	if(player.biomeID==1){
+		if(!(player.record.quests[1])){
+			if(player.level<2){
+				player.record.quests[1]=0;
+			}
+			else{
+				player.record.quests[1]=1;
+			}
+		}
+		if(player.record.quests[1]<1){
+			cinematic[0]=="dialog";
+			dialoga=1;
+			dialog=function(){
+				sdialogb({
+					speaker:"Unknown Voice",
+					speech:"Welcome to Project Infinity! This is an RPG focusing on adventure and character building. Are you in need of assistance, or do you already know about this world?",
+					answers:[
+						{
+							answer:"I need assistance (enables introductory help screens)",
+							effect:function(){
+								player.enableintro=1;
+								convergingdialog.intro();
+							}
+						},
+						{
+							answer:"I do not need assistance - I am a pro!",
+							effect:function(){
+								player.enableintro=0;
+								convergingdialog.intro();
+							}
+						}
 					]
 				});
 			}
@@ -6818,6 +7130,12 @@ var getBiomeScripts=function(){
 	}
 	//Nexus structures
 	if(player.biomeID==1){
+		if(player.enableintro){
+			if(!(player.intro.enchantnotice)&!(player.intro.enchanter)&player.xp>=500&player.reactant>=200){
+				openhelpscreen("enchantnotice");
+				player.intro.enchantnotice=1;
+			}
+		}
 		append(biomescripts,function(){
 			//Walls
 			if(render){fill(100,100,100);
@@ -6861,6 +7179,13 @@ var getBiomeScripts=function(){
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&pow(playertemp.x,2)+pow(playertemp.y+190,2)<pow(62+player.size,2)){
 					getAtlas();
 					inventory=3;
+					if(!(player.intro.infuser)&player.enableintro){
+						openhelpscreen();
+						player.intro.infuser=1;
+					}
+					else{
+						helpscreen={active:0,help:0};
+					}
 				}
 			}
 			//Enchanter
@@ -6887,7 +7212,13 @@ var getBiomeScripts=function(){
 					fusionselect=0;
 					enchantmode=0;
 					inventype=2;
-				helpscreen={active:0,help:0};
+					if(!(player.intro.enchanter)&player.enableintro){
+						openhelpscreen();
+						player.intro.enchanter=1;
+					}
+					else{
+						helpscreen={active:0,help:0};
+					}
 				}
 			}
 			//Artisan's Bench
@@ -6919,7 +7250,13 @@ var getBiomeScripts=function(){
 				tooltipcache[0]=-1;
 					inventory=1;
 					inventype=4;
-				helpscreen={active:0,help:0};
+					if(!(player.intro.artisans)&player.enableintro){
+						openhelpscreen();
+						player.intro.artisans=1;
+					}
+					else{
+						helpscreen={active:0,help:0};
+					}
 				}
 			}
 			//Infuser
@@ -7001,7 +7338,13 @@ var getBiomeScripts=function(){
 							tooltipcache[0]=-1;
 							inventory=1;
 							inventype=3;
-							helpscreen={active:0,help:0};
+							if(!(player.intro.infuser)&player.enableintro){
+								openhelpscreen();
+								player.intro.infuser=1;
+							}
+							else{
+								helpscreen={active:0,help:0};
+							}
 						}
 				
 				}
@@ -7030,6 +7373,14 @@ var getBiomeScripts=function(){
 				ellipse(0,0,40,40);
 			}
 			resetMatrix();
+			}
+			if(player.enableintro){
+				if(!(player.intro.restorationshrine)){
+					if(terraineffects[n].x-playertemp.x<300&terraineffects[n].x-playertemp.x>-300&terraineffects[n].y-playertemp.y<300&terraineffects[n].y-playertemp.y>-300){
+						openhelpscreen("restorationshrine");
+						player.intro.restorationshrine=1;
+					}
+				}
 			}
 		if(terraineffects[n].x-playertemp.x<-1900||terraineffects[n].x-playertemp.x>1900||terraineffects[n].y-playertemp.y<-1900||terraineffects[n].y-playertemp.y>1900){
 			terraineffects[n].x=random(-1700,1700)+playertemp.x;
@@ -7109,6 +7460,14 @@ var getBiomeScripts=function(){
 			resetMatrix();
 			rectMode(CORNER);
 			}
+			if(player.enableintro){
+				if(!(player.intro.challengearena)){
+					if(terraineffects[n].x-playertemp.x<300&terraineffects[n].x-playertemp.x>-300&terraineffects[n].y-playertemp.y<300&terraineffects[n].y-playertemp.y>-300){
+						openhelpscreen("challengearena");
+						player.intro.challengearena=1;
+					}
+				}
+			}
 		if(terraineffects[n].x-playertemp.x<-2150||terraineffects[n].x-playertemp.x>2150||terraineffects[n].y-playertemp.y<-2150||terraineffects[n].y-playertemp.y>2150){
 			terraineffects[n].x=random(-2150,2150)+playertemp.x;
 			terraineffects[n].y=random(-2150,2150)+playertemp.y;
@@ -7181,6 +7540,10 @@ var getBiomeScripts=function(){
 							ellipse(challengearena.x-playertemp.x+400,challengearena.y-playertemp.y+350,1370,1370);
 							noStroke();
 							if(pow(playertemp.x-challengearena.x,2)+pow(playertemp.y-challengearena.y,2)>pow(700,2)||!(player.biomeID==terraineffects[n].bid)||playertemp.inBossFight==1){
+								for(rae=0;rae<enemies.length;rae+=1){
+									enemies[rae].x+=9999;
+								}
+								append(particles,new createparticle(terraineffects[n].x,terraineffects[n].y,0,0,0,0,'circle','',2025,-40,2,2,190,140,0,1));
 								player.xp+=round((challengearena.souls/10+max(0,(challengearena.souls-1000)/10))*(pow(1.1,min(player.level,biomedata[9]+floor(challengearena.souls/100)))));
 								player.sp+=floor(challengearena.souls/100)*30;
 								player.reactant+=floor(challengearena.souls/100)*10;
@@ -7436,8 +7799,9 @@ var getBiomeScripts=function(){
 								if(!(player.record.bosses[1])){
 									player.record.bosses[1]=1;
 									player.pp+=10000;
-									cinematic[0]=="dialog";
+									cinematic[0]="dialog";
 									dialoga=1;
+									mouselock=1;
 									dialog=function(){
 										sdialogb({
 											speaker:"",
@@ -8459,6 +8823,26 @@ var statpanel=function(){
 		fill(200,200,100);
 		textFont(0,26);
 		text('PP: '+floor(player.pp/100),50,650);
+		if(player.pp>=15000){
+			fill(abs(tick%120-60)*255/60,abs(tick%90-45)*255/45,abs(tick%60-30)*255/30);
+			ellipse(200,665,40,40);
+			fill(abs((tick+60)%120-60)*255/60,abs((tick+45)%90-45)*255/45,abs((tick+30)%60-30)*255/30);
+			textFont(0,25);
+			textAlign(CENTER);
+			text("!",180,645,40,40);
+			if(cursorbox(200,240,645,685)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-50,
+					w:150,
+					h:100,
+					title:"Notice",
+					tip:"You have "+floor(player.pp/100)+" PP to spend on the passives above this!",
+					colors:0
+				};
+			}
+		}
 		fill(50,50,0);
 		textFont(0,25);
 		text('Your Stats',115,50);
@@ -13799,6 +14183,14 @@ showdots[2]=0;
 				}
 			}
 			if(gateways[i].exists){
+				if(player.enableintro){
+					if(!(player.intro.portals)){
+						if(gateways[i].x-playertemp.x<300&gateways[i].x-playertemp.x>-300&gateways[i].y-playertemp.y>-300&gateways[i].y-playertemp.y<300){
+							openhelpscreen("portals");
+							player.intro.portals=1;
+						}
+					}
+				}
 				if(gateways[i].x-playertemp.x<450&gateways[i].x-playertemp.x>-450&gateways[i].y-playertemp.y>-450&gateways[i].y-playertemp.y<450){
 					if(render){translate(gateways[i].x-playertemp.x+400,gateways[i].y-playertemp.y+350);
 					if(player.level-10>gateways[i].destlv){
@@ -13848,14 +14240,16 @@ showdots[2]=0;
 	}
 	skip=0;
 	//==============Terrain-type effects (i.e. biome scripts)====
-	for(n=0;n<terraineffects.length;n+=1){
-		terraineffects[n].tick+=1;
-		terraineffects[n].run();
-	}
-	//==============Grounded stat effects====
-	for(n=0;n<stateffectsg.length;n+=1){
-		stateffectsg[n].tick+=1;
-		stateffectsg[n].run();
+	if(!(cinematic||dialoga)){
+		for(n=0;n<terraineffects.length;n+=1){
+			terraineffects[n].tick+=1;
+			terraineffects[n].run();
+		}
+		//==============Grounded stat effects====
+		for(n=0;n<stateffectsg.length;n+=1){
+			stateffectsg[n].tick+=1;
+			stateffectsg[n].run();
+		}
 	}
 	//===================PASSIVE EFFECTS===============================================================
 	//===========AND STAT EFFECT==============================================
@@ -14376,38 +14770,39 @@ showdots[2]=0;
 		keystonefuncs.overlay[tfo]();
 	}
 	if(!(cinematic==0)){
-		if(cinematic[0]=="death"){
-			cinematic[1]+=1;
-			if(cinematic[1]<150){if(render){
-			fill(0,0,0,cinematic[1]*2);
-			rect(0,0,1133,700);}
-			}
-			else{
-				if(cinematic[1]==150){
-					playertemp.inBossFight=0;
-					player.hp=(plshp(1));
-					player.mp=(plsmp(1));
-					player.xp-=round(player.xpr*(max(0.1,min(player.level,100)/100)));
-					dots=new Array();
-					if(player.xp<0){
-						player.xp=0;
-					}
-					player.biomeID=1;
-					playertemp.x=0;
-					playertemp.y=0;
-					playertemp.xvelo=0;
-					playertemp.yvelo=0;
-					loadArea();
-					temp= new Array(JSON.stringify(player),1);
-					saveStrings("player "+player.name+".txt",temp);
-				}if(render){
-				fill(0,0,0,255-(cinematic[1]-150)*3);
+		if(cinematic[0]){
+			if(cinematic[0]=="death"){
+				cinematic[1]+=1;
+				if(cinematic[1]<150){if(render){
+				fill(0,0,0,cinematic[1]*2);
 				rect(0,0,1133,700);}
-				if(cinematic[1]==220){
-					cinematic=0;
+				}
+				else{
+					if(cinematic[1]==150){
+						playertemp.inBossFight=0;
+						player.hp=(plshp(1));
+						player.mp=(plsmp(1));
+						player.xp-=round(player.xpr*(max(0.1,min(player.level,100)/100)));
+						dots=new Array();
+						if(player.xp<0){
+							player.xp=0;
+						}
+						player.biomeID=1;
+						playertemp.x=0;
+						playertemp.y=0;
+						playertemp.xvelo=0;
+						playertemp.yvelo=0;
+						loadArea();
+						temp= new Array(JSON.stringify(player),1);
+						saveStrings("player "+player.name+".txt",temp);
+					}if(render){
+					fill(0,0,0,255-(cinematic[1]-150)*3);
+					rect(0,0,1133,700);}
+					if(cinematic[1]==220){
+						cinematic=0;
+					}
 				}
 			}
-			
 		}
 	}
 	}}
@@ -14783,7 +15178,13 @@ showdots[2]=0;
 				invselect=['',-1];
 				tooltipcache[0]=-1;
 				inventory=2;
-				helpscreen={active:0,help:0};
+				if(!(player.intro.traits)&player.enableintro){
+					openhelpscreen();
+					player.intro.traits=1;
+				}
+				else{
+					helpscreen={active:0,help:0};
+				}
 				inventorysprites={};
 				gettraits();
 			}
@@ -15397,66 +15798,7 @@ showdots[2]=0;
 				if(!(player.inventory.bag[invselect[1]])){
 					renderequips(1);
 					renderinventory();
-					for(x=0;x<15;x+=1){
-						for(n=0;n<15;n+=1){
-							if(cursorbox(650+30*n,675+30*n,125+30*x,150+30*x)){
-								if(player.inventory.bag[15*x+n]){
-									equiptooltip('bag',15*x+n);
-								}
-								if(!(mouselock)&mousePressed){
-									mouselock=1;
-									if(mouseButton==LEFT){
-										if(options.loadAudio){sfx.click2.play();}
-										invselect[0]='bag';
-										invselect[1]=15*x+n;
-									}
-									else{
-										if(player.inventory.bag[15*x+n]){
-											if(player.inventory.bag[15*x+n].level<=player.level){
-												if(options.loadAudio){sfx.click3.play();}
-												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='weapon'){
-													if(!(player.inventory.LH)){
-														swapitems('bag',15*x+n,'LH','');
-														getstances();
-													}
-													else if(!(player.inventory.RH)){
-														swapitems('bag',15*x+n,'RH','');
-														getstances();
-													}
-													else{
-														swapitems('bag',15*x+n,'LH','');
-														getstances();
-													}
-												}
-												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='chest'){
-													swapitems('bag',15*x+n,'chest','');
-												}
-												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='helmet'){
-													swapitems('bag',15*x+n,'helmet','');
-												}
-												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='pants'){
-													swapitems('bag',15*x+n,'pants','');
-												}
-												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='gloves'){
-													swapitems('bag',15*x+n,'gloves','');
-												}
-												if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='shoes'){
-													swapitems('bag',15*x+n,'shoes','');
-												}
-												loadtraits();
-												recalstats();
-												getplayersprite();
-											}
-											else{
-												append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Your level is too low to equip this!',20,0,255,-3,255,0,0));
-											}
-										}
-										invselect=['',-1];
-									}
-								}
-							}
-						}
-					}
+					interactinventory();
 				}
 			}
 			//Infuser
@@ -15589,7 +15931,7 @@ showdots[2]=0;
 			//Artisan Bench
 			else if(inventype==4){
 			fill(170,140,100);
-			rect(0,0,450,700);
+			rect(0,0,420,700);
 			fill(100,200,200);
 			textFont(0,26);
 			text('SP: '+player.sp,1000,650);
@@ -15598,24 +15940,9 @@ showdots[2]=0;
 			text("Artisan's Bench",500,30);
 			fill(140,140,150);
 			rect(65,55,180,180,8);
+			renderequips(1);
 			renderinventory();
-				for(x=0;x<15;x+=1){
-					for(n=0;n<15;n+=1){
-						if(cursorbox(650+30*n,675+30*n,125+30*x,150+30*x)){
-							if(player.inventory.bag[15*x+n]){
-								equiptooltip('bag',15*x+n);
-							}
-							if(!(mouselock)&mousePressed){
-								mouselock=1;
-								if(mouseButton==LEFT){
-									if(options.loadAudio){sfx.click.play();}
-									invselect[0]='bag';
-									invselect[1]=15*x+n;
-								}
-							}
-						}
-					}
-				}
+			interactinventory();
 				if(invselect[1]>=0){
 				if(player.inventory.bag[invselect[1]]){
 					if(player.inventory.bag[invselect[1]].id==44){
@@ -16347,7 +16674,7 @@ text(dmgind[y].text,400+dmgind[y].x-playertemp.x,350+dmgind[y].y-playertemp.y);}
 			dmgind[y].t+=1;
 }
 textAlign(LEFT,TOP);
-if(helpscreen.active){
+if(helpscreen.active&render){
 	helpscreen.help();
 }
 if(dialog){
@@ -16645,6 +16972,9 @@ var updateplayerdat=function(){
 	}
 	if(!(player.biomeID)){
 		player.biomeID=1;
+	}
+	if(!(player.intro)){
+		player.intro={basics:0,inventory:0};
 	}
 		if(!(player.record.bosses)){
 			player.record.bosses=new Array(999);
