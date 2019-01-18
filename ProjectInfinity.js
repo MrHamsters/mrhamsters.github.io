@@ -607,7 +607,7 @@ window.onkeydown=function(e){
 					inventype=1;
 					invquicksell=0;
 					getinventorysprites();
-					if(!(player.intro.inventory)){
+					if(player.enableintro&!(player.intro.inventory)){
 						openhelpscreen();
 						player.intro.inventory=1;
 					}
@@ -5881,44 +5881,44 @@ var equiptooltip=function(slot,bagnum){
 				}
 				if(prefixdata[player.inventory.bag[bagnum].prefix*5-1]){
 					for(a=0;a<prefixdata[player.inventory.bag[bagnum].prefix*5-1].length;a+=1){
-						if(prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1<150||prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1>209){
+						if(prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]<150||prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]>209){
 						}
-						else if(prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1<180){
-							if(tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-150]){
-								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-150]+=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
+						else if(prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]<180){
+							if(tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-150]){
+								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-150]+=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-150]=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
+								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-150]=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
 							}
 						}
 						else{
-							if(tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-180]){
-								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-180]-=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
+							if(tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-180]){
+								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-180]-=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-180]=-prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
+								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-180]=-prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
 							}
 						}
 					}
 				}
 				if(suffixdata[player.inventory.bag[bagnum].suffix*5-1]){
 					for(a=0;a<suffixdata[player.inventory.bag[bagnum].suffix*5-1].length;a+=1){
-						if(suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1<150||suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1>209){
+						if(suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]<150||suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]>209){
 						}
-						else if(suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1<180){
-							if(tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-150]){
-								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-150]+=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
+						else if(suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]<180){
+							if(tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-150]){
+								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-150]+=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-150]=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
+								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-150]=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
 							}
 						}
 						else{
-							if(tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-180]){
-								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-180]-=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
+							if(tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-180]){
+								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-180]-=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-180]=-suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
+								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-180]=-suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
 							}
 						}
 					}
@@ -6001,48 +6001,48 @@ var equiptooltip=function(slot,bagnum){
 				}
 				if(prefixdata[player.inventory.bag[bagnum].prefix*5-1]){
 					for(a=0;a<prefixdata[player.inventory.bag[bagnum].prefix*5-1].length;a+=1){
-						if(prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1<150||prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1>209){
+						if(prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]<150||prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]>209){
 							append(temp,traitkey[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1]+' + '+prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1]);
 							temp4+=20;
 						}
-						else if(prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1<180){
-							if(tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-150]){
-								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-150]+=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
+						else if(prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]<180){
+							if(tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-150]){
+								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-150]+=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-150]=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
+								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-150]=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
 							}
 						}
 						else{
-							if(tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-180]){
-								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-180]-=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
+							if(tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-180]){
+								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-180]-=prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-1-180]=-prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
+								tooltipdefc[prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][0]-180]=-prefixdata[player.inventory.bag[bagnum].prefix*5-1][a][1];
 							}
 						}
 					}
 				}
 				if(suffixdata[player.inventory.bag[bagnum].suffix*5-1]){
 					for(a=0;a<suffixdata[player.inventory.bag[bagnum].suffix*5-1].length;a+=1){
-						if(suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1<150||suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1>209){
+						if(suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]<150||suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]>209){
 							append(temp,traitkey[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1]+' + '+suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1]);
 							temp4+=20;
 						}
-						else if(suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1<180){
-							if(tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-150]){
-								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-150]+=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
+						else if(suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]<180){
+							if(tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-150]){
+								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-150]+=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-150]=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
+								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-150]=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
 							}
 						}
 						else{
-							if(tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-180]){
-								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-180]-=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
+							if(tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-180]){
+								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-180]-=suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
 							}
 							else{
-								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-1-180]=-suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
+								tooltipdefc[suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][0]-180]=-suffixdata[player.inventory.bag[bagnum].suffix*5-1][a][1];
 							}
 						}
 					}
