@@ -163,7 +163,7 @@ Generates a damage barrier while out of combat for 2.5 seconds. Shields for up t
 0
 10
 Omni Cannon
-Fires a blast in the target direction when you left click, dealing {s0.06+i0.06+ox9c0+ox0.18c0Po+lx1c0+lx0.02c0Po} magic damage to up to 3 enemies. {ox3.5c-0.3} second cooldown, costs 2 mana.
+Fires a blast in the target direction when you left click, dealing {s0.05+i0.05+ox4.5c0+ox0.09c0Po+lx0.5c0+lx0.01c0Po}-{s0.06+i0.06+ox4.5c0+ox0.09c0Po+lx0.5c0+lx0.01c0Po} magic damage to up to 3 enemies. {ox2c-0.18} second cooldown (affected by haste), costs 1 mana.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 2/1
