@@ -1,12 +1,12 @@
 Omni Shell
 Omni Cannon
 Shielded
-Dampening
+Endurance
 Tenacity
 Pentakill
 Carnage
 Force
-Omni Boost
+Resilient Shell
 Spirit Guard
 Spirit Vengeance
 Health
@@ -19,3 +19,8 @@ Armor
 Resistance
 Frenzy
 Reinforced Shell
+Victory
+Aegis
+Unyielding
+Survivalist
+Immortality

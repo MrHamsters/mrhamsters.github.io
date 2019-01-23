@@ -4,7 +4,7 @@ Increases health regeneration
 Gain health regeneration based on your maximum health
 Use mana to absorb a portion of damage taken
 Active skill (gain a damage reduction shield)
-The more damaged you are, the less damage you take
+Take less damage when low on health
 Massively increases maximum mana at the cost of mana regeneration
 Heal for a portion of damage dealt
 A portion of your strength applies to Arcane Armor
