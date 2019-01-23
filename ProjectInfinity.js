@@ -1,4 +1,4 @@
-var version="0.8b";
+var version="0.8bf1";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -13924,7 +13924,7 @@ append(doaction,function(lv,hand){
 							dur:240,
 							run:function(i){
 								if(tick%10==0){
-									append(particles,new createparticle(enemies[index].x+random(-5,5),enemies[index].y,random(-0.25,0.25),random(-0.5,-0.3),0,0,'circle','',12,-0.2,255,-9,200+random(55),160+random(40),random(40),1));
+									append(particles,new createparticle(enemies[i].x+random(-5,5),enemies[i].y,random(-0.25,0.25),random(-0.5,-0.3),0,0,'circle','',12,-0.2,255,-9,200+random(55),160+random(40),random(40),1));
 								}
 							}
 						});
