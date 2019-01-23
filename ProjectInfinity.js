@@ -13927,9 +13927,8 @@ append(doaction,function(lv,hand){
 							dur:240,
 							ptchan:random(9);
 							run:function(i){
-								if((tick+enemies[i].dots[d])%12==0){
-									append(particles,new createparticle(enemies[i].x+random(-enemies[i].size,enemies[i].size),enemies[i].y+random(-enemies[i].size,enemies[i].size),random(-1,1),random(-1.5,-0.7),0,0,'circle','',12,-0.2,255,-9,200+random(55),160+random(40),random(40),1));
-								}
+								if((tick+enemies[i].dots[d].ptchan)%12==0){
+									}
 							}
 						});
 					}
