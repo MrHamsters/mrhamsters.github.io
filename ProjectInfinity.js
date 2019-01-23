@@ -1,4 +1,4 @@
-var version="0.8bf2";
+var version="0.8b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -13915,6 +13915,9 @@ append(doaction,function(lv,hand){
 					properties:["fire"],
 					hits:new Array(999),
 					onhit:function(i){
+						if(!(enemies[i].dots)){
+							enemies[i].dots=new Array();
+						}
 						append(enemies[i].dots,{
 							pdmg:0,
 							mdmg:plsin(6)/240,
@@ -13922,6 +13925,11 @@ append(doaction,function(lv,hand){
 							resE:0.018,
 							properties:["fire","burn"],
 							dur:240,
+							run:function(i){
+								if(tick%10==0){
+									append(particles,new createparticle(enemies[i].x+random(-5,5),enemies[i].y,random(-0.25,0.25),random(-0.5,-0.3),0,0,'circle','',12,-0.2,255,-9,200+random(55),160+random(40),random(40),1));
+								}
+							}
 						});
 					}
 				});
@@ -14015,7 +14023,7 @@ append(doaction,function(lv,hand){
 						if(options.light){
 							fill(160,160,255,7);
 							for(cal=0;cal<15;cal+=1){
-								ellipse(0,12,cal*(3-objects[n].duration*0.03),cal*(3-objects[n].duration*0.03));
+								ellipse(0,4,cal*2*(3-objects[n].duration*0.03),cal*4*(3-objects[n].duration*0.03));
 							}
 						}
 					},
