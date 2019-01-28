@@ -117,7 +117,7 @@ dragon
 3
 
 1,0,0.9/0.8/1|3,9,1/dragonRoar/300/100/120/255/200/0/50/150/40|0,13,fire:0.65/slash:0.85/impact:0.9/nature:0.9/electric:0.9/arcane:1.15/pierce:1.2/water:1.1
-
+|dash
 Poison Cap
 mushroom
 250
@@ -147,7 +147,7 @@ mushroom
 1
 
 7,19,0/1/15/8/25/1/0.3/30/6/360|3,17,5/130/50/130/25/-0.5/180/-2|0,13,water:0.8/electric:0.85/nature:0.9/earth:0.9/impact:0.9/slash:1.15/fire:1.2
-
+|channel
 Angery Shroom
 mashroom
 260
@@ -177,7 +177,7 @@ mashroom
 3
 
 0,13,water:0.9/nature:0.9/earth:0.9/impact:0.9/slash:1.15/fire:1.2
-
+|dash
 Red Whiteshroom
 shroom
 185
@@ -387,7 +387,7 @@ wendigo
 3
 
 0,13,bleed:0.5/cold:0.6/slash:0.75/pierce:0.8/void:0.85/nature:1.1/light:1.25/fire:1.25
-
+|dash
 Frozen Slime
 iceslime
 185
@@ -477,7 +477,7 @@ furry
 3
 
 0,13,nature:0.9/arcane:0.9/impact:0.9/cold:1.1/electric:1.2/poison:1.35/bleed:1.35
-
+|dash
 Naga
 naga
 165
@@ -507,7 +507,7 @@ naga
 3
 
 0,13,water:0.75/fire:0.8/slash:0.9/impact:0.9/nature:1.1/poison:1.1/arcane:1.1/burn:1.15
-1/35/3
+1/35/3|dash
 Dragonfly
 dragonfly
 130
@@ -567,7 +567,7 @@ totem
 1
 25
 7,18,200/225/130/255/180/210/160/3/150/-4.5|3,17,5/180/0/160/25/-0.5/180/-2|3,5,420/900/0|1,6,0.2/0.2/0.3|6,10,55/255/100/255/60/120/120|0,13,arcane:0.85/nature:0.9/impact:0.9/water:1.1/fire:1.1/burn:1.25
-
+|channel
 Enchest
 enchest
 550
@@ -627,7 +627,7 @@ shadorachnid
 3
 20
 0,13,void:0.75/explosion:0.85/poison:0.85/cold:0.9/arcane:0.9/impact:0.9/nature:1.1/slash:1.1/pierce:1.1/light:1.25
-
+|dash
 Bat
 bat
 110
@@ -687,7 +687,7 @@ rat
 3
 
 0,13,nature:0.9/void:0.9/arcane:0.9/cold:1.1/electric:1.2/bleed:1.35
-1/60/3
+1/60/3|dash
 Golem
 golem
 375
@@ -810,34 +810,34 @@ sludge
 
 Pile of Dirt
 dirt
-0.5
-1
-0
+100
 1
 6
-.3
+7
+6
+1.3
 1
 1
 0
 0
-1/100/6/120,1,1,0,0,0,1/999
-
-
+1/100/6/20,1,1,0,0,0,1/50
+2/100/100/50,4,40,0,15,12,0,0,1,1,1,0,1,1/100/0
+6/100/999/60,5,1,1,0/999
 
 
 1
 1
-5000
--999
-15
-0/59/100
-100
-0.01
+40
+-100
+110
+1/0/100,1/1/100
+60
+10
+25
 2
-2
-999
-
-
+5
+1,0,0.1/0.1/0.1|7,20,3/1/10/12/10/1/1|3,17,7/110/100/0/20/-0.5/180/-2|0,13,earth:0.65/water:1.4
+|channel
 Skeleton
 skeleton
 125

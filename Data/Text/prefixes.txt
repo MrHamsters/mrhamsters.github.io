@@ -367,12 +367,12 @@ Sharp
 100/1/200,0,0/weapon
 0/0/0/0/0/0/0/0
 1
-213/5
+213/8
 Empowered
 100/1/0,0,200/weapon
 0/0/0/0/0/0/0/0
 1
-214/5
+214/8
 Bandaged
 50/1/100,200,100/helmet,chest,pants,gloves,shoes
 0/0/0/0/0/0/0/0

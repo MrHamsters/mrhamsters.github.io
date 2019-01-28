@@ -73,7 +73,7 @@ Astral III
 Eldritch
 2/60
 105/1
-0
+10
 Hasted
 1/80
 85/6
@@ -81,15 +81,15 @@ Hasted
 Hasted II
 2/80
 85/8
-0
+10
 Hasted III
 3/80
 85/10
-0
+20
 Verdant
 2/65
 106/1
-0
+10
 Critical
 1/65
 98/6
@@ -97,11 +97,11 @@ Critical
 Critical II
 2/65
 98/8
-0
+10
 Critical III
 3/65
 98/10
-0
+20
 Runic
 1/40
 107/1
@@ -113,11 +113,11 @@ Adjusting
 Adjusting II
 2/45
 34/2
-0
+10
 Adjusting III
 3/45
 34/3
-0
+20
 Power Shift
 1/30
 108/1
@@ -125,15 +125,15 @@ Power Shift
 Defense Shift
 2/30
 109/1
-0
+10
 Azure
 2/65
 110/1
-0
+10
 Timeless
 2/60
 113/1
-0
+10
 Spectral Vampire
 1/50
 114/1,9/2
@@ -205,4 +205,4 @@ Impact Rune
 Explosion Rune
 2/40
 136/5,166/12
-0
+10
