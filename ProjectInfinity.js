@@ -1,4 +1,4 @@
-var version="0.8.1";
+var version="0.8.1b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -5406,13 +5406,13 @@ var loadtraits=function(){
 				playertemp.shieldoverload-=1;
 				stemp*=2;
 			}
-			playertemp.energyshield=min(((plshp(1))*0.004+(plsre(1))*0.05)*playertemp.traits[12],playertemp.energyshield+((plshr(1))*0.008+(plsre(1))*0.0008)*stemp*playertemp.traits[12]/60);
 			if(playertemp.traits[40]>0){
-				playertemp.energyshield=min(((plshp(1))*0.004+(plsre(1))*0.05)*playertemp.traits[12],playertemp.energyshield+((plshr(1))*0.008+(plsre(1))*0.0008)*stemp*playertemp.traits[12]*(min(480,playertemp.timesincedamagetaken*(1+min(10,playertemp.traits[40])/10))/120)/60);
+				stemp*=min(8,(playertemp.timesincedamagetaken*(1+playertemp.traits[40]/10))/60)+1;
 			}
 			else{
-				playertemp.energyshield=min(((plshp(1))*0.004+(plsre(1))*0.05)*playertemp.traits[12],playertemp.energyshield+((plshr(1))*0.008+(plsre(1))*0.0008)*stemp*playertemp.traits[12]*(min(480,playertemp.timesincedamagetaken)/120)/60);
+				stemp*=min(8,playertemp.timesincedamagetaken/60)+1;
 			}
+			playertemp.energyshield=min(((plshp(0.006))+(plsre(0.075)))*playertemp.traits[12],playertemp.energyshield+((plshr(0.004))+(plsre(0.0004)))*stemp*playertemp.traits[12]/60);
 		});
 		append(traitfuncs.overlay,function(){
 				if(render){
@@ -6232,6 +6232,9 @@ var recalstats=function(){
 	}
 	if(playertemp.traits[8]>0){
 		player.maxmp*=1.46+playertemp.traits[8]/25;
+	}
+	if(playertemp.traits[75]>0){
+		player.maxmp*=1+playertemp.traits[75]*0.05;
 	}
 	if(playertemp.traits[4]>0){
 		player.hpregen+=player.maxhp*(playertemp.traits[4]*0.005);
@@ -7381,15 +7384,15 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				}
 			}
 			if(playertemp.traits[5]>0){
-				if(player.mp>plsmp(0.1)){
+				if(player.mp>plsmp(0.4)){
 					manadmg=0;
 					if(playertemp.traits[10]>0){
-						stemp=[max(0,(1-playertemp.traits[5]/200)/(1+(max(0,plsmp-100)*playertemp.traits[5])/5000)),(plsin(0.01)+plshp(0.02)+plsst(min(0.01,0.0015*playertemp.traits[10])))];
+						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp*playertemp.traits[5])/2500)),(plsin(0.001)+plshp(0.002)+plsst(min(0.0015,0.0002*playertemp.traits[10])))];
 					}
 					else{
-						stemp=[max(0,(1-playertemp.traits[5]/200)/(1+(max(0,plsmp-100)*playertemp.traits[5])/5000)),(plsin(0.01)+plshp(0.02))];
+						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp*playertemp.traits[5])/2500)),(plsin(0.001)+plshp(0.002))];
 					}
-					if(player.mp-plsmp(0.1)>pdmg*(1-stemp[0])/stemp[1]){
+					if(player.mp-plsmp(0.4)>pdmg*(1-stemp[0])/stemp[1]){
 						player.mp-=pdmg*(1-stemp[0])/stemp[1];
 						manadmg+=pdmg*(1-stemp[0])/stemp[1];
 						pdmg*=stemp[0];
@@ -7397,9 +7400,9 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 					else{
 						pdmg-=(player.mp-plsmp(0.1))*stemp[1];
 						manadmg+=(player.mp-plsmp(0.1))*stemp[1];
-						player.mp=plsmp(0.1);
+						player.mp=plsmp(0.4);
 					}
-					if(player.mp-plsmp(0.1)>mdmg*(1-stemp[0])/stemp[1]){
+					if(player.mp-plsmp(0.4)>mdmg*(1-stemp[0])/stemp[1]){
 						player.mp-=mdmg*(1-stemp[0])/stemp[1];
 						manadmg+=mdmg*(1-stemp[0])/stemp[1];
 						mdmg*=stemp[0];
@@ -7407,7 +7410,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 					else{
 						mdmg-=(player.mp-plsmp(0.1))*stemp[1];
 						manadmg+=(player.mp-plsmp(0.1))*stemp[1];
-						player.mp=plsmp(0.1);
+						player.mp=plsmp(0.4);
 					}
 					if(willhit){
 						append(particles,new createparticle(775,340,0,2,0,0,'text',"-"+round(manadmg*10)/10,22,0,255,-4,0,0,200));
@@ -10240,7 +10243,7 @@ var statpanel=function(){
 				h:290,
 				title:"Mana Regeneration  (base: "+(player.baseStats.mpregen+player.keystonestats.mpregen)+")",
 				tip:["Mana regenerated per second,",
-				"increased by up to 300% after resting for 6 seconds.",
+				"increased by up to 300% after resting for 4 seconds.",
 				"Resting means not moving, performing actions,",
 				"or taking damage.",
 				"",
@@ -11524,6 +11527,12 @@ append(doaction,function(lv,hand){
 					procc:1.2,
 					properties:["impact"],
 					hits:new Array(999),
+					onhit:function(i){
+						objects[n].pdmgmin*=0.92;
+						objects[n].pdmgmax*=0.92;
+						objects[n].mdmgmin*=0.92;
+						objects[n].mdmgmax*=0.92;
+					},
 					run:function(){
 						objects[n].speed-=0.35;
 					},
@@ -11561,6 +11570,12 @@ append(doaction,function(lv,hand){
 								procc:1.2,
 								properties:["impact"],
 								hits:new Array(999),
+								onhit:function(i){
+									objects[n].pdmgmin*=0.92;
+									objects[n].pdmgmax*=0.92;
+									objects[n].mdmgmin*=0.92;
+									objects[n].mdmgmax*=0.92;
+								},
 								run:function(){
 									objects[n].dir=dirtoplayerfromobject(n);
 									objects[n].speed+=0.4;
@@ -11616,7 +11631,7 @@ append(doaction,function(lv,hand){
 	}
 	else{
 		if(stancecache[hand].current==2){
-			playertemp.action.pierce=999;
+			playertemp.action.pierce=1000;
 		}
 		playertemp.action.autofire=0;
 	}
@@ -11628,7 +11643,7 @@ append(doaction,function(lv,hand){
 	}
 	playertemp.action.run=function(){
 		if(stancecache[hand].current==2){
-			playertemp.action.tick-=0.5;
+			playertemp.action.tick-=0.4;
 		}
 		if(playertemp.action.tick>60){
 			playertemp.action.tick=60;
@@ -11680,14 +11695,20 @@ append(doaction,function(lv,hand){
 				dir:playertemp.action.dir,
 				x:playertemp.x,
 				y:playertemp.y,
-				pdmgmin:(plsst(1))*47,
-				pdmgmax:(plsst(1))*55,
+				pdmgmin:(plsst(52*(1+playertemp.action.pierce/5000))),
+				pdmgmax:(plsst(60*(1+playertemp.action.pierce/5000))),
 				mdmgmin:0,
 				mdmgmax:0,
 				armorE:1,
 				resE:1,
 				procc:2.1,
 				hits:new Array(999),
+				onhit:function(i){
+					objects[n].pdmgmin*=0.94;
+					objects[n].pdmgmax*=0.94;
+					objects[n].mdmgmin*=0.94;
+					objects[n].mdmgmax*=0.94;
+				},
 				endfunc:function(){
 					if(playertemp.traits[65]>0){
 						ts.explosivemunitions(2);
@@ -11716,8 +11737,8 @@ append(doaction,function(lv,hand){
 				dir:playertemp.action.dir,
 				x:playertemp.x,
 				y:playertemp.y,
-				pdmgmin:(plsst(1))*playertemp.action.tick*4.7/60*10,
-				pdmgmax:(plsst(1))*playertemp.action.tick*5.5/60*10,
+				pdmgmin:(plsst(60*(1+playertemp.action.pierce/5000))*playertemp.action.tick)/60,
+				pdmgmax:(plsst(60*(1+playertemp.action.pierce/5000))*playertemp.action.tick)/60,
 				mdmgmin:0,
 				mdmgmax:0,
 				armorE:1,
@@ -11725,6 +11746,12 @@ append(doaction,function(lv,hand){
 				procc:playertemp.action.tick*2.1/60,
 				properties:["pierce"],
 				hits:new Array(999),
+				onhit:function(i){
+					objects[n].pdmgmin*=0.94;
+					objects[n].pdmgmax*=0.94;
+					objects[n].mdmgmin*=0.94;
+					objects[n].mdmgmax*=0.94;
+				},
 				endfunc:function(){
 					if(playertemp.traits[65]>0){
 						ts.explosivemunitions(playertemp.action.tick/30);
@@ -11861,7 +11888,7 @@ append(doaction,function(lv,hand){
 		playertemp.action.run=function(){
 			playertemp.timesinceaction=0;
 			playertemp.timesincemove=0;
-			player.mp-=0.15;
+			player.mp-=0.125;
 			playertemp.action.dir=targetdir();
 			playertemp.action.xvelo*=0.985;
 			playertemp.action.yvelo*=0.985;
@@ -11900,7 +11927,7 @@ append(doaction,function(lv,hand){
 				if(playertemp.action.tick>=30){
 					for(i=0;i<enemies.length;i+=1){
 						if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(140+enemies[i].size,2)){
-							damage("enemies",i,0,random((plsin(min(200,playertemp.action.tick)/2.5)),(plsin(1.1*min(200,playertemp.action.tick)/2.5))),1,1,"ranged","player",min(200,playertemp.action.tick)/50,["impact","water"]);
+							damage("enemies",i,0,random((plsin(min(200,playertemp.action.tick)*0.3)),(plsin(1.1*min(200,playertemp.action.tick)*0.3))),1,1,"ranged","player",min(200,playertemp.action.tick)/80,["impact","water"]);
 							hits+=1;
 						}
 					}
@@ -13044,12 +13071,12 @@ append(doaction,function(lv,hand){
 		rotate(playertemp.action.dir);
 		if(render){shape(sprites.voidstaff,0,0,30,45);}
 		resetMatrix();
-		if(playertemp.action.tick<15){
-			fill(0,0,0,playertemp.action.tick*7);
+		if(playertemp.action.tick<30){
+			fill(0,0,0,playertemp.action.tick*3.5);
 			ellipseMode(CENTER);
-			ellipse(400,350,playertemp.action.tick*6,playertemp.action.tick*6);
+			ellipse(400,350,playertemp.action.tick*3,playertemp.action.tick*3);
 		}
-		if(playertemp.action.tick==15){
+		if(playertemp.action.tick==30){
 			append(objects,{
 				type:'projectile',
 				sprite:sprites.voidblast,
@@ -13121,7 +13148,7 @@ append(doaction,function(lv,hand){
 			});
 			
 		}
-		if(playertemp.action.tick>=30){
+		if(playertemp.action.tick>=40){
 			stopaction();
 		}
 	}
@@ -14031,7 +14058,7 @@ append(doaction,function(lv,hand){
 			if(hits>1){
 				for(i=0;i<enemies.length;i+=1){
 					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
-						damage("enemies",i,random((plsst(8)+plshp(0.2)),(plsst(9)+plshp(0.24))),0,1,1,"melee","player",0.35,["slash"]);
+						damage("enemies",i,random((plsst(7)+plshp(0.2)),(plsst(8)+plshp(0.24))),0,1,1,"melee","player",0.3,["slash"]);
 						if(options.loadAudio){sfx.judgmenthit.play();}
 					}
 				}
@@ -14039,7 +14066,7 @@ append(doaction,function(lv,hand){
 			else{
 				for(i=0;i<enemies.length;i+=1){
 					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
-						damage("enemies",i,random((plsst(8)+plshp(0.2))*1.33,(plsst(9)+plshp(0.24))*1.33),0,1,1,"melee","player",0.35,["slash"]);
+						damage("enemies",i,random((plsst(7)+plshp(0.2))*1.45,(plsst(8)+plshp(0.24))*1.45),0,1,1,"melee","player",0.4,["slash"]);
 						if(options.loadAudio){sfx.judgmenthit.play();}
 					}
 				}
@@ -14102,7 +14129,7 @@ append(doaction,function(lv,hand){
 					}
 				},
 				target:'enemy',
-				size:22,
+				size:12,
 				speed:6,
 				duration:random(16,24),
 				arcturn:round(random(1)),
@@ -14124,6 +14151,7 @@ append(doaction,function(lv,hand){
 				properties:["arcane","slash"],
 				hits:new Array(999),
 				run:function(){
+					objects[n].size+=0.4;
 					if(!(objects[n].phase)){
 						if(!(mousePressed)){
 							objects[n].triggered=1;
@@ -14147,12 +14175,18 @@ append(doaction,function(lv,hand){
 								objects[n].fast=4;
 								objects[n].speed=44;
 								objects[n].size=15;
-								objects[n].mdmgmin=plsin(3);
-								objects[n].mdmgmax=plsin(4);
+								objects[n].mdmgmin=plsin(4);
+								objects[n].mdmgmax=plsin(5);
 								objects[n].resE=0.7;
 								objects[n].procc=0.2;
 								objects[n].dir=targetdirfs(objects[n].x-playertemp.x+400,objects[n].y-playertemp.y+350);
 								objects[n].hits=new Array(999);
+								objects[n].onhit=function(i){
+									objects[n].pdmgmin*=0.85;
+									objects[n].pdmgmax*=0.85;
+									objects[n].mdmgmin*=0.85;
+									objects[n].mdmgmax*=0.85;
+								}
 								append(objects[n].properties,"pierce");
 								objects[n].draw=function(){
 									fill(150,0,150,objects[n].duration*25);
@@ -14236,18 +14270,24 @@ append(doaction,function(lv,hand){
 			if(playertemp.traits[44]>0){
 				playertemp.action.charge+=playertemp.traits[44]/10;
 			}
+			if(playertemp.action.charge>120){
+				playertemp.action.charge=120;
+			}
 			if(player.mp>=0.18){
 				player.mp-=0.18;
 				spendmana("magic",0.18,0.18);
 				playertemp.action.ammo+=1;
+				if(playertemp.action.activated){
+					playertemp.action.ammo+=0.5;
+				}
 			}
 			else{
 				playertemp.action.charge=0;
 				playertemp.action.flare=30;
 				playertemp.action.activated=0;
 			}
-			if(playertemp.action.ammo>=7){
-				playertemp.action.ammo-=7;
+			if(playertemp.action.ammo>=9){
+				playertemp.action.ammo-=9;
 				append(objects,{
 					type:'projectile',
 					vfx:1,
@@ -14276,6 +14316,7 @@ append(doaction,function(lv,hand){
 					pdmgmax:0,
 					mdmgmin:(plsin(1.5)),
 					mdmgmax:(plsin(2)),
+					burnd:plsin(12)/240,
 					armorE:1,
 					resE:1,
 					procc:0.16,
@@ -14287,7 +14328,7 @@ append(doaction,function(lv,hand){
 						}
 						append(enemies[i].dots,{
 							pdmg:0,
-							mdmg:plsin(10)/240,
+							mdmg:objects[n].burnd,
 							armorE:0.018,
 							resE:0.0045,
 							properties:["fire","burn"],
@@ -14299,6 +14340,7 @@ append(doaction,function(lv,hand){
 								}
 							}
 						});
+						objects[n].burnd*=0.85;
 					}
 				});
 			}
@@ -14308,7 +14350,7 @@ append(doaction,function(lv,hand){
 					playertemp.action.flare-=20;
 					for(i=0;i<enemies.length;i+=1){
 						if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(50+min(50,(playertemp.action.charge-60)/3)+enemies[i].size,2)){
-							damage("enemies",i,0,random((plsin(9)),(plsin(10))),1,1,"ranged","player",0.35,["fire"]);
+							damage("enemies",i,0,random((plsin(4)),(plsin(5))),1,1,"ranged","player",0.35,["fire"]);
 						}
 					}
 					append(stateffects,{name:'incinerate flare',tick:0,run:function(){
@@ -15635,7 +15677,7 @@ showdots[2]=0;
 				else{
 					stemp=3;
 				}
-				player.mp+=(plsmr(1))/60*(1+min(stemp,min(playertemp.timesincedamagetaken,playertemp.timesincemove,playertemp.timesinceaction)/120));
+				player.mp+=(plsmr(1))/60*(1+min(stemp,min(playertemp.timesincedamagetaken,playertemp.timesincemove,playertemp.timesinceaction)/80));
 			}
 			if(player.mp<=0){
 				player.mp=0;
@@ -16164,12 +16206,14 @@ showdots[2]=0;
 			textFont(0,15);
 			fill(0,255,255);
 			text(round(max(0,enemies[stemp[2]].hp))+" / "+round(enemies[stemp[2]].mhp),250,70,300,30);
-			stroke(255,0,0,50+abs(tick%60-30)*3);
-			strokeWeight(7);
-			noFill();
-			ellipseMode(CENTER);
-			ellipse(enemies[stemp[2]].x-playertemp.x+400,enemies[stemp[2]].y-playertemp.y+350,14+enemies[stemp[2]].size*2,14+enemies[stemp[2]].size*2);
-			noStroke();
+			if(!(playertemp.inBossFight)){
+				stroke(255,0,0,50+abs(tick%60-30)*3);
+				strokeWeight(7);
+				noFill();
+				ellipseMode(CENTER);
+				ellipse(enemies[stemp[2]].x-playertemp.x+400,enemies[stemp[2]].y-playertemp.y+350,14+enemies[stemp[2]].size*2,14+enemies[stemp[2]].size*2);
+				noStroke();
+			}
 		}
 	}
 	}}
