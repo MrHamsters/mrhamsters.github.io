@@ -206,3 +206,11 @@ Explosion Rune
 2/40
 136/5,166/12
 10
+Mind over Matter
+2/80
+5/10
+10
+Looting
+1/100
+20/2,61/1,68/1
+0

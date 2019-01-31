@@ -7,7 +7,7 @@ Starfish
 Vitality
 [Passive] Grants {h0.005x0c1} additional health regeneration.
 Arcane Armor
-[Passive] A portion of damage is taken from mana before health. Base absorbed amount is {ox0c0.5}%. For every 100 points of mana above 100, the un-absorbed portion is divided by an extra {ox0c0.02}. Damage taken by mana is divided by {i0.01+h0.02}. Absorbtion stops at 10% mana.
+[Passive] A portion of damage is taken from mana before health. Base absorbed amount is {ox0c0.5}%. For every 100 points of maximum mana, the un-absorbed portion is divided by an extra {ox0c0.04}. Damage taken by mana is divided by {i0.001+h0.002}. Absorbtion stops at 40% mana.
 Relic Shield
 [Active] Gives you {ox23c2}% damage reduction, 25% slow, and 36% increased armor and resistance for 12 seconds. The armor and resistance decays over its duration. Heals you for {h0.15} health on expiration. 15 second cooldown. Each point in Shield Mastery increases damage reduction by 1%.
 Grit
@@ -17,11 +17,11 @@ Mana Battery
 Vampire
 [Passive] Heal for {ox0c1}% of all damage dealt.
 Zealot's Oath
-[Passive] Adds the lower of {s0.0015} and {s0.01} to Arcane Armor's mana damage division.
+[Passive] Adds the lower of {s0.0002} and {s0.0015} to Arcane Armor's mana damage division.
 Spores
 [Passive] Getting hit releases {ox0c1} spores which deal {i0.35}-{i0.4} magic poison damage to enemies.
 Energy Shield
-[Passive] Generate {p0.008x0c1+r0.0008x0c1} energy shield per second, up to {h0.004x0c1+r0.05x0c1}. Recharge accelerates the longer you dont take damage (maximum bonus is 400% at 8 seconds). Each point in Shield Mastery accelerates recharge bonus by 10%.
+[Passive] Generate {p0.004x0c1+r0.0004x0c1} energy shield per second, up to {h0.006x0c1+r0.075x0c1}. Recharge accelerates the longer you dont take damage (maximum bonus is 1200% [total: {p0.004x0c13+r0.0004x0c13}/sec] at 8 seconds). Each point in Shield Mastery accelerates recharge bonus by 10%.
 Shield Overload
 [Active] Instantly generates a {r0.0075x42c8+h0.001x42c8} point damage shield which decays over 6 seconds while doubling your Energy Shield recharge for 2 seconds, but reduces your mana regeneration by 64%, decaying over 8 seconds. 15 second cooldown. Each point in Shield Mastery reduces mana regeneration penalty by 10%. Can be used mid-action.
 Roar
@@ -147,7 +147,7 @@ Iron Man
 Siphon of Harvesting
 [Active] Damages all nearby enemies for {i1.3}-{i1.45} magic damage and generates {ox11c4}% of maximum Iron Man shield for each enemy hit, plus 25% of the magic damage dealt. 4 second cooldown. Costs {ox9c0+lx1c0} health.
 Traveller's Call
-[Passive] Your mana regeneration is disabled. Instead, mana orbs spawn nearby. Each one restores mana equal to {ox350c150}% of your mana regeneration. You can still regenerate mana during boss battles.
+[Passive] Your mana regeneration is disabled. Instead, mana orbs spawn nearby. Each one restores mana equal to {ox350c150}% of your mana regeneration. You can still regenerate mana during boss battles. Additionally, increases your maximum mana by {ox0c5}%.
 Recall Boomerangs
 [Active] Empowers all boomerangs and increases their speed. Ones that haven't started returning to you yet do so immediately. {ox1.5c-0.5} second cooldown.
 Detonate Boomerangs
