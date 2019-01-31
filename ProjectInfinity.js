@@ -1,4 +1,4 @@
-var version="0.8.1b";
+var version="0.8.1c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -5417,7 +5417,7 @@ var loadtraits=function(){
 		append(traitfuncs.overlay,function(){
 				if(render){
 					fill(60+abs(tick%200-100)/2,60+abs(tick%200-100)/2,255);
-					rect(825,245,playertemp.energyshield/(((plshp(1))*0.004+(plsre(1))*0.05)*playertemp.traits[12])*300,5+playertemp.traits[12]/5);fill(170,170,255);
+					rect(825,245,playertemp.energyshield/(((plshp(1))*0.008+(plsre(1))*0.075)*playertemp.traits[12])*300,5+playertemp.traits[12]/5);fill(170,170,255);
 					fill(0,0,200,200);
 					textFont(0,13);
 					text(round(playertemp.energyshield),950,245);
@@ -6035,10 +6035,6 @@ var loadtraits=function(){
 				resetMatrix();
 			}
 			if(stateffects[n].tick>=1800){
-				if(playertemp.souleater<=25){
-					playertemp.speed-=0.02;
-					playertemp.haste-=0.01;
-				}
 				playertemp.souleater-=1;
 				if(playertemp.souleaters>min(playertemp.traits[25]*3,playertemp.souleater)){
 					playertemp.haste-=playertemp.souleaters-min(playertemp.traits[25]*3,playertemp.souleater)/100;
