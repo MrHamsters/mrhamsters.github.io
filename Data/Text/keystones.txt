@@ -33,9 +33,9 @@ Power is worth {ox0c0.1}% increased intelligence.
 0
 10
 Bulk Up
-Fortitude is worth {ox0c0.1}% increased health.
+Fortitude is worth {ox0c0.15}% increased health.
 0/0/0/0/0/0/0/0/0/0/0
-0/0/0/0/0/0/0.1/0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0.15/0/0/0/0/0/0/0/0/0/0/0
 
 
 2
@@ -43,9 +43,9 @@ Fortitude is worth {ox0c0.1}% increased health.
 0
 10
 Recovery
-Fortitude is worth {ox0c0.1}% increased health regen.
+Fortitude is worth {ox0c0.15}% increased health regen.
 0/0/0/0/0/0/0/0/0/0/0
-0/0/0/0/0/0/0/0.1/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0.15/0/0/0/0/0/0/0/0/0/0
 
 
 2
@@ -53,9 +53,9 @@ Fortitude is worth {ox0c0.1}% increased health regen.
 0
 10
 Armored
-Fortitude is worth {ox0c0.1}% increased armor.
+Fortitude is worth {ox0c0.15}% increased armor.
 0/0/0/0/0/0/0/0/0/0/0
-0/0/0/0/0/0/0/0/0/0/0.1/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0.15/0/0/0/0/0/0/0
 
 
 2
@@ -63,9 +63,9 @@ Fortitude is worth {ox0c0.1}% increased armor.
 0
 10
 Warded
-Fortitude is worth {ox0c0.1}% increased resistance.
+Fortitude is worth {ox0c0.15}% increased resistance.
 0/0/0/0/0/0/0/0/0/0/0
-0/0/0/0/0/0/0/0/0/0/0/0.1/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0.15/0/0/0/0/0/0
 
 
 3

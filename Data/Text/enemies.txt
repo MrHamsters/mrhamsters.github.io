@@ -28,7 +28,7 @@ slime
 
 1,4,40/0/0/180|1,1,1.15/1/1|0,13,water:0.7/nature:0.8/cold:1.25/wind:1.1/explosion:0.8/electric:1.3/void:1.1/impact:0.85
 1/50/3
-Large Fly
+Fly
 fly
 80
 1
@@ -418,7 +418,7 @@ iceslime
 
 0,13,water:0.7/cold:0.7/nature:0.8/earth:1.15/void:1.15/electric:1.3
 
-Forest Chest
+Chest
 forestchest
 340
 1
@@ -897,3 +897,4 @@ ghost
 3
 3
 0,13,cold:0.8/void:0.9/wind:1.1/nature:1.1/light:1.3|1,4,40/0/0/60|1,0,0.6/1/1|3,15,60/240/300/25/110/125/120/10/-0.6/150/3/45|3,16,3/40
+
