@@ -1,4 +1,4 @@
-var version="0.8c";
+var version="0.8.1";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -44,7 +44,8 @@ var options={
 	//0: frames do not get skipped; if you lag, so does the game  1: game and frames are independent
 	frameskip:1,
 	//0: no light effects  1: player light effects  2: all light effects
-	light:2
+	light:2,
+	nmehppanel:1
 };
 var dmgixtra="";
 var drawcap=8;
@@ -99,6 +100,7 @@ var playertemp={
 	rcostm:[1,1],
 	timesincedamagetaken:999,
 	timesincehittaken:999,
+	timesincehitdealt:999,
 	timesincedamagedealt:999,
 	timesincemove:999,
 	timesinceaction:999,
@@ -275,32 +277,209 @@ for(i=0;i<suffixdata.length/5;i+=1){
 		}
 	}
 }
-/*var suffixdata=loadStrings('Data/Text/suffixes.txt');
-for(i=0;i<suffixdata.length/5;i+=1){
-	suffixdata[i*5+1]=split(suffixdata[i*5+1],'/');
-	suffixdata[i*5+1][0]=Number(suffixdata[i*5+1][0]);
-	suffixdata[i*5+1][1]=Number(suffixdata[i*5+1][1]);
-	suffixdata[i*5+1][2]=split(suffixdata[i*5+1][2],',');
-	suffixdata[i*5+1][2][0]=Number(suffixdata[i*5+1][2][0]);
-	suffixdata[i*5+1][2][1]=Number(suffixdata[i*5+1][2][1]);
-	suffixdata[i*5+1][2][2]=Number(suffixdata[i*5+1][2][2]);
-	if(suffixdata[i*5+1][3]){
-		suffixdata[i*5+1][3]=split(suffixdata[i*5+1][3],',');
+var eprefixdata=loadStrings('Data/Text/eprefixes.txt');
+for(i=0;i<eprefixdata.length/5;i+=1){
+	eprefixdata[i*5+1]=split(eprefixdata[i*5+1],'/');
+	eprefixdata[i*5+1][0]=Number(eprefixdata[i*5+1][0]);
+	eprefixdata[i*5+1][1]=Number(eprefixdata[i*5+1][1]);
+	eprefixdata[i*5+1][2]=split(eprefixdata[i*5+1][2],',');
+	eprefixdata[i*5+1][2][0]=Number(eprefixdata[i*5+1][2][0]);
+	eprefixdata[i*5+1][2][1]=Number(eprefixdata[i*5+1][2][1]);
+	eprefixdata[i*5+1][2][2]=Number(eprefixdata[i*5+1][2][2]);
+	eprefixdata[i*5+2]=split(eprefixdata[i*5+2],'/');
+	for(n=0;n<eprefixdata[i*5+2].length;n+=1){
+		eprefixdata[i*5+2][n]=Number(eprefixdata[i*5+2][n]);
 	}
-	suffixdata[i*5+2]=split(suffixdata[i*5+2],'/');
-	for(n=0;n<suffixdata[i*5+2].length;n+=1){
-		suffixdata[i*5+2][n]=Number(suffixdata[i*5+2][n]);
-	}
-	suffixdata[i*5+3]=Number(suffixdata[i*5+3]);
-	if(suffixdata[i*5+4]){
-		suffixdata[i*5+4]=split(suffixdata[i*5+4],',');
-		for(n=0;n<suffixdata[i*5+4].length;n+=1){
-			suffixdata[i*5+4][n]=split(suffixdata[i*5+4][n],'/');
-			suffixdata[i*5+4][n][0]=Number(suffixdata[i*5+4][n][0]);
-			suffixdata[i*5+4][n][1]=Number(suffixdata[i*5+4][n][1]);
+	//unused: eprefixdata[i*5+3]=Number(eprefixdata[i*5+3]);
+	if(eprefixdata[i*5+4]){
+		eprefixdata[i*5+4]=split(eprefixdata[i*5+4],'|');
+		for(n=0;n<eprefixdata[i*5+4].length;n+=1){
+			eprefixdata[i*5+4][n]=split(eprefixdata[i*5+4][n],',');
+			eprefixdata[i*5+4][n][0]=Number(eprefixdata[i*5+4][n][0]);
+			eprefixdata[i*5+4][n][1]=Number(eprefixdata[i*5+4][n][1]);
 		}
 	}
-}*/
+}
+var esuffixdata=loadStrings('Data/Text/esuffixes.txt');
+for(i=0;i<esuffixdata.length/5;i+=1){
+	esuffixdata[i*5+1]=split(esuffixdata[i*5+1],'/');
+	esuffixdata[i*5+1][0]=Number(esuffixdata[i*5+1][0]);
+	esuffixdata[i*5+1][1]=Number(esuffixdata[i*5+1][1]);
+	esuffixdata[i*5+1][2]=split(esuffixdata[i*5+1][2],',');
+	esuffixdata[i*5+1][2][0]=Number(esuffixdata[i*5+1][2][0]);
+	esuffixdata[i*5+1][2][1]=Number(esuffixdata[i*5+1][2][1]);
+	esuffixdata[i*5+1][2][2]=Number(esuffixdata[i*5+1][2][2]);
+	esuffixdata[i*5+2]=split(esuffixdata[i*5+2],'/');
+	for(n=0;n<esuffixdata[i*5+2].length;n+=1){
+		esuffixdata[i*5+2][n]=Number(esuffixdata[i*5+2][n]);
+	}
+	//unused: esuffixdata[i*5+3]=Number(esuffixdata[i*5+3]);
+	if(esuffixdata[i*5+4]){
+		esuffixdata[i*5+4]=split(esuffixdata[i*5+4],'|');
+		for(n=0;n<esuffixdata[i*5+4].length;n+=1){
+			esuffixdata[i*5+4][n]=split(esuffixdata[i*5+4][n],',');
+			esuffixdata[i*5+4][n][0]=Number(esuffixdata[i*5+4][n][0]);
+			esuffixdata[i*5+4][n][1]=Number(esuffixdata[i*5+4][n][1]);
+		}
+	}
+}
+var applynmeenchants=function(i){
+	enemies[i].dsize=1;
+	if(enemies[i].prefix){
+		enemies[i].prefixname=eprefixdata[(enemies[i].prefix-1)*5];
+		enemies[i].prefixcolor=eprefixdata[(enemies[i].prefix-1)*5+1][2];
+		enemies[i].mhp*=eprefixdata[(enemies[i].prefix-1)*5+2][0];
+		enemies[i].dmgmin*=eprefixdata[(enemies[i].prefix-1)*5+2][1];
+		enemies[i].dmgmax*=eprefixdata[(enemies[i].prefix-1)*5+2][2];
+		enemies[i].str*=eprefixdata[(enemies[i].prefix-1)*5+2][3];
+		enemies[i].intel*=eprefixdata[(enemies[i].prefix-1)*5+2][4];
+		enemies[i].armor*=eprefixdata[(enemies[i].prefix-1)*5+2][5];
+		enemies[i].res*=eprefixdata[(enemies[i].prefix-1)*5+2][6];
+		enemies[i].speed*=eprefixdata[(enemies[i].prefix-1)*5+2][7];
+		enemies[i].haste*=eprefixdata[(enemies[i].prefix-1)*5+2][8];
+		enemies[i].size*=eprefixdata[(enemies[i].prefix-1)*5+2][9];
+		enemies[i].dsize*=eprefixdata[(enemies[i].prefix-1)*5+2][9];
+		enemies[i].xp*=eprefixdata[(enemies[i].prefix-1)*5+2][10];
+		if(!(enemies[i].lootbonus)){
+			enemies[i].lootbonus=0;
+		}
+		enemies[i].lootbonus+=eprefixdata[(enemies[i].prefix-1)*5+2][11];
+		enemies[i].reactant+=eprefixdata[(enemies[i].prefix-1)*5+2][12];
+		if(enemies[i].tenacity>0){
+			if(eprefixdata[(enemies[i].prefix-1)*5+2][13]>=100){
+				enemies[i].tenacity=100;
+			}
+			else{
+				enemies[i].tenacity*=1/(100-eprefixdata[(enemies[i].prefix-1)*5+2][13]);
+			}
+		}		
+		if(eprefixdata[(enemies[i].prefix-1)*5+4]){
+			for(aea=0;aea<eprefixdata[(enemies[i].prefix-1)*5+4].length;aea+=1){
+				if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==0){
+					applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2],enemies[i]);
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==1){
+					append(enemies[i].traits.damagetakenpoa,applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2],enemies[i]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==2){
+					append(enemies[i].traits.damagedealt,applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==3){
+					append(enemies[i].traits.passive,applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==4){
+					append(enemies[i].traits.ondeath,applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==5){
+					append(enemies[i].traits.damagetakenpra,applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==6){
+					append(enemies[i].traits.drawover,applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==7){
+					append(enemies[i].traits.channel[0],applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==8){
+					append(enemies[i].traits.channel[1],applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==9){
+					append(enemies[i].traits.channel[2],applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==10){
+					append(enemies[i].traits.channel[3],applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==11){
+					append(enemies[i].traits.channel[4],applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+				else if(eprefixdata[(enemies[i].prefix-1)*5+4][aea][0]==12){
+					append(enemies[i].traits.channel[5],applyNMETrait[eprefixdata[(enemies[i].prefix-1)*5+4][aea][1]](eprefixdata[(enemies[i].prefix-1)*5+4][aea][2]));
+				}
+			}
+		}
+	}
+	if(enemies[i].suffix){
+		enemies[i].suffixname=esuffixdata[(enemies[i].suffix-1)*5];
+		enemies[i].suffixcolor=esuffixdata[(enemies[i].suffix-1)*5+1][2];
+		enemies[i].mhp*=esuffixdata[(enemies[i].suffix-1)*5+2][0];
+		enemies[i].dmgmin*=esuffixdata[(enemies[i].suffix-1)*5+2][1];
+		enemies[i].dmgmax*=esuffixdata[(enemies[i].suffix-1)*5+2][2];
+		enemies[i].str*=esuffixdata[(enemies[i].suffix-1)*5+2][3];
+		enemies[i].intel*=esuffixdata[(enemies[i].suffix-1)*5+2][4];
+		enemies[i].armor*=esuffixdata[(enemies[i].suffix-1)*5+2][5];
+		enemies[i].res*=esuffixdata[(enemies[i].suffix-1)*5+2][6];
+		enemies[i].speed*=esuffixdata[(enemies[i].suffix-1)*5+2][7];
+		enemies[i].haste*=esuffixdata[(enemies[i].suffix-1)*5+2][8];
+		enemies[i].size*=esuffixdata[(enemies[i].suffix-1)*5+2][9];
+		enemies[i].dsize*=esuffixdata[(enemies[i].suffix-1)*5+2][9];
+		enemies[i].xp*=esuffixdata[(enemies[i].suffix-1)*5+2][10];
+		if(!(enemies[i].lootbonus)){
+			enemies[i].lootbonus=0;
+		}
+		enemies[i].lootbonus+=esuffixdata[(enemies[i].suffix-1)*5+2][11];
+		enemies[i].reactant+=esuffixdata[(enemies[i].suffix-1)*5+2][12];
+		if(enemies[i].tenacity>0){
+			if(esuffixdata[(enemies[i].suffix-1)*5+2][13]>=100){
+				enemies[i].tenacity=100;
+			}
+			else{
+				enemies[i].tenacity*=1/(100-esuffixdata[(enemies[i].suffix-1)*5+2][13]);
+			}
+		}		
+		if(esuffixdata[(enemies[i].suffix-1)*5+4]){
+			for(aea=0;aea<esuffixdata[(enemies[i].suffix-1)*5+4].length;aea+=1){
+				if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==0){
+					applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2],enemies[i]);
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==1){
+					append(enemies[i].traits.damagetakenpoa,applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2],enemies[i]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==2){
+					append(enemies[i].traits.damagedealt,applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==3){
+					append(enemies[i].traits.passive,applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==4){
+					append(enemies[i].traits.ondeath,applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==5){
+					append(enemies[i].traits.damagetakenpra,applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==6){
+					append(enemies[i].traits.drawover,applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==7){
+					append(enemies[i].traits.channel[0],applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==8){
+					append(enemies[i].traits.channel[1],applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==9){
+					append(enemies[i].traits.channel[2],applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==10){
+					append(enemies[i].traits.channel[3],applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==11){
+					append(enemies[i].traits.channel[4],applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+				else if(esuffixdata[(enemies[i].suffix-1)*5+4][aea][0]==12){
+					append(enemies[i].traits.channel[5],applyNMETrait[esuffixdata[(enemies[i].suffix-1)*5+4][aea][1]](esuffixdata[(enemies[i].suffix-1)*5+4][aea][2]));
+				}
+			}
+		}
+	}
+	enemies[i].hp=enemies[i].mhp;
+	enemies[i].dname="";
+	if(enemies[i].prefixname){
+		enemies[i].dname=enemies[i].prefixname+" ";
+	}
+	enemies[i].dname+=enemies[i].name;
+	if(enemies[i].suffixname){
+		enemies[i].dname+=" "+enemies[i].suffixname;
+	}
+}
+var ncache;
 var getenchkeyspotp=function(i){
 	for(n=0;n<enchanter.prefix.length;n+=1){
 		if(prefixdata[i*5+1][1]>enchanter.prefix[n].lv){
@@ -751,11 +930,6 @@ var getEnemyData=function(){
 			}
 			if(enemydata[i*30+29][1]){
 				enemydata[i*30+29][1]=split(enemydata[i*30+29][1],',');
-				for(n=0;n<enemydata[i*30+29][1].length;n+=1){
-					enemydata[i*30+29][1][n]=split(enemydata[i*30+29][1][n],'/');
-					enemydata[i*30+29][1][n][0]=Number(enemydata[i*30+29][1][n][0]);
-					enemydata[i*30+29][1][n][1]=Number(enemydata[i*30+29][1][n][1]);
-				}
 			}
 		}
 	}
@@ -767,7 +941,9 @@ var invquicksell=0;
 noStroke();
 window.onbeforeunload = function () {
 	if(loaded){
-		savegame();
+		if(options.autosave){
+			savegame();
+		}
 	}
     return "Really want to quit the game?";
 };
@@ -1389,7 +1565,7 @@ function createenemy(ID){
 		ondeath:new Array(),
 		damagetakenpra:new Array(),
 		drawover:new Array(),
-		channel:[new Array(),new Array(),new Array(),new Array(),new Array()],
+		channel:[new Array(),new Array(),new Array(),new Array(),new Array(),new Array()],
 	};
 	if(enemydata[ID*30+28]){
 		for(aea=0;aea<enemydata[ID*30+28].length;aea+=1){
@@ -1428,6 +1604,61 @@ function createenemy(ID){
 			}
 			else if(enemydata[ID*30+28][aea][0]==11){
 				append(this.traits.channel[4],applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
+			}
+			else if(enemydata[ID*30+28][aea][0]==12){
+				append(this.traits.channel[5],applyNMETrait[enemydata[ID*30+28][aea][1]](enemydata[ID*30+28][aea][2]));
+			}
+		}
+	}
+	if(log(max(1,this.lv-20)/3)*10>=random(0,100)){
+		this.prefix=getnmeprefix(this.lv,enemydata[ID*30+29][1]);
+	}
+	if(log(max(1,this.lv-50)/3)*10>=random(0,100)){
+		this.suffix=getnmesuffix(this.lv,enemydata[ID*30+29][1]);
+	}
+}
+var getnmeprefix=function(lv,tags){
+	var nmp=[false,0];
+	while(!(nmp[0])){
+		nmp[1]=round(random(-0.49,eprefixdata.length/5-0.51));
+		if(eprefixdata[nmp[1]*5+1][1]<=lv){
+			if(eprefixdata[nmp[1]*5+1][0]>=random(100)){
+				if(eprefixdata[nmp[1]*5+1][3]){
+					if(tags){
+						for(rtt=0;rtt<tags.length;rtt+=1){
+							if(tags[rtt]==eprefixdata[nmp[1]*5+1][3]){
+								nmp[0]=true;
+								return(nmp[1]+1);
+							}
+						}
+					}
+				}
+				else{
+					nmp[0]=true;
+					return(nmp[1]+1);
+				}
+			}
+		}
+	}
+}
+var getnmesuffix=function(lv,tags){
+	var nmp=[false,0];
+	while(!(nmp[0])){
+		nmp[1]=round(random(-0.49,esuffixdata.length/5-0.51));
+		if(esuffixdata[nmp[1]*5+1][1]<=lv){
+			if(esuffixdata[nmp[1]*5+1][0]>=random(100)){
+				if(esuffixdata[nmp[1]*5+1][3]){
+					for(rtt=0;rtt<tags.length;rtt+=1){
+						if(tags[rtt]==esuffixdata[nmp[1]*5+1][3]){
+							nmp[0]=true;
+							return(nmp[1]+1);
+						}
+					}
+				}
+				else{
+					nmp[0]=true;
+					return(nmp[1]+1);
+				}
 			}
 		}
 	}
@@ -2171,6 +2402,18 @@ var defaultenemy=function(i,mindistance){
 					}
 				}
 				for(plp=0;plp<packset.length;plp+=1){
+					if(enemies[i].prefix){
+						enemies[packset[plp]].prefix=enemies[i].prefix;
+					}
+					else{
+						enemies[packset[plp]].prefix=0;
+					}
+					if(enemies[i].suffix){
+						enemies[packset[plp]].suffix=enemies[i].suffix;
+					}
+					else{
+						enemies[packset[plp]].suffix=0;
+					}
 					enemies[packset[plp]].exists=1;
 					enemies[packset[plp]].lfpack=0;
 					enemies[packset[plp]].x=enemies[i].x+random(-20,20)*(1+packset.length/2);
@@ -2186,6 +2429,7 @@ var defaultenemy=function(i,mindistance){
 		}
 	}
 	if(enemies[i].exists){
+		applynmeenchants(i);
 		if(challengearena.active){
 			var capd=random(PI);
 			enemies[i].x=challengearena.x+sin(capd)*random(-700,700);
@@ -2683,6 +2927,9 @@ var getloot=function(f){
 	}
 	else{
 		lootstock=enemydata[enemies[f].sprite*30+21];
+	}
+	if(enemies[f].lootbonus){
+		lootstock*=1+enemies[f].lootbonus;
 	}
 	lootcount=0;
 	while(lootstock>0){
@@ -3717,7 +3964,7 @@ var loadkeystoneps=function(){
 			if(playertemp.keystonepassives[9]>0){
 				stemp*=1-playertemp.keystonepassives[9]*0.08;
 			}
-			if(playertemp.timesincedamagetaken>=stemp&playertemp.timesincedamagedealt>=stemp){
+			if(playertemp.timesincedamagetaken>=stemp&playertemp.timesincehitdealt>=stemp){
 				playertemp.omnishell=min(playertemp.omnishellm,playertemp.omnishell+playertemp.omnishellm/240);
 				if(playertemp.keystonepassives[9]>0){
 					playertemp.omnishell=min(playertemp.omnishellm,playertemp.omnishell+playertemp.omnishellm*playertemp.keystonepassives[9]/4800);
@@ -4509,6 +4756,9 @@ var loadtraits=function(){
 	if(playertemp.traits[98]>0){
 		append(traitfuncs.damagedealt,function(){
 			if(willhit&random(100)<playertemp.traits[98]){
+				for(cp=0;cp<procc*15+1;cp+=1){
+					append(particles,new createparticle(enemies[index].x,enemies[index].y,random(-2,2),random(-2,2),0,0,'circle','',20,-0.5,255,-13,random(200,255),random(180,230),random(120,160),1));
+				}
 				if(playertemp.traits[99]>0){
 					pdmg*=2+playertemp.traits[99]/100;
 					mdmg*=2+playertemp.traits[99]/100;
@@ -4823,37 +5073,33 @@ var loadtraits=function(){
 		append(traitfuncs.damagetaken,function(){
 			if(playertemp.fortify>0){
 				if(willhit){
-					pdmg*=0.7;
-					mdmg*=0.7;
+					pdmg*=0.75;
+					mdmg*=0.75;
+				}
+				else{
+					pdmg*=0.5;
+					mdmg*=0.5;
 				}
 			}
-		});
-		append(traitfuncs.damagetakenpm,function(){
-		if(playertemp.fortify>0){
+		if(playertemp.action.name=='swordswing'){
 			if(willhit){
-				stemp=plshp(0.015)+plsst(0.04);
-				if(stemp>pdmg){
-					stemp-=pdmg;
-					pdmg=0;
+				stemp=20;
+				if(playertemp.traits[39]>0){
+					stemp+=playertemp.traits[39];
 				}
-				else{
-					pdmg-=stemp;
-					stemp=0;
+				if(playertemp.empoweredparry){
+					stemp*=3;
 				}
-				if(stemp>mdmg){
-					stemp-=mdmg;
-					mdmg=0;
+				if(stemp>=random(100)){
+					playertemp.empoweredparry=0;
+					pdmg*=0.1;
+					mdmg*=0.1;
+					sfx.fullblock.play();
 				}
-				else{
-					mdmg-=stemp;
-					stemp=0;
-				}
-			}
-			else{
-				pdmg*=0.5;
-				mdmg*=0.5;
 			}
 		}
+		});
+		append(traitfuncs.damagetakenpm,function(){
 		if(playertemp.action.name=='defend'){
 			if(playertemp.traits[40]>0){
 				pdmg*=1-min(10,playertemp.traits[40])*0.03;
@@ -5170,8 +5416,11 @@ var loadtraits=function(){
 		});
 		append(traitfuncs.overlay,function(){
 				if(render){
-				fill(60+abs(tick%200-100)/2,60+abs(tick%200-100)/2,255);
-				rect(825,245,playertemp.energyshield/(((plshp(1))*0.004+(plsre(1))*0.05)*playertemp.traits[12])*300,5+playertemp.traits[12]/5);
+					fill(60+abs(tick%200-100)/2,60+abs(tick%200-100)/2,255);
+					rect(825,245,playertemp.energyshield/(((plshp(1))*0.004+(plsre(1))*0.05)*playertemp.traits[12])*300,5+playertemp.traits[12]/5);fill(170,170,255);
+					fill(0,0,200,200);
+					textFont(0,13);
+					text(round(playertemp.energyshield),950,245);
 				}
 		});
 	}
@@ -5736,7 +5985,7 @@ var loadtraits=function(){
 			lootstock-=100;
 		}
 		if(lootcount>0){
-			append(particles,new createparticle(275+random(150),300,0,-1,0,0,'text','+ '+lootcount+' Reactant',19,0,255,-2,160,130,50));
+			append(particles,new createparticle(275+random(150),300,0,-1,0,0,'text','+ '+lootcount+' R',19,0,255,-2,160,130,50));
 		}
 		});
 	}
@@ -7205,7 +7454,8 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 					}
 				}
 			}
-			if(indicatedmg&options.dmgindicators){
+			if(indicatedmg){
+			//&options.dmgindicators){
 				if(pdmg>0){
 					append(particles,new createparticle(765,235,0,-1.5,0,0,'text',"-"+round(pdmg),55,-1,255,-3.5,255,150,0));
 				}
@@ -7288,6 +7538,9 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 		}
 		if(pdmg+mdmg>0){
 			playertemp.timesincedamagedealt=0;
+			if(willhit){
+				playertemp.timesincehitdealt=0;
+			}
 		}
 		enemies[index].hp-=pdmg+mdmg;
 		if(options.dmgindicators&indicatedmg){
@@ -8518,8 +8771,8 @@ var getBiomeScripts=function(){
 								player.xp+=round((challengearena.souls/10+max(0,(challengearena.souls-1000)/10))*(pow(1.1,min(player.level,biomedata[9]+floor(challengearena.souls/100)))));
 								player.sp+=floor(challengearena.souls/100)*30;
 								player.reactant+=floor(challengearena.souls/100)*10;
-								append(particles,new createparticle(50,100,0,0.5,0,0,'text','+ '+floor(challengearena.souls/100)*30+' SP',22,0,255,-1.5,130,130,220));
-								append(particles,new createparticle(50,200,0,0.5,0,0,'text','+ '+floor(challengearena.souls/100)*10+' Reactant',22,0,255,-1.5,160,130,50));
+								append(particles,new createparticle(90,100,0,0.5,0,0,'text','+ '+floor(challengearena.souls/100)*30+' SP',22,0,255,-1.5,130,130,220));
+								append(particles,new createparticle(90,200,0,0.5,0,0,'text','+ '+floor(challengearena.souls/100)*10+' Reactant',22,0,255,-1.5,160,130,50));
 								challengearena={
 									active:0,
 									souls:0,
@@ -8738,7 +8991,7 @@ var getBiomeScripts=function(){
 								if(enemies[i].x>375){
 									enemies[i].x=375;
 								}
-								bosshpbar={name:"Shrek",val:enemies[i].hp/enemies[i].mhp};
+								bosshpbar=i;
 								if(enemies[i].enraged&tick%8==0){
 									append(particles,new createparticle(enemies[i].x+random(-20,20),enemies[i].y+random(-20,20),0,0,0,0,'circle','',15,-0.2,255,-15,255,0,0,1));
 								}
@@ -8765,7 +9018,7 @@ var getBiomeScripts=function(){
 							vision:1000,
 							ondeath:function(i){
 								//Defeat boss
-								bosshpbar={name:"Shrek",val:0};
+								bosshpbar=-1;
 								if(options.loadAudio){sfx.shrekdeath.play();}
 								if(!(player.record.bosses[1])){
 									player.record.bosses[1]=1;
@@ -10932,6 +11185,11 @@ append(nmem,function(i){
 			for(tdd=0;tdd<enemies[i].traits.channel[enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][4]].length;tdd+=1){
 				enemies[i].traits.channel[enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][4]][tdd]();
 			}
+			if(enemies[i].traits.channel[5]){
+				for(tdd=0;tdd<enemies[i].traits.channel[5].length;tdd+=1){
+					enemies[i].traits.channel[5][tdd]();
+				}
+			}
 		}
 		endnmeaction(i,enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][1]);
 	}
@@ -11135,6 +11393,7 @@ append(doaction,function(lv,hand){
 	else{
 		playertemp.action.dir+=1.8;
 	}
+	playertemp.empoweredparry=1;
 	playertemp.action.run=function(){
 		if(playertemp.traits[39]>0){
 			traitpow=playertemp.traits[39];
@@ -11191,12 +11450,7 @@ append(doaction,function(lv,hand){
 			}
 			if(hits>=1){
 				if(playertemp.bswordc==2){
-					if(playertemp.traits[39]>0){
-						playertemp.fortify=300+min(10,playertemp.traits[39])*30;
-					}
-					else{
-						playertemp.fortify=300;
-					}
+					playertemp.fortify=300;
 					if(options.loadAudio){sfx.shield.play();}
 				}
 				if(playertemp.bswordc==3){
@@ -14480,6 +14734,7 @@ var render=0;
 var playeractionstock=0;
 var playeractionstockr=0;
 var igclick=0;
+var scache;
 // Main draw loop
 void draw(){
 	cdraw=0;
@@ -14883,7 +15138,7 @@ showdots[2]=0;
 				playertemp.timesincekill=0;
 				append(particles,new createparticle(enemies[i].x,enemies[i].y,0,0,0,-0.1,'circle','',20,-0.3,255,-6,200,0,140,1));
 				if(enemies[i].reactant){
-					append(particles,new createparticle(275+random(150),300,0,-1,0,0,'text','+ '+round(enemies[i].reactant)+' Reactant',22,0,255,-2,160,130,50));
+					append(particles,new createparticle(275+random(150),300,0,-1,0,0,'text','+ '+round(enemies[i].reactant)+' R',22,0,255,-2,160,130,50));
 					player.reactant+=round(enemies[i].reactant);
 				}
 				player.xp+=round(enemies[i].xp*(pow(1.1,min(player.level,enemies[i].lv)-1)));
@@ -14979,19 +15234,39 @@ showdots[2]=0;
 			if((enemies[i].x-playertemp.x<enemies[i].vision&enemies[i].x-playertemp.x>-enemies[i].vision&
 			enemies[i].y-playertemp.y>-enemies[i].vision&enemies[i].y-playertemp.y<enemies[i].vision)||enemies[i].persistent){
 				if(!(cinematic||dialoga)){
-					ai[enemies[i].ai](i);
+					if(!(enemies[i].hastecache)){
+						enemies[i].hastecache=0;
+					}
+					enemies[i].hastecache+=enemies[i].haste;
+					while(enemies[i].hastecache>=1){
+						enemies[i].hastecache-=1;
+						ai[enemies[i].ai](i);
+					}
 				}
 				if(render){
 					if(!(enemies[i].stealth>0)){
 						translate(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350);
+						ellipseMode(CENTER);
+						if(enemies[i].prefixcolor){
+							fill(enemies[i].prefixcolor[0],enemies[i].prefixcolor[1],enemies[i].prefixcolor[2],70+abs(tick%60-30)*4);
+							ellipse(0,0,enemies[i].size*2.5+9,enemies[i].size*2.5+9);
+						}
+						if(enemies[i].suffixcolor){
+							fill(enemies[i].suffixcolor[0],enemies[i].suffixcolor[1],enemies[i].suffixcolor[2],70+abs((tick+30)%60-30)*4);
+							ellipse(0,0,enemies[i].size*2.5+9,enemies[i].size*2.5+9);
+						}
 						if(enemies[i].turnstyle==1){
 							rotate(enemies[i].dir);
 						}
+						scache=1;
+						if(enemies[i].dsize){
+							scache=enemies[i].dsize;
+						}
 						if(enemies[i].imgtype==1){
-							shape(enemiesimg[enemies[i].sprite][floor(enemies[i].anc)],0,0,30,45);
+							shape(enemiesimg[enemies[i].sprite][floor(enemies[i].anc)],0,0,30*scache,45*scache);
 						}
 						if(enemies[i].imgtype==2){
-							shape(enemies[i].sprite[floor(enemies[i].anc)],0,0,30,45);
+							shape(enemies[i].sprite[floor(enemies[i].anc)],0,0,30*scache,45*scache);
 						}
 						if(enemies[i].imgtype==3){
 							enemies[i].draw(i);
@@ -15383,6 +15658,7 @@ showdots[2]=0;
 			levelup();
 			playertemp.timesincedamagetaken+=1;
 			playertemp.timesincehittaken+=1;
+			playertemp.timesincehitdealt+=1;
 			playertemp.timesincemove+=1;
 			playertemp.timesinceaction+=1;
 			playertemp.timesincedamagedealt+=1;
@@ -15671,17 +15947,6 @@ showdots[2]=0;
 		noStroke();
 	}
 	losthp=max(0,losthp-losthp/30-0.15);
-	if(playertemp.inBossFight){
-		if(bosshpbar){
-			fill(0,0,0);
-			rect(200,20,400,40,15);
-			fill(255,0,0);
-			rect(200,20,max(0,400*bosshpbar.val),40,15);
-			fill(0,255,255);
-			textFont(0,20);
-			text(bosshpbar.name,215,25);
-		}
-	}
 	}
 	//STATEFFECTS===================================================
 	if(!(cinematic||dialoga)){
@@ -15855,6 +16120,58 @@ showdots[2]=0;
 			}
 		}
 	}
+	stemp=[0,999];
+	if(playertemp.inBossFight){
+		if(bosshpbar==-1){
+			stemp=[0,0,0,""];
+		}
+		else{
+			stemp=[0,0,bosshpbar,""];
+		}
+	}
+	else if(options.nmehppanel){
+		stemp=[new Array(),999,0,""];
+		for(nhb=0;nhb<enemies.length;nhb+=1){
+			if(!(enemies[nhb].stealth>0)){
+				if(enemies[nhb].x-playertemp.x+400<mouseX+80+enemies[nhb].size&enemies[nhb].x-playertemp.x+400>mouseX-80-enemies[nhb].size&enemies[nhb].y-playertemp.y+350<mouseY+80+enemies[nhb].size&enemies[nhb].y-playertemp.y+350>mouseY-80-enemies[nhb].size){
+					append(stemp[0],nhb);
+				}
+			}
+		}
+		for(dhp=0;dhp<stemp[0].length;dhp+=1){
+			if(dirgeneric(enemies[stemp[0][dhp]].x-playertemp.x+400,enemies[stemp[0][dhp]].y-playertemp.y+350,mouseX,mouseY)-enemies[stemp[0][dhp]].size/2<stemp[1]){
+				stemp[1]=dirgeneric(enemies[stemp[0][dhp]].x-playertemp.x+400,enemies[stemp[0][dhp]].y-playertemp.y+350,mouseX,mouseY)-enemies[stemp[0][dhp]].size/2;
+				stemp[2]=stemp[0][dhp];
+			}
+		}
+	}
+	if(stemp[1]<990){
+		if(enemies[stemp[2]]){
+			stemp[3]=enemies[stemp[2]].name;
+			if(enemies[stemp[2]].dname){
+				stemp[3]=enemies[stemp[2]].dname;
+			}
+			fill(0,0,0);
+			rect(200,20,400,40,15);
+			fill(255,0,0);
+			rect(200,20,max(0,400*enemies[stemp[2]].hp/enemies[stemp[2]].mhp),40,15);
+			fill(60,40,0);
+			rect(250,60,300,30,20);
+			fill(255,200,0);
+			textAlign(CENTER);
+			textFont(0,18);
+			text(stemp[3]+" (LV "+enemies[stemp[2]].lv+")",200,30,400,40);
+			textFont(0,15);
+			fill(0,255,255);
+			text(round(max(0,enemies[stemp[2]].hp))+" / "+round(enemies[stemp[2]].mhp),250,70,300,30);
+			stroke(255,0,0,50+abs(tick%60-30)*3);
+			strokeWeight(7);
+			noFill();
+			ellipseMode(CENTER);
+			ellipse(enemies[stemp[2]].x-playertemp.x+400,enemies[stemp[2]].y-playertemp.y+350,14+enemies[stemp[2]].size*2,14+enemies[stemp[2]].size*2);
+			noStroke();
+		}
+	}
 	}}
 	//INVENTORY/GUIS================================================
 	else{
@@ -15898,6 +16215,21 @@ showdots[2]=0;
 			fill(150,255,150);
 			textFont(0,40);
 			text('Traits',400,35,200,80);
+			fill(50,50,50);
+			rect(800,600,80,80,10);
+			noFill();
+			stroke(150,150,150);
+			strokeWeight(10);
+			ellipseMode(CENTER);
+			ellipse(840,640,40,40);
+			noStroke();
+			fill(150,150,150);
+			translate(840,640);
+			for(dos=0;dos<8;dos+=1){
+				rect(-8,-34,16,16);
+				rotate(PI/4);
+			}
+			resetMatrix();
 			if(playertemp.timesincedamagetaken>=60){
 				fill(150+abs(tick%180-90)/3,150+abs(tick%180-90)/3,255);
 			}
@@ -16235,6 +16567,18 @@ showdots[2]=0;
 				else{
 					helpscreen={active:0,help:0};
 				}
+				inventorysprites={};
+				gettraits();
+			}
+		}
+		if(!(mouselock)&mousePressed&cursorbox(800,880,600,680)){
+			mouselock=1;
+			if(mouseButton==LEFT){
+				if(options.loadAudio){sfx.click.play();}
+				invselect=['',-1];
+				tooltipcache[0]=-1;
+				inventory=4;
+				helpscreen={active:0,help:0};
 				inventorysprites={};
 				gettraits();
 			}
@@ -17121,7 +17465,7 @@ showdots[2]=0;
 	rectMode(CORNER);
 	textAlign(LEFT,CENTER);
 	}
-	if(inventory==2){
+	else if(inventory==2){
 		if(!(mousePressed||keyPressed)){
 			mouselock=0;
 		}
@@ -17335,7 +17679,7 @@ showdots[2]=0;
 		textFont(0,28);
 		text("Back",966,14,100,50);
 	}
-	if(inventory==3){
+	else if(inventory==3){
 		fill(20,0,20);
 		rect(0,0,1133,700);
 		fill(140,100,80);
@@ -17396,6 +17740,246 @@ showdots[2]=0;
 				}
 			}
 		}
+	}
+	else if(inventory==4){
+		if(!(mousePressed||keyPressed)){
+			mouselock=0;
+		}
+		fill(70,140,110);
+		rect(0,0,1133,700);
+		fill(255,180,0);
+		textFont(0,40);
+		text('Options',500,25);
+		textFont(0,30);
+		textAlign(CENTER);
+		
+		if(options.dmgindicators){
+			fill(0,255,0);
+		}
+		else{
+			fill(255,0,0);
+		}
+		rect(150,100,200,100,20);
+		fill(0,0,0);
+		text("Damage Indicators",150,130,200,100);
+		if(cursorbox(150,350,100,200)){
+			tooltipdraw={
+				type:0,
+				x:mouseX,
+				y:mouseY-100,
+				w:300,
+				h:200,
+				title:"Damage Indicators",
+				colors:0
+			};
+			if(options.dmgindicators){
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.dmgindicators=0;
+					player.options.dmgindicators=0;
+				}
+				tooltipdraw.tip="Click to disable damage numbers when hitting enemies.";
+			}
+			else{
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.dmgindicators=1;
+					player.options.dmgindicators=1;
+				}
+				tooltipdraw.tip="Click to enable damage numbers when hitting enemies.";
+			}
+		}
+		
+		if(options.autosave){
+			fill(0,255,0);
+		}
+		else{
+			fill(255,0,0);
+		}
+		rect(150,300,200,100,20);
+		fill(0,0,0);
+		text("Autosave",150,330,200,100);
+		if(cursorbox(150,350,300,400)){
+			tooltipdraw={
+				type:0,
+				x:mouseX,
+				y:mouseY-100,
+				w:300,
+				h:200,
+				title:"Autosave",
+				colors:0
+			};
+			if(options.autosave){
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.autosave=0;
+					player.options.autosave=0;
+				}
+				tooltipdraw.tip="Click to disable automatic saving.";
+			}
+			else{
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.autosave=1;
+					player.options.autosave=1;
+				}
+				tooltipdraw.tip="Click to enable automatic saving.";
+			}
+		}
+		
+		if(options.healthbars){
+			fill(0,255,0);
+		}
+		else{
+			fill(255,0,0);
+		}
+		rect(450,100,200,100,20);
+		fill(0,0,0);
+		text("Enemy Health Bars",450,130,200,100);
+		if(cursorbox(450,650,100,200)){
+			tooltipdraw={
+				type:0,
+				x:mouseX,
+				y:mouseY-100,
+				w:300,
+				h:200,
+				title:"Enemy Health Bars",
+				colors:0
+			};
+			if(options.healthbars){
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.healthbars=0;
+					player.options.healthbars=0;
+				}
+				tooltipdraw.tip="Click to disable health bars below enemies.";
+			}
+			else{
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.healthbars=1;
+					player.options.healthbars=1;
+				}
+				tooltipdraw.tip="Click to enable health bars below enemies.";
+			}
+		}
+		
+		if(options.nmehppanel){
+			fill(0,255,0);
+		}
+		else{
+			fill(255,0,0);
+		}
+		rect(450,300,200,100,20);
+		fill(0,0,0);
+		text("Enemy Status Panel",450,330,200,100);
+		if(cursorbox(450,650,300,400)){
+			tooltipdraw={
+				type:0,
+				x:mouseX,
+				y:mouseY-100,
+				w:300,
+				h:200,
+				title:"Enemy Status Panel",
+				colors:0
+			};
+			if(options.nmehppanel){
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.nmehppanel=0;
+					player.options.nmehppanel=0;
+				}
+				tooltipdraw.tip="Click to disable enemy health panel.";
+			}
+			else{
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.nmehppanel=1;
+					player.options.nmehppanel=1;
+				}
+				tooltipdraw.tip="Click to enable targetted enemy health panel.";
+			}
+		}
+		
+		if(options.light==2){
+			fill(0,255,0);
+		}
+		else if(options.light){
+			fill(50,150,50);
+		}
+		else{
+			fill(255,0,0);
+		}
+		rect(750,100,200,100,20);
+		fill(0,0,0);
+		text("Lighting Effects",750,130,200,100);
+		if(cursorbox(750,950,100,200)){
+			tooltipdraw={
+				type:0,
+				x:mouseX,
+				y:mouseY-100,
+				w:300,
+				h:200,
+				title:"Lighting Effects",
+				colors:0
+			};
+			if(options.light==2){
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.light=0;
+					player.options.light=0;
+				}
+				tooltipdraw.tip="Click to disable lighting effects.";
+			}
+			else if(options.light){
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.light=2;
+					player.options.light=2;
+				}
+				tooltipdraw.tip="Click to enable all lighting effects.";
+			}
+			else{
+				if(!(mouselock)&mousePressed){
+					if(options.loadAudio){sfx.click.play()};
+					mouselock=1;
+					options.light=1;
+					player.options.light=1;
+				}
+				tooltipdraw.tip="Click to enable light effects created by you.";
+			}
+		}
+		
+		fill(200,100,0);
+		if(cursorbox(925,1075,5,65)){
+			fill(255,175,50);
+			if(!(mouselock)&mousePressed){
+				mouselock=1;
+				if(mouseButton==LEFT){
+					if(options.loadAudio){sfx.click.play();}
+					tooltipcache[0]=-1;
+					inventory=1;
+					inventype=1;
+					invquicksell=0;
+					getinventorysprites();
+					helpscreen={active:0,help:0};
+				}
+			}
+		}
+		rect(925,5,150,60,30);
+		fill(0,0,100);
+		textFont(0,28);
+		text("Back",945,20,100,50);
 	}
 	}
 	if(toloadarea){
@@ -17846,6 +18430,7 @@ void mouseClicked(){
 					temp=loadStrings('player '+textinput+'.txt');
 					player=JSON.parse(temp[0]);
 					updateplayerdat();
+					options=player.options;
 					loadtraits();
 					recalstats();
 					getstances();
@@ -17879,6 +18464,7 @@ void mouseClicked(){
 					temp=loadStrings('player '+loadStrings("namecache.txt")[0]+'.txt');
 					player=JSON.parse(temp[0]);
 					updateplayerdat();
+					options=player.options;
 					loadtraits();
 					recalstats();
 					getstances();
@@ -17912,6 +18498,7 @@ void mouseClicked(){
 				player=importdata[0];
 					saveStrings("namecache.txt",[player.name,1]);
 				updateplayerdat();
+				options=player.options;
 				loadtraits();
 				recalstats();
 				getstances();
@@ -17946,6 +18533,21 @@ void mouseMoved(){
 	movemousef();
 }
 var updateplayerdat=function(){
+	if(!(player.options)){
+		player.options={
+			particles:2,
+			dmgindicators:1,
+			music:0.75,
+			sfx:1,
+			autosave:1,
+			healthbars:1,
+			loadAudio:1,
+			showmit:1,
+			frameskip:1,
+			light:2,
+			nmehppanel:1
+		};
+	}
 	if(player.keystonepassives){
 		player.keystonepassives=0;
 	}
