@@ -1,4 +1,4 @@
-var version="0.8.1c";
+var version="0.8.1d";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -1386,23 +1386,54 @@ var openhelpscreen=function(introkey){
 			}
 		}
 		else if(inventory==3){
-			helpscreen.help=function(){
-				fill(0,0,50,160);
-				rect(5,5,1123,790,40);
-				textAlign(CENTER,CENTER);
-				fill(255,255,255);
-				textFont(0,30);
-				text("Atlas Help",100,0,933,50);
-				
-				textFont(0,22);
-				fill(255,255,255,200);
-				text("This is a map of all the chartable areas you have discovered so far. Once you have killed enough enemies in normal areas, it will become unlocked. You may click on these to travel to the area. Completed areas appear blue (these no longer grant PP - although specific enemies may continue to). Completing an area also grants 1 keystone to use at the Infuser.",33,100,1100,600);
-				
-				textAlign(LEFT,TOP);
-				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
-				textFont(0,19);
-				text("Press H to toggle this help screen",820,30,500,50);
-				noStroke();
+			if(!(player.intro.atlasport)&player.enableintro&player.level<2){
+				player.intro.atlasport=1;
+				helpscreen.help=function(){
+					fill(0,0,50,160);
+					rect(5,5,1123,790,40);
+					textAlign(CENTER,CENTER);
+					fill(255,255,255);
+					textFont(0,30);
+					text("Atlas Help",100,0,933,50);
+					
+					translate(200,350);
+					fill(255,0,0);
+					rect(-15,abs(tick%60-30)-75,30,30);
+					triangle(-25,abs(tick%60-30)-50,25,abs(tick%60-30)-50,0,abs(tick%60-30)-30);
+					resetMatrix();
+					
+					textFont(0,22);
+					fill(255,255,255,200);
+					text("Click here to travel to the Plains.",33,150,600,150);
+					
+					text("This is a map of all the chartable areas you have discovered so far. Once you have killed enough enemies in normal areas, it will become unlocked. You may click on these to travel to the area. Completed areas appear blue (these no longer grant PP - although specific enemies may continue to). Completing an area also grants 1 keystone to use at the Infuser.",33,400,1100,200);
+					
+					textAlign(LEFT,TOP);
+					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+					textFont(0,19);
+					text("Press H to toggle this help screen",820,30,500,50);
+					noStroke();
+				}
+			}
+			else{
+				helpscreen.help=function(){
+					fill(0,0,50,160);
+					rect(5,5,1123,790,40);
+					textAlign(CENTER,CENTER);
+					fill(255,255,255);
+					textFont(0,30);
+					text("Atlas Help",100,0,933,50);
+					
+					textFont(0,22);
+					fill(255,255,255,200);
+					text("This is a map of all the chartable areas you have discovered so far. Once you have killed enough enemies in normal areas, it will become unlocked. You may click on these to travel to the area. Completed areas appear blue (these no longer grant PP - although specific enemies may continue to). Completing an area also grants 1 keystone to use at the Infuser.",33,100,1100,600);
+					
+					textAlign(LEFT,TOP);
+					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+					textFont(0,19);
+					text("Press H to toggle this help screen",820,30,500,50);
+					noStroke();
+				}
 			}
 		}
 		else{
@@ -5417,7 +5448,7 @@ var loadtraits=function(){
 		append(traitfuncs.overlay,function(){
 				if(render){
 					fill(60+abs(tick%200-100)/2,60+abs(tick%200-100)/2,255);
-					rect(825,245,playertemp.energyshield/(((plshp(1))*0.008+(plsre(1))*0.075)*playertemp.traits[12])*300,5+playertemp.traits[12]/5);fill(170,170,255);
+					rect(825,245,playertemp.energyshield/(((plshp(1))*0.006+(plsre(1))*0.075)*playertemp.traits[12])*300,5+playertemp.traits[12]/5);fill(170,170,255);
 					fill(0,0,200,200);
 					textFont(0,13);
 					text(round(playertemp.energyshield),950,245);
@@ -5429,11 +5460,11 @@ var loadtraits=function(){
 		append(traitfuncs.passives,function(){
 			if(playertemp.traits[12]>=10){
 				if(gametick%240==0){
-					playertemp.energising=((plshp(0.004))+(plsre(0.05))*playertemp.traits[12]-playertemp.energyshield)*(0.22+playertemp.traits[103]*0.03);
+					playertemp.energising=(((plshp(0.006))+(plsre(0.075)))*playertemp.traits[12]-playertemp.energyshield)*(0.22+playertemp.traits[103]*0.03);
 				}
 				if(gametick%240<60){
-					playertemp.energyshield=min(((plshp(1))*0.004+(plsre(1))*0.05)*playertemp.traits[12],playertemp.energyshield+playertemp.energising/60);
-					if(playertemp.energyshield<(plshp(1))*0.004+(plsre(1))*0.05*playertemp.traits[12]&tick%6==0){
+					playertemp.energyshield=min(((plshp(0.006))+(plsre(0.075)))*playertemp.traits[12],playertemp.energyshield+playertemp.energising/60);
+					if(playertemp.energyshield<((plshp(0.006))+(plsre(0.075)))*playertemp.traits[12]&tick%6==0){
 						append(particles,new createparticle(random(385,415),random(335,365),0,0,0,0,'circle','',10,-0.3,255,-15,130,130,255));
 					}
 				}
@@ -8159,6 +8190,12 @@ var getBiomeScripts=function(){
 			rect(400-playertemp.x,160-playertemp.y,40,10);
 			rect(400-playertemp.x,160-playertemp.y,10,40);}
 			
+			if(!(player.intro.atlas)&player.enableintro){
+				if(tick%3==0){
+					append(particles,new createparticle(random(-25,25),random(-25,25)-190,random(-2,2),random(-2,2),0,0,
+					'circle','',random(5,7),random(-0.2,0.2),random(160,220),random(-4,-3),255,255,150,1));
+				}
+			}
 			if(pow(playertemp.x,2)+pow(playertemp.y+190,2)<pow(42+player.size,2)){
 				playertemp.x-=playertemp.xvelo;
 				playertemp.y-=playertemp.yvelo;
