@@ -21,9 +21,9 @@ Zealot's Oath
 Spores
 [Passive] Getting hit releases {ox0c1} spores which deal {i0.35}-{i0.4} magic poison damage to enemies.
 Energy Shield
-[Passive] Generate {p0.004x0c1+r0.0004x0c1} energy shield per second, up to {h0.006x0c1+r0.075x0c1}. Recharge accelerates the longer you dont take damage (maximum bonus is 1200% [total: {p0.004x0c13+r0.0004x0c13}/sec] at 8 seconds). Each point in Shield Mastery accelerates recharge bonus by 10%.
+[Passive] Generate {p0.004x0c1+r0.0004x0c1+s0.0002x0c1} energy shield per second, up to {h0.004x0c1+r0.05x0c1+i0.03x0c1}. Recharge accelerates the longer you dont take damage (maximum bonus is 1200% [total: {p0.004x0c13+r0.0004x0c13+s0.0002x0c13}/sec] at 8 seconds). Each point in Shield Mastery accelerates recharge bonus by 10% (reaching 1200% at 4 seconds with 10 points in Shield Mastery).
 Shield Overload
-[Active] Instantly generates a {r0.0075x42c8+h0.001x42c8} point damage shield which decays over 6 seconds while doubling your Energy Shield recharge for 2 seconds, but reduces your mana regeneration by 64%, decaying over 8 seconds. 15 second cooldown. Each point in Shield Mastery reduces mana regeneration penalty by 10%. Can be used mid-action.
+[Active] Instantly generates a {r0.0075x42c8+h0.001x42c8} point damage shield which decays over 6 seconds while boosting your Energy Shield recharge by 1200% for 2 seconds (replacing normal recharge acceleration), but reduces your mana regeneration by 64%, decaying over 8 seconds. 20 second cooldown. Each point in Shield Mastery reduces mana regeneration penalty by 10%. Can be used mid-action.
 Roar
 [Active] Shout furiously, regaining 15% of your missing mana, stunning nearby enemies for up to 3 seconds while increasing your strength by {ox10c10}%, mana regeneration by 30%, and haste by 15%, all decaying over 10 seconds. 20 second cooldown. Can be used mid-action.
 Dash
@@ -191,11 +191,11 @@ Berserking
 An Acquired Taste
 [Passive] Deal {h0.01x0c1} additional magic damage on hit (modified by the attack's proc coefficient). Damage increases by 100% every second in combat, up to 4 times. These stacks decay twice per second if you haven't dealt damage in over 2 seconds. 
 Darknik Capacitor
-[Passive] Rotates between physical and magic shields every 5 seconds. While a shield is selected, you are immune to that damage type, but take {ox70c-10}% more damage from the other.
+[Passive] Alternates between physical and magic shields every 5 seconds. While a shield is selected, you are immune to that damage type, but take {ox70c-10}% more damage from the other.
 Critical Hit
 [Passive] Your hits have a {ox0c1}% chance to critically strike, dealing increased damage (100% increase without Critical Damage).
 Critical Damage
-[Passive] Critical Hits now deal {ox100c1}% increased damage.
+[Passive] Critical Hits deal {ox100c1}% increased damage.
 Titanium
 [Passive] Reduces physical damage taken by {ox8c2}%.
 Spectral
@@ -423,9 +423,9 @@ Reserved Mana
 Soul Inversion
 [Passive] Damage shields instead heal you based on its durability and duration (a 2 second shield will heal you for 100% of its durability). Healing instead shields you for 3 seconds. Your armor applies to magic damage instead of physical. Your resistance applies to physical damage instead of magic.
 Physical Augment
-[Passive] Adds {s0.01} physical damage (per 100% proc power) to hits.
+[Passive] Adds {s0.01x0c1+i0.01x0c1} physical damage (per 100% proc power) to hits.
 Magic Augment
-[Passive] Adds {i0.01} magic damage (per 100% proc power) to hits.
+[Passive] Adds {s0.01x0c1+i0.01x0c1} magic damage (per 100% proc power) to hits.
 Armor Penetration
 [Passive] Your damage ignores {ox0c1}% of the target's armor. (Stacks multiplicatively with other penetration bonuses.)
 Resistance Penetration

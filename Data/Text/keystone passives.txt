@@ -7,7 +7,7 @@ Pentakill
 Carnage
 Force
 Resilient Shell
-Spirit Guard
+Attuned Spirit
 Spirit Vengeance
 Health
 Health Regen
@@ -24,3 +24,5 @@ Aegis
 Unyielding
 Survivalist
 Immortality
+Tempered Flesh
+Rupture

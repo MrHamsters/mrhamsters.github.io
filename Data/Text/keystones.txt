@@ -393,7 +393,7 @@ Swiftness
 0
 20
 Augmented Strength
-+{ox0c3}% strength
++{ox0c3}% strength.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 16/3
@@ -403,7 +403,7 @@ Augmented Strength
 0
 20
 Augmented Intelligence
-+{ox0c3}% intelligence
++{ox0c3}% intelligence.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 17/3
@@ -413,7 +413,7 @@ Augmented Intelligence
 0
 20
 Augmented Mana
-+{ox0c2}% mana and mana regen
++{ox0c2}% mana and mana regen.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 14/2,15/2
@@ -423,7 +423,7 @@ Augmented Mana
 0
 20
 Augmented Health
-+{ox0c3}% health
++{ox0c3}% health.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 12/3
@@ -433,7 +433,7 @@ Augmented Health
 0
 20
 Augmented Health Regeneration
-+{ox0c3}% health regen
++{ox0c3}% health regen.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 13/3
@@ -443,7 +443,7 @@ Augmented Health Regeneration
 0
 20
 Augmented Armor
-+{ox0c3}% armor
++{ox0c3}% armor.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 18/3
@@ -453,7 +453,7 @@ Augmented Armor
 0
 20
 Augmented Resistance
-+{ox0c3}% resistance
++{ox0c3}% resistance.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 19/3
@@ -463,7 +463,7 @@ Augmented Resistance
 0
 20
 Augmented Mana
-+{ox0c2}% mana and mana regen
++{ox0c2}% mana and mana regen.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 14/2,15/2
@@ -483,7 +483,7 @@ Increases Omni Shell's barrier capacity by {ox0c3}%, recovery rate by {ox0c5}%, 
 0
 20
 Augmented Offense
-+{ox0c3}% strength and intelligence
++{ox0c3}% strength and intelligence.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 16/3,17/3
@@ -493,7 +493,7 @@ Augmented Offense
 0
 20
 Augmented Defense
-+{ox0c2}% health, health regen, armor, and resistance
++{ox0c2}% health, health regen, armor, and resistance.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 12/2,13/2,18/2,19/2,
@@ -503,7 +503,27 @@ Augmented Defense
 0
 20
 Augmented Mana
-+{ox0c2}% mana and mana regen
++{ox0c2}% mana and mana regen.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 14/2,15/2
+
+2
+2
+0
+10
+Tempered Flesh
+Your health takes {ox0c3}% less damage.
+0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+27/1
+
+3
+2
+0
+10
+Attuned Spirit
+Store up to 10 spirit charges from kills (+2) or when out of combat (+1 per second after 5 seconds). Taking a hit consumes a charge to reduce damage taken by {H0.005x0c1+ox0c0.27+ox0c0.054Po+lx0c0.03+lx0c0.0006Po}. If you have had no spirit charges in the past half second, gain {ox0c0.5}% haste and deal {ox0c1}% more damage.
+0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+10/1
