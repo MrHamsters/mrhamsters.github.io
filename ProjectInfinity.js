@@ -1,4 +1,4 @@
-var version="0.8.2test";
+var version="0.8.2";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -142,180 +142,182 @@ var dptemp=0;
 var menuscreentemp=[0,0,0,0];
 var nametemp=0;
 var loadassetscache=function(){
-	textFont(0,60);
-	fill(0,0,0,100);
-	rect(0,0,1133,700);
-	fill(255,150,0);
-	text("Loading game assets",300,200);
-	fill(0,0,0);
-	rect(400,350,300,100);
-	fill(255,150,0);
-	text("0/3",500,370);
-	if(options.loadAudio){
-		var bgmn='Title';
-		var bgm = new Howl({
-		  src: ['Data/Sound/music/title.ogg'],
-		  autoplay: true,
-		  loop: true,
-		  volume: options.music,
-		});
+		loadassetscache=function(){
+		textFont(0,60);
+		fill(0,0,0,100);
+		rect(0,0,1133,700);
+		fill(255,150,0);
+		text("Loading game assets",300,200);
+		fill(0,0,0);
+		rect(400,350,300,100);
+		fill(255,150,0);
+		text("0/3",500,370);
+		if(options.loadAudio){
+			var bgmn='Title';
+			var bgm = new Howl({
+			  src: ['Data/Sound/music/title.ogg'],
+			  autoplay: true,
+			  loop: true,
+			  volume: options.music,
+			});
+		}
+		fill(0,0,0);
+		rect(400,350,300,100);
+		fill(255,150,0);
+		text("1/3",500,370);
+		var sprites={
+			sword:loadShape('Data/Graphics/attack/sword.svg'),
+			shieldBash:loadShape('Data/Graphics/attack/shield bash.svg'),
+			arrow:loadShape('Data/Graphics/attack/arrow.svg'),
+			bow:loadShape('Data/Graphics/attack/bow.svg'),
+			lbow:loadShape('Data/Graphics/attack/bowloaded.svg'),
+			bubblewand:loadShape('Data/Graphics/attack/bubble wand.svg'),
+			bubble:loadShape('Data/Graphics/attack/bubble.svg'),
+			xbow:loadShape('Data/Graphics/attack/xbow.svg'),
+			bolt:loadShape('Data/Graphics/attack/bolt.svg'),
+			dariusaxe:loadShape('Data/Graphics/attack/darius axe.svg'),
+			demonpike:loadShape('Data/Graphics/attack/demonpike.svg'),
+			garensword:loadShape('Data/Graphics/attack/garen sword.svg'),
+			mordekaisermace:loadShape('Data/Graphics/attack/mordekaiser mace.svg'),
+			hp:loadShape('Data/Graphics/miscellaneous/hp.svg'),
+			hpregen:loadShape('Data/Graphics/miscellaneous/hpregen.svg'),
+			str:loadShape('Data/Graphics/miscellaneous/str.svg'),
+			intel:loadShape('Data/Graphics/miscellaneous/int.svg'),
+			armor:loadShape('Data/Graphics/miscellaneous/arm.svg'),
+			res:loadShape('Data/Graphics/miscellaneous/res.svg'),
+			mp:loadShape('Data/Graphics/miscellaneous/mp.svg'),
+			mpregen:loadShape('Data/Graphics/miscellaneous/mpregen.svg'),
+			passive:loadShape('Data/Graphics/miscellaneous/passive.svg'),
+			masterSword:loadShape('Data/Graphics/attack/master sword.svg'),
+			mswordbeam:loadShape('Data/Graphics/attack/master sword beam.svg'),
+			anvil:loadShape('Data/Graphics/miscellaneous/anvil.svg'),
+			rapier:loadShape('Data/Graphics/attack/rapier.svg'),
+			voidblast:loadShape('Data/Graphics/attack/voidblast.svg'),
+			voidstaff:loadShape('Data/Graphics/attack/void staff.svg'),
+			minigun:loadShape('Data/Graphics/attack/minigun.svg'),
+			boomerang:loadShape('Data/Graphics/attack/boomerang.svg'),
+			ancientfang:loadShape('Data/Graphics/attack/ancientFang.svg'),
+			energystaff:loadShape('Data/Graphics/attack/energyStaff.svg'),
+			stattrait:loadShape('Data/Graphics/miscellaneous/stat trait.svg'),
+			statkeystone:loadShape('Data/Graphics/miscellaneous/stat keystone.svg'),
+			power:loadShape('Data/Graphics/miscellaneous/power.svg'),
+			fortitude:loadShape('Data/Graphics/miscellaneous/fortitude.svg'),
+			omni:loadShape('Data/Graphics/miscellaneous/omni.svg'),
+			keystone:loadShape('Data/Graphics/miscellaneous/keystone.svg'),
+		};
+		fill(0,0,0);
+		rect(400,350,300,100);
+		fill(255,150,0);
+		text("2/3",500,370);
+		if(options.loadAudio){
+		var sfx={
+				hurt: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.3,}),
+				hurtpow: new Howl({ src: ['Data/Sound/sfx/hurt.ogg'],autoplay: false, loop: false,  volume: options.sfx*0.7,}),
+				hurtpow2: new Howl({src: ['Data/Sound/sfx/hurt.ogg'],  autoplay: false,  loop: false, volume: options.sfx*1,}),
+				hurt2: new Howl({  src: ['Data/Sound/sfx/hurt2.wav'], autoplay: false,loop: false, volume: options.sfx*0.6,}),
+				death: new Howl({src: ['Data/Sound/sfx/death.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				swing: new Howl({src: ['Data/Sound/sfx/swing.wav'], autoplay: false, loop: false,volume: options.sfx*0.65,}),
+				slice: new Howl({  src: ['Data/Sound/sfx/slice.wav'], autoplay: false,  loop: false,volume: options.sfx*0.55,}),
+				bong: new Howl({ src: ['Data/Sound/sfx/shield hit.wav'], autoplay: false,loop: false, volume: options.sfx*0.1,}),
+				bow: new Howl({ src: ['Data/Sound/sfx/bow.wav'], autoplay: false,loop: false, volume: options.sfx*0.7,}),
+				arrow: new Howl({src: ['Data/Sound/sfx/arrow.wav'], autoplay: false, loop: false,volume: options.sfx*0.7,}),
+				arrowhit: new Howl({ src: ['Data/Sound/sfx/arrow hit.wav'], autoplay: false, loop: false, volume: options.sfx*0.7,}),
+				shield: new Howl({src: ['Data/Sound/sfx/shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				pop: new Howl({src: ['Data/Sound/sfx/pop.wav'], autoplay: false,loop: false,volume: options.sfx*0.65,}),
+				water: new Howl({src: ['Data/Sound/sfx/water drop.wav'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
+				decimatec: new Howl({src: ['Data/Sound/sfx/decimateC.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				decimateh: new Howl({src: ['Data/Sound/sfx/decimateH.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				decimatem: new Howl({src: ['Data/Sound/sfx/decimateM.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				decimates: new Howl({src: ['Data/Sound/sfx/decimateS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				MoS:{start:new Howl({src: ['Data/Sound/sfx/MoSstart.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+					one:new Howl({src: ['Data/Sound/sfx/MoS1.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+					too:new Howl({src: ['Data/Sound/sfx/MoS2.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+					three:new Howl({src: ['Data/Sound/sfx/MoS3.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+					swing:new Howl({src: ['Data/Sound/sfx/MoSwing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				},
+				relicshield:new Howl({src: ['Data/Sound/sfx/relic shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				shieldoverload:new Howl({src: ['Data/Sound/sfx/shield overload.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				roar:new Howl({src: ['Data/Sound/sfx/roar.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				block:new Howl({src: ['Data/Sound/sfx/block.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				fullblock:new Howl({src: ['Data/Sound/sfx/full block.wav'], autoplay: false,loop: false,volume: options.sfx*0.15,}),
+				pswing:new Howl({src: ['Data/Sound/sfx/pswing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				pslice:new Howl({src: ['Data/Sound/sfx/pslice.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				focus:new Howl({src: ['Data/Sound/sfx/focus.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				sprint:new Howl({src: ['Data/Sound/sfx/sprint.wav'], autoplay: false,loop: false,volume: options.sfx*0.5,}),
+				mswordswing:new Howl({src: ['Data/Sound/sfx/master sword swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				mswordbeam:new Howl({src: ['Data/Sound/sfx/master sword beam.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				mswordhit:new Howl({src: ['Data/Sound/sfx/master sword hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				upgrade:new Howl({src: ['Data/Sound/sfx/upgrade.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				enchant:new Howl({src: ['Data/Sound/sfx/enchant.wav'], autoplay: false,loop: false,volume: options.sfx*0.4,}),
+				obliteration:new Howl({src: ['Data/Sound/sfx/obliteration.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				glacialwardcharge:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				glacialwardshatter:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				warp:new Howl({src: ['Data/Sound/sfx/warp.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				rapiersw:new Howl({src: ['Data/Sound/sfx/rapier swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.75,}),
+				voidbarrier:new Howl({src: ['Data/Sound/sfx/void barrier.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				voidbarrierr:new Howl({src: ['Data/Sound/sfx/void barrier release.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				voidblast:new Howl({src: ['Data/Sound/sfx/void blast.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				voidboom:new Howl({src: ['Data/Sound/sfx/void explosion.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				bomb:new Howl({src: ['Data/Sound/sfx/bomb.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				windslash:new Howl({src: ['Data/Sound/sfx/wind slash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				boomerang:new Howl({src: ['Data/Sound/sfx/boomerang.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				boomerangcatch:new Howl({src: ['Data/Sound/sfx/boomerang catch.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				SoH:new Howl({src: ['Data/Sound/sfx/SoH.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				SoHh:new Howl({src: ['Data/Sound/sfx/SoHh.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				freezeboomers:new Howl({src: ['Data/Sound/sfx/boomerang freeze.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				poison:new Howl({src: ['Data/Sound/sfx/poison.wav'], autoplay: false,loop: false,volume: options.sfx*0.03,}),
+				energystaff:new Howl({src: ['Data/Sound/sfx/energy bolt.wav'], autoplay: false,loop: false,volume: options.sfx*0.22,}),
+				energyh:new Howl({src: ['Data/Sound/sfx/energy hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.1,}),
+				dash:new Howl({src: ['Data/Sound/sfx/dash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				burn:new Howl({src: ['Data/Sound/sfx/burn.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				bleed:new Howl({src: ['Data/Sound/sfx/bleed.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				poisoned:new Howl({src: ['Data/Sound/sfx/poisoned.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				raining:new Howl({src: ['Data/Sound/sfx/rain.ogg'], autoplay: false,loop: true,volume: options.sfx*2,}),
+				plunge:new Howl({src: ['Data/Sound/sfx/plunge.wav'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
+				eldritch:new Howl({src: ['Data/Sound/sfx/eldritch.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				arcanereconstruction:new Howl({src: ['Data/Sound/sfx/heal.ogg'], autoplay: false,loop: false,volume: options.sfx*0.9,}),
+				prime:new Howl({src: ['Data/Sound/sfx/distortion.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
+				pdoor:new Howl({src: ['Data/Sound/sfx/warp.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
+				slash:new Howl({src: ['Data/Sound/sfx/slash.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				rapier:new Howl({src: ['Data/Sound/sfx/rapier.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				click:new Howl({src: ['Data/Sound/sfx/click.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				click2:new Howl({src: ['Data/Sound/sfx/click2.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				click3:new Howl({src: ['Data/Sound/sfx/click3.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				shrek:new Howl({src: ['Data/Sound/sfx/shrek.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				shrekdeath:new Howl({src: ['Data/Sound/sfx/shrek death.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				dashbig:new Howl({src: ['Data/Sound/sfx/dashbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				earthquake:new Howl({src: ['Data/Sound/sfx/earthquake.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				jumpbig:new Howl({src: ['Data/Sound/sfx/jumpbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				judgment:new Howl({src: ['Data/Sound/sfx/judgment.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				judgmenthit:new Howl({src: ['Data/Sound/sfx/judgmenthit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
+				cripplingsw:new Howl({src: ['Data/Sound/sfx/cripplingSwing.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				cripplingst:new Howl({src: ['Data/Sound/sfx/cripplingStrike.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				energyls:new Howl({src: ['Data/Sound/sfx/energyLS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				energylf:new Howl({src: ['Data/Sound/sfx/energyLF.ogg'], autoplay: false,loop: true,volume: options.sfx*0.8,}),
+				woodenshell:new Howl({src: ['Data/Sound/sfx/woodenshell.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				shattershield:new Howl({src: ['Data/Sound/sfx/shattershield.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+				aquabubble:new Howl({src: ['Data/Sound/sfx/aquabubble.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
+				aquabubbleburst:new Howl({src: ['Data/Sound/sfx/aquabubbleburst.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
+				etherknife:new Howl({src: ['Data/Sound/sfx/etherknife.ogg'], autoplay: false,loop: false,volume: options.sfx*0.1,}),
+				etherknifeh:new Howl({src: ['Data/Sound/sfx/etherknifehit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				ethercut:new Howl({src: ['Data/Sound/sfx/ethercut.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				incinerates:new Howl({src: ['Data/Sound/sfx/incineratestart.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				incineratel:new Howl({src: ['Data/Sound/sfx/incinerateloop.ogg'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				incineratec:new Howl({src: ['Data/Sound/sfx/incineratecharge.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
+				surge:new Howl({src: ['Data/Sound/sfx/surge.ogg'], autoplay: false,loop: false,volume: options.sfx*1.2,}),
+				surges:new Howl({src: ['Data/Sound/sfx/surgeshock.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				blizzards:new Howl({src: ['Data/Sound/sfx/blizzardstart.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,onend:function(){sfx.blizzardl.play()}}),
+				blizzardl:new Howl({src: ['Data/Sound/sfx/blizzard.ogg'], autoplay: false,loop: true,volume: options.sfx*1.5,}),
+				infernalstab:new Howl({src: ['Data/Sound/sfx/demon pike.wav'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				challengearena:new Howl({src: ['Data/Sound/sfx/challengearena.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
+				levelup:new Howl({src: ['Data/Sound/sfx/levelup.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				ksblock:new Howl({src: ['Data/Sound/sfx/passiveblock.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+		};
+		}
+		loadassetscache=0;
 	}
-	fill(0,0,0);
-	rect(400,350,300,100);
-	fill(255,150,0);
-	text("1/3",500,370);
-	var sprites={
-		sword:loadShape('Data/Graphics/attack/sword.svg'),
-		shieldBash:loadShape('Data/Graphics/attack/shield bash.svg'),
-		arrow:loadShape('Data/Graphics/attack/arrow.svg'),
-		bow:loadShape('Data/Graphics/attack/bow.svg'),
-		lbow:loadShape('Data/Graphics/attack/bowloaded.svg'),
-		bubblewand:loadShape('Data/Graphics/attack/bubble wand.svg'),
-		bubble:loadShape('Data/Graphics/attack/bubble.svg'),
-		xbow:loadShape('Data/Graphics/attack/xbow.svg'),
-		bolt:loadShape('Data/Graphics/attack/bolt.svg'),
-		dariusaxe:loadShape('Data/Graphics/attack/darius axe.svg'),
-		demonpike:loadShape('Data/Graphics/attack/demonpike.svg'),
-		garensword:loadShape('Data/Graphics/attack/garen sword.svg'),
-		mordekaisermace:loadShape('Data/Graphics/attack/mordekaiser mace.svg'),
-		hp:loadShape('Data/Graphics/miscellaneous/hp.svg'),
-		hpregen:loadShape('Data/Graphics/miscellaneous/hpregen.svg'),
-		str:loadShape('Data/Graphics/miscellaneous/str.svg'),
-		intel:loadShape('Data/Graphics/miscellaneous/int.svg'),
-		armor:loadShape('Data/Graphics/miscellaneous/arm.svg'),
-		res:loadShape('Data/Graphics/miscellaneous/res.svg'),
-		mp:loadShape('Data/Graphics/miscellaneous/mp.svg'),
-		mpregen:loadShape('Data/Graphics/miscellaneous/mpregen.svg'),
-		passive:loadShape('Data/Graphics/miscellaneous/passive.svg'),
-		masterSword:loadShape('Data/Graphics/attack/master sword.svg'),
-		mswordbeam:loadShape('Data/Graphics/attack/master sword beam.svg'),
-		anvil:loadShape('Data/Graphics/miscellaneous/anvil.svg'),
-		rapier:loadShape('Data/Graphics/attack/rapier.svg'),
-		voidblast:loadShape('Data/Graphics/attack/voidblast.svg'),
-		voidstaff:loadShape('Data/Graphics/attack/void staff.svg'),
-		minigun:loadShape('Data/Graphics/attack/minigun.svg'),
-		boomerang:loadShape('Data/Graphics/attack/boomerang.svg'),
-		ancientfang:loadShape('Data/Graphics/attack/ancientFang.svg'),
-		energystaff:loadShape('Data/Graphics/attack/energyStaff.svg'),
-		stattrait:loadShape('Data/Graphics/miscellaneous/stat trait.svg'),
-		statkeystone:loadShape('Data/Graphics/miscellaneous/stat keystone.svg'),
-		power:loadShape('Data/Graphics/miscellaneous/power.svg'),
-		fortitude:loadShape('Data/Graphics/miscellaneous/fortitude.svg'),
-		omni:loadShape('Data/Graphics/miscellaneous/omni.svg'),
-		keystone:loadShape('Data/Graphics/miscellaneous/keystone.svg'),
-	};
-	fill(0,0,0);
-	rect(400,350,300,100);
-	fill(255,150,0);
-	text("2/3",500,370);
-	if(options.loadAudio){
-	var sfx={
-			hurt: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.3,}),
-			hurtpow: new Howl({ src: ['Data/Sound/sfx/hurt.ogg'],autoplay: false, loop: false,  volume: options.sfx*0.7,}),
-			hurtpow2: new Howl({src: ['Data/Sound/sfx/hurt.ogg'],  autoplay: false,  loop: false, volume: options.sfx*1,}),
-			hurt2: new Howl({  src: ['Data/Sound/sfx/hurt2.wav'], autoplay: false,loop: false, volume: options.sfx*0.6,}),
-			death: new Howl({src: ['Data/Sound/sfx/death.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			swing: new Howl({src: ['Data/Sound/sfx/swing.wav'], autoplay: false, loop: false,volume: options.sfx*0.65,}),
-			slice: new Howl({  src: ['Data/Sound/sfx/slice.wav'], autoplay: false,  loop: false,volume: options.sfx*0.55,}),
-			bong: new Howl({ src: ['Data/Sound/sfx/shield hit.wav'], autoplay: false,loop: false, volume: options.sfx*0.1,}),
-			bow: new Howl({ src: ['Data/Sound/sfx/bow.wav'], autoplay: false,loop: false, volume: options.sfx*0.7,}),
-			arrow: new Howl({src: ['Data/Sound/sfx/arrow.wav'], autoplay: false, loop: false,volume: options.sfx*0.7,}),
-			arrowhit: new Howl({ src: ['Data/Sound/sfx/arrow hit.wav'], autoplay: false, loop: false, volume: options.sfx*0.7,}),
-			shield: new Howl({src: ['Data/Sound/sfx/shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			pop: new Howl({src: ['Data/Sound/sfx/pop.wav'], autoplay: false,loop: false,volume: options.sfx*0.65,}),
-			water: new Howl({src: ['Data/Sound/sfx/water drop.wav'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
-			decimatec: new Howl({src: ['Data/Sound/sfx/decimateC.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			decimateh: new Howl({src: ['Data/Sound/sfx/decimateH.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			decimatem: new Howl({src: ['Data/Sound/sfx/decimateM.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			decimates: new Howl({src: ['Data/Sound/sfx/decimateS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			MoS:{start:new Howl({src: ['Data/Sound/sfx/MoSstart.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-				one:new Howl({src: ['Data/Sound/sfx/MoS1.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-				too:new Howl({src: ['Data/Sound/sfx/MoS2.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-				three:new Howl({src: ['Data/Sound/sfx/MoS3.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-				swing:new Howl({src: ['Data/Sound/sfx/MoSwing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			},
-			relicshield:new Howl({src: ['Data/Sound/sfx/relic shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			shieldoverload:new Howl({src: ['Data/Sound/sfx/shield overload.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			roar:new Howl({src: ['Data/Sound/sfx/roar.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			block:new Howl({src: ['Data/Sound/sfx/block.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			fullblock:new Howl({src: ['Data/Sound/sfx/full block.wav'], autoplay: false,loop: false,volume: options.sfx*0.15,}),
-			pswing:new Howl({src: ['Data/Sound/sfx/pswing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			pslice:new Howl({src: ['Data/Sound/sfx/pslice.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			focus:new Howl({src: ['Data/Sound/sfx/focus.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-			sprint:new Howl({src: ['Data/Sound/sfx/sprint.wav'], autoplay: false,loop: false,volume: options.sfx*0.5,}),
-			mswordswing:new Howl({src: ['Data/Sound/sfx/master sword swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			mswordbeam:new Howl({src: ['Data/Sound/sfx/master sword beam.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			mswordhit:new Howl({src: ['Data/Sound/sfx/master sword hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			upgrade:new Howl({src: ['Data/Sound/sfx/upgrade.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			enchant:new Howl({src: ['Data/Sound/sfx/enchant.wav'], autoplay: false,loop: false,volume: options.sfx*0.4,}),
-			obliteration:new Howl({src: ['Data/Sound/sfx/obliteration.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
-			glacialwardcharge:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
-			glacialwardshatter:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
-			warp:new Howl({src: ['Data/Sound/sfx/warp.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			rapiersw:new Howl({src: ['Data/Sound/sfx/rapier swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.75,}),
-			voidbarrier:new Howl({src: ['Data/Sound/sfx/void barrier.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			voidbarrierr:new Howl({src: ['Data/Sound/sfx/void barrier release.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			voidblast:new Howl({src: ['Data/Sound/sfx/void blast.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			voidboom:new Howl({src: ['Data/Sound/sfx/void explosion.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			bomb:new Howl({src: ['Data/Sound/sfx/bomb.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			windslash:new Howl({src: ['Data/Sound/sfx/wind slash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
-			boomerang:new Howl({src: ['Data/Sound/sfx/boomerang.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			boomerangcatch:new Howl({src: ['Data/Sound/sfx/boomerang catch.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			SoH:new Howl({src: ['Data/Sound/sfx/SoH.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			SoHh:new Howl({src: ['Data/Sound/sfx/SoHh.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			freezeboomers:new Howl({src: ['Data/Sound/sfx/boomerang freeze.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			poison:new Howl({src: ['Data/Sound/sfx/poison.wav'], autoplay: false,loop: false,volume: options.sfx*0.03,}),
-			energystaff:new Howl({src: ['Data/Sound/sfx/energy bolt.wav'], autoplay: false,loop: false,volume: options.sfx*0.22,}),
-			energyh:new Howl({src: ['Data/Sound/sfx/energy hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.1,}),
-			dash:new Howl({src: ['Data/Sound/sfx/dash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			burn:new Howl({src: ['Data/Sound/sfx/burn.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
-			bleed:new Howl({src: ['Data/Sound/sfx/bleed.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
-			poisoned:new Howl({src: ['Data/Sound/sfx/poisoned.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
-			raining:new Howl({src: ['Data/Sound/sfx/rain.ogg'], autoplay: false,loop: true,volume: options.sfx*2,}),
-			plunge:new Howl({src: ['Data/Sound/sfx/plunge.wav'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
-			eldritch:new Howl({src: ['Data/Sound/sfx/eldritch.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			arcanereconstruction:new Howl({src: ['Data/Sound/sfx/heal.ogg'], autoplay: false,loop: false,volume: options.sfx*0.9,}),
-			prime:new Howl({src: ['Data/Sound/sfx/distortion.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
-			pdoor:new Howl({src: ['Data/Sound/sfx/warp.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
-			slash:new Howl({src: ['Data/Sound/sfx/slash.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			rapier:new Howl({src: ['Data/Sound/sfx/rapier.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			click:new Howl({src: ['Data/Sound/sfx/click.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-			click2:new Howl({src: ['Data/Sound/sfx/click2.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-			click3:new Howl({src: ['Data/Sound/sfx/click3.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-			shrek:new Howl({src: ['Data/Sound/sfx/shrek.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			shrekdeath:new Howl({src: ['Data/Sound/sfx/shrek death.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			dashbig:new Howl({src: ['Data/Sound/sfx/dashbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			earthquake:new Howl({src: ['Data/Sound/sfx/earthquake.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			jumpbig:new Howl({src: ['Data/Sound/sfx/jumpbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			judgment:new Howl({src: ['Data/Sound/sfx/judgment.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
-			judgmenthit:new Howl({src: ['Data/Sound/sfx/judgmenthit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
-			cripplingsw:new Howl({src: ['Data/Sound/sfx/cripplingSwing.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			cripplingst:new Howl({src: ['Data/Sound/sfx/cripplingStrike.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-			energyls:new Howl({src: ['Data/Sound/sfx/energyLS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-			energylf:new Howl({src: ['Data/Sound/sfx/energyLF.ogg'], autoplay: false,loop: true,volume: options.sfx*0.8,}),
-			woodenshell:new Howl({src: ['Data/Sound/sfx/woodenshell.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			shattershield:new Howl({src: ['Data/Sound/sfx/shattershield.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
-			aquabubble:new Howl({src: ['Data/Sound/sfx/aquabubble.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
-			aquabubbleburst:new Howl({src: ['Data/Sound/sfx/aquabubbleburst.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
-			etherknife:new Howl({src: ['Data/Sound/sfx/etherknife.ogg'], autoplay: false,loop: false,volume: options.sfx*0.1,}),
-			etherknifeh:new Howl({src: ['Data/Sound/sfx/etherknifehit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
-			ethercut:new Howl({src: ['Data/Sound/sfx/ethercut.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			incinerates:new Howl({src: ['Data/Sound/sfx/incineratestart.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			incineratel:new Howl({src: ['Data/Sound/sfx/incinerateloop.ogg'], autoplay: false,loop: true,volume: options.sfx*1,}),
-			incineratec:new Howl({src: ['Data/Sound/sfx/incineratecharge.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
-			surge:new Howl({src: ['Data/Sound/sfx/surge.ogg'], autoplay: false,loop: false,volume: options.sfx*1.2,}),
-			surges:new Howl({src: ['Data/Sound/sfx/surgeshock.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-			blizzards:new Howl({src: ['Data/Sound/sfx/blizzardstart.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,onend:function(){sfx.blizzardl.play()}}),
-			blizzardl:new Howl({src: ['Data/Sound/sfx/blizzard.ogg'], autoplay: false,loop: true,volume: options.sfx*1.5,}),
-			infernalstab:new Howl({src: ['Data/Sound/sfx/demon pike.wav'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-			challengearena:new Howl({src: ['Data/Sound/sfx/challengearena.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
-			levelup:new Howl({src: ['Data/Sound/sfx/levelup.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-			ksblock:new Howl({src: ['Data/Sound/sfx/passiveblock.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
-	};
-	}
-	loadassetscache=0;
 }
 var movemousef=function(){
 	getmenugameload();
