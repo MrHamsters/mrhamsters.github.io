@@ -1,4 +1,4 @@
-var version="0.8.2";
+var version="0.8.2test";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -141,8 +141,7 @@ var temp=0;
 var dptemp=0;
 var menuscreentemp=[0,0,0,0];
 var nametemp=0;
-var movemousef=function(){
-	getmenugameload();
+var loadassetscache=function(){
 	textFont(0,60);
 	fill(0,0,0,100);
 	rect(0,0,1133,700);
@@ -316,6 +315,10 @@ var movemousef=function(){
 			ksblock:new Howl({src: ['Data/Sound/sfx/passiveblock.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
 	};
 	}
+	loadassetscache=0;
+}
+var movemousef=function(){
+	getmenugameload();
 	movemousef=function(){};
 }
 var getmenugameload=function(){
@@ -18496,7 +18499,10 @@ if(dialog){
 	dialog();
 }
 }
-	
+if(loadassetscache){
+	loadassetscache();
+}
+
 }
 void mouseClicked(){
 	if(loaded==0){
