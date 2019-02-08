@@ -1,4 +1,4 @@
-var version="0.8.1d";
+var version="0.8.2";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -45,7 +45,9 @@ var options={
 	frameskip:1,
 	//0: no light effects  1: player light effects  2: all light effects
 	light:2,
-	nmehppanel:1
+	nmehppanel:1,
+	//0: normal converttext  1: show stat scaling rather than #s
+	scaling:0
 };
 var dmgixtra="";
 var drawcap=8;
@@ -138,14 +140,209 @@ var enemies;
 var temp=0;
 var dptemp=0;
 var menuscreentemp=[0,0,0,0];
+var nametemp=0;
+var canstart=0;
+var bgmn=0;
+var bgm;
+var sprites;
+var sfx;
+var loadassetscache=function(){
+	textFont(0,60);
+	fill(0,0,0,100);
+	rect(0,0,1133,700);
+	fill(255,150,0);
+	text("Loading game assets",300,200);
+	fill(0,0,0);
+	rect(400,350,300,100);
+	fill(255,150,0);
+	text("0/3",500,370);
+		loadassetscache=function(){
+		textFont(0,60);
+		fill(0,0,0,100);
+		rect(0,0,1133,700);
+		fill(255,150,0);
+		text("Loading game assets",300,200);
+		fill(0,0,0);
+		rect(400,350,300,100);
+		fill(255,150,0);
+		text("0/3",500,370);
+		if(options.loadAudio){
+			bgmn='Title';
+			bgm = new Howl({
+			  src: ['Data/Sound/music/title.ogg'],
+			  autoplay: true,
+			  loop: true,
+			  volume: options.music,
+			});
+		}
+		fill(0,0,0);
+		rect(400,350,300,100);
+		fill(255,150,0);
+		text("1/3",500,370);
+		sprites={
+			sword:loadShape('Data/Graphics/attack/sword.svg'),
+			shieldBash:loadShape('Data/Graphics/attack/shield bash.svg'),
+			arrow:loadShape('Data/Graphics/attack/arrow.svg'),
+			bow:loadShape('Data/Graphics/attack/bow.svg'),
+			lbow:loadShape('Data/Graphics/attack/bowloaded.svg'),
+			bubblewand:loadShape('Data/Graphics/attack/bubble wand.svg'),
+			bubble:loadShape('Data/Graphics/attack/bubble.svg'),
+			xbow:loadShape('Data/Graphics/attack/xbow.svg'),
+			bolt:loadShape('Data/Graphics/attack/bolt.svg'),
+			dariusaxe:loadShape('Data/Graphics/attack/darius axe.svg'),
+			demonpike:loadShape('Data/Graphics/attack/demonpike.svg'),
+			garensword:loadShape('Data/Graphics/attack/garen sword.svg'),
+			mordekaisermace:loadShape('Data/Graphics/attack/mordekaiser mace.svg'),
+			hp:loadShape('Data/Graphics/miscellaneous/hp.svg'),
+			hpregen:loadShape('Data/Graphics/miscellaneous/hpregen.svg'),
+			str:loadShape('Data/Graphics/miscellaneous/str.svg'),
+			intel:loadShape('Data/Graphics/miscellaneous/int.svg'),
+			armor:loadShape('Data/Graphics/miscellaneous/arm.svg'),
+			res:loadShape('Data/Graphics/miscellaneous/res.svg'),
+			mp:loadShape('Data/Graphics/miscellaneous/mp.svg'),
+			mpregen:loadShape('Data/Graphics/miscellaneous/mpregen.svg'),
+			passive:loadShape('Data/Graphics/miscellaneous/passive.svg'),
+			masterSword:loadShape('Data/Graphics/attack/master sword.svg'),
+			mswordbeam:loadShape('Data/Graphics/attack/master sword beam.svg'),
+			anvil:loadShape('Data/Graphics/miscellaneous/anvil.svg'),
+			rapier:loadShape('Data/Graphics/attack/rapier.svg'),
+			voidblast:loadShape('Data/Graphics/attack/voidblast.svg'),
+			voidstaff:loadShape('Data/Graphics/attack/void staff.svg'),
+			minigun:loadShape('Data/Graphics/attack/minigun.svg'),
+			boomerang:loadShape('Data/Graphics/attack/boomerang.svg'),
+			ancientfang:loadShape('Data/Graphics/attack/ancientFang.svg'),
+			energystaff:loadShape('Data/Graphics/attack/energyStaff.svg'),
+			stattrait:loadShape('Data/Graphics/miscellaneous/stat trait.svg'),
+			statkeystone:loadShape('Data/Graphics/miscellaneous/stat keystone.svg'),
+			power:loadShape('Data/Graphics/miscellaneous/power.svg'),
+			fortitude:loadShape('Data/Graphics/miscellaneous/fortitude.svg'),
+			omni:loadShape('Data/Graphics/miscellaneous/omni.svg'),
+			keystone:loadShape('Data/Graphics/miscellaneous/keystone.svg'),
+		};
+		fill(0,0,0);
+		rect(400,350,300,100);
+		fill(255,150,0);
+		text("2/3",500,370);
+		if(options.loadAudio){
+		sfx={
+				hurt: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.3,}),
+				hurtpow: new Howl({ src: ['Data/Sound/sfx/hurt.ogg'],autoplay: false, loop: false,  volume: options.sfx*0.7,}),
+				hurtpow2: new Howl({src: ['Data/Sound/sfx/hurt.ogg'],  autoplay: false,  loop: false, volume: options.sfx*1,}),
+				hurt2: new Howl({  src: ['Data/Sound/sfx/hurt2.wav'], autoplay: false,loop: false, volume: options.sfx*0.6,}),
+				death: new Howl({src: ['Data/Sound/sfx/death.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				swing: new Howl({src: ['Data/Sound/sfx/swing.wav'], autoplay: false, loop: false,volume: options.sfx*0.65,}),
+				slice: new Howl({  src: ['Data/Sound/sfx/slice.wav'], autoplay: false,  loop: false,volume: options.sfx*0.55,}),
+				bong: new Howl({ src: ['Data/Sound/sfx/shield hit.wav'], autoplay: false,loop: false, volume: options.sfx*0.1,}),
+				bow: new Howl({ src: ['Data/Sound/sfx/bow.wav'], autoplay: false,loop: false, volume: options.sfx*0.7,}),
+				arrow: new Howl({src: ['Data/Sound/sfx/arrow.wav'], autoplay: false, loop: false,volume: options.sfx*0.7,}),
+				arrowhit: new Howl({ src: ['Data/Sound/sfx/arrow hit.wav'], autoplay: false, loop: false, volume: options.sfx*0.7,}),
+				shield: new Howl({src: ['Data/Sound/sfx/shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				pop: new Howl({src: ['Data/Sound/sfx/pop.wav'], autoplay: false,loop: false,volume: options.sfx*0.65,}),
+				water: new Howl({src: ['Data/Sound/sfx/water drop.wav'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
+				decimatec: new Howl({src: ['Data/Sound/sfx/decimateC.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				decimateh: new Howl({src: ['Data/Sound/sfx/decimateH.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				decimatem: new Howl({src: ['Data/Sound/sfx/decimateM.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				decimates: new Howl({src: ['Data/Sound/sfx/decimateS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				MoS:{start:new Howl({src: ['Data/Sound/sfx/MoSstart.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+					one:new Howl({src: ['Data/Sound/sfx/MoS1.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+					too:new Howl({src: ['Data/Sound/sfx/MoS2.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+					three:new Howl({src: ['Data/Sound/sfx/MoS3.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+					swing:new Howl({src: ['Data/Sound/sfx/MoSwing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				},
+				relicshield:new Howl({src: ['Data/Sound/sfx/relic shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				shieldoverload:new Howl({src: ['Data/Sound/sfx/shield overload.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				roar:new Howl({src: ['Data/Sound/sfx/roar.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				block:new Howl({src: ['Data/Sound/sfx/block.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				fullblock:new Howl({src: ['Data/Sound/sfx/full block.wav'], autoplay: false,loop: false,volume: options.sfx*0.15,}),
+				pswing:new Howl({src: ['Data/Sound/sfx/pswing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				pslice:new Howl({src: ['Data/Sound/sfx/pslice.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				focus:new Howl({src: ['Data/Sound/sfx/focus.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				sprint:new Howl({src: ['Data/Sound/sfx/sprint.wav'], autoplay: false,loop: false,volume: options.sfx*0.5,}),
+				mswordswing:new Howl({src: ['Data/Sound/sfx/master sword swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				mswordbeam:new Howl({src: ['Data/Sound/sfx/master sword beam.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				mswordhit:new Howl({src: ['Data/Sound/sfx/master sword hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				upgrade:new Howl({src: ['Data/Sound/sfx/upgrade.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				enchant:new Howl({src: ['Data/Sound/sfx/enchant.wav'], autoplay: false,loop: false,volume: options.sfx*0.4,}),
+				obliteration:new Howl({src: ['Data/Sound/sfx/obliteration.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				glacialwardcharge:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				glacialwardshatter:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				warp:new Howl({src: ['Data/Sound/sfx/warp.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				rapiersw:new Howl({src: ['Data/Sound/sfx/rapier swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.75,}),
+				voidbarrier:new Howl({src: ['Data/Sound/sfx/void barrier.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				voidbarrierr:new Howl({src: ['Data/Sound/sfx/void barrier release.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				voidblast:new Howl({src: ['Data/Sound/sfx/void blast.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				voidboom:new Howl({src: ['Data/Sound/sfx/void explosion.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				bomb:new Howl({src: ['Data/Sound/sfx/bomb.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				windslash:new Howl({src: ['Data/Sound/sfx/wind slash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				boomerang:new Howl({src: ['Data/Sound/sfx/boomerang.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				boomerangcatch:new Howl({src: ['Data/Sound/sfx/boomerang catch.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				SoH:new Howl({src: ['Data/Sound/sfx/SoH.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				SoHh:new Howl({src: ['Data/Sound/sfx/SoHh.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				freezeboomers:new Howl({src: ['Data/Sound/sfx/boomerang freeze.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				poison:new Howl({src: ['Data/Sound/sfx/poison.wav'], autoplay: false,loop: false,volume: options.sfx*0.03,}),
+				energystaff:new Howl({src: ['Data/Sound/sfx/energy bolt.wav'], autoplay: false,loop: false,volume: options.sfx*0.22,}),
+				energyh:new Howl({src: ['Data/Sound/sfx/energy hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.1,}),
+				dash:new Howl({src: ['Data/Sound/sfx/dash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				burn:new Howl({src: ['Data/Sound/sfx/burn.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				bleed:new Howl({src: ['Data/Sound/sfx/bleed.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				poisoned:new Howl({src: ['Data/Sound/sfx/poisoned.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				raining:new Howl({src: ['Data/Sound/sfx/rain.ogg'], autoplay: false,loop: true,volume: options.sfx*2,}),
+				plunge:new Howl({src: ['Data/Sound/sfx/plunge.wav'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
+				eldritch:new Howl({src: ['Data/Sound/sfx/eldritch.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
+				arcanereconstruction:new Howl({src: ['Data/Sound/sfx/heal.ogg'], autoplay: false,loop: false,volume: options.sfx*0.9,}),
+				prime:new Howl({src: ['Data/Sound/sfx/distortion.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
+				pdoor:new Howl({src: ['Data/Sound/sfx/warp.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
+				slash:new Howl({src: ['Data/Sound/sfx/slash.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				rapier:new Howl({src: ['Data/Sound/sfx/rapier.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				click:new Howl({src: ['Data/Sound/sfx/click.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				click2:new Howl({src: ['Data/Sound/sfx/click2.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				click3:new Howl({src: ['Data/Sound/sfx/click3.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				shrek:new Howl({src: ['Data/Sound/sfx/shrek.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				shrekdeath:new Howl({src: ['Data/Sound/sfx/shrek death.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				dashbig:new Howl({src: ['Data/Sound/sfx/dashbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				earthquake:new Howl({src: ['Data/Sound/sfx/earthquake.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				jumpbig:new Howl({src: ['Data/Sound/sfx/jumpbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				judgment:new Howl({src: ['Data/Sound/sfx/judgment.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				judgmenthit:new Howl({src: ['Data/Sound/sfx/judgmenthit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
+				cripplingsw:new Howl({src: ['Data/Sound/sfx/cripplingSwing.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				cripplingst:new Howl({src: ['Data/Sound/sfx/cripplingStrike.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				energyls:new Howl({src: ['Data/Sound/sfx/energyLS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				energylf:new Howl({src: ['Data/Sound/sfx/energyLF.ogg'], autoplay: false,loop: true,volume: options.sfx*0.8,}),
+				woodenshell:new Howl({src: ['Data/Sound/sfx/woodenshell.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				shattershield:new Howl({src: ['Data/Sound/sfx/shattershield.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+				aquabubble:new Howl({src: ['Data/Sound/sfx/aquabubble.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
+				aquabubbleburst:new Howl({src: ['Data/Sound/sfx/aquabubbleburst.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
+				etherknife:new Howl({src: ['Data/Sound/sfx/etherknife.ogg'], autoplay: false,loop: false,volume: options.sfx*0.15,}),
+				etherknifeh:new Howl({src: ['Data/Sound/sfx/etherknifehit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.45,}),
+				ethercut:new Howl({src: ['Data/Sound/sfx/ethercut.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				incinerates:new Howl({src: ['Data/Sound/sfx/incineratestart.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				incineratel:new Howl({src: ['Data/Sound/sfx/incinerateloop.ogg'], autoplay: false,loop: true,volume: options.sfx*1,}),
+				incineratec:new Howl({src: ['Data/Sound/sfx/incineratecharge.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
+				surge:new Howl({src: ['Data/Sound/sfx/surge.ogg'], autoplay: false,loop: false,volume: options.sfx*1.2,}),
+				surges:new Howl({src: ['Data/Sound/sfx/surgeshock.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				blizzards:new Howl({src: ['Data/Sound/sfx/blizzardstart.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,onend:function(){sfx.blizzardl.play()}}),
+				blizzardl:new Howl({src: ['Data/Sound/sfx/blizzard.ogg'], autoplay: false,loop: true,volume: options.sfx*1.5,}),
+				infernalstab:new Howl({src: ['Data/Sound/sfx/demon pike.wav'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
+				challengearena:new Howl({src: ['Data/Sound/sfx/challengearena.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
+				levelup:new Howl({src: ['Data/Sound/sfx/levelup.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
+				ksblock:new Howl({src: ['Data/Sound/sfx/passiveblock.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+		};
+		}
+		loadassetscache=0;
+		canstart=1;
+	}
+}
 var movemousef=function(){
-	movemousef=function(){};
 	getmenugameload();
+	movemousef=function(){};
 }
 var getmenugameload=function(){
 	if(loadStrings('player '+loadStrings("namecache.txt")[0]+'.txt')){
 		menuscreentemp[0]=1;
 		menuscreentemp[1]=JSON.parse(loadStrings('player '+loadStrings("namecache.txt")[0]+'.txt')[0]).level;
+		nametemp=JSON.parse(loadStrings('player '+loadStrings("namecache.txt")[0]+'.txt')[0]).name;
 	}
 }
 var winfocus=1;
@@ -1452,7 +1649,7 @@ var openhelpscreen=function(introkey){
 				text("-Left click to use the weapon in your left hand.",140,150,500,50);
 				text("-Right click to use the weapon in your right hand.",140,180,500,50);
 				text("-Hold CTRL and click to change stance (if that weapon has different ones).",140,210,500,50);
-				text("   Use with caution: your browser will most likely try to do unwanted things (i.e. CTRL + W will try to close the game).",140,255,500,50);
+				text("Use with caution: your browser will most likely try to do unwanted things (i.e. CTRL + W will try to close the game).",170,255,470,50);
 				text("-I or ESCAPE to open inventory",140,315,500,50);
 				text("-F or UP (arrow key) to interact with things, such as structures in the nexus and portals.",140,345,530,50);
 				fill(200,170,100,200);
@@ -2919,6 +3116,7 @@ var getloot=function(f){
 	stemp=0;
 	if(enemies[f].ppv-player.record.enemies[biomedata[8][enemies[f].sprite][0]]*enemies[f].ppd>0){
 		player.pp+=enemies[f].ppv-player.record.enemies[biomedata[8][enemies[f].sprite][0]]*enemies[f].ppd;
+		player.record.pp.enemies+=enemies[f].ppv-player.record.enemies[biomedata[8][enemies[f].sprite][0]]*enemies[f].ppd;
 		stemp=enemies[f].ppv-player.record.enemies[biomedata[8][enemies[f].sprite][0]]*enemies[f].ppd;
 	}
 	player.record.enemies[biomedata[8][enemies[f].sprite][0]]+=1;
@@ -2926,6 +3124,7 @@ var getloot=function(f){
 		for(ppvfs=0;ppvfs<enemies[f].soulv;ppvfs+=1){
 			if(player.record.biomes[player.biomeID]<biomedata[18]){
 				player.pp+=0.05*(biomedata[18]-player.record.biomes[player.biomeID]);
+				player.record.pp.areas+=0.05*(biomedata[18]-player.record.biomes[player.biomeID]);
 				stemp+=0.05*(biomedata[18]-player.record.biomes[player.biomeID]);
 			}
 			player.record.biomes[player.biomeID]+=1;
@@ -3352,6 +3551,7 @@ var levelup=function(){
 		player.level+=1;
 		player.xpr=round(100*pow(1.1,player.level-1));
 		player.pp+=(player.level-player.lvpprew)*500;
+		player.record.pp.levels+=(player.level-player.lvpprew)*500;
 		player.lvpprew=player.level;
 		if(player.autoanvil&player.sp>=5){
 			if(player.inventory.LH){
@@ -3758,17 +3958,17 @@ var loadkeystoneps=function(){
 			if(!(playertemp.omnicannon)){
 				playertemp.omnicannon=0;
 			}
-			if(playertemp.omnicannon<210-18*playertemp.keystonepassives[9]){
+			if(playertemp.omnicannon<120-10.8*playertemp.keystonepassives[2]){
 				playertemp.omnicannon+=player.haste*playertemp.haste;
-				if(playertemp.keystonepassives[9]>0){
+				/*if(playertemp.keystonepassives[9]>0){
 					playertemp.omnicannon+=player.haste*playertemp.haste;
-				}
+				}*/
 			}
 		});
 		append(keystonefuncs.passives,function(){
 			if(mousePressed&mouseButton==LEFT&(!(input[8]))){
-				if(playertemp.omnicannon>=210-18*playertemp.keystonepassives[9]&player.mp>=1){
-					player.mp-=1;
+				if(playertemp.omnicannon>=120-10.8*playertemp.keystonepassives[2]&player.mp>=0.2){
+					player.mp-=0.2;
 					playertemp.omnicannon=0;
 					append(objects,{
 						type:'projectile',
@@ -3883,24 +4083,61 @@ var loadkeystoneps=function(){
 					playertemp.guard=0;
 				}
 				if(options.loadAudio){
-					if(pdmg+mdmg>0){
-						sfx.ksblock.play();
-					}
-					else{
-						sfx.ksblock.play();
-						dmgsound=0;
+					if(sfxstock.ksblock>0){
+						sfxstock.ksblock-=1;
+						if(pdmg+mdmg>0){
+							sfx.ksblock.play();
+						}
+						else{
+							sfx.ksblock.play();
+							dmgsound=0;
+						}
 					}
 				}
 			}
 		});
 	}
+	if(playertemp.keystonepassives[27]>0){
+		append(keystonefuncs.damagetakenpa,function(){
+			pdmg*=1-playertemp.traits[27]*0.03;
+			mdmg*=1-playertemp.traits[27]*0.03;
+		});
+	}
 	if(playertemp.keystonepassives[10]>0){
 		append(keystonefuncs.passives,function(){
+			if(!(playertemp.spiritrage)){
+				playertemp.spiritrage=0;
+			}
+			if(!(playertemp.spiritragea)){
+				playertemp.spiritragea=0;
+			}
 			if(!(playertemp.spiritguard)){
 				playertemp.spiritguard=0;
+				playertemp.spiritrage=30;
 			}
-			if(player.biomeID==1){
-				playertemp.spiritguard=10;
+			if(!(playertemp.spiritguardg)){
+				playertemp.spiritguardg=0;
+			}
+			if(playertemp.timesincedamagetaken>=300&playertemp.timesincedamagedealt>=300&playertemp.timesincehittaken>=300){
+				playertemp.spiritguardg+=1;
+				if(playertemp.spiritguardg>=60){
+					playertemp.spiritguardg-=60;
+					playertemp.spiritguard=min(10,playertemp.spiritguard+1);
+				}
+			}
+			else{
+				playertemp.spiritguardg=0;
+			}
+			if(playertemp.spiritrage>0){
+				playertemp.spiritrage-=1;
+				if(playertemp.spiritragea<playertemp.keystonepassives[10]/2){
+					playertemp.haste+=playertemp.keystonepassives[10]/2-playertemp.spiritragea;
+					playertemp.spiritragea+=playertemp.keystonepassives[10]/2-playertemp.spiritragea;
+				}
+				if(playertemp.spiritrage<=0){
+					playertemp.haste-=playertemp.spiritragea;
+					playertemp.spiritragea=0;
+				}
 			}
 		});
 		append(keystonefuncs.overlay,function(){
@@ -3913,12 +4150,19 @@ var loadkeystoneps=function(){
 					ellipse(840+rsg*30,210,8,8);
 				}
 			}
+			else{
+				ellipseMode(CENTER);
+				fill(150,150,150);
+				ellipse(830+abs(tick%600-300),210,13,13);
+				fill(255,0,0);
+				ellipse(830+abs(tick%600-300),210,11,11);
+			}
 		});
 		append(keystonefuncs.damagetakenpm,function(){
 			if(pdmg+mdmg>0&willhit){
 				if(playertemp.spiritguard>0){
 					playertemp.spiritguard-=1;
-					stemp=((3+player.level/3)*(1+player.passives[2]/50))+(plshp(1))/100;
+					stemp=(((0.27+player.level*0.03)*(1+player.passives[2]/50))+(plshp(0.005)))*playertemp.keystonepassives[10];
 					if(pdmg>stemp){
 						pdmg-=stemp;
 						stemp=0;
@@ -3938,9 +4182,10 @@ var loadkeystoneps=function(){
 				}
 			}
 		});
-		append(keystonefuncs.damagedealtpostmit,function(){
-			if((pdmg+mdmg)>=nmelvsc(enemies[index].lv)*25&willhit){
-				playertemp.spiritguard=min(10,playertemp.spiritguard+1);
+		append(keystonefuncs.damagedealt,function(){
+			if(playertemp.spiritrage>0){
+				pdmg*=1+playertemp.keystonepassives[10]/100;
+				mdmg*=1+playertemp.keystonepassives[10]/100;
 			}
 		});
 		append(keystonefuncs.onkill,function(){
@@ -4168,14 +4413,14 @@ var loadtraits=function(){
 	if(playertemp.traits[213]>0){
 		append(traitfuncs.damagedealt,function(){
 			if(willhit){
-				pdmg+=plsst(procc*playertemp.traits[213]/100);
+				pdmg+=plsst(procc*playertemp.traits[213]/100)+plsin(procc*playertemp.traits[213]/100);
 			}
 		});
 	}
 	if(playertemp.traits[214]>0){
 		append(traitfuncs.damagedealt,function(){
 			if(willhit){
-				mdmg+=plsin(procc*playertemp.traits[214]/100);
+				mdmg+=plsst(procc*playertemp.traits[214]/100)+plsin(procc*playertemp.traits[214]/100);
 			}
 		});
 	}
@@ -5125,7 +5370,10 @@ var loadtraits=function(){
 					playertemp.empoweredparry=0;
 					pdmg*=0.1;
 					mdmg*=0.1;
-					sfx.fullblock.play();
+					if(sfxstock.block>0){
+						sfxstock.block-=1;
+						sfx.fullblock.play();
+					}
 				}
 			}
 		}
@@ -5229,12 +5477,15 @@ var loadtraits=function(){
 					playertemp.guard=0;
 				}
 				if(willhit&options.loadAudio){
-					if(pdmg+mdmg>0){
-						sfx.block.play();
-					}
-					else{
-						sfx.fullblock.play();
-						dmgsound=0;
+					if(sfxstock.block>0){
+						sfxstock.block-=1;
+						if(pdmg+mdmg>0){
+							sfx.block.play();
+						}
+						else{
+							sfx.fullblock.play();
+							dmgsound=0;
+						}
 					}
 				}
 			}
@@ -5330,12 +5581,15 @@ var loadtraits=function(){
 					playertemp.guard=0;
 				}
 				if(options.loadAudio){
-					if(pdmg+mdmg>0){
-						sfx.block.play();
-					}
-					else{
-						sfx.fullblock.play();
-						dmgsound=0;
+					if(sfxstock.block>0){
+						sfxstock.block-=1;
+						if(pdmg+mdmg>0){
+							sfx.block.play();
+						}
+						else{
+							sfx.fullblock.play();
+							dmgsound=0;
+						}
 					}
 				}
 			}
@@ -5432,23 +5686,27 @@ var loadtraits=function(){
 			if(!(playertemp.energyshield)){
 				playertemp.energyshield=0;
 			}
+			playertemp.energyshieldmax=((plshp(0.004))+(plsre(0.05))+plsin(0.03))*playertemp.traits[12];
+			playertemp.energyshieldrec=((plshr(0.004))+(plsre(0.0004))+plsst(0.002))*playertemp.traits[12]/60;
 			stemp=1;
 			if(playertemp.shieldoverload>0){
 				playertemp.shieldoverload-=1;
-				stemp*=2;
-			}
-			if(playertemp.traits[40]>0){
-				stemp*=min(8,(playertemp.timesincedamagetaken*(1+playertemp.traits[40]/10))/60)+1;
+				stemp=12;
 			}
 			else{
-				stemp*=min(8,playertemp.timesincedamagetaken/60)+1;
+				if(playertemp.traits[40]>0){
+					stemp*=min(12,(playertemp.timesincedamagetaken*(1+playertemp.traits[40]/10))/40)+1;
+				}
+				else{
+					stemp*=min(12,playertemp.timesincedamagetaken/40)+1;
+				}
 			}
-			playertemp.energyshield=min(((plshp(0.006))+(plsre(0.075)))*playertemp.traits[12],playertemp.energyshield+((plshr(0.004))+(plsre(0.0004)))*stemp*playertemp.traits[12]/60);
+			playertemp.energyshield=min(playertemp.energyshieldmax,playertemp.energyshield+(playertemp.energyshieldrec*stemp));
 		});
 		append(traitfuncs.overlay,function(){
 				if(render){
 					fill(60+abs(tick%200-100)/2,60+abs(tick%200-100)/2,255);
-					rect(825,245,playertemp.energyshield/(((plshp(1))*0.006+(plsre(1))*0.075)*playertemp.traits[12])*300,5+playertemp.traits[12]/5);fill(170,170,255);
+					rect(825,245,playertemp.energyshield/playertemp.energyshieldmax*300,5+playertemp.traits[12]/5);fill(170,170,255);
 					fill(0,0,200,200);
 					textFont(0,13);
 					text(round(playertemp.energyshield),950,245);
@@ -5460,11 +5718,11 @@ var loadtraits=function(){
 		append(traitfuncs.passives,function(){
 			if(playertemp.traits[12]>=10){
 				if(gametick%240==0){
-					playertemp.energising=(((plshp(0.006))+(plsre(0.075)))*playertemp.traits[12]-playertemp.energyshield)*(0.22+playertemp.traits[103]*0.03);
+					playertemp.energising=(playertemp.energyshieldmax-playertemp.energyshield)*(0.22+playertemp.traits[103]*0.03);
 				}
 				if(gametick%240<60){
-					playertemp.energyshield=min(((plshp(0.006))+(plsre(0.075)))*playertemp.traits[12],playertemp.energyshield+playertemp.energising/60);
-					if(playertemp.energyshield<((plshp(0.006))+(plsre(0.075)))*playertemp.traits[12]&tick%6==0){
+					playertemp.energyshield=min(playertemp.energyshieldmax,playertemp.energyshield+playertemp.energising/60);
+					if(playertemp.energyshield<playertemp.energyshieldmax&tick%6==0){
 						append(particles,new createparticle(random(385,415),random(335,365),0,0,0,0,'circle','',10,-0.3,255,-15,130,130,255));
 					}
 				}
@@ -6748,8 +7006,8 @@ var equiptooltip=function(slot,bagnum){
 					type:0,
 					x:mouseX,
 					y:mouseY-100,
-					w:300,
-					h:300,
+					w:500,
+					h:500,
 					title:"Attack: ",
 					tip:converttext(attacktt[itemdata[player.inventory.bag[bagnum].id*10+2]],0),
 					colors:0
@@ -6777,8 +7035,8 @@ var equiptooltip=function(slot,bagnum){
 					type:0,
 					x:mouseX,
 					y:mouseY-100,
-					w:450,
-					h:450,
+					w:500,
+					h:500,
 					title:"Attack: ",
 					tip:converttext(attacktt[itemdata[player.inventory[slot].id*10+2]],0),
 					colors:0
@@ -7414,10 +7672,10 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				if(player.mp>plsmp(0.4)){
 					manadmg=0;
 					if(playertemp.traits[10]>0){
-						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp*playertemp.traits[5])/2500)),(plsin(0.001)+plshp(0.002)+plsst(min(0.0015,0.0002*playertemp.traits[10])))];
+						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp(1)*playertemp.traits[5])/2500)),(plsin(0.001)+plshp(0.002)+plsst(min(0.0015,0.0002*playertemp.traits[10])))];
 					}
 					else{
-						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp*playertemp.traits[5])/2500)),(plsin(0.001)+plshp(0.002))];
+						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp(1)*playertemp.traits[5])/2500)),(plsin(0.001)+plshp(0.002))];
 					}
 					if(player.mp-plsmp(0.4)>pdmg*(1-stemp[0])/stemp[1]){
 						player.mp-=pdmg*(1-stemp[0])/stemp[1];
@@ -7425,8 +7683,8 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 						pdmg*=stemp[0];
 					}
 					else{
-						pdmg-=(player.mp-plsmp(0.1))*stemp[1];
-						manadmg+=(player.mp-plsmp(0.1))*stemp[1];
+						pdmg-=(player.mp-plsmp(0.4))*stemp[1];
+						manadmg+=(player.mp-plsmp(0.4))*stemp[1];
 						player.mp=plsmp(0.4);
 					}
 					if(player.mp-plsmp(0.4)>mdmg*(1-stemp[0])/stemp[1]){
@@ -7435,11 +7693,11 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 						mdmg*=stemp[0];
 					}
 					else{
-						mdmg-=(player.mp-plsmp(0.1))*stemp[1];
-						manadmg+=(player.mp-plsmp(0.1))*stemp[1];
+						mdmg-=(player.mp-plsmp(0.4))*stemp[1];
+						manadmg+=(player.mp-plsmp(0.4))*stemp[1];
 						player.mp=plsmp(0.4);
 					}
-					if(willhit){
+					if(willhit&(pdmg+mdmg)>0){
 						append(particles,new createparticle(775,340,0,2,0,0,'text',"-"+round(manadmg*10)/10,22,0,255,-4,0,0,200));
 					}
 				}
@@ -7459,27 +7717,30 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 			}
 			
 			if(pdmg+mdmg>0){
-				losthp+=100*(pdmg+mdmg)/((plshp(1)));
+				losthp+=150*(pdmg+mdmg)/((plshp(1)));
 				player.hp-=pdmg+mdmg;
 			}
 			if(willhit){
 				if(options.loadAudio){
 					if(dmgsound){
-						if(pdmg+mdmg>0){
-							if(pdmg+mdmg>(plshp(1))/8){
-								if(pdmg+mdmg>(plshp(1))/3){
-									sfx.hurtpow2.play();
+						if(sfxstock.hurt>0){
+							sfxstock.hurt-=1;
+							if(pdmg+mdmg>0){
+								if(pdmg+mdmg>(plshp(1))/8){
+									if(pdmg+mdmg>(plshp(1))/3){
+										sfx.hurtpow2.play();
+									}
+									else{
+										sfx.hurtpow.play();
+									}
 								}
 								else{
-									sfx.hurtpow.play();
+									sfx.hurt.play();
 								}
 							}
 							else{
-								sfx.hurt.play();
+								sfx.hurt2.play();
 							}
-						}
-						else{
-							sfx.hurt2.play();
 						}
 					}
 				}
@@ -7837,7 +8098,7 @@ var convergingdialog={
 											{
 												answer:"Thanks",
 												effect:function(){
-													player.record.quests[1]=1;
+													player.record.quests.start=1;
 													player.sp+=1;
 													dialog=0;
 													cinematic[0]=0;
@@ -7855,7 +8116,7 @@ var convergingdialog={
 											{
 												answer:"(Say nothing)",
 												effect:function(){
-													player.record.quests[1]=1;
+													player.record.quests.start=1;
 													dialog=0;
 													cinematic[0]=0;
 													dialoga=0;
@@ -7903,7 +8164,7 @@ var convergingdialog={
 											{
 												answer:"Thanks",
 												effect:function(){
-													player.record.quests[1]=1;
+													player.record.quests.start=1;
 													player.sp+=1;
 													dialog=0;
 													cinematic[0]=0;
@@ -7921,7 +8182,7 @@ var convergingdialog={
 											{
 												answer:"(Say nothing)",
 												effect:function(){
-													player.record.quests[1]=1;
+													player.record.quests.start=1;
 													dialog=0;
 													cinematic[0]=0;
 													dialoga=0;
@@ -7969,7 +8230,7 @@ var convergingdialog={
 											{
 												answer:"Thanks",
 												effect:function(){
-													player.record.quests[1]=1;
+													player.record.quests.start=1;
 													player.sp+=1;
 													dialog=0;
 													cinematic[0]=0;
@@ -7987,7 +8248,7 @@ var convergingdialog={
 											{
 												answer:"(Say nothing)",
 												effect:function(){
-													player.record.quests[1]=1;
+													player.record.quests.start=1;
 													dialog=0;
 													cinematic[0]=0;
 													dialoga=0;
@@ -8035,7 +8296,7 @@ var convergingdialog={
 											{
 												answer:"Thanks",
 												effect:function(){
-													player.record.quests[1]=1;
+													player.record.quests.start=1;
 													player.sp+=1;
 													dialog=0;
 													cinematic[0]=0;
@@ -8053,7 +8314,7 @@ var convergingdialog={
 											{
 												answer:"(Say nothing)",
 												effect:function(){
-													player.record.quests[1]=1;
+													player.record.quests.start=1;
 													dialog=0;
 													cinematic[0]=0;
 													dialoga=0;
@@ -8084,15 +8345,15 @@ var getBiomeScripts=function(){
 	killquests=new Array();
 	//Intro
 	if(player.biomeID==1){
-		if(!(player.record.quests[1])){
+		if(!(player.record.quests.start)){
 			if(player.level<2){
-				player.record.quests[1]=0;
+				player.record.quests.start=0;
 			}
 			else{
-				player.record.quests[1]=1;
+				player.record.quests.start=1;
 			}
 		}
-		if(player.record.quests[1]<1){
+		if(player.record.quests.start<1){
 			cinematic[0]=="dialog";
 			dialoga=1;
 			dialog=function(){
@@ -8121,12 +8382,12 @@ var getBiomeScripts=function(){
 	}
 	//Nature Shard
 	if(player.biomeID==4){
-		if(!(player.record.quests[2])){
-			player.record.quests[2]=0;
+		if(!(player.record.quests.infuser)){
+			player.record.quests.infuser=0;
 		}
-		if(player.record.quests[2]<1){
+		if(player.record.quests.infuser<1){
 			append(killquests,{name:"Nature Crystals",run:function(){
-				player.record.quests[2]=1;
+				player.record.quests.infuser=1;
 				append(particles,new createparticle(350,300,0,-0.3,0,0,'text','Found Nature Shard! Return to the Infuser to repair it.',25,0,255,-1.5,255,255,100));
 				killquests.splice(kq,1);
 				kq-=1;
@@ -8254,7 +8515,7 @@ var getBiomeScripts=function(){
 				rect(400-playertemp.x,-30-playertemp.y,70,40);
 				fill(100,55,0);
 				rect(390-playertemp.x,-25-playertemp.y,40,22);
-				if(player.record.bosses[1]>0){
+				if(player.record.quests.shrek>0){
 					fill(60,35,0);
 					rect(417-playertemp.x,-28-playertemp.y,5,25);
 					fill(170,170,170);
@@ -8382,7 +8643,7 @@ var getBiomeScripts=function(){
 							}
 						}
 					}
-					else if(player.record.quests[4]){
+					else if(player.record.quests.resetmerchant){
 						dialog=function(){
 							sdialogb({
 								speaker:"Reset Merchant",
@@ -8506,7 +8767,7 @@ var getBiomeScripts=function(){
 									{
 										answer:"(Leave)",
 										effect:function(){
-											player.record.quests[4]=1;
+											player.record.quests.resetmerchant=1;
 											dialog=0;
 											cinematic[0]=0;
 											dialoga=0;
@@ -8522,7 +8783,7 @@ var getBiomeScripts=function(){
 			if(render){ellipseMode(CENTER);
 			fill(80,120,70);
 			triangle(190-playertemp.x,-30-playertemp.y,210-playertemp.x,-30-playertemp.y,200-playertemp.x,-10-playertemp.y);
-			if(player.record.quests[2]>=2){
+			if(player.record.quests.infuser>=2){
 				triangle(190-playertemp.x,30-playertemp.y,210-playertemp.x,30-playertemp.y,200-playertemp.x,10-playertemp.y);
 			}
 			triangle(170-playertemp.x,10-playertemp.y,170-playertemp.x,-10-playertemp.y,190-playertemp.x,-playertemp.y);
@@ -8536,7 +8797,7 @@ var getBiomeScripts=function(){
 			line(220-playertemp.x,-playertemp.y*/
 			noStroke();
 			}
-			if(player.record.quests[2]==1){
+			if(player.record.quests.infuser==1){
 				if(tick%3==0){
 					append(particles,new createparticle(random(-25,25)-200,random(-25,25)-350,random(-2,2),random(-2,2),0,0,
 					'circle','',random(5,7),random(-0.2,0.2),random(160,220),random(-4,-3),255,255,150,1));
@@ -8544,7 +8805,7 @@ var getBiomeScripts=function(){
 			}
 			if(!(cinematic||dialoga)){
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<-175&playertemp.x>-225&playertemp.y<-325&playertemp.y>-375){		
-					if(player.record.quests[2]<1){
+					if(player.record.quests.infuser<1){
 						cinematic[0]=="dialog";
 						dialoga=1;
 						dialog=function(){
@@ -8564,7 +8825,7 @@ var getBiomeScripts=function(){
 							});
 						}
 					}
-					else if(player.record.quests[2]<2){
+					else if(player.record.quests.infuser<2){
 						cinematic[0]=="dialog";
 						dialoga=1;
 						dialog=function(){
@@ -8576,7 +8837,7 @@ var getBiomeScripts=function(){
 										answer:"(Insert Shard of Nature)",
 										effect:function(){
 												if(options.loadAudio){sfx.upgrade.play();}
-												player.record.quests[2]=2;
+												player.record.quests.infuser=2;
 												dialog=0;
 												cinematic[0]=0;
 												dialoga=0;
@@ -8800,8 +9061,11 @@ var getBiomeScripts=function(){
 							ellipse(challengearena.x-playertemp.x+400,challengearena.y-playertemp.y+350,1370,1370);
 							noStroke();
 							if(pow(playertemp.x-challengearena.x,2)+pow(playertemp.y-challengearena.y,2)>pow(700,2)||!(player.biomeID==terraineffects[n].bid)||playertemp.inBossFight==1){
-								for(rae=0;rae<enemies.length;rae+=1){
-									enemies[rae].x+=9999;
+								if(!(playertemp.inBossFight)){
+									enemies=new Array(biomedata[7]);
+									for(rae=0;rae<enemies.length;rae+=1){
+										defaultenemy(rae,450);
+									}
 								}
 								append(particles,new createparticle(terraineffects[n].x,terraineffects[n].y,0,0,0,0,'circle','',2025,-40,2,2,190,140,0,1));
 								player.xp+=round((challengearena.souls/10+max(0,(challengearena.souls-1000)/10))*(pow(1.1,min(player.level,biomedata[9]+floor(challengearena.souls/100)))));
@@ -8863,8 +9127,9 @@ var getBiomeScripts=function(){
 				append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,2,100,-2,80,80,0,1));
 			}
 			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
-				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
-					if(player.record.quests[3]==1){
+				if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+					portallock=1;
+					if(player.record.quests.shardofpurity==1){
 						playertemp.lastarea=player.biomeID;
 						player.biomeID=16;
 						playertemp.x=0;
@@ -9056,9 +9321,10 @@ var getBiomeScripts=function(){
 								//Defeat boss
 								bosshpbar=-1;
 								if(options.loadAudio){sfx.shrekdeath.play();}
-								if(!(player.record.bosses[1])){
-									player.record.bosses[1]=1;
+								if(!(player.record.quests.shrek)){
+									player.record.quests.shrek=1;
 									player.pp+=10000;
+									player.record.pp.bosses+=10000;
 									cinematic[0]="dialog";
 									dialoga=1;
 									mouselock=1;
@@ -9089,7 +9355,8 @@ var getBiomeScripts=function(){
 										append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,0,90,0,1));
 									}
 									if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
-										if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+										if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+											portallock=1;
 											playertemp.inBossFight=0;
 											playertemp.lastarea=-1;
 											loadArea();
@@ -9381,8 +9648,8 @@ var getBiomeScripts=function(){
 	}
 	//Shard of Purity
 	if(player.biomeID==15){
-		if(!(player.record.quests[3])){
-			player.record.quests[3]=0;
+		if(!(player.record.quests.shardofpurity)){
+			player.record.quests.shardofpurity=0;
 				append(stateffectsg,{name:'shard of purity',x:random(-1500,1500),y:random(-1500,1500),tick:0,run:function(){
 					fill(0,255,100);
 					ellipseMode(CENTER);
@@ -9399,10 +9666,10 @@ var getBiomeScripts=function(){
 						append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',5,1,200,-2,0,255,120,1));
 					}
 					if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(10+player.size,2)){
-						player.record.quests[3]=1;
+						player.record.quests.shardofpurity=1;
 						append(particles,new createparticle(400,200,0,-0.1,0,0,'text','Found the Shard of Purity! This should allow you to enter the Wastelands.',22,0,255,-0.8,255,255,100));
 					}
-					if(!(player.biomeID==15)||player.record.quests[3]==1){
+					if(!(player.biomeID==15)||player.record.quests.shardofpurity==1){
 						stateffectsg.splice(n,1);
 						n-=1;
 					}
@@ -9874,71 +10141,142 @@ var grabstatforct=function(rawtext,cvar){
 }
 var converttext=function(rawtext,cvar){
 	cctext="";
-	for(gttc=0;gttc<rawtext.length;gttc+=1){
-		if(rawtext.substr(gttc,1)=="{"){
-			gttc+=1;
-			stemp=["",0];
-			while(!(rawtext.substr(gttc,1)=="}")){
-				stemp[0]="";
-				if(rawtext.substr(gttc,1)=="h"){
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0]*(plshp(1));
+	if(options.scaling){
+		for(gttc=0;gttc<rawtext.length;gttc+=1){
+			if(rawtext.substr(gttc,1)=="{"){
+				gttc+=1;
+				stemp=["",0];
+				while(!(rawtext.substr(gttc,1)=="}")){
+					stemp[0]="";
+					if(rawtext.substr(gttc,1)=="h"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plshp(1));
+					}
+					if(rawtext.substr(gttc,1)=="H"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*player.maxhp;
+					}
+					if(rawtext.substr(gttc,1)=="p"){
+						gttc+=1;
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plshr(1));
+					}
+					if(rawtext.substr(gttc,1)=="s"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsst(1));
+					}
+					if(rawtext.substr(gttc,1)=="i"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsin(1));
+					}
+					if(rawtext.substr(gttc,1)=="a"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsar(1));
+					}
+					if(rawtext.substr(gttc,1)=="r"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsre(1));
+					}
+					if(rawtext.substr(gttc,1)=="m"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsmp(1));
+					}
+					if(rawtext.substr(gttc,1)=="o"){
+						stemp[0]=1;
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0];
+					}
+					if(rawtext.substr(gttc,1)=="l"){
+						stemp[0]=player.level;
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0];
+					}
+					if(rawtext.substr(gttc,1)=="+"){
+						gttc+=1;
+					}
 				}
-				if(rawtext.substr(gttc,1)=="H"){
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0]*player.maxhp;
-				}
-				if(rawtext.substr(gttc,1)=="p"){
-					gttc+=1;
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0]*(plshr(1));
-				}
-				if(rawtext.substr(gttc,1)=="s"){
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0]*(plsst(1));
-				}
-				if(rawtext.substr(gttc,1)=="i"){
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0]*(plsin(1));
-				}
-				if(rawtext.substr(gttc,1)=="a"){
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0]*(plsar(1));
-				}
-				if(rawtext.substr(gttc,1)=="r"){
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0]*(plsre(1));
-				}
-				if(rawtext.substr(gttc,1)=="m"){
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0]*(plsmp(1));
-				}
-				if(rawtext.substr(gttc,1)=="o"){
-					stemp[0]=1;
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0];
-				}
-				if(rawtext.substr(gttc,1)=="l"){
-					stemp[0]=player.level;
-					grabstatforct(rawtext,cvar);
-					stemp[1]+=stemp[0];
-				}
-				if(rawtext.substr(gttc,1)=="+"){
-					gttc+=1;
-				}
-			}
-			if(stemp[1]>=10){
+				if(stemp[1]>=10){
 					cctext+=round(stemp[1]);
-			}
-			else if(stemp[1]>=1){
+				}
+				else if(stemp[1]>=1){
 					cctext+=round(stemp[1]*10)/10;
+				}
+				else{
+					cctext+=round(stemp[1]*100)/100;
+				}
 			}
 			else{
-					cctext+=round(stemp[1]*100)/100;
+				cctext+=rawtext.substr(gttc,1);
 			}
 		}
-		else{
-			cctext+=rawtext.substr(gttc,1);
+	}
+	else{
+		for(gttc=0;gttc<rawtext.length;gttc+=1){
+			if(rawtext.substr(gttc,1)=="{"){
+				gttc+=1;
+				stemp=["",0];
+				while(!(rawtext.substr(gttc,1)=="}")){
+					stemp[0]="";
+					if(rawtext.substr(gttc,1)=="h"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plshp(1));
+					}
+					if(rawtext.substr(gttc,1)=="H"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*player.maxhp;
+					}
+					if(rawtext.substr(gttc,1)=="p"){
+						gttc+=1;
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plshr(1));
+					}
+					if(rawtext.substr(gttc,1)=="s"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsst(1));
+					}
+					if(rawtext.substr(gttc,1)=="i"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsin(1));
+					}
+					if(rawtext.substr(gttc,1)=="a"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsar(1));
+					}
+					if(rawtext.substr(gttc,1)=="r"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsre(1));
+					}
+					if(rawtext.substr(gttc,1)=="m"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsmp(1));
+					}
+					if(rawtext.substr(gttc,1)=="o"){
+						stemp[0]=1;
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0];
+					}
+					if(rawtext.substr(gttc,1)=="l"){
+						stemp[0]=player.level;
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0];
+					}
+					if(rawtext.substr(gttc,1)=="+"){
+						gttc+=1;
+					}
+				}
+				if(stemp[1]>=10){
+					cctext+=round(stemp[1]);
+				}
+				else if(stemp[1]>=1){
+					cctext+=round(stemp[1]*10)/10;
+				}
+				else{
+					cctext+=round(stemp[1]*100)/100;
+				}
+			}
+			else{
+				cctext+=rawtext.substr(gttc,1);
+			}
 		}
 	}
 	return(cctext);
@@ -10006,15 +10344,7 @@ var traitfuncs={
 	onhit:new Array(),
 	whenhit:new Array()
 };
-if(options.loadAudio){
-	var bgmn='Title';
-var bgm = new Howl({
-  src: ['Data/Sound/music/title.ogg'],
-  autoplay: true,
-  loop: true,
-  volume: options.music,
-});
-}
+
 var nmeonhit=function(effect,chance,power,duration){
 	if(chance>=random(0,100)){
 		if(effect==1){
@@ -11550,7 +11880,7 @@ append(doaction,function(lv,hand){
 					dir:playertemp.action.dir,
 					x:playertemp.x,
 					y:playertemp.y,
-					shieldval:((plsar(0.01))+(plshp(0.025)+(plsre(0.0005)))*(1+traitpow/10)),
+					shieldval:((plsar(0.01))+(plshp(0.025)+(plsre(0.005)))*(1+traitpow/10)),
 					pdmgmin:(plsst(10))+(plsar(4)),
 					pdmgmax:(plsst(13))+(plsar(5)),
 					mdmgmin:(plsin(10))+(plsre(4)),
@@ -14088,19 +14418,20 @@ append(doaction,function(lv,hand){
 					}
 				}
 			}
-			if(hits>1){
-				for(i=0;i<enemies.length;i+=1){
-					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
-						damage("enemies",i,random((plsst(7)+plshp(0.2)),(plsst(8)+plshp(0.24))),0,1,1,"melee","player",0.3,["slash"]);
-						if(options.loadAudio){sfx.judgmenthit.play();}
+			if(hits>0){
+				if(options.loadAudio){sfx.judgmenthit.play();}
+				if(hits>1){
+					for(i=0;i<enemies.length;i+=1){
+						if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
+							damage("enemies",i,random((plsst(7)+plshp(0.2)),(plsst(8)+plshp(0.24))),0,1,1,"melee","player",0.3,["slash"]);
+						}
 					}
 				}
-			}
-			else{
-				for(i=0;i<enemies.length;i+=1){
-					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
-						damage("enemies",i,random((plsst(7)+plshp(0.2))*1.45,(plsst(8)+plshp(0.24))*1.45),0,1,1,"melee","player",0.4,["slash"]);
-						if(options.loadAudio){sfx.judgmenthit.play();}
+				else{
+					for(i=0;i<enemies.length;i+=1){
+						if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(60+enemies[i].size,2)){
+							damage("enemies",i,random((plsst(7)+plshp(0.2))*1.45,(plsst(8)+plshp(0.24))*1.45),0,1,1,"melee","player",0.4,["slash"]);
+						}
 					}
 				}
 			}
@@ -14180,9 +14511,16 @@ append(doaction,function(lv,hand){
 				mdmgmax:(plsin(6)),
 				armorE:1,
 				resE:1,
+				ds:2,
 				procc:0.16,
 				properties:["arcane","slash"],
 				hits:new Array(999),
+				onhit:function(i){
+					objects[n].ds-=1;
+					if(objects[n].ds<=0){
+						objects[n].sound=0;
+					}
+				},
 				run:function(){
 					objects[n].size+=0.4;
 					if(!(objects[n].phase)){
@@ -14199,13 +14537,16 @@ append(doaction,function(lv,hand){
 								if(objects[n].cutsfx){
 									if(options.loadAudio){sfx.ethercut.play();}
 								}
+								playertemp.etherealknivesreactivatesfx=2;
 								if(!(objects[n].hitsfx)){
 									objects[n].sound=0;
 								}
 								objects[n].paused=0;
 								objects[n].phase=1;
 								objects[n].duration=10;
+								objects[n].ds=4;
 								objects[n].fast=4;
+								objects[n].sound=sfx.etherknifeh;
 								objects[n].speed=44;
 								objects[n].size=15;
 								objects[n].mdmgmin=plsin(4);
@@ -14215,6 +14556,10 @@ append(doaction,function(lv,hand){
 								objects[n].dir=targetdirfs(objects[n].x-playertemp.x+400,objects[n].y-playertemp.y+350);
 								objects[n].hits=new Array(999);
 								objects[n].onhit=function(i){
+									playertemp.etherealknivesreactivatesfx-=1;
+									if(playertemp.etherealknivesreactivatesfx<=0){
+										objects[n].sound=0;
+									}
 									objects[n].pdmgmin*=0.85;
 									objects[n].pdmgmax*=0.85;
 									objects[n].mdmgmin*=0.85;
@@ -14333,7 +14678,7 @@ append(doaction,function(lv,hand){
 						if(options.light){
 							fill(255,160,0,7);
 							for(cal=0;cal<30;cal+=1){
-								ellipse(0,12,cal,cal*1.5);
+								ellipse(0,12,cal*1.25,cal*1.75);
 							}
 						}
 					},
@@ -14355,6 +14700,13 @@ append(doaction,function(lv,hand){
 					procc:0.16,
 					properties:["fire"],
 					hits:new Array(999),
+					run:function(){
+						if(options.light){
+							if((objects[n].duration)%6==0){
+								append(particles,new createparticle(objects[n].x+random(-15,15),objects[n].y+random(-15,15),random(-1,1),random(-1.5,-0.7),0,0,'circle','',12,-0.2,255,-9,200+random(55),160+random(40),random(40),1));
+							}
+						}
+					},
 					onhit:function(i){
 						if(!(enemies[i].dots)){
 							enemies[i].dots=new Array();
@@ -14368,8 +14720,10 @@ append(doaction,function(lv,hand){
 							dur:240,
 							ptchan:round(random(11)),
 							run:function(i){
-								if((tick+enemies[i].dots[d].ptchan)%12==0){
-									append(particles,new createparticle(enemies[i].x+random(-enemies[i].size,enemies[i].size),enemies[i].y+random(-enemies[i].size,enemies[i].size),random(-1,1),random(-1.5,-0.7),0,0,'circle','',12,-0.2,255,-9,200+random(55),160+random(40),random(40),1));
+								if(options.light){
+									if((tick+enemies[i].dots[d].ptchan)%15==0){
+										append(particles,new createparticle(enemies[i].x+random(-enemies[i].size,enemies[i].size),enemies[i].y+random(-enemies[i].size,enemies[i].size),random(-1,1),random(-1.5,-0.7),0,0,'circle','',12,-0.2,255,-9,200+random(55),160+random(40),random(40),1));
+									}
 								}
 							}
 						});
@@ -14646,153 +15000,6 @@ var reducecd=function(traitID,amount){
 	}
 }
 //=========================
-var sprites={
-	sword:loadShape('Data/Graphics/attack/sword.svg'),
-	shieldBash:loadShape('Data/Graphics/attack/shield bash.svg'),
-	arrow:loadShape('Data/Graphics/attack/arrow.svg'),
-	bow:loadShape('Data/Graphics/attack/bow.svg'),
-	lbow:loadShape('Data/Graphics/attack/bowloaded.svg'),
-	bubblewand:loadShape('Data/Graphics/attack/bubble wand.svg'),
-	bubble:loadShape('Data/Graphics/attack/bubble.svg'),
-	xbow:loadShape('Data/Graphics/attack/xbow.svg'),
-	bolt:loadShape('Data/Graphics/attack/bolt.svg'),
-	dariusaxe:loadShape('Data/Graphics/attack/darius axe.svg'),
-	demonpike:loadShape('Data/Graphics/attack/demonpike.svg'),
-	garensword:loadShape('Data/Graphics/attack/garen sword.svg'),
-	mordekaisermace:loadShape('Data/Graphics/attack/mordekaiser mace.svg'),
-	hp:loadShape('Data/Graphics/miscellaneous/hp.svg'),
-	hpregen:loadShape('Data/Graphics/miscellaneous/hpregen.svg'),
-	str:loadShape('Data/Graphics/miscellaneous/str.svg'),
-	intel:loadShape('Data/Graphics/miscellaneous/int.svg'),
-	armor:loadShape('Data/Graphics/miscellaneous/arm.svg'),
-	res:loadShape('Data/Graphics/miscellaneous/res.svg'),
-	mp:loadShape('Data/Graphics/miscellaneous/mp.svg'),
-	mpregen:loadShape('Data/Graphics/miscellaneous/mpregen.svg'),
-	passive:loadShape('Data/Graphics/miscellaneous/passive.svg'),
-	masterSword:loadShape('Data/Graphics/attack/master sword.svg'),
-	mswordbeam:loadShape('Data/Graphics/attack/master sword beam.svg'),
-	anvil:loadShape('Data/Graphics/miscellaneous/anvil.svg'),
-	rapier:loadShape('Data/Graphics/attack/rapier.svg'),
-	voidblast:loadShape('Data/Graphics/attack/voidblast.svg'),
-	voidstaff:loadShape('Data/Graphics/attack/void staff.svg'),
-	minigun:loadShape('Data/Graphics/attack/minigun.svg'),
-	boomerang:loadShape('Data/Graphics/attack/boomerang.svg'),
-	ancientfang:loadShape('Data/Graphics/attack/ancientFang.svg'),
-	energystaff:loadShape('Data/Graphics/attack/energyStaff.svg'),
-	stattrait:loadShape('Data/Graphics/miscellaneous/stat trait.svg'),
-	statkeystone:loadShape('Data/Graphics/miscellaneous/stat keystone.svg'),
-	power:loadShape('Data/Graphics/miscellaneous/power.svg'),
-	fortitude:loadShape('Data/Graphics/miscellaneous/fortitude.svg'),
-	omni:loadShape('Data/Graphics/miscellaneous/omni.svg'),
-	keystone:loadShape('Data/Graphics/miscellaneous/keystone.svg'),
-};
-if(options.loadAudio){
-var sfx={	
-		hurt: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.3,}),
-		hurtpow: new Howl({ src: ['Data/Sound/sfx/hurt.ogg'],autoplay: false, loop: false,  volume: options.sfx*0.7,}),
-		hurtpow2: new Howl({src: ['Data/Sound/sfx/hurt.ogg'],  autoplay: false,  loop: false, volume: options.sfx*1,}),
-		hurt2: new Howl({  src: ['Data/Sound/sfx/hurt2.wav'], autoplay: false,loop: false, volume: options.sfx*0.6,}),
-		death: new Howl({src: ['Data/Sound/sfx/death.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		swing: new Howl({src: ['Data/Sound/sfx/swing.wav'], autoplay: false, loop: false,volume: options.sfx*0.65,}),
-		slice: new Howl({  src: ['Data/Sound/sfx/slice.wav'], autoplay: false,  loop: false,volume: options.sfx*0.55,}),
-		bong: new Howl({ src: ['Data/Sound/sfx/shield hit.wav'], autoplay: false,loop: false, volume: options.sfx*0.1,}),
-		bow: new Howl({ src: ['Data/Sound/sfx/bow.wav'], autoplay: false,loop: false, volume: options.sfx*0.7,}),
-		arrow: new Howl({src: ['Data/Sound/sfx/arrow.wav'], autoplay: false, loop: false,volume: options.sfx*0.7,}),
-		arrowhit: new Howl({ src: ['Data/Sound/sfx/arrow hit.wav'], autoplay: false, loop: false, volume: options.sfx*0.7,}),
-		shield: new Howl({src: ['Data/Sound/sfx/shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		pop: new Howl({src: ['Data/Sound/sfx/pop.wav'], autoplay: false,loop: false,volume: options.sfx*0.65,}),
-		water: new Howl({src: ['Data/Sound/sfx/water drop.wav'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
-		decimatec: new Howl({src: ['Data/Sound/sfx/decimateC.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		decimateh: new Howl({src: ['Data/Sound/sfx/decimateH.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		decimatem: new Howl({src: ['Data/Sound/sfx/decimateM.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		decimates: new Howl({src: ['Data/Sound/sfx/decimateS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		MoS:{start:new Howl({src: ['Data/Sound/sfx/MoSstart.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			one:new Howl({src: ['Data/Sound/sfx/MoS1.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			too:new Howl({src: ['Data/Sound/sfx/MoS2.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			three:new Howl({src: ['Data/Sound/sfx/MoS3.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-			swing:new Howl({src: ['Data/Sound/sfx/MoSwing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		},
-		relicshield:new Howl({src: ['Data/Sound/sfx/relic shield.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		shieldoverload:new Howl({src: ['Data/Sound/sfx/shield overload.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		roar:new Howl({src: ['Data/Sound/sfx/roar.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		block:new Howl({src: ['Data/Sound/sfx/block.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		fullblock:new Howl({src: ['Data/Sound/sfx/full block.wav'], autoplay: false,loop: false,volume: options.sfx*0.15,}),
-		pswing:new Howl({src: ['Data/Sound/sfx/pswing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		pslice:new Howl({src: ['Data/Sound/sfx/pslice.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		focus:new Howl({src: ['Data/Sound/sfx/focus.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-		sprint:new Howl({src: ['Data/Sound/sfx/sprint.wav'], autoplay: false,loop: false,volume: options.sfx*0.5,}),
-		mswordswing:new Howl({src: ['Data/Sound/sfx/master sword swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		mswordbeam:new Howl({src: ['Data/Sound/sfx/master sword beam.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		mswordhit:new Howl({src: ['Data/Sound/sfx/master sword hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		upgrade:new Howl({src: ['Data/Sound/sfx/upgrade.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		enchant:new Howl({src: ['Data/Sound/sfx/enchant.wav'], autoplay: false,loop: false,volume: options.sfx*0.4,}),
-		obliteration:new Howl({src: ['Data/Sound/sfx/obliteration.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
-		glacialwardcharge:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
-		glacialwardshatter:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
-		warp:new Howl({src: ['Data/Sound/sfx/warp.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		rapiersw:new Howl({src: ['Data/Sound/sfx/rapier swing.wav'], autoplay: false,loop: false,volume: options.sfx*0.75,}),
-		voidbarrier:new Howl({src: ['Data/Sound/sfx/void barrier.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		voidbarrierr:new Howl({src: ['Data/Sound/sfx/void barrier release.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		voidblast:new Howl({src: ['Data/Sound/sfx/void blast.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		voidboom:new Howl({src: ['Data/Sound/sfx/void explosion.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		bomb:new Howl({src: ['Data/Sound/sfx/bomb.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		windslash:new Howl({src: ['Data/Sound/sfx/wind slash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
-		boomerang:new Howl({src: ['Data/Sound/sfx/boomerang.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		boomerangcatch:new Howl({src: ['Data/Sound/sfx/boomerang catch.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		SoH:new Howl({src: ['Data/Sound/sfx/SoH.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		SoHh:new Howl({src: ['Data/Sound/sfx/SoHh.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		freezeboomers:new Howl({src: ['Data/Sound/sfx/boomerang freeze.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		poison:new Howl({src: ['Data/Sound/sfx/poison.wav'], autoplay: false,loop: false,volume: options.sfx*0.03,}),
-		energystaff:new Howl({src: ['Data/Sound/sfx/energy bolt.wav'], autoplay: false,loop: false,volume: options.sfx*0.22,}),
-		energyh:new Howl({src: ['Data/Sound/sfx/energy hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.1,}),
-		dash:new Howl({src: ['Data/Sound/sfx/dash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		burn:new Howl({src: ['Data/Sound/sfx/burn.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
-		bleed:new Howl({src: ['Data/Sound/sfx/bleed.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
-		poisoned:new Howl({src: ['Data/Sound/sfx/poisoned.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
-		raining:new Howl({src: ['Data/Sound/sfx/rain.ogg'], autoplay: false,loop: true,volume: options.sfx*2,}),
-		plunge:new Howl({src: ['Data/Sound/sfx/plunge.wav'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
-		eldritch:new Howl({src: ['Data/Sound/sfx/eldritch.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-		arcanereconstruction:new Howl({src: ['Data/Sound/sfx/heal.ogg'], autoplay: false,loop: false,volume: options.sfx*0.9,}),
-		prime:new Howl({src: ['Data/Sound/sfx/distortion.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
-		pdoor:new Howl({src: ['Data/Sound/sfx/warp.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
-		slash:new Howl({src: ['Data/Sound/sfx/slash.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		rapier:new Howl({src: ['Data/Sound/sfx/rapier.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		click:new Howl({src: ['Data/Sound/sfx/click.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-		click2:new Howl({src: ['Data/Sound/sfx/click2.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-		click3:new Howl({src: ['Data/Sound/sfx/click3.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-		shrek:new Howl({src: ['Data/Sound/sfx/shrek.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		shrekdeath:new Howl({src: ['Data/Sound/sfx/shrek death.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		dashbig:new Howl({src: ['Data/Sound/sfx/dashbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		earthquake:new Howl({src: ['Data/Sound/sfx/earthquake.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		jumpbig:new Howl({src: ['Data/Sound/sfx/jumpbig.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		judgment:new Howl({src: ['Data/Sound/sfx/judgment.wav'], autoplay: false,loop: true,volume: options.sfx*1,}),
-		judgmenthit:new Howl({src: ['Data/Sound/sfx/judgmenthit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
-		cripplingsw:new Howl({src: ['Data/Sound/sfx/cripplingSwing.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		cripplingst:new Howl({src: ['Data/Sound/sfx/cripplingStrike.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		energyls:new Howl({src: ['Data/Sound/sfx/energyLS.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-		energylf:new Howl({src: ['Data/Sound/sfx/energyLF.ogg'], autoplay: false,loop: true,volume: options.sfx*0.8,}),
-		woodenshell:new Howl({src: ['Data/Sound/sfx/woodenshell.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		shattershield:new Howl({src: ['Data/Sound/sfx/shattershield.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
-		aquabubble:new Howl({src: ['Data/Sound/sfx/aquabubble.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
-		aquabubbleburst:new Howl({src: ['Data/Sound/sfx/aquabubbleburst.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
-		etherknife:new Howl({src: ['Data/Sound/sfx/etherknife.ogg'], autoplay: false,loop: false,volume: options.sfx*0.14,}),
-		etherknifeh:new Howl({src: ['Data/Sound/sfx/etherknifehit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
-		ethercut:new Howl({src: ['Data/Sound/sfx/ethercut.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		incinerates:new Howl({src: ['Data/Sound/sfx/incineratestart.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		incineratel:new Howl({src: ['Data/Sound/sfx/incinerateloop.ogg'], autoplay: false,loop: true,volume: options.sfx*1,}),
-		incineratec:new Howl({src: ['Data/Sound/sfx/incineratecharge.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
-		surge:new Howl({src: ['Data/Sound/sfx/surge.ogg'], autoplay: false,loop: false,volume: options.sfx*1.2,}),
-		surges:new Howl({src: ['Data/Sound/sfx/surgeshock.ogg'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-		blizzards:new Howl({src: ['Data/Sound/sfx/blizzardstart.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,onend:function(){sfx.blizzardl.play()}}),
-		blizzardl:new Howl({src: ['Data/Sound/sfx/blizzard.ogg'], autoplay: false,loop: true,volume: options.sfx*1.5,}),
-		infernalstab:new Howl({src: ['Data/Sound/sfx/demon pike.wav'], autoplay: false,loop: false,volume: options.sfx*0.8,}),
-		challengearena:new Howl({src: ['Data/Sound/sfx/challengearena.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
-		levelup:new Howl({src: ['Data/Sound/sfx/levelup.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-		ksblock:new Howl({src: ['Data/Sound/sfx/passiveblock.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
-};
-}
 var anticlipc;
 var projectiles= new Array();
 append(projectiles,loadShape('Data/Graphics/projectiles/branch.svg'));
@@ -14810,6 +15017,12 @@ var playeractionstock=0;
 var playeractionstockr=0;
 var igclick=0;
 var scache;
+var portallock=0;
+var sfxstock={
+	hurt:1,
+	block:1,
+	ksblock:1
+};
 // Main draw loop
 void draw(){
 	cdraw=0;
@@ -14852,11 +15065,17 @@ tick += 1;
 //====================In Game=============================================================================================================================
 //========================================================================================================================================================
 if(loaded==1){
+	if(!(keyPressed)){
+		portallock=0;
+	}
 	if(inventory==0){
 gametick += 1;
 showdots[0]=0;
 showdots[1]=0;
 showdots[2]=0;
+sfxstock.hurt=1;
+sfxstock.block=min(1,sfxstock.block+0.05);
+sfxstock.ksblock=min(1,sfxstock.ksblock+0.05);
 	if(!(cinematic||dialoga)){
 	if(inwater){
 		if(playertemp.traits[210]>0){
@@ -15594,22 +15813,23 @@ showdots[2]=0;
 					}
 					//Enter GTW
 					if(!(cinematic||dialoga)){
-									if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&gateways[i].x-playertemp.x>-(60)&
-											gateways[i].x-playertemp.x<(60)&
-											gateways[i].y-playertemp.y>-(60)&
-											gateways[i].y-playertemp.y<(60)){
-												playertemp.lastarea=player.biomeID;
-												player.biomeID=gateways[i].dest;
-												playertemp.x=0;
-												playertemp.y=0;
-												loadArea();
-												skip=1;
-												if(options.autosave){
-													temp= new Array(JSON.stringify(player),1);
-													saveStrings("player "+player.name+".txt",temp);
-													append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
-												}
-											}
+						if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)&gateways[i].x-playertemp.x>-(60)&
+						gateways[i].x-playertemp.x<(60)&
+						gateways[i].y-playertemp.y>-(60)&
+						gateways[i].y-playertemp.y<(60)){
+							portallock=1;
+							playertemp.lastarea=player.biomeID;
+							player.biomeID=gateways[i].dest;
+							playertemp.x=0;
+							playertemp.y=0;
+							loadArea();
+							skip=1;
+							if(options.autosave){
+								temp= new Array(JSON.stringify(player),1);
+								saveStrings("player "+player.name+".txt",temp);
+								append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
+							}
+						}
 					}
 					resetMatrix();
 				}
@@ -16021,7 +16241,7 @@ showdots[2]=0;
 		rect(834-(8+min(22,losthp/2)),254-(8+min(22,losthp/2)),282+(8+min(22,losthp/2))*2,12+(8+min(22,losthp/2))*2);
 		noStroke();
 	}
-	losthp=max(0,losthp-losthp/30-0.15);
+	losthp=min(100,max(0,losthp-losthp/15-0.02));
 	}
 	//STATEFFECTS===================================================
 	if(!(cinematic||dialoga)){
@@ -16140,7 +16360,7 @@ showdots[2]=0;
 			arc(1090,600,75,75,-PI/2-playertemp.traitcd.e/traitcd[player.activetraits.e]*2*PI,-PI/2);
 		}
 	}
-	if(playertemp.stun>0){
+	/*if(playertemp.stun>0){
 		strokeWeight(10);
 		stroke(255,255,160,150);
 		fill(255,255,160,75);
@@ -16149,7 +16369,7 @@ showdots[2]=0;
 		line(775,430,1045,690);
 		line(775,690,1045,430);
 		noStroke();
-	}
+	}*/
 	textFont(0,15);
 	fill(255,100,150);
 	text('FPS: '+fps.fps,825,675);
@@ -18334,7 +18554,10 @@ if(dialog){
 	dialog();
 }
 }
-	
+if(loadassetscache){
+	loadassetscache();
+}
+
 }
 void mouseClicked(){
 	if(loaded==0){
@@ -18344,17 +18567,6 @@ void mouseClicked(){
 			}
 		}
 		else{
-			if(mouseX<0&mouseY<0){
-				if(options.loadAudio){
-					bgmn='Title';
-					bgm = new Howl({
-					  src: ['Data/Sound/music/title.ogg'],
-					  autoplay: true,
-					  loop: true,
-					  volume: options.music,
-					});
-				}
-			}
 			if(mouseX>1080&mouseX<1120&mouseY>12&mouseY<52){
 				if(urf){
 					urf=0;
@@ -18368,248 +18580,234 @@ void mouseClicked(){
 				particles=new Array();
 				mode=1;
 			}
-			//NEW GAME======================================
-			if(!(textinput=='')&mouseX>50&mouseX<250&mouseY>350&mouseY<450){
-				saveStrings("namecache.txt",[textinput,1]);
-				player={
-					baseStats:{
+			if(canstart){
+				//NEW GAME======================================
+				if(!(textinput=='')&mouseX>50&mouseX<250&mouseY>350&mouseY<450){
+					saveStrings("namecache.txt",[textinput,1]);
+					player={
+						baseStats:{
+							hp:100,
+							hpregen:3,
+							mp:100,
+							mpregen:3,
+							armor:0,
+							res:0,
+							str:30,
+							intel:30,
+							speed:4,
+							size:6,
+							haste:1
+						},
+						keystonestats:{
+							hp:0,
+							hpregen:0,
+							mp:0,
+							mpregen:0,
+							armor:0,
+							res:0,
+							str:0,
+							intel:0,
+							speed:0,
+							size:0,
+							haste:0,
+							power:0,
+							fortitude:0,
+							omnipotency:0
+						},
+						passivemults:{
+							power:{
+								hp:0,
+								hpregen:0,
+								str:1,
+								intel:1,
+								armor:0,
+								res:0
+							},
+							fortitude:{
+								hp:1,
+								hpregen:1,
+								str:0,
+								intel:0,
+								armor:1,
+								res:1
+							},
+							omnipotency:{
+								hp:1,
+								hpregen:1,
+								str:1,
+								intel:1,
+								armor:1,
+								res:1
+							},
+						},
 						hp:100,
-						hpregen:3,
 						mp:100,
+						//Normal spd:4
+						speed:4,
+						maxhp:100,
+						maxmp:100,
+						size:6,
+						level:1,
+						traction:0.9,
+						biomeID:1
+						,
+						hpregen:3,
 						mpregen:3,
 						armor:0,
 						res:0,
 						str:30,
 						intel:30,
-						speed:4,
-						size:6,
-						haste:1
-					},
-					keystonestats:{
-						hp:0,
-						hpregen:0,
-						mp:0,
-						mpregen:0,
-						armor:0,
-						res:0,
-						str:0,
-						intel:0,
-						speed:0,
-						size:0,
-						haste:0,
-						power:0,
-						fortitude:0,
-						omnipotency:0
-					},
-					passivemults:{
-						power:{
-							hp:0,
-							hpregen:0,
-							str:1,
-							intel:1,
-							armor:0,
-							res:0
+						haste:1,
+						rcostm:[1,1],
+						name:textinput,
+						xp:0,
+						xpr:100,
+						sp:100,
+						pp:500,
+						generation:1,
+						update:{newqnb:1},
+						reactant:200,
+						record:{
+							enemies:new Array(9999),
+							quests:{},
+							atlas:new Array(9999),
+							biomes:new Array(9999)
 						},
-						fortitude:{
-							hp:1,
-							hpregen:1,
-							str:0,
-							intel:0,
-							armor:1,
-							res:1
+						passives:new Array(99),
+						activetraits:{
+							shift:0,
+							space:0,
+							q:0,
+							e:0
 						},
-						omnipotency:{
-							hp:1,
-							hpregen:1,
-							str:1,
-							intel:1,
-							armor:1,
-							res:1
-						},
-					},
-					hp:100,
-					mp:100,
-					//Normal spd:4
-					speed:4,
-					maxhp:100,
-					maxmp:100,
-					size:6,
-					level:1,
-					traction:0.9,
-					biomeID:1
-					,
-					hpregen:3,
-					mpregen:3,
-					armor:0,
-					res:0,
-					str:30,
-					intel:30,
-					haste:1,
-					rcostm:[1,1],
-					name:textinput,
-					xp:0,
-					xpr:100,
-					sp:100,
-					pp:500,
-					reactant:200,
-					record:{
-						enemies:new Array(9999),
-						bosses:new Array(999),
-						atlas:new Array(9999),
-						biomes:new Array(9999)
-					},
-					passives:new Array(99),
-					activetraits:{
-						shift:0,
-						space:0,
-						q:0,
-						e:0
-					},
-					inventory:{
-						LH:0,
-						RH:0,
-						bag:new Array(225)
-						}
-				};
-				for(i=0;i<9999;i+=1){
-					player.record.enemies[i]=0;
+						inventory:{
+							LH:0,
+							RH:0,
+							bag:new Array(225)
+							}
+					};
+					for(i=0;i<9999;i+=1){
+						player.record.enemies[i]=0;
+					}
+					for(i=0;i<9999;i+=1){
+						player.record.atlas[i]=0;
+					}
+					player.record.atlas[2]=2;
+					for(i=0;i<9999;i+=1){
+						player.record.biomes[i]=0;
+					}
+					for(i=0;i<99;i+=1){
+						player.passives[i]=0;
+					}
+					for(i=0;i<999;i+=1){
+						player.record.bosses[i]=0;
+					}
+					updateplayerdat();
+					loadtraits();
+					recalstats();
+					getstances();
+					loadkeystoneps();
+					if(options.loadAudio){
+					bgm.stop();
+					}
+					getplayersprite();
+					loadArea();
+					loaded=1;
 				}
-				for(i=0;i<9999;i+=1){
-					player.record.atlas[i]=0;
-				}
-				player.record.atlas[2]=2;
-				for(i=0;i<9999;i+=1){
-					player.record.biomes[i]=0;
-				}
-				for(i=0;i<99;i+=1){
-					player.passives[i]=0;
-				}
-				for(i=0;i<999;i+=1){
-					player.record.bosses[i]=0;
-				}
-				updateplayerdat();
-				loadtraits();
-				recalstats();
-				getstances();
-				loadkeystoneps();
-				if(options.loadAudio){
-				bgm.stop();
-				}
-				getplayersprite();
-				loadArea();
-				loaded=1;
-			}
-			//LOAD GAME=============================================
-			else if(!(textinput=='')&mouseX>400&mouseX<600&mouseY>350&mouseY<450){
+				//LOAD GAME=============================================
+				else if(!(textinput=='')&mouseX>400&mouseX<600&mouseY>350&mouseY<450){
 					menuscreentemp[3]=1;
-				if(loadStrings('player '+textinput+'.txt')){
-					saveStrings("namecache.txt",[textinput,1]);
-					temp=loadStrings('player '+textinput+'.txt');
-					player=JSON.parse(temp[0]);
-					updateplayerdat();
-					options=player.options;
-					loadtraits();
-					recalstats();
-					getstances();
-					loadkeystoneps();
-					if(player.activetraits.shift>0){
-						playertemp.activetraitsprites.shift=loadShape('Data/Graphics/traits/'+player.activetraits.shift+'.svg');
+					if(loadStrings('player '+textinput+'.txt')){
+						saveStrings("namecache.txt",[textinput,1]);
+						temp=loadStrings('player '+textinput+'.txt');
+						player=JSON.parse(temp[0]);
+						loadplayer();
 					}
-					if(player.activetraits.space>0){
-						playertemp.activetraitsprites.space=loadShape('Data/Graphics/traits/'+player.activetraits.space+'.svg');
+				}
+				else if(menuscreentemp[0]&mouseX>800&mouseX<1000&mouseY>270&mouseY<370){
+						temp=loadStrings('player '+loadStrings("namecache.txt")[0]+'.txt');
+						player=JSON.parse(temp[0]);
+						loadplayer();
+				}
+				else if(mouseX>150&mouseX<450&mouseY>600&mouseY<700){
+					if(!(importdata[0]=="Insert import data here.")){
+						player=importdata[0];
+						saveStrings("namecache.txt",[player.name,1]);
+						loadplayer();
 					}
-					if(player.activetraits.q>0){
-						playertemp.activetraitsprites.q=loadShape('Data/Graphics/traits/'+player.activetraits.q+'.svg');
-					}
-					if(player.activetraits.e>0){
-						playertemp.activetraitsprites.e=loadShape('Data/Graphics/traits/'+player.activetraits.e+'.svg');
-					}
-					if(player.name=="Wizard"){
-						console.log(player);
-					}
-					console.log(JSON.stringify(player).substring(0,200000));
-					console.log(JSON.stringify(player).substring(200000,400000));
-					if(options.loadAudio){
-					bgm.stop();
-					}
-					getplayersprite();
-					loadArea();
-					loaded=1;
 				}
 			}
-			else if(menuscreentemp[0]&mouseX>800&mouseX<1000&mouseY>270&mouseY<370){
-					temp=loadStrings('player '+loadStrings("namecache.txt")[0]+'.txt');
-					player=JSON.parse(temp[0]);
-					updateplayerdat();
-					options=player.options;
-					loadtraits();
-					recalstats();
-					getstances();
-					loadkeystoneps();
-					if(player.activetraits.shift>0){
-						playertemp.activetraitsprites.shift=loadShape('Data/Graphics/traits/'+player.activetraits.shift+'.svg');
-					}
-					if(player.activetraits.space>0){
-						playertemp.activetraitsprites.space=loadShape('Data/Graphics/traits/'+player.activetraits.space+'.svg');
-					}
-					if(player.activetraits.q>0){
-						playertemp.activetraitsprites.q=loadShape('Data/Graphics/traits/'+player.activetraits.q+'.svg');
-					}
-					if(player.activetraits.e>0){
-						playertemp.activetraitsprites.e=loadShape('Data/Graphics/traits/'+player.activetraits.e+'.svg');
-					}
-					if(player.name=="Wizard"){
-						console.log(player);
-					}
-					console.log(JSON.stringify(player).substring(0,200000));
-					console.log(JSON.stringify(player).substring(200000,400000));
-					if(options.loadAudio){
-					bgm.stop();
-					}
-					getplayersprite();
-					loadArea();
-					loaded=1;
-			}
-			else if(mouseX>150&mouseX<450&mouseY>600&mouseY<700){
-				if(!(importdata[0]=="Insert import data here.")){
-				player=importdata[0];
-					saveStrings("namecache.txt",[player.name,1]);
-				updateplayerdat();
-				options=player.options;
-				loadtraits();
-				recalstats();
-				getstances();
-				loadkeystoneps();
-				if(player.activetraits.shift>0){
-					playertemp.activetraitsprites.shift=loadShape('Data/Graphics/traits/'+player.activetraits.shift+'.svg');
-				}
-				if(player.activetraits.space>0){
-					playertemp.activetraitsprites.space=loadShape('Data/Graphics/traits/'+player.activetraits.space+'.svg');
-				}
-				if(player.activetraits.q>0){
-					playertemp.activetraitsprites.q=loadShape('Data/Graphics/traits/'+player.activetraits.q+'.svg');
-				}
-				if(player.activetraits.e>0){
-					playertemp.activetraitsprites.e=loadShape('Data/Graphics/traits/'+player.activetraits.e+'.svg');
-				}
-				if(player.name=="Wizard"){
-					console.log(player);
-				}
-				if(options.loadAudio){
-				bgm.stop();
-				}
-				getplayersprite();
-				loadArea();
-				loaded=1;
-			}
-		}
 		}
 	}
 }
 void mouseMoved(){
 	movemousef();
 }
+var loadplayer=function(){
+	updateplayerdat();
+	options=player.options;
+	loadtraits();
+	recalstats();
+	getstances();
+	loadkeystoneps();
+	if(player.activetraits.shift>0){
+		playertemp.activetraitsprites.shift=loadShape('Data/Graphics/traits/'+player.activetraits.shift+'.svg');
+	}
+	if(player.activetraits.space>0){
+		playertemp.activetraitsprites.space=loadShape('Data/Graphics/traits/'+player.activetraits.space+'.svg');
+	}
+	if(player.activetraits.q>0){
+		playertemp.activetraitsprites.q=loadShape('Data/Graphics/traits/'+player.activetraits.q+'.svg');
+	}
+	if(player.activetraits.e>0){
+		playertemp.activetraitsprites.e=loadShape('Data/Graphics/traits/'+player.activetraits.e+'.svg');
+	}
+	if(player.name=="Wizard"){
+		console.log(player);
+	}
+	console.log(JSON.stringify(player).substring(0,200000));
+	console.log(JSON.stringify(player).substring(200000,400000));
+	if(options.loadAudio){
+	bgm.stop();
+	}
+	getplayersprite();
+	loadArea();
+	loaded=1;
+}
 var updateplayerdat=function(){
+	if(!(player.update)){
+		player.update={};
+	}
+	if(!(player.update.newqnb)){
+		temp=player.record.quests;
+		player.record.quests={};
+		if(player.record.bosses[1]>0){
+			player.record.quests.shrek=1;
+		}
+		if(temp[1]>0){
+			player.record.quests.start=temp[1];
+		}
+		if(temp[2]>0){
+			player.record.quests.infuser=temp[2];
+		}
+		if(temp[3]>0){
+			player.record.quests.shardofpurity=temp[3];
+		}
+		if(temp[4]>0){
+			player.record.quests.resetmerchant=temp[4];
+		}
+		player.record.bosses=0;
+		player.update.newqnb=1;
+	}
+	if(!(player.record.pp)){
+		player.record.pp={
+			areas:0,
+			enemies:0,
+			bosses:0,
+			base:500,
+			levels:0
+		};
+	}
 	if(!(player.options)){
 		player.options={
 			particles:2,
@@ -18624,6 +18822,9 @@ var updateplayerdat=function(){
 			light:2,
 			nmehppanel:1
 		};
+	}
+	if(!(player.options.scaling)){
+		player.options.scaling=0;
 	}
 	if(player.keystonepassives){
 		player.keystonepassives=0;
