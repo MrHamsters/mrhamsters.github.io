@@ -142,6 +142,15 @@ var dptemp=0;
 var menuscreentemp=[0,0,0,0];
 var nametemp=0;
 var loadassetscache=function(){
+	textFont(0,60);
+	fill(0,0,0,100);
+	rect(0,0,1133,700);
+	fill(255,150,0);
+	text("Loading game assets",300,200);
+	fill(0,0,0);
+	rect(400,350,300,100);
+	fill(255,150,0);
+	text("0/3",500,370);
 		loadassetscache=function(){
 		textFont(0,60);
 		fill(0,0,0,100);
