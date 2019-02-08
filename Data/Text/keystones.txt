@@ -163,7 +163,7 @@ Generates a damage barrier while out of combat for 2.5 seconds. Shields for up t
 0
 10
 Omni Cannon
-Fires a blast in the target direction when you left click, dealing {s0.05+i0.05+ox4.5c0+ox0.09c0Po+lx0.5c0+lx0.01c0Po}-{s0.06+i0.06+ox4.5c0+ox0.09c0Po+lx0.5c0+lx0.01c0Po} magic damage to up to 3 enemies. {ox2c-0.18} second cooldown (affected by haste), costs 1 mana.
+Fires a blast in the target direction when you left click, dealing {s0.05+i0.05+ox4.5c0+ox0.09c0Po+lx0.5c0+lx0.01c0Po}-{s0.06+i0.06+ox4.5c0+ox0.09c0Po+lx0.5c0+lx0.01c0Po} magic damage to up to 3 enemies. {ox2c-0.18} second cooldown (affected by haste), costs 0.2 mana.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 2/1
@@ -523,7 +523,7 @@ Your health takes {ox0c3}% less damage.
 0
 10
 Attuned Spirit
-Store up to 10 spirit charges from kills (+2) or when out of combat (+1 per second after 5 seconds). Taking a hit consumes a charge to reduce damage taken by {H0.005x0c1+ox0c0.27+ox0c0.054Po+lx0c0.03+lx0c0.0006Po}. If you have had no spirit charges in the past half second, gain {ox0c0.5}% haste and deal {ox0c1}% more damage.
+Store up to 10 spirit charges from kills (+2) or when out of combat (+1 per second after 5 seconds). Taking a hit consumes a charge to reduce damage taken by {H0.005x0c1+ox0c0.27+ox0c0.054Po+lx0c0.03+lx0c0.0006Po}. While you have no charges, gain {ox0c0.5}% haste and deal {ox0c1}% more damage (persists for 0.5 sec after gaining charges again).
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 10/1
