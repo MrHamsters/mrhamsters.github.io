@@ -18783,8 +18783,10 @@ var updateplayerdat=function(){
 		console.log(player.update);
 		temp=player.record.quests;
 		player.record.quests={shrek:0,infuser:0};
-		if(player.record.bosses[1]>0){
-			player.record.quests.shrek=1;
+		if(player.record.bosses){
+			if(player.record.bosses[1]>0){
+				player.record.quests.shrek=1;
+			}
 		}
 		if(temp[1]>0){
 			player.record.quests.start=temp[1];
