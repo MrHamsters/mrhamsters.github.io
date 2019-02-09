@@ -1,4 +1,4 @@
-var version="0.8.2";
+var version="0.8.2b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -311,7 +311,7 @@ var loadassetscache=function(){
 				energylf:new Howl({src: ['Data/Sound/sfx/energyLF.ogg'], autoplay: false,loop: true,volume: options.sfx*0.8,}),
 				woodenshell:new Howl({src: ['Data/Sound/sfx/woodenshell.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 				shattershield:new Howl({src: ['Data/Sound/sfx/shattershield.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-				dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+				dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*2.2,}),
 				aquabubble:new Howl({src: ['Data/Sound/sfx/aquabubble.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
 				aquabubbleburst:new Howl({src: ['Data/Sound/sfx/aquabubbleburst.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
 				etherknife:new Howl({src: ['Data/Sound/sfx/etherknife.ogg'], autoplay: false,loop: false,volume: options.sfx*0.15,}),
@@ -17719,7 +17719,7 @@ sfxstock.ksblock=min(1,sfxstock.ksblock+0.05);
 					if(player.inventory.bag[invselect[1]].ptfree){
 						stemp=5+player.inventory.bag[invselect[1]].ptfree;
 					}
-					if(player.record.bosses[1]>0){
+					if(player.record.quests.shrek>0){
 						artisanmbox("hp",0);
 						artisanmbox("hpregen",40);
 						artisanmbox("mp",80);
@@ -18699,9 +18699,6 @@ void mouseClicked(){
 					for(i=0;i<99;i+=1){
 						player.passives[i]=0;
 					}
-					for(i=0;i<999;i+=1){
-						player.record.bosses[i]=0;
-					}
 					updateplayerdat();
 					loadtraits();
 					recalstats();
@@ -18844,12 +18841,6 @@ var updateplayerdat=function(){
 	}
 	if(!(player.intro)){
 		player.intro={basics:0,inventory:0};
-	}
-	if(!(player.record.bosses)){
-		player.record.bosses=new Array(999);
-		for(i=0;i<999;i+=1){
-			player.record.bosses[i]=0;
-		}
 	}
 	if(!(player.record.quests)){
 		player.record.quests=new Array(999);
