@@ -8804,8 +8804,8 @@ var getBiomeScripts=function(){
 				}
 			}
 			if(!(cinematic||dialoga)){
-				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<-175&playertemp.x>-225&playertemp.y<-325&playertemp.y>-375){		
-					if(player.record.quests.infuser<1){
+				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<-175&playertemp.x>-225&playertemp.y<-325&playertemp.y>-375){
+					if(player.record.quests.infuser<1||!(player.record.quests.infuser)){
 						cinematic[0]=="dialog";
 						dialoga=1;
 						dialog=function(){
@@ -18772,12 +18772,17 @@ var loadplayer=function(){
 	loaded=1;
 }
 var updateplayerdat=function(){
-	if(!(player.update)){
-		player.update={};
+	if(!(player.fixqbcjsg)){
+		player.update=0;
+		player.fixqbcjsg=1;
 	}
-	if(!(player.update.newqnb)){
+	if(!(player.update)){
+		player.update={newqnbs:0};
+	}
+	if(!(player.update.newqnbs)){
+		console.log(player.update);
 		temp=player.record.quests;
-		player.record.quests={};
+		player.record.quests={shrek:0,infuser:0};
 		if(player.record.bosses[1]>0){
 			player.record.quests.shrek=1;
 		}
@@ -18794,7 +18799,8 @@ var updateplayerdat=function(){
 			player.record.quests.resetmerchant=temp[4];
 		}
 		player.record.bosses=0;
-		player.update.newqnb=1;
+		player.update.newqnbs=1;
+		console.log(player.update);
 	}
 	if(!(player.record.pp)){
 		player.record.pp={
@@ -18843,10 +18849,7 @@ var updateplayerdat=function(){
 		player.intro={basics:0,inventory:0};
 	}
 	if(!(player.record.quests)){
-		player.record.quests=new Array(999);
-		for(i=0;i<999;i+=1){
-			player.record.quests[i]=0;
-		}
+		player.record.quests={shrek:0,infuser:0};
 	}
 	if(!(player.record.biocomp)){
 		player.record.biocomp=new Array(99999);
