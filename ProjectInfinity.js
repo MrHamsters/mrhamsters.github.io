@@ -11124,23 +11124,23 @@ var statpanel=function(){
 						stemp=[100-stemp,damageproperties[rtdp],stemp];
 					}
 					if(playertemp.traits[120+rtdp]>0){
-						stemp[3]=100+playertemp.traits[120+rtdp];
+						stemp[3]=playertemp.traits[120+rtdp];
 					}
 					else{
-						stemp[3]=100;
+						stemp[3]=0;
 					}
 					tooltipdraw={
 						type:1,
 						x:mouseX,
 						y:mouseY-100,
-						w:250,
+						w:300,
 						h:250,
 						title:stemp[1],
 						tip:[stemp[1]+" defense: "+stemp[2],
 						"You take "+round(stemp[0]*10)/10+"% damage from "+stemp[1]+" attacks",
 						"",
 						stemp[1]+" mastery: "+stemp[3],
-						"You deal "+stemp[3]+"% damage with "+stemp[1]+" attacks",
+						"You deal "+(100+stemp[3])+"% damage with "+stemp[1]+" attacks",
 						],
 						colors:0
 					};
