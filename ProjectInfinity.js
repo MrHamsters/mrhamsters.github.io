@@ -1,4 +1,4 @@
-var version="0.8.2b";
+var version="0.8.2c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -274,7 +274,7 @@ var loadassetscache=function(){
 				voidboom:new Howl({src: ['Data/Sound/sfx/void explosion.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
 				bomb:new Howl({src: ['Data/Sound/sfx/bomb.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
 				windslash:new Howl({src: ['Data/Sound/sfx/wind slash.wav'], autoplay: false,loop: false,volume: options.sfx*1,}),
-				minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
+				minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
 				boomerang:new Howl({src: ['Data/Sound/sfx/boomerang.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
 				boomerangcatch:new Howl({src: ['Data/Sound/sfx/boomerang catch.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
 				SoH:new Howl({src: ['Data/Sound/sfx/SoH.wav'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
@@ -4099,8 +4099,8 @@ var loadkeystoneps=function(){
 	}
 	if(playertemp.keystonepassives[27]>0){
 		append(keystonefuncs.damagetakenpa,function(){
-			pdmg*=1-playertemp.traits[27]*0.03;
-			mdmg*=1-playertemp.traits[27]*0.03;
+			pdmg*=1-playertemp.keystonepassives[27]*0.03;
+			mdmg*=1-playertemp.keystonepassives[27]*0.03;
 		});
 	}
 	if(playertemp.keystonepassives[10]>0){
@@ -4860,6 +4860,16 @@ var loadtraits=function(){
 			}
 		});
 	}
+	append(traitfuncs.damagedealt,function(){
+		if(atkprop){
+			if(enemies[index].drenchcount){
+				if(findprop("cold")||findprop("electric")){
+					pdmg*=1+enemies[index].drenchcount;
+					mdmg*=1+enemies[index].drenchcount;
+				}
+			}
+		}
+	});
 	append(traitfuncs.damagedealt,function(){
 		if(atkprop){
 			for(rtdp=0;rtdp<damageproperties.length;rtdp+=1){
@@ -9062,10 +9072,16 @@ var getBiomeScripts=function(){
 							noStroke();
 							if(pow(playertemp.x-challengearena.x,2)+pow(playertemp.y-challengearena.y,2)>pow(700,2)||!(player.biomeID==terraineffects[n].bid)||playertemp.inBossFight==1){
 								if(!(playertemp.inBossFight)){
-									enemies=new Array(biomedata[7]);
-									for(rae=0;rae<enemies.length;rae+=1){
-										defaultenemy(rae,450);
-									}
+									append(stateffects,{name:'challenge arena reset',tick:0,run:function(){
+										if(stateffects[n].tick>1){
+											enemies=new Array(biomedata[7]);
+											for(rae=0;rae<enemies.length;rae+=1){
+												defaultenemy(rae,450);
+											}
+											stateffects.splice(n,1);
+											n-=1
+										}
+									}});
 								}
 								append(particles,new createparticle(terraineffects[n].x,terraineffects[n].y,0,0,0,0,'circle','',2025,-40,2,2,190,140,0,1));
 								player.xp+=round((challengearena.souls/10+max(0,(challengearena.souls-1000)/10))*(pow(1.1,min(player.level,biomedata[9]+floor(challengearena.souls/100)))));
@@ -11102,19 +11118,30 @@ var statpanel=function(){
 				}
 				if(cursorbox(5+(rtdp%8)*42,45+(rtdp%8)*42,405+floor(rtdp/8)*42,445+floor(rtdp/8)*42)){
 					if(stemp>0){
-						stemp=[100/(1+stemp/100),damageproperties[rtdp]];
+						stemp=[100/(1+stemp/100),damageproperties[rtdp],stemp];
 					}
 					else{
-						stemp=[100-stemp,damageproperties[rtdp]];
+						stemp=[100-stemp,damageproperties[rtdp],stemp];
+					}
+					if(playertemp.traits[120+rtdp]>0){
+						stemp[3]=100+playertemp.traits[120+rtdp];
+					}
+					else{
+						stemp[3]=100;
 					}
 					tooltipdraw={
-						type:0,
+						type:1,
 						x:mouseX,
 						y:mouseY-100,
 						w:250,
 						h:250,
-						title:stemp[1]+" defense",
-						tip:"You take "+round(stemp[0]*10)/10+"% "+stemp[1]+ " damage.",
+						title:stemp[1],
+						tip:[stemp[1]+" defense: "+stemp[2],
+						"You take "+round(stemp[0]*10)/10+"% damage from "+stemp[1]+" attacks",
+						"",
+						stemp[1]+" mastery: "+stemp[3],
+						"You deal "+stemp[3]+"% damage with "+stemp[1]+" attacks",
+						],
 						colors:0
 					};
 				}
@@ -11881,10 +11908,10 @@ append(doaction,function(lv,hand){
 					x:playertemp.x,
 					y:playertemp.y,
 					shieldval:((plsar(0.01))+(plshp(0.025)+(plsre(0.005)))*(1+traitpow/10)),
-					pdmgmin:(plsst(10))+(plsar(4)),
-					pdmgmax:(plsst(13))+(plsar(5)),
-					mdmgmin:(plsin(10))+(plsre(4)),
-					mdmgmax:(plsin(13))+(plsre(5)),
+					pdmgmin:(plsst(10)+plsar(4))/0.92,
+					pdmgmax:(plsst(13)+plsar(5))/0.92,
+					mdmgmin:(plsin(10)+plsre(4))/0.92,
+					mdmgmax:(plsin(13)+plsre(5))/0.92,
 					armorE:1,
 					resE:1,
 					procc:1.2,
@@ -11924,10 +11951,10 @@ append(doaction,function(lv,hand){
 								y:objects[n].y,
 								shieldval:objects[n].shieldval,
 								caught:0,
-								pdmgmin:(plsst(10))+(plsar(4)),
-								pdmgmax:(plsst(13))+(plsar(5)),
-								mdmgmin:(plsin(10))+(plsre(4)),
-								mdmgmax:(plsin(13))+(plsre(5)),
+								pdmgmin:(plsst(10)+plsar(4))/0.92,
+								pdmgmax:(plsst(13)+plsar(5))/0.92,
+								mdmgmin:(plsin(10)+plsre(4))/0.92,
+								mdmgmax:(plsin(13)+plsre(5))/0.92,
 								armorE:1,
 								resE:1,
 								procc:1.2,
@@ -12058,8 +12085,8 @@ append(doaction,function(lv,hand){
 				dir:playertemp.action.dir,
 				x:playertemp.x,
 				y:playertemp.y,
-				pdmgmin:(plsst(52*(1+playertemp.action.pierce/5000))),
-				pdmgmax:(plsst(60*(1+playertemp.action.pierce/5000))),
+				pdmgmin:(plsst(52*(1+playertemp.action.pierce/5000)))/0.94,
+				pdmgmax:(plsst(60*(1+playertemp.action.pierce/5000)))/0.94,
 				mdmgmin:0,
 				mdmgmax:0,
 				armorE:1,
@@ -12100,8 +12127,8 @@ append(doaction,function(lv,hand){
 				dir:playertemp.action.dir,
 				x:playertemp.x,
 				y:playertemp.y,
-				pdmgmin:(plsst(60*(1+playertemp.action.pierce/5000))*playertemp.action.tick)/60,
-				pdmgmax:(plsst(60*(1+playertemp.action.pierce/5000))*playertemp.action.tick)/60,
+				pdmgmin:(plsst(60*(1+playertemp.action.pierce/5000))*playertemp.action.tick)/60/0.94,
+				pdmgmax:(plsst(60*(1+playertemp.action.pierce/5000))*playertemp.action.tick)/60/0.94,
 				mdmgmin:0,
 				mdmgmax:0,
 				armorE:1,
@@ -12290,7 +12317,28 @@ append(doaction,function(lv,hand){
 				if(playertemp.action.tick>=30){
 					for(i=0;i<enemies.length;i+=1){
 						if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(140+enemies[i].size,2)){
-							damage("enemies",i,0,random((plsin(min(200,playertemp.action.tick)*0.3)),(plsin(1.1*min(200,playertemp.action.tick)*0.3))),1,1,"ranged","player",min(200,playertemp.action.tick)/80,["impact","water"]);
+							damage("enemies",i,0,random((plsin(min(200,playertemp.action.tick)*0.25)),(plsin(1.1*min(200,playertemp.action.tick)*0.25))),1,1,"ranged","player",min(200,playertemp.action.tick)/80,["impact","water"]);	
+							if(!(enemies[i].drenchcount)){
+								enemies[i].drenchcount=0;
+							}
+							enemies[i].drenchcount+=20;
+							append(enemies[i].tstatus,{name:'drench',strs:enemies[i].str*0.2,ints:enemies[i].intel*0.2,dcap:min(200,playertemp.action.tick)*0.6,tick:0,dir:random(PI*2),run:function(){
+								enemies[i].str-=enemies[i].tstatus[d].strs;
+								enemies[i].intel-=enemies[i].tstatus[d].ints;
+								enemies[i].hastecache-=0.3;
+								enemies[i].tstatus[d].tick+=1;
+								if((tick+enemies[i].dots[d].ptchan)%8==0){
+									append(particles,new createparticle(enemies[i].x+random(-enemies[i].size,enemies[i].size),enemies[i].y+random(-enemies[i].size,enemies[i].size),random(-0.5,0.5),0,0,random(0.03,0.07),'circle','',12,-0.2,255,-9,random(30),random(30),170+random(85),1));
+								}
+								if(enemies[i].tstatus[d].tick>=enemies[i].tstatus[d].dcap){
+									enemies[i].str+=enemies[i].tstatus[d].strs;
+									enemies[i].intel+=enemies[i].tstatus[d].ints;
+									enemies[i].drenchcount-=20;
+									enemies[i].tstatus.splice(d,1);
+									d-=1;
+								}
+							}
+							});
 							hits+=1;
 						}
 					}
@@ -14549,8 +14597,8 @@ append(doaction,function(lv,hand){
 								objects[n].sound=sfx.etherknifeh;
 								objects[n].speed=44;
 								objects[n].size=15;
-								objects[n].mdmgmin=plsin(4);
-								objects[n].mdmgmax=plsin(5);
+								objects[n].mdmgmin=plsin(4)/0.85;
+								objects[n].mdmgmax=plsin(5)/0.85;
 								objects[n].resE=0.7;
 								objects[n].procc=0.2;
 								objects[n].dir=targetdirfs(objects[n].x-playertemp.x+400,objects[n].y-playertemp.y+350);
@@ -15689,12 +15737,12 @@ sfxstock.ksblock=min(1,sfxstock.ksblock+0.05);
 								if(objects[n].pierce<0){
 									objects[n].duration=0;
 								}
+								if(objects[n].onhit){
+									objects[n].onhit(i);
+								}
 								damage("enemies",i,random(objects[n].pdmgmin,objects[n].pdmgmax),random(objects[n].mdmgmin,objects[n].mdmgmax),objects[n].armorE,objects[n].resE,"ranged","player",objects[n].procc,getprojprops(objects[n].properties));
 								if(objects[n].stun){
 									enemies[i].stun+=round(objects[n].stun*(100-enemies[i].tenacity)/100);
-								}
-								if(objects[n].onhit){
-									objects[n].onhit(i);
 								}
 								if(objects[n].sound){
 								if(options.loadAudio){
