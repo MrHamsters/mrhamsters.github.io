@@ -145,7 +145,7 @@ Antimagic
 Iron Man
 [Passive] Allows you to store a shield for up to {h0.4x0.5c0.5+i0.8x0.5c0.5}. Rapidly decays if it hasn't been charged recently, but stops at 25% capacity. This shield prevents damage from being taken.
 Siphon of Harvesting
-[Active] Damages all nearby enemies for {i1.3}-{i1.45} magic damage and generates {ox11c4}% of maximum Iron Man shield for each enemy hit, plus 25% of the magic damage dealt. 4 second cooldown. Costs {ox9c0+lx1c0} health.
+[Active] Damages all nearby enemies for {i1.3}-{i1.45} magic void damage and generates {ox11c4}% of maximum Iron Man shield for each enemy hit, plus 25% of the magic damage dealt. 4 second cooldown. Costs {ox9c0+lx1c0} health.
 Traveller's Call
 [Passive] Your mana regeneration is disabled. Instead, mana orbs spawn nearby. Each one restores mana equal to {ox350c150}% of your mana regeneration. You can still regenerate mana during boss battles. Additionally, increases your maximum mana by {ox0c5}%.
 Recall Boomerangs
@@ -161,7 +161,7 @@ Resilience
 Herald of Ice
 [Passive] Withers nearby enemies by {ox120c60}% per second, up to 40%. Enemies inside inner range recieve double wither rate, capped at 55%. Increases cold damage you deal by 10%.
 Herald of Lightning
-[Passive] Strikes a random visible enemy with lightning, dealing {s0.175x0.5c0.5}-{s0.575x0.5c0.5} physical and {i0.175x0.5c0.5}-{i0.575x0.5c0.5} magic electric damage to nearby enemies, every 4 seconds, increased to once per second if you've killed in the last 8 seconds. Increases electric damage you deal by 5%, increased to 15% if you've killed in the last 8 seconds.
+[Passive] Strikes a random visible enemy (tougher enemies are more likely to be struck) with lightning, dealing {s0.175x0.5c0.5}-{s0.575x0.5c0.5} physical and {i0.175x0.5c0.5}-{i0.575x0.5c0.5} magic electric damage to nearby enemies, every 4 seconds, increased to once per second if you've killed in the last 8 seconds. Increases electric damage you deal by 5%, increased to 15% if you've killed in the last 8 seconds.
 Herald of Ash
 [Passive] Burns nearby enemies for {s0.06x0c1+i0.06x0c1} true fire-burn damage per second. Herald of Ash's damage increases by up to 400%, and all damage you deal by up to 10% (increased to 25% for fire damage and 20% for explosion damage), after being in combat for 6 seconds.
 Chaos Innoculation
