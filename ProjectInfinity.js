@@ -1,4 +1,4 @@
-var version="0.8.2c";
+var version="0.8.2d";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -139,7 +139,7 @@ var enemydata;
 var enemies;
 var temp=0;
 var dptemp=0;
-var menuscreentemp=[0,0,0,0];
+var menuscreentemp=[0,0,0,0,0,0];
 var nametemp=0;
 var canstart=0;
 var bgmn=0;
@@ -4400,7 +4400,7 @@ var loadtraits=function(){
 			if(runedata[player.inventory[equipkey[i]].rune*4-2]){
 				for(n=0;n<runedata[player.inventory[equipkey[i]].rune*4-2].length;n+=1){
 					if(playertemp.traits[runedata[player.inventory[equipkey[i]].rune*4-2][n][0]]){
-						playertemp.traits[runedata[player.inventory[equipkey[i]].rune*4-2]]+=runedata[player.inventory[equipkey[i]].rune*4-2][n][1];
+						playertemp.traits[runedata[player.inventory[equipkey[i]].rune*4-2][n][0]]+=runedata[player.inventory[equipkey[i]].rune*4-2][n][1];
 					}
 					else{
 						playertemp.traits[runedata[player.inventory[equipkey[i]].rune*4-2][n][0]]=runedata[player.inventory[equipkey[i]].rune*4-2][n][1];
@@ -5280,35 +5280,27 @@ var loadtraits=function(){
 	if(playertemp.traits[73]>0){
 		append(traitfuncs.damagedealtpostmit,function(){
 			if(willhit){
-				if(playertemp.action.name=="mace of spades"){
-					if(hits<2){
-						stemp=1;
-					}
-					else{
-						stemp=0.5;
-					}
-					if(getbuffind(12)>=0){
-						playertemp.buffs[getbuffind(12)].pow+=mdmg/4*stemp;
-						playertemp.buffs[getbuffind(12)].dur=999;
-						if(playertemp.buffs[getbuffind(12)].pow>(plshp(1))*(0.2+0.2*playertemp.traits[73])){
-							playertemp.buffs[getbuffind(12)].pow=(plshp(1))*(0.2+0.2*playertemp.traits[73]);	
+				if(findprop("ironmanshield")){
+					if(playertemp.action.name=="mace of spades"){
+						if(hits<2){
+							stemp=1;
+						}
+						else{
+							stemp=0.5;
+						}
+						playertemp.ironman+=mdmg/4*stemp;
+						playertemp.ironmandur=240;
+						if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
+							playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
 						}
 					}
-					else{
-						buff(12,999,mdmg/4*stemp);
-					}
+					else if(playertemp.action.name=="siphon of harvesting"){
+						playertemp.ironman+=mdmg/4;
+						playertemp.ironmandur=240;
+						if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
+							playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
+						}
 				}
-				else if(playertemp.action.name=="siphon of harvesting"){
-					if(getbuffind(12)>=0){
-						playertemp.buffs[getbuffind(12)].pow+=mdmg/4;
-						playertemp.buffs[getbuffind(12)].dur=999;
-						if(playertemp.buffs[getbuffind(12)].pow>(plshp(1))*(0.2+0.2*playertemp.traits[73])){
-							playertemp.buffs[getbuffind(12)].pow=(plshp(1))*(0.2+0.2*playertemp.traits[73]);	
-						}
-					}
-					else{
-						buff(12,999,mdmg/4);
-					}
 				}
 			}
 		});
@@ -5645,21 +5637,24 @@ var loadtraits=function(){
 	}
 	if(playertemp.traits[73]>0){
 		append(traitfuncs.damagetakenpm,function(){
-			if(getbuffind(12)>=0){
-				if(pdmg>playertemp.buffs[getbuffind(12)].pow){
-					pdmg-=playertemp.buffs[getbuffind(12)].pow;
-					playertemp.buffs[getbuffind(12)].pow=0;
+			if(playertemp.ironman>0){
+				if(willhit){
+					append(particles,new createparticle(775,240,-0.2,0,0,0.03,'text',"-"+round(min(pdmg+mdmg,playertemp.ironman)),22,0,255,-2,110,110,110));
+				}
+				if(pdmg>playertemp.ironman){
+					pdmg-=playertemp.ironman;
+					playertemp.ironman=0;
 				}
 				else{
-					playertemp.buffs[getbuffind(12)].pow-=pdmg;
+					playertemp.ironman-=pdmg;
 					pdmg=0;
 				}
-				if(mdmg>playertemp.buffs[getbuffind(12)].pow){
-					mdmg-=playertemp.buffs[getbuffind(12)].pow;
-					playertemp.buffs[getbuffind(12)].pow=0;
+				if(mdmg>playertemp.ironman){
+					mdmg-=playertemp.ironman;
+					playertemp.ironman=0;
 				}
 				else{
-					playertemp.buffs[getbuffind(12)].pow-=mdmg;
+					playertemp.ironman-=mdmg;
 					mdmg=0;
 				}
 			}
@@ -5963,27 +5958,27 @@ var loadtraits=function(){
 	}
 	if(playertemp.traits[73]>0){
 		append(traitfuncs.passives,function(){
-			if(getbuffind(12)>=0){
-				stemp=getbuffind(12);
-				if(playertemp.buffs[stemp].dur<819){
-					if(playertemp.buffs[stemp].dur<699){
-						playertemp.buffs[stemp].dur=698;
-					}
-					if(playertemp.buffs[stemp].pow>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])/4){
-						playertemp.buffs[stemp].pow-=nmelvsc(player.level)/6;
-						if(playertemp.buffs[stemp].pow<((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])/4){
-							playertemp.buffs[stemp].pow=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])/4;
-						}
-					}
+			if(!(playertemp.ironman)){
+				playertemp.ironman=0;
+			}
+			if(!(playertemp.ironmandur)){
+				playertemp.ironmandur=0;
+			}
+			if(playertemp.ironmandur<=0){
+				if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])/4){
+					playertemp.ironman=max(((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])/4,playertemp.ironman-((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])/600);
 				}
-				if(render){fill(170,170,200);
-				rect(825,240,(playertemp.buffs[stemp].pow)/(((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]))*300,10);}
+			}
+			else{
+				playertemp.ironmandur-=1;
 			}
 		});
 		append(traitfuncs.overlay,function(){
-			if(getbuffind(12)>=0){
-				if(render){fill(170,170,200);
-				rect(825,242,(playertemp.buffs[getbuffind(12)].pow)/(((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]))*300,3*(3+playertemp.traits[73]));}
+			if(playertemp.ironman>=0){
+				if(render){
+					fill(140,140,160,abs(tick%120-60)+170);
+					rect(825,275-3*(3+playertemp.traits[73]),(playertemp.ironman)/(((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]))*300,3*(3+playertemp.traits[73]));
+				}
 			}
 		});
 	}
@@ -6044,17 +6039,31 @@ var loadtraits=function(){
 	}			
 	if(playertemp.traits[82]>0){
 		append(traitfuncs.passives,function(){
-			if(gametick%240==0||gametick%60==0&playertemp.timesincekill<=480){
+			if(gametick%240==0||(gametick%60==0&playertemp.timesincekill<=480)){
 				hits=new Array();
 				for(i=0;i<enemies.length;i+=1){
-					if(!(enemies[i].invinci>0)){
+					if(!(enemies[i].invinci>0||enemies[i].stealth>0)&enemies[i].exists){
 						if(enemies[i].x-playertemp.x<400&enemies[i].y-playertemp.y<350&enemies[i].x-playertemp.x>-400&enemies[i].y-playertemp.y>-350){
-								append(hits,i);
+							append(hits,i+1);
 						}
 					}
 				}
 				if(hits[0]){
-					stemp=hits[round(random(0,hits.length-1))];
+					for(cii=0;cii<hits.length;cii+=1){
+						hits[cii]-=1;
+					}
+					stemp=round(1);
+					if(stemp){
+						stemp=hits[0];
+						for(cii=1;cii<hits.length;cii+=1){
+							if(enemies[hits[cii]].mhp>enemies[stemp]){
+								stemp=hits[cii];
+							}
+						}
+					}
+					else{
+						stemp=hits[round(random(0,hits.length-1))];
+					}
 					append(particles,new createparticle(enemies[stemp].x,enemies[stemp].y,0,0,0,0,'circle','',55,10,255,-25,220,220,100,1));
 					append(particles,new createparticle(enemies[stemp].x,enemies[stemp].y,0,0,0,0,'circle','',45,0,255,-17,100,100,255,1));
 					append(objects,{
@@ -6063,7 +6072,7 @@ var loadtraits=function(){
 						size:50,
 						duration:0,
 						rangetype:"ranged",
-						sound:sfx.obliteration,
+						sound:0,
 						x:enemies[stemp].x,
 						y:enemies[stemp].y,
 						pdmgmin:((plsst(1)))*0.35*10*(0.5+playertemp.traits[82]/2),
@@ -6076,6 +6085,7 @@ var loadtraits=function(){
 						properties:["electric"],
 						hits:new Array(999)
 					});
+					sfx.surges.play();
 				}
 			}
 			if(playertemp.timesincekill<=480){
@@ -8821,7 +8831,7 @@ var getBiomeScripts=function(){
 						dialog=function(){
 							sdialogb({
 								speaker:"Tattered Note",
-								speech:"The Infuser is missing a crucial component and cannot be used. However, it can easily be fixed with a Shard of Nature. These can be found in the jungle. Once fixed, the Infuser can be used to gain powerful bonuses after spending enough PP on passives in your inventory.",
+								speech:"The Infuser is missing a crucial component and cannot be used. However, it can easily be fixed with a Shard of Nature. These can be found in the jungle. Once fixed, the Infuser can be used to gain powerful bonuses by spending keystones gained by completing areas.",
 								answers:[
 									{
 										answer:"(Leave)",
@@ -12748,7 +12758,7 @@ append(doaction,function(lv,hand){
 									damage("enemies",i,random(13*(plsst(1)),
 									(plsst(1))*14),random(
 									(plsin(1))*17,
-									(plsin(1))*18),1,1,"melee","player",1.3,["impact"]
+									(plsin(1))*18),1,1,"melee","player",1.3,["impact","ironmanshield"]
 									);
 									
 							if(options.loadAudio){sfx.MoS.one.play();}
@@ -12791,7 +12801,7 @@ append(doaction,function(lv,hand){
 									damage("enemies",i,random(1.3*(plsst(1))*10,
 									(plsst(1))*1.4*10),random(
 									(plsin(1))*1.7*10,
-									(plsin(1))*1.8*10),1,1,"melee","player",1.3,["impact"]
+									(plsin(1))*1.8*10),1,1,"melee","player",1.3,["impact","ironmanshield"]
 									);
 									
 							if(options.loadAudio){sfx.MoS.too.play();}
@@ -12833,7 +12843,7 @@ append(doaction,function(lv,hand){
 								damage("enemies",i,random(1.3*(plsst(1))*10,
 								(plsst(1))*1.4*10),random(
 								(plsin(1))*3.4*10,
-								(plsin(1))*3.6*10),1,1,"melee","player",1.7,["impact"]
+								(plsin(1))*3.6*10),1,1,"melee","player",1.7,["impact","ironmanshield"]
 								);
 								
 						if(options.loadAudio){sfx.MoS.three.play();}
@@ -13711,7 +13721,7 @@ append(doaction,function(lv,hand){
 			ellipse(400,350,180,180);
 		}
 		else{
-			fill(150,130,170,200);
+			fill(110,90,150,200);
 			ellipseMode(CENTER);
 			ellipse(400,350,180,180);
 			stroke(200,200,220,150);
@@ -13724,23 +13734,18 @@ append(doaction,function(lv,hand){
 			for(i=0;i<enemies.length;i+=1){
 				if(!(enemies[i].invinci>0)){
 					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(90+enemies[i].size,2)){
-						damage("enemies",i,0,random(26*(plsin(1)),29*(plsin(1))),1,1,"ranged","player",1.2);
+						damage("enemies",i,0,random(26*(plsin(1)),29*(plsin(1))),1,1,"ranged","player",1.2,["void","ironmanshield"]);
 						hits+=1;
 					}
 				}
 			}
 			if(hits>0){
 			if(options.loadAudio){sfx.SoHh.play();}
-					if(getbuffind(12)>=0){
-						playertemp.buffs[getbuffind(12)].pow+=hits*((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])*(0.11+0.04*playertemp.traits[74]);
-						playertemp.buffs[getbuffind(12)].dur=999;
-						if(playertemp.buffs[getbuffind(12)].pow>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
-							playertemp.buffs[getbuffind(12)].pow=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
-						}
-					}
-					else{
-						buff(12,999,hits*((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])*(0.11+0.04*playertemp.traits[74]));
-					}
+				playertemp.ironman+=hits*((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])*(0.11+0.04*playertemp.traits[74]);
+				playertemp.ironmandur=240;
+				if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
+					playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
+				}
 			}
 		
 			
@@ -15098,6 +15103,7 @@ void draw(){
 	}
 	if(!(mousePressed)){
 		igclick=0;
+		mouselock=0;
 	}
 while(drawcount>=17&cdraw<=drawcap){
 	drawcount-=17;
@@ -16521,9 +16527,6 @@ sfxstock.ksblock=min(1,sfxstock.ksblock+0.05);
 	//INVENTORY/GUIS================================================
 	else{
 	if(inventory==1){
-		if(!(mousePressed)){
-			mouselock=0;
-		}
 			fill(120,120,120);
 			rect(0,0,1133,700);
 			//Normal inventory=========
@@ -18352,13 +18355,25 @@ else{
 			menuscreentemp[2]=min(50,menuscreentemp[2]+1);
 			
 		}
-		fill(255,40,40,5+menuscreentemp[2]*5);
+		if(cursorbox(50,250,350,450)){
+			fill(255,100,100,5+menuscreentemp[2]*5);
+		}
+		else{
+			fill(255,40,40,5+menuscreentemp[2]*5);
+		}
 		rect(50,350,200,100,40);
 		
 		fill(0,0,0,5+menuscreentemp[2]*5);
 		textFont(font, 30); 
 		text("New Game",75,383,500,65);
-		fill(40,180,255,5+menuscreentemp[2]*5);
+		
+		if(cursorbox(400,600,350,450)){
+			fill(100,200,255,5+menuscreentemp[2]*5);
+		}
+		else{
+			fill(40,180,255,5+menuscreentemp[2]*5);
+		}
+		
 		rect(400,350,200,100,40);
 		fill(0,0,0,5+menuscreentemp[2]*5);
 		textFont(font, 30); 
@@ -18376,11 +18391,16 @@ else{
 			textFont(font, 37); 
 			text("Credits",437,600,500,60);
 		if(menuscreentemp[0]){
-			fill(40,255,40);
+			if(cursorbox(800,1000,270,370)){
+				fill(100,255,100);
+			}
+			else{
+				fill(40,255,40);
+			}
 			rect(800,270,200,100,40);
 			fill(0,0,0);
 			textFont(font, 37); 
-			text("Continue",820,305,500,60);
+			text("Continue",820,300,500,60);
 			fill(30,30,60);
 			rect(720,385,350,130);
 			textAlign(CENTER,CENTER);
@@ -18393,6 +18413,45 @@ else{
 		fill(0,0,0);
 		textFont(font, 20); 
 		text("Current Version: "+version,875,670,300,30);
+		if(menuscreentemp[5]){
+			fill(50+abs(tick%50-25),50+abs(tick%50-25),0,100);
+			rect(165,220,400,40);
+			if(cursorbox(570,620,215,265)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-100,
+					w:200,
+					h:150,
+					title:"Click to clear name",
+					tip:"Or press DELETE to remove the last letter",
+					colors:0
+				};
+				if(mousePressed&!(mouselock)){
+					textinput="";
+					if(sfx){
+						sfx.click.play();
+					}
+					mouselock=1;
+				}
+				fill(100,100,100);
+			}
+			else{
+				fill(60,60,60);
+			}
+			rect(570,215,50,50,10);
+			noFill();
+			strokeWeight(12);
+			stroke(255,0,0);
+			line(577,222,613,258);
+			line(613,222,577,258);
+			noStroke();
+		}
+		else{
+			if(mousePressed){
+				menuscreentemp[5]=1;
+			}
+		}
 		fill(200,200,0);
 		textFont(font, 30); 
 		text("Name: "+textinput,75,220,700,90);
@@ -18499,47 +18558,7 @@ else{
 	if(buttonCD>0){
 		buttonCD-=1;
 	}
-	if(tooltipdraw){
-		if(tooltipdraw.x-tooltipdraw.w/2<0){
-			tooltipdraw.x=tooltipdraw.w/2;
-		}
-		if(tooltipdraw.y-tooltipdraw.h/2<0){
-			tooltipdraw.y=tooltipdraw.h/2;
-		}
-		if(tooltipdraw.x+tooltipdraw.w/2>1133){
-			tooltipdraw.x=1133-tooltipdraw.w/2;
-		}
-		if(tooltipdraw.y+tooltipdraw.h/2>700){
-			tooltipdraw.y=700-tooltipdraw.h/2;
-		}
-		rectMode(CENTER);
-		fill(0,0,50,175);
-		rect(tooltipdraw.x,tooltipdraw.y,tooltipdraw.w,tooltipdraw.h);
-		textFont(0,16);
-		fill(255,225,190);
-		textAlign(LEFT,TOP);
-		text(tooltipdraw.title,13+tooltipdraw.x-tooltipdraw.w/2,7+tooltipdraw.y-tooltipdraw.h/2);
-		textFont(0,14);
-		fill(255,255,255);
-		if(tooltipdraw.type==0){
-		textAlign(CENTER,CENTER);
-		text(tooltipdraw.tip,tooltipdraw.x-tooltipdraw.w/2,40+tooltipdraw.y-tooltipdraw.h/2,tooltipdraw.w,tooltipdraw.h-40);
-		}
-		else{
-			for(i=0;i<tooltipdraw.tip.length;i+=1){
-				if(tooltipdraw.colors){
-					if(tooltipdraw.colors[i]){
-						fill(tooltipdraw.colors[i][0],tooltipdraw.colors[i][1],tooltipdraw.colors[i][2]);
-					}
-					else{
-						fill(255,255,255);
-					}
-				}
-				text(tooltipdraw.tip[i],10+tooltipdraw.x-tooltipdraw.w/2,40+tooltipdraw.y-tooltipdraw.h/2+20*i);
-			}
-		}
-			rectMode(CORNER);
-	}
+	
 //============Particles=============
 textAlign(CENTER,CENTER);
 ellipseMode(CENTER);
@@ -18594,6 +18613,47 @@ text(dmgind[y].text,400+dmgind[y].x-playertemp.x,350+dmgind[y].y-playertemp.y);}
 			}
 			dmgind[y].t+=1;
 }
+if(tooltipdraw){
+		if(tooltipdraw.x-tooltipdraw.w/2<0){
+			tooltipdraw.x=tooltipdraw.w/2;
+		}
+		if(tooltipdraw.y-tooltipdraw.h/2<0){
+			tooltipdraw.y=tooltipdraw.h/2;
+		}
+		if(tooltipdraw.x+tooltipdraw.w/2>1133){
+			tooltipdraw.x=1133-tooltipdraw.w/2;
+		}
+		if(tooltipdraw.y+tooltipdraw.h/2>700){
+			tooltipdraw.y=700-tooltipdraw.h/2;
+		}
+		rectMode(CENTER);
+		fill(0,0,50,175);
+		rect(tooltipdraw.x,tooltipdraw.y,tooltipdraw.w,tooltipdraw.h);
+		textFont(0,16);
+		fill(255,225,190);
+		textAlign(LEFT,TOP);
+		text(tooltipdraw.title,13+tooltipdraw.x-tooltipdraw.w/2,7+tooltipdraw.y-tooltipdraw.h/2);
+		textFont(0,14);
+		fill(255,255,255);
+		if(tooltipdraw.type==0){
+		textAlign(CENTER,CENTER);
+		text(tooltipdraw.tip,tooltipdraw.x-tooltipdraw.w/2,40+tooltipdraw.y-tooltipdraw.h/2,tooltipdraw.w,tooltipdraw.h-40);
+		}
+		else{
+			for(i=0;i<tooltipdraw.tip.length;i+=1){
+				if(tooltipdraw.colors){
+					if(tooltipdraw.colors[i]){
+						fill(tooltipdraw.colors[i][0],tooltipdraw.colors[i][1],tooltipdraw.colors[i][2]);
+					}
+					else{
+						fill(255,255,255);
+					}
+				}
+				text(tooltipdraw.tip[i],10+tooltipdraw.x-tooltipdraw.w/2,40+tooltipdraw.y-tooltipdraw.h/2+20*i);
+			}
+		}
+			rectMode(CORNER);
+	}
 textAlign(LEFT,TOP);
 if(helpscreen.active&render){
 	helpscreen.help();
