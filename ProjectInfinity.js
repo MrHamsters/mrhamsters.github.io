@@ -4771,7 +4771,7 @@ var loadtraits=function(){
 				mdmg=max(mdmg/10,mdmg-(playertemp.traits[87]*0.002-0.001)*((plsre(1))*resE-dmgstashfc[1])/10);
 			}
 		}
-		if(pdmg<=dmgstashfc[0]/10||mdmg<=dmgstashfc[1]/10){
+		if(pdmg<=dmgstashfc[0]*0.15||mdmg<=dmgstashfc[1]*0.15){
 			armorsfx=1;
 		}
 	});
