@@ -1,4 +1,4 @@
-var version="0.8.2d";
+var version="0.8.2f";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -225,6 +225,8 @@ var loadassetscache=function(){
 		text("2/3",500,370);
 		if(options.loadAudio){
 		sfx={
+				armor: new Howl({  src: ['Data/Sound/sfx/armor.ogg'], autoplay: false,loop: false, volume: options.sfx*0.15,}),
+				hurtmin: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.15,}),
 				hurt: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.3,}),
 				hurtpow: new Howl({ src: ['Data/Sound/sfx/hurt.ogg'],autoplay: false, loop: false,  volume: options.sfx*0.7,}),
 				hurtpow2: new Howl({src: ['Data/Sound/sfx/hurt.ogg'],  autoplay: false,  loop: false, volume: options.sfx*1,}),
@@ -3380,20 +3382,20 @@ var applykeystones=function(){
 		}
 		player.passivemults={
 			power:{
-				hp:0,
-				hpregen:0,
-				str:1,
-				intel:1,
-				armor:0,
-				res:0
+				hp:0.1,
+				hpregen:0.1,
+				str:0.9,
+				intel:0.9,
+				armor:0.1,
+				res:0.1
 			},
 			fortitude:{
-				hp:1,
-				hpregen:1,
-				str:0,
-				intel:0,
-				armor:1,
-				res:1
+				hp:0.9,
+				hpregen:0.9,
+				str:0.1,
+				intel:0.1,
+				armor:0.9,
+				res:0.9
 			},
 			omnipotency:{
 				hp:1,
@@ -4768,6 +4770,9 @@ var loadtraits=function(){
 				pdmg=max(pdmg/10,pdmg-(playertemp.traits[87]*0.002-0.001)*((plsar(1))*armorE-dmgstashfc[0])/10);
 				mdmg=max(mdmg/10,mdmg-(playertemp.traits[87]*0.002-0.001)*((plsre(1))*resE-dmgstashfc[1])/10);
 			}
+		}
+		if(pdmg<=dmgstashfc[0]/10||mdmg<=dmgstashfc[1]/10){
+			armorsfx=1;
 		}
 	});
 	if(playertemp.traits[37]>0){
@@ -7556,6 +7561,7 @@ var getprojprops=function(props){
 var spdmg=0;
 var smdmg=0;
 var atkprop=0;
+var armorsfx;
 var clearobjects=function(){
 	for(n=1;n<objects.length;n+=1){
 		if(objects[n].deleted){
@@ -7578,6 +7584,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 	else{
 		atkprop=new Array();
 	}
+	armorsfx=0;
 	pdmg=pdmgs;
 	mdmg=mdmgs;
 	spdmg=pdmgs;
@@ -7745,6 +7752,9 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 					if(dmgsound){
 						if(sfxstock.hurt>0){
 							sfxstock.hurt-=1;
+							if(armorsfx){
+								sfx.armor.play();
+							}
 							if(pdmg+mdmg>0){
 								if(pdmg+mdmg>(plshp(1))/8){
 									if(pdmg+mdmg>(plshp(1))/3){
@@ -7754,8 +7764,11 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 										sfx.hurtpow.play();
 									}
 								}
-								else{
+								else if(pdmg+mdmg>(plshp(0.04))){
 									sfx.hurt.play();
+								}
+								else{
+									sfx.hurtmin.play();
 								}
 							}
 							else{
@@ -7974,7 +7987,7 @@ var loadArea=function(){
 	}
 }
 var nmelvsc=function (nmelv){
-	return ((0.9+nmelv/10)*(1+nmelv/100)*(0.6+(min(100,max(0,nmelv-30))+min(100,max(0,nmelv/2-50)))*0.012));
+	return((0.9+nmelv/10)*(1+nmelv/100)*(0.45+(min(100,max(0,nmelv-20))+min(100,max(0,nmelv/2-50)))*0.018));
 }
 var placegateway=function(i,mindistance){
 	gateways[i].x = playertemp.x+random(-biomedata[11],biomedata[11]);
@@ -12761,7 +12774,9 @@ append(doaction,function(lv,hand){
 									(plsin(1))*18),1,1,"melee","player",1.3,["impact","ironmanshield"]
 									);
 									
-							if(options.loadAudio){sfx.MoS.one.play();}
+								if(hits<2){
+									if(options.loadAudio){sfx.MoS.one.play();}
+								}
 							}
 						}
 					}
@@ -12804,7 +12819,9 @@ append(doaction,function(lv,hand){
 									(plsin(1))*1.8*10),1,1,"melee","player",1.3,["impact","ironmanshield"]
 									);
 									
-							if(options.loadAudio){sfx.MoS.too.play();}
+								if(hits<2){
+									if(options.loadAudio){sfx.MoS.too.play();}
+								}
 							}
 						}
 					}
@@ -12845,8 +12862,9 @@ append(doaction,function(lv,hand){
 								(plsin(1))*3.4*10,
 								(plsin(1))*3.6*10),1,1,"melee","player",1.7,["impact","ironmanshield"]
 								);
-								
-						if(options.loadAudio){sfx.MoS.three.play();}
+								if(hits<2){
+									if(options.loadAudio){sfx.MoS.three.play();}
+								}
 						}
 					}
 				}
@@ -18724,20 +18742,20 @@ void mouseClicked(){
 						},
 						passivemults:{
 							power:{
-								hp:0,
-								hpregen:0,
-								str:1,
-								intel:1,
-								armor:0,
-								res:0
+								hp:0.1,
+								hpregen:0.1,
+								str:0.9,
+								intel:0.9,
+								armor:0.1,
+								res:0.1
 							},
 							fortitude:{
-								hp:1,
-								hpregen:1,
-								str:0,
-								intel:0,
-								armor:1,
-								res:1
+								hp:0.9,
+								hpregen:0.9,
+								str:0.1,
+								intel:0.1,
+								armor:0.9,
+								res:0.9
 							},
 							omnipotency:{
 								hp:1,
