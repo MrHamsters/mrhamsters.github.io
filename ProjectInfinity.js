@@ -225,8 +225,9 @@ var loadassetscache=function(){
 		text("2/3",500,370);
 		if(options.loadAudio){
 		sfx={
-				armor: new Howl({  src: ['Data/Sound/sfx/armor.ogg'], autoplay: false,loop: false, volume: options.sfx*0.15,}),
-				hurtmin: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.15,}),
+				armor: new Howl({  src: ['Data/Sound/sfx/armor.ogg'], autoplay: false,loop: false, volume: options.sfx*0.3,}),
+				armorp: new Howl({  src: ['Data/Sound/sfx/armorpartial.ogg'], autoplay: false,loop: false, volume: options.sfx,}),
+				hurtmin: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.12,}),
 				hurt: new Howl({  src: ['Data/Sound/sfx/hurt.ogg'], autoplay: false,loop: false, volume: options.sfx*0.3,}),
 				hurtpow: new Howl({ src: ['Data/Sound/sfx/hurt.ogg'],autoplay: false, loop: false,  volume: options.sfx*0.7,}),
 				hurtpow2: new Howl({src: ['Data/Sound/sfx/hurt.ogg'],  autoplay: false,  loop: false, volume: options.sfx*1,}),
@@ -4756,6 +4757,12 @@ var loadtraits=function(){
 	append(traitfuncs.damagetaken,function(){
 		dmgstashfc=[pdmg,mdmg];
 		if(playertemp.traits[212]>0){
+			if((plsar(1))*armorE/10>mdmg*0.45&(plsre(1))*resE/10>pdmg*0.45){
+				armorsfx=1;
+				if((plsar(1))*armorE/10>mdmg*0.88&(plsre(1))*resE/10>pdmg*0.88){
+					armorsfx=2;
+				}
+			}
 			pdmg=max(pdmg/10,pdmg-(plsre(1))*resE/10);
 			mdmg=max(mdmg/10,mdmg-(plsar(1))*armorE/10);
 			if(playertemp.traits[87]>0){
@@ -4764,15 +4771,18 @@ var loadtraits=function(){
 			}
 		}
 		else{
+			if((plsar(1))*armorE/10>pdmg*0.45&(plsre(1))*resE/10>mdmg*0.45){
+				armorsfx=1;
+				if((plsar(1))*armorE/10>pdmg*0.88&(plsre(1))*resE/10>mdmg*0.88){
+					armorsfx=2;
+				}
+			}
 			pdmg=max(pdmg/10,pdmg-(plsar(1))*armorE/10);
 			mdmg=max(mdmg/10,mdmg-(plsre(1))*resE/10);
 			if(playertemp.traits[87]>0){
 				pdmg=max(pdmg/10,pdmg-(playertemp.traits[87]*0.002-0.001)*((plsar(1))*armorE-dmgstashfc[0])/10);
 				mdmg=max(mdmg/10,mdmg-(playertemp.traits[87]*0.002-0.001)*((plsre(1))*resE-dmgstashfc[1])/10);
 			}
-		}
-		if(pdmg<=dmgstashfc[0]*0.15||mdmg<=dmgstashfc[1]*0.15){
-			armorsfx=1;
 		}
 	});
 	if(playertemp.traits[37]>0){
@@ -7752,8 +7762,15 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 					if(dmgsound){
 						if(sfxstock.hurt>0){
 							sfxstock.hurt-=1;
-							if(armorsfx){
-								sfx.armor.play();
+							if(armorsfx>0){
+								if(armorsfx==2){
+									sfx.armor.rate(random(0.8,1));
+									sfx.armor.play();
+								}
+								else{
+									sfx.armorp.rate(random(0.8,1));
+									sfx.armorp.play();
+								}
 							}
 							if(pdmg+mdmg>0){
 								if(pdmg+mdmg>(plshp(1))/8){
@@ -7826,6 +7843,12 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				}
 			}
 		}
+		if(enemies[index].armor/10*armorE>pdmg*0.45&enemies[index].res/10*resE>mdmg*0.45){
+			armorsfx=1;
+			if(enemies[index].armor/10*armorE>pdmg*0.88&enemies[index].res/10*resE>mdmg*0.88){
+				armorsfx=2;
+			}
+		}
 		pdmg=max(pdmg/10,pdmg-enemies[index].armor/10*armorE);
 		mdmg=max(mdmg/10,mdmg-enemies[index].res/10*resE);
 		if(enemies[index].propertydmods){
@@ -7863,6 +7886,14 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 		if(pdmg+mdmg>0){
 			playertemp.timesincedamagedealt=0;
 			if(willhit){
+				if(armorsfx>0){
+					if(armorsfx==2){
+						sfx.armor.play();
+					}
+					else{
+						sfx.armorp.play();
+					}
+				}
 				playertemp.timesincehitdealt=0;
 			}
 		}
@@ -12406,7 +12437,10 @@ append(doaction,function(lv,hand){
 					}
 					});
 				}
-				if(options.loadAudio){sfx.aquabubbleburst.play();sfx.aquabubble.stop();}
+				if(options.loadAudio){
+					sfx.aquabubbleburst.play();
+					sfx.aquabubble.stop();
+				}
 				playertemp.aquabubble=0;
 				stopaction();
 			}
