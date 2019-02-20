@@ -11230,10 +11230,10 @@ var propertycolors=[
 var specialdraw=new Array(999);
 specialdraw[2]=function(){
 	if(options.light>1){
-		fill(200,0,200,3);
+		fill(100+abs(tick%20-10)*10,0,100,10);
 			ellipseMode(CENTER);
 		for(cal=0;cal<5;cal+=1){
-			ellipse(0,0,cal*6,cal*6);
+			ellipse(0,0,cal*9,cal*9);
 		}
 	}
 }
