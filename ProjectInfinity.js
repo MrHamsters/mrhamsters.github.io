@@ -4643,7 +4643,11 @@ var loadtraits=function(){
 					pdmg=0;
 					mdmg=0;
 					willdamage=0;
-					willhit=0;
+					if(atkprop){
+						if(findprop("cold")&random(1)<0.5){
+							willhit=0;
+						}
+					}
 					append(dmgind,new cdmgind(playertemp.x+random(-10,10),
 					playertemp.y+random(-10,10),
 					"Blocked",10,150,150,255));
@@ -4653,7 +4657,7 @@ var loadtraits=function(){
 					for(gw=0;gw<enemies.length;gw+=1){
 						if(enemies[gw].x-playertemp.x<65&enemies[gw].y-playertemp.y<65&enemies[gw].x-playertemp.x>-65&enemies[gw].y-playertemp.y>-65){
 							if(pow(enemies[gw].x-playertemp.x,2)+pow(enemies[gw].y-playertemp.y,2)<pow(50+enemies[gw].size,2)){
-								enemies[b].stun+=round(24*playertemp.traits[28]*(100-enemies[b].tenacity)/100);
+								enemies[gw].stun+=round(24*playertemp.traits[28]*(100-enemies[gw].tenacity)/100);
 							}
 						}
 					}
@@ -4882,6 +4886,14 @@ var loadtraits=function(){
 					pdmg*=1+enemies[index].drenchcount;
 					mdmg*=1+enemies[index].drenchcount;
 				}
+			}
+		}
+	});
+	append(traitfuncs.damagetaken,function(){
+		if(enemies[attacker]){
+			if(enemies[attacker].drenchcount){
+				pdmg*=1-enemies[attacker].drenchcount/150;
+				mdmg*=1-enemies[attacker].drenchcount/150;
 			}
 		}
 	});
@@ -5622,7 +5634,15 @@ var loadtraits=function(){
 		append(traitfuncs.damagetakenpm,function(){
 		if(playertemp.aquabubble>0){
 			if(willhit){
-				stemp=plshp(0.075)+plsin(0.15);
+				stemp=plshp(0.05)+plsin(0.1);
+				if(atkprop){
+					if(findprop("electric")){
+						stemp/=2;
+					}
+					if(findprop("fire")){
+						stemp*=2;
+					}
+				}
 				if(pdmg>stemp){
 					pdmg-=stemp;
 					stemp=0;
@@ -8711,13 +8731,13 @@ var getBiomeScripts=function(){
 						dialog=function(){
 							sdialogb({
 								speaker:"Reset Merchant",
-								speech:"Hello, "+player.name+"! Interested in a reset? It's 3,000 reactant for a passive reset and 2,000 for a keystone reset.",
+								speech:"Hello, "+player.name+"! Interested in a reset? It's 300 reactant for a passive reset and 200 for a keystone reset.",
 								answers:[
 									{
 										answer:"Reset passives",
 											effect:function(){
-												if(player.reactant>=3000){
-													player.reactant-=3000;
+												if(player.reactant>=300){
+													player.reactant-=300;
 													player.pp+=player.passives[0]*300;
 													player.passives[0]=0;
 													player.pp+=player.passives[1]*300;
@@ -8765,8 +8785,8 @@ var getBiomeScripts=function(){
 									{
 										answer:"Reset keystones",
 											effect:function(){
-												if(player.reactant>=2000){
-													player.reactant-=2000;
+												if(player.reactant>=200){
+													player.reactant-=200;
 													player.keystones.keystones=new Array();
 													player.keystones.allocated=0;
 													for(upd=0;upd<999;upd+=1){
@@ -12375,19 +12395,15 @@ append(doaction,function(lv,hand){
 							if(!(enemies[i].drenchcount)){
 								enemies[i].drenchcount=0;
 							}
-							enemies[i].drenchcount+=20;
-							append(enemies[i].tstatus,{name:'drench',strs:enemies[i].str*0.2,ints:enemies[i].intel*0.2,dcap:min(200,playertemp.action.tick)*0.6,tick:0,dir:random(PI*2),run:function(){
-								enemies[i].str-=enemies[i].tstatus[d].strs;
-								enemies[i].intel-=enemies[i].tstatus[d].ints;
+							enemies[i].drenchcount+=30;
+							append(enemies[i].tstatus,{name:'drench',dcap:min(200,playertemp.action.tick)*0.9,tick:0,dir:random(PI*2),run:function(){
 								enemies[i].hastecache-=0.3;
 								enemies[i].tstatus[d].tick+=1;
-								if((tick+enemies[i].dots[d].ptchan)%8==0){
+								if((tick)%6==0){
 									append(particles,new createparticle(enemies[i].x+random(-enemies[i].size,enemies[i].size),enemies[i].y+random(-enemies[i].size,enemies[i].size),random(-0.5,0.5),0,0,random(0.03,0.07),'circle','',12,-0.2,255,-9,random(30),random(30),170+random(85),1));
 								}
 								if(enemies[i].tstatus[d].tick>=enemies[i].tstatus[d].dcap){
-									enemies[i].str+=enemies[i].tstatus[d].strs;
-									enemies[i].intel+=enemies[i].tstatus[d].ints;
-									enemies[i].drenchcount-=20;
+									enemies[i].drenchcount-=30;
 									enemies[i].tstatus.splice(d,1);
 									d-=1;
 								}
