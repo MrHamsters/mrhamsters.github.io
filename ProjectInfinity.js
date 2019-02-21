@@ -1,4 +1,4 @@
-var version="0.8.2f";
+var version="0.8.2g";
 void setup(){
   size(1133,700);
   strokeWeight(10);
