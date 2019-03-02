@@ -1,4 +1,4 @@
-var version="0.8.3";
+var version="0.8.3b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -11954,7 +11954,8 @@ append(doaction,function(lv,hand){
 		dir:0,
 		level:lv,
 		speedm:0.7,
-		empowered:playertemp.bswordc
+		empowered:playertemp.bswordc,
+		pret:playertemp.bswordct
 	};
 	playertemp.bswordct=120;
 	if(stancecache[hand].current==0){
@@ -12190,8 +12191,8 @@ append(doaction,function(lv,hand){
 							rangetype:"melee",
 							x:enemies[i].x,
 							y:enemies[i].y,
-							pdmgmin:plsst(8),
-							pdmgmax:plsst(10),
+							pdmgmin:plsst(10),
+							pdmgmax:plsst(12),
 							mdmgmin:0,
 							mdmgmax:0,
 							armorE:1,
@@ -12285,7 +12286,7 @@ append(doaction,function(lv,hand){
 						playertemp.bswordct=120;
 					}
 					else{
-						playertemp.bswordc=0;
+						playertemp.bswordct=playertemp.action.pret;
 					}
 				}
 				if(playertemp.action.tick>=30){
