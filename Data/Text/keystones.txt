@@ -523,7 +523,7 @@ Your health takes {ox0c3}% less damage.
 0
 10
 Attuned Spirit
-Store up to 10 spirit charges from kills (+2) or when out of combat (+1 per second after 5 seconds). Taking a hit consumes a charge to reduce damage taken by {H0.005x0c1+ox0c0.27+ox0c0.054Po+lx0c0.03+lx0c0.0006Po}. While you have no charges, gain {ox0c0.5}% haste and deal {ox0c1}% more damage (persists for 0.5 sec after gaining charges again).
+Store up to 10 spirit charges from kills (+2) or when out of combat (+1 per second after 5 seconds). Taking a hit consumes a charge to reduce damage taken by {H0.005x0c1+ox0c0.27+ox0c0.054Po+lx0c0.03+lx0c0.0006Po}. While you have no charges, gain {ox0c0.5}% haste and deal {ox0c1}% more damage (persists for 0.5 sec after regaining charges).
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 10/1

@@ -22,7 +22,7 @@ Not sure how this is here (unimplemented trait)
 Increases XP gain
 Decreases XP gain
 Your health can now exceed your maximum health (decays faster the more you have above maximum)
-Kills heal you and temporarily increase all of your stats
+Kills heal you and steal strength and intelligence on kill
 Strong hits trigger an explosion
 Rapidly regenerate health while out of combat
 Gain a shield which blocks the next attack if you havent taken damage recently
