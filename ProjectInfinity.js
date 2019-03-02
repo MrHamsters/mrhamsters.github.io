@@ -1,4 +1,4 @@
-var version="0.8.3b";
+var version="0.8.3c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -9473,6 +9473,7 @@ var getBiomeScripts=function(){
 							enraged:0,
 							enragec:0,
 							disablehpbar:1,
+							tstatus:new Array(),
 							isBoss:1,
 							persistent:1,
 							imgtype:3,
