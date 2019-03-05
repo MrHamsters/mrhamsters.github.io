@@ -1,4 +1,4 @@
-var version="0.8.3c";
+var version="0.8.3d";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -2220,7 +2220,7 @@ var applyNMETrait=[
 				if(enemies[i].ts.barrier>0){
 					fill(args[1],args[2],args[3],args[4]+((args[5]-args[4])*(abs(tick%args[6]-(args[6]/2))/args[6])*2));
 					ellipseMode(CENTER);
-					ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,args[0],args[0]);
+					ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,args[0]+enemies[i].size*2,args[0]+enemies[i].size*2);
 				}
 			}
 		);
@@ -2244,7 +2244,7 @@ var applyNMETrait=[
 						strokeWeight(args[1]/4);
 						stroke(args[2],args[3],args[4],args[5]+((args[6]-args[5])*(abs(tick%args[7]-(args[7]/2))/args[7])*2));
 						ellipseMode(CENTER);
-						ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,args[1],args[1]);
+						ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,args[1]+enemies[i].size*2,args[1]+enemies[i].size*2);
 						noStroke();
 					}
 				}
@@ -2475,7 +2475,7 @@ var applyNMETrait=[
 			}
 			return(
 				function(){
-					append(stateffects,{name:'spore bomb',poison:{chance:args[7],power:args[8]*nmelvsc(enemies[i].lv)*enemies[i].de,duration:args[9]},launchspd:pow(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2),0.5)/120,dir:dirgeneric(enemies[i].x,enemies[i].y,playertemp.x,playertemp.y),x:enemies[i].x,y:enemies[i].y,source:i,pdmg:args[0]*enemies[i].str,mdmg:args[1]*enemies[i].intel,projectiles:args[2],speed:args[3],duration:args[4],armorE:args[5],resE:args[6],tick:0,run:function(){
+					append(stateffects,{name:'spore bomb',source:i,poison:{chance:args[7],power:args[8]*nmelvsc(enemies[i].lv)*enemies[i].de,duration:args[9]},launchspd:pow(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2),0.5)/120,dir:dirgeneric(enemies[i].x,enemies[i].y,playertemp.x,playertemp.y),x:enemies[i].x,y:enemies[i].y,source:i,pdmg:args[0]*enemies[i].str,mdmg:args[1]*enemies[i].intel,projectiles:args[2],speed:args[3],duration:args[4],armorE:args[5],resE:args[6],tick:0,run:function(){
 						if(render){
 							ellipseMode(CENTER);
 							fill(0,0,0,80+abs(stateffects[n].tick-60)*3);
@@ -2491,7 +2491,7 @@ var applyNMETrait=[
 									type:'projectile',
 									sprite:projectiles[5],
 									target:'player',
-									source:i,
+									source:stateffects[n].source,
 									size:10,
 									speed:stateffects[n].speed,
 									duration:stateffects[n].duration,
@@ -2534,7 +2534,7 @@ var applyNMETrait=[
 			}
 			return(
 				function(){
-					append(stateffects,{name:'dirt bomb',launchspd:pow(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2),0.5)/120,dir:dirgeneric(enemies[i].x,enemies[i].y,playertemp.x,playertemp.y),x:enemies[i].x,y:enemies[i].y,source:i,pdmg:args[0]*enemies[i].str,mdmg:args[1]*enemies[i].intel,projectiles:args[2],speed:args[3],duration:args[4],armorE:args[5],resE:args[6],tick:0,run:function(){
+					append(stateffects,{name:'dirt bomb',source:i,launchspd:pow(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2),0.5)/120,dir:dirgeneric(enemies[i].x,enemies[i].y,playertemp.x,playertemp.y),x:enemies[i].x,y:enemies[i].y,source:i,pdmg:args[0]*enemies[i].str,mdmg:args[1]*enemies[i].intel,projectiles:args[2],speed:args[3],duration:args[4],armorE:args[5],resE:args[6],tick:0,run:function(){
 						if(render){
 							ellipseMode(CENTER);
 							fill(0,0,0,80+abs(stateffects[n].tick-60)*3);
@@ -2550,7 +2550,7 @@ var applyNMETrait=[
 									type:'projectile',
 									sprite:projectiles[15],
 									target:'player',
-									source:i,
+									source:stateffects[n].source,
 									size:10,
 									speed:stateffects[n].speed,
 									duration:stateffects[n].duration,
@@ -4937,8 +4937,8 @@ var loadtraits=function(){
 		if(atkprop){
 			if(enemies[index].drenchcount){
 				if(findprop("cold")||findprop("electric")){
-					pdmg*=1+enemies[index].drenchcount;
-					mdmg*=1+enemies[index].drenchcount;
+					pdmg*=1+enemies[index].drenchcount/50;
+					mdmg*=1+enemies[index].drenchcount/50;
 				}
 			}
 			if(enemies[index].unbalancecount){
@@ -4952,8 +4952,8 @@ var loadtraits=function(){
 	append(traitfuncs.damagetaken,function(){
 		if(enemies[attacker]){
 			if(enemies[attacker].drenchcount){
-				pdmg*=1-enemies[attacker].drenchcount/150;
-				mdmg*=1-enemies[attacker].drenchcount/150;
+				pdmg*=1-enemies[attacker].drenchcount/100;
+				mdmg*=1-enemies[attacker].drenchcount/100;
 			}
 		}
 	});
@@ -6099,6 +6099,9 @@ var loadtraits=function(){
 			}
 			else{
 				playertemp.ironmandur-=1;
+			}
+			if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
+				playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
 			}
 		});
 		append(traitfuncs.overlay,function(){
@@ -7841,10 +7844,10 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				if(player.mp>plsmp(0.4)){
 					manadmg=0;
 					if(playertemp.traits[10]>0){
-						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp(1)*playertemp.traits[5])/2500)),(plsin(0.001)+plshp(0.002)+plsst(min(0.0015,0.0002*playertemp.traits[10])))];
+						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp(1)*playertemp.traits[5])/2500)),(plsin(0.001+playertemp.traits[5]*0.00002)+plshp(0.002+playertemp.traits[5]*0.00004)+plsst(0.0002*playertemp.traits[10]))];
 					}
 					else{
-						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp(1)*playertemp.traits[5])/2500)),(plsin(0.001)+plshp(0.002))];
+						stemp=[max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp(1)*playertemp.traits[5])/2500)),(plsin(0.001+playertemp.traits[5]*0.00002)+plshp(0.002+playertemp.traits[5]*0.00004))];
 					}
 					if(player.mp-plsmp(0.4)>pdmg*(1-stemp[0])/stemp[1]){
 						player.mp-=pdmg*(1-stemp[0])/stemp[1];
@@ -12108,7 +12111,7 @@ append(doaction,function(lv,hand){
 			playertemp.action.diro=PI-atan((mouseX-400)/(mouseY-350));
 		}
 		if(playertemp.bswordc>3){
-			playertemp.bswordc=-1;
+			playertemp.bswordc=0;
 			sfx.fissurec.play();
 			playertemp.action.run=function(){
 				ellipseMode(CENTER);
@@ -12278,6 +12281,10 @@ append(doaction,function(lv,hand){
 							sfx.slash.rate(random(0.9,1.1));
 							sfx.slash.play();}
 							playertemp.eartharmor=min(20,playertemp.eartharmor+min(5,hits));
+							for(cpt=0;cpt<20;cpt+=1){
+								append(particles,new createparticle(400+sin(playertemp.action.dir)*random(10,70)+random(-25,25),350-cos(playertemp.action.dir)*random(10,70)+random(-25,25),0,0,0,0,'circle','',10,0,200,-20,220,170,random(0,50)));
+							}
+							append(particles,new createparticle(400,350,0,0,0,0,'circle','',70,-6,255,-25,255,170,0));
 						}
 						else{
 							if(options.loadAudio){
@@ -12627,7 +12634,10 @@ append(doaction,function(lv,hand){
 				traitpow=0;
 			}
 			if(playertemp.action.tick==1){
-				if(options.loadAudio){sfx.water.play();}
+				if(options.loadAudio){
+					sfx.water.rate(random(0.9,1.1));
+					sfx.water.play();
+				}
 			}
 			translate(400,350);
 			rotate(playertemp.action.dir);
@@ -12643,26 +12653,70 @@ append(doaction,function(lv,hand){
 					pierce:0,
 					duration:random(15,100),
 					timer:0,
-					sound:sfx.pop,
+					sound:0,
 					dir:playertemp.action.dir+random(-0.25*(1-min(10,traitpow)/20),0.25*(1-min(10,traitpow)/20)),
 					x:playertemp.x,
 					y:playertemp.y,
 					pdmgmin:0,
 					pdmgmax:0,
-					mdmgmin:(plsin(1))*3,
-					mdmgmax:(plsin(1))*9,
-					dmggain:(plsin(1))*3/100,
+					mdmgmin:(plsin(1)),
+					mdmgmax:(plsin(6)),
+					dmggain:(plsin(10))/100,
 					armorE:1,
-					resE:1,
-					procc:0.5,
-					properties:["water"],
+					resE:0.6,
+					procc:0.25,
+					properties:["impact","water"],
 					hits:new Array(999),
 					run:function(){
 						objects[n].timer+=1;
 						objects[n].mdmgmin+=objects[n].dmggain;
-						objects[n].mdmgmax+=objects[n].dmggain*3;
+						objects[n].mdmgmax+=objects[n].dmggain;
 					},
 					endfunc:function(){
+						sfx.pop.rate(random(0.9,1.1));
+						sfx.pop.play();
+						append(particles,new createparticle(objects[n].x,objects[n].y,0,0,0,0,'circle','',3,5,200,-20,0,0,180,1));
+						append(objects,{
+							type:'AoE',
+							target:'enemy',
+							size:15,
+							duration:0,
+							rangetype:"ranged",
+							x:objects[n].x,
+							y:objects[n].x,
+							pdmgmin:0,
+							pdmgmax:0,
+							mdmgmin:plsin(2),
+							mdmgmax:plsin(3),
+							armorE:1,
+							resE:0.4,
+							procc:0.07,
+							properties:["water"],
+							hits:new Array(999)
+						});
+						if(random(1)<0.2){
+							for(i=0;i<enemies.length;i+=1){
+								if(pow(enemies[i].x-objects[n].x,2)+pow(enemies[i].y-objects[n].y,2)<pow(15+enemies[i].size,2)){
+									if(!(enemies[i].drenchcount)){
+										enemies[i].drenchcount=0;
+									}
+									enemies[i].drenchcount+=5;
+									append(enemies[i].tstatus,{name:'drench',dcap:180,tick:0,dir:random(PI*2),run:function(){
+										enemies[i].tstatus[d].tick+=1;
+										if((tick)%6==0){
+											append(particles,new createparticle(enemies[i].x+random(-enemies[i].size,enemies[i].size),enemies[i].y+random(-enemies[i].size,enemies[i].size),random(-0.5,0.5),0,0,random(0.03,0.07),'circle','',12,-0.2,255,-9,random(30),random(30),170+random(85),1));
+										}
+										if(enemies[i].tstatus[d].tick>=enemies[i].tstatus[d].dcap){
+											enemies[i].drenchcount-=5;
+											enemies[i].tstatus.splice(d,1);
+											d-=1;
+										}
+									}
+									});
+									hits+=1;
+								}
+							}
+						}
 						if(!(playertemp.bubblewandrestpools)){
 							playertemp.bubblewandrestpools=0;
 						}
@@ -12761,15 +12815,14 @@ append(doaction,function(lv,hand){
 							if(!(enemies[i].drenchcount)){
 								enemies[i].drenchcount=0;
 							}
-							enemies[i].drenchcount+=30;
-							append(enemies[i].tstatus,{name:'drench',dcap:min(200,playertemp.action.tick)*0.9,tick:0,dir:random(PI*2),run:function(){
-								enemies[i].hastecache-=0.3;
+							enemies[i].drenchcount+=15;
+							append(enemies[i].tstatus,{name:'drench',dcap:min(200,playertemp.action.tick)*1.5,tick:0,dir:random(PI*2),run:function(){
 								enemies[i].tstatus[d].tick+=1;
 								if((tick)%6==0){
 									append(particles,new createparticle(enemies[i].x+random(-enemies[i].size,enemies[i].size),enemies[i].y+random(-enemies[i].size,enemies[i].size),random(-0.5,0.5),0,0,random(0.03,0.07),'circle','',12,-0.2,255,-9,random(30),random(30),170+random(85),1));
 								}
 								if(enemies[i].tstatus[d].tick>=enemies[i].tstatus[d].dcap){
-									enemies[i].drenchcount-=30;
+									enemies[i].drenchcount-=15;
 									enemies[i].tstatus.splice(d,1);
 									d-=1;
 								}
