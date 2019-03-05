@@ -142,8 +142,8 @@ Take {ox0c3.5}% less damage from DoTs.
 2
 0
 10
-Tenacity
-Recover {h0.01x0c1+p0.2x0c1} health per second for 3 seconds when you drop below 30% health. 25 second cooldown. A green dot appears next to your health bar when ready.
+Rejuvenation
+Recover {h0.01x0c1+p0.2x0c1} health per second for 3 seconds when you drop below 30% health. 15 second cooldown. A green dot appears next to your health bar when ready.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 5/1
