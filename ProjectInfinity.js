@@ -1,4 +1,4 @@
-var version="0.8.3d";
+var version="0.8.3e";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -4612,7 +4612,7 @@ var loadtraits=function(){
 		if(willhit){
 			if(enemies[attacker]){
 				if(enemies[attacker].unbalancecount){
-					if(random(100)<enemies[attacker].unbalancecount){
+					if(random(100)<min(90,enemies[attacker].unbalancecount)){
 						pdmg=0;
 						mdmg=0;
 						willhit=0;
@@ -4656,8 +4656,8 @@ var loadtraits=function(){
 				noFill();
 				stroke(200,0,200,50);
 				rectMode(CENTER);
-					strokeWeight(50);
-					rect(400,350,754,650);
+				strokeWeight(50);
+				rect(400,350,754,650);
 				rectMode(CORNER);
 				noStroke();
 				fill(200,0,200,playertemp.phasedoor/1.5);
@@ -4952,8 +4952,8 @@ var loadtraits=function(){
 	append(traitfuncs.damagetaken,function(){
 		if(enemies[attacker]){
 			if(enemies[attacker].drenchcount){
-				pdmg*=1-enemies[attacker].drenchcount/100;
-				mdmg*=1-enemies[attacker].drenchcount/100;
+				pdmg*=max(0.1,1-enemies[attacker].drenchcount/100);
+				mdmg*=max(0.1,1-enemies[attacker].drenchcount/100);
 			}
 		}
 	});
@@ -10008,7 +10008,7 @@ var getBiomeScripts=function(){
 								},
 								loot:0,
 								cloot:{
-									stock:25,
+									stock:40,
 									items:[[0,8,100]]
 								},
 								vision:1000,
@@ -12683,7 +12683,7 @@ append(doaction,function(lv,hand){
 							duration:0,
 							rangetype:"ranged",
 							x:objects[n].x,
-							y:objects[n].x,
+							y:objects[n].y,
 							pdmgmin:0,
 							pdmgmax:0,
 							mdmgmin:plsin(2),
@@ -12694,20 +12694,21 @@ append(doaction,function(lv,hand){
 							properties:["water"],
 							hits:new Array(999)
 						});
-						if(random(1)<0.2){
+						if(random(1)<0.1){
+							append(particles,new createparticle(objects[n].x,objects[n].y,0,0,0,0,'circle','',3,10,200,-20,0,0,180,1));
 							for(i=0;i<enemies.length;i+=1){
-								if(pow(enemies[i].x-objects[n].x,2)+pow(enemies[i].y-objects[n].y,2)<pow(15+enemies[i].size,2)){
+								if(pow(enemies[i].x-objects[n].x,2)+pow(enemies[i].y-objects[n].y,2)<pow(25+enemies[i].size,2)){
 									if(!(enemies[i].drenchcount)){
 										enemies[i].drenchcount=0;
 									}
-									enemies[i].drenchcount+=5;
-									append(enemies[i].tstatus,{name:'drench',dcap:180,tick:0,dir:random(PI*2),run:function(){
+									enemies[i].drenchcount+=10;
+									append(enemies[i].tstatus,{name:'drench',dcap:300,tick:0,dir:random(PI*2),run:function(){
 										enemies[i].tstatus[d].tick+=1;
 										if((tick)%6==0){
 											append(particles,new createparticle(enemies[i].x+random(-enemies[i].size,enemies[i].size),enemies[i].y+random(-enemies[i].size,enemies[i].size),random(-0.5,0.5),0,0,random(0.03,0.07),'circle','',12,-0.2,255,-9,random(30),random(30),170+random(85),1));
 										}
 										if(enemies[i].tstatus[d].tick>=enemies[i].tstatus[d].dcap){
-											enemies[i].drenchcount-=5;
+											enemies[i].drenchcount-=10;
 											enemies[i].tstatus.splice(d,1);
 											d-=1;
 										}
