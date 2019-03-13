@@ -1,4 +1,4 @@
-var version="0.8.3f";
+var version="0.8.3e";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -3776,10 +3776,10 @@ var loadkeystoneps=function(){
 			if(!(playertemp.tenacityksa)){
 				playertemp.tenacityksa=0;
 			}
-			if(playertemp.tenacityks<1200){
+			if(playertemp.tenacityks<1500){
 				playertemp.tenacityks+=player.haste*playertemp.haste;
 			}
-			if(playertemp.tenacityks>=1200&player.hp<(plshp(1))*0.3){
+			if(playertemp.tenacityks>=1500&player.hp<(plshp(1))*0.3){
 				playertemp.tenacityks=0;
 				playertemp.tenacityksa=180;
 			}
@@ -3791,37 +3791,13 @@ var loadkeystoneps=function(){
 				heal(((plshp(0.01))+(plshr(0.2)))*playertemp.keystonepassives[5]/60,"HoT");
 			}
 		});
-		append(keystonefuncs.damagetaken,function(){
-			if(playertemp.tenacityksa>0){
-				pdmg*=1-playertemp.keystonepassives[5]/100;
-				mdmg*=1-playertemp.keystonepassives[5]/100;
-			}
-		});
 		append(keystonefuncs.overlay,function(){
-			if(playertemp.tenacityks>=1200){
+			if(playertemp.tenacityks>=1500){
 				ellipseMode(CENTER);
 				fill(150,150,150);
 				ellipse(818,255,10,10);
 				fill(0,255,0);
 				ellipse(818,255,6,6);
-			}
-		});
-	}
-	if(playertemp.keystonepassives[31]>0){
-		append(keystonefuncs.passives,function(){
-			if(!(playertemp.astralinfusion)){
-				playertemp.astralinfusion=0;
-			}
-			if(tick%300==0){
-				playertemp.astralinfusion=60;
-			}
-			if(playertemp.astralinfusion>0){
-				playertemp.astralinfusion-=1;
-				if(tick%5==0){
-					append(particles,new createparticle(random(385,415),random(335,365),0,0,0,0,'circle','',10,-0.3,255,-15,200,random(50,120),200));
-				}
-				heal(((plshp(0.01))+(plshr(0.5)))*playertemp.keystonepassives[31]/60,"regeneration");
-				player.mp+=((plsmp(0.01))+(plsmr(0.5)))*playertemp.keystonepassives[31]/60;
 			}
 		});
 	}
@@ -3920,6 +3896,9 @@ var loadkeystoneps=function(){
 			if(!(playertemp.frenzy)){
 				playertemp.frenzy=0;
 			}
+			if(!(playertemp.frenzym)){
+				playertemp.frenzym=0;
+			}
 			if(!(playertemp.frenzyt)){
 				playertemp.frenzyt=0;
 			}
@@ -3929,6 +3908,9 @@ var loadkeystoneps=function(){
 					playertemp.haste-=playertemp.frenzy*0.002*playertemp.keystonepassives[20];
 					playertemp.frenzy=0;
 				}
+			}
+			if(playertemp.frenzym<60){
+				playertemp.frenzym+=player.haste*playertemp.haste;
 			}
 		});
 		append(keystonefuncs.damagedealt,function(){
@@ -3941,14 +3923,11 @@ var loadkeystoneps=function(){
 						playertemp.haste+=0.002*playertemp.keystonepassives[20];
 						playertemp.frenzyt=300;
 					}
+					if(playertemp.frenzym>=24){
+						playertemp.frenzym-=24;
+						player.mp+=0.2*playertemp.keystonepassives[20];
+					}
 				}
-			}
-		});
-	}
-	if(playertemp.keystonepassives[30]>0){
-		append(keystonefuncs.damagedealt,function(){
-			if(willhit){
-				player.mp+=procc*playertemp.keystonepassives[30]/2;
 			}
 		});
 	}
@@ -4035,14 +4014,9 @@ var loadkeystoneps=function(){
 	}
 	//Post % Mit
 	if(playertemp.keystonepassives[23]>0){
-		append(keystonefuncs.passive,function(){
-			if(playertemp.aegistimer>0){
-				playertemp.aegistimer-=1;
-			}
-		});
 		append(keystonefuncs.damagetaken,function(){
 			if(willhit){
-				if(random(1)<=playertemp.keystonepassives[23]*0.06){
+				if(random(1)<=playertemp.keystonepassives[23]*0.04){
 					append(stateffects,{name:'block',tick:0,run:function(){
 						if(stateffects[n].tick<25){
 							stroke(100,100,255,255-stateffects[n].tick*10);
@@ -4058,9 +4032,8 @@ var loadkeystoneps=function(){
 						}
 					}});
 					playertemp.aegis=1;
-					playertemp.aegistimer=30;
-					pdmg*=0.8;
-					mdmg*=0.8;
+					pdmg/=2;
+					mdmg/=2;
 				}
 				else{
 					playertemp.aegis=0;
@@ -4225,19 +4198,6 @@ var loadkeystoneps=function(){
 		});
 		append(keystonefuncs.onkill,function(){
 			playertemp.spiritguard=min(10,playertemp.spiritguard+2);
-		});
-	}
-	//post mit
-	if(playertemp.keystonepassives[29]>0){
-		append(keystonefuncs.damagedealtpostmit,function(){
-			if(enemies[index].hp>0){
-				if(willhit){
-					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.keystonepassives[29]*0.01),"leech");
-				}
-				else{
-					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.keystonepassives[29]*0.01),"LoT");
-				}
-			}
 		});
 	}
 	//Health extensions
@@ -4744,9 +4704,7 @@ var loadtraits=function(){
 					append(dmgind,new cdmgind(playertemp.x+random(-10,10),
 					playertemp.y+random(-10,10),
 					"Blocked",10,150,150,255));
-					sfx.glacialwardshatter.rate(random(0.95,1.05));
-					sfx.glacialwardshatter.volume(0.3);
-					sfx.glacialwardshatter.play();
+					if(options.loadAudio){sfx.glacialwardshatter.play();}
 					dmgsound=0;
 					append(particles,new createparticle(playertemp.x,playertemp.y,0,0,0,0,'circle','',20,2,255,-13,120,120,255,1));
 					for(gw=0;gw<enemies.length;gw+=1){
@@ -6401,15 +6359,7 @@ var loadtraits=function(){
 		});
 		append(traitfuncs.passives,function(){
 			if(playertemp.traits[92]>0){
-				if(playertemp.action.name=="defend"){
-					if(playertemp.aegistimer>0&playertemp.keystonepassives[23]>0){
-						playertemp.guard=min((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+playertemp.keystonepassives[23]*0.1*(plshp(1))*(playertemp.traits[92]/60000));
-						if(playertemp.traits[94]>0&player.speed>2){
-							playertemp.guard=min(((plshp(1)))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+playertemp.keystonepassives[23]*0.1*(((plshp(1))*0.01+(plsst(1))*0.006)*(min(7,player.speed)-2)/60));
-						}
-					}
-				}
-				else{
+				if(!(playertemp.action.name=="defend")){
 					playertemp.guard=min((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+(plshp(1))*(playertemp.traits[92]/60000));
 					if(playertemp.traits[94]>0&player.speed>2){
 						playertemp.guard=min(((plshp(1)))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+(((plshp(1))*0.01+(plsst(1))*0.006)*(min(7,player.speed)-2)/60));
@@ -7698,7 +7648,6 @@ var takedamage=function(sourcedmg,finaldmg){
 		}
 	}
 }
-var healind=0;
 var heal=function(healp,healtype){
 	if(healp>0){
 		if(playertemp.traits[106]>0){
@@ -7722,21 +7671,6 @@ var heal=function(healp,healtype){
 			shield(healp,180,1);
 		}
 		else{
-			if(playertemp.keystonepassives[29]>0){
-				if(healtype=="leech"){
-					playertemp.strfb+=healp*0.006*playertemp.keystonepassives[29];
-					playertemp.intelfb+=healp*0.006*playertemp.keystonepassives[29];
-					append(stateffects,{name:'blood rage',tick:0,strb:,intelb:,run:function(){
-						if(stateffects[n].tick>=300){
-							playertemp.strfb-=stateffects[n].strb;
-							playertemp.intelfb-=stateffects[n].intelb;
-							stateffects.splice(n,1);
-							n-=1;
-						}
-					}});
-					healp*=1-playertemp.keystonepassives[29]*0.03;
-				}
-			}
 			if(playertemp.traits[114]>0){
 				if(healtype=="leech"){
 					shield(healp*0.9*(1.45+playertemp.traits[114]*0.05),180);
@@ -7744,8 +7678,11 @@ var heal=function(healp,healtype){
 				}
 			}
 			player.hp+=healp;
+			if(round(healp)>0){
 			if(healtype=="direct"||healtype=="leech"||healtype=="static"){
-				healind+=healp;
+				var healyr=random(230,270);
+				append(particles,new createparticle(720,healyr,1.5,(250-healyr)/10,0,-(250-healyr)/500,'text',"+"+round(healp),22,0,255,-4,0,255,0));
+			}
 			}
 		}
 	}
@@ -8838,13 +8775,13 @@ var getBiomeScripts=function(){
 							dialog=function(){
 								sdialogb({
 									speaker:"Keystone Merchant",
-									speech:"Hello, "+player.name+"! Would you like to buy a keystone? They're quite rare. This one will cost "+(round(100*pow(1.7,player.record.keystonemerchant)))+" SP.",
+									speech:"Hello, "+player.name+"! Would you like to buy a keystone? They're quite rare. This one will cost "+(100*pow(2,player.record.keystonemerchant))+" SP.",
 									answers:[
 										{
 											answer:"Yes",
 											effect:function(){
-												if(player.sp>=round(100*pow(1.7,player.record.keystonemerchant))){
-													player.sp-=round(100*pow(1.7,player.record.keystonemerchant));
+												if(player.sp>=100*pow(2,player.record.keystonemerchant)){
+													player.sp-=100*pow(2,player.record.keystonemerchant);
 													player.record.keystonemerchant+=1;
 													player.keystones.bonus+=1;
 													dialog=function(){
@@ -10528,10 +10465,6 @@ var converttext=function(rawtext,cvar){
 					if(rawtext.substr(gttc,1)=="m"){
 						grabstatforct(rawtext,cvar);
 						stemp[1]+=stemp[0]*(plsmp(1));
-					}
-					if(rawtext.substr(gttc,1)=="n"){
-						grabstatforct(rawtext,cvar);
-						stemp[1]+=stemp[0]*(plsmr(1));
 					}
 					if(rawtext.substr(gttc,1)=="o"){
 						stemp[0]=1;
@@ -14692,11 +14625,11 @@ append(doaction,function(lv,hand){
 					){
 						hits+=1;
 						damage("enemies",i,random(((plsin(3))+(plsst(10))),((plsin(4))+(plsst(13)))),0,1,1,"melee","player",1.4,["pierce","poison"]);
+						if(options.loadAudio){sfx.pslice.play();}
 					}
 				}
 			}
 			if(hits>0){
-				if(options.loadAudio){sfx.pslice.play();}
 				ts.venompool(2.5,0.5,1.25);
 			}
 			else{
@@ -15523,7 +15456,6 @@ append(doaction,function(lv,hand){
 							objects[n].empowered=1;
 							objects[n].ds=2;
 							objects[n].sound=sfx.glacialwardshatter;
-							objects[n].soundefx={rate:random(0.9,1.1),volume:random(0.1,0.12)};
 						}
 					},
 					onhit:function(i){
@@ -15781,13 +15713,6 @@ sfxstock.lightarmor=1;
 sfxstock.armor=1;
 sfxstock.block=min(1,sfxstock.block+0.05);
 sfxstock.ksblock=min(1,sfxstock.ksblock+0.05);
-if(tick%10==0){
-	if(round(healind)>0){
-		var healyr=random(230,270);
-		append(particles,new createparticle(720,healyr,1.5,(250-healyr)/10,0,-(250-healyr)/500,'text',"+"+round(healind),22,0,255,-4,0,255,0));
-		healind=0;
-	}
-}
 	if(!(cinematic||dialoga)){
 	if(inwater){
 		if(playertemp.traits[210]>0){
@@ -16450,17 +16375,8 @@ if(tick%10==0){
 							}
 							objects[n].hitc+=1;
 							if(objects[n].sound){
-								if(options.loadAudio){
-									if(objects[n].soundefx){
-										if(objects[n].soundefx.rate){
-											objects[n].sound.rate(objects[n].soundefx.rate);
-										}
-										if(objects[n].soundefx.volume){
-											objects[n].sound.volume(objects[n].soundefx.volume);
-										}
-									}
-									objects[n].sound.play();
-								}
+							if(options.loadAudio){
+							objects[n].sound.play();}
 							}
 						}
 					}
