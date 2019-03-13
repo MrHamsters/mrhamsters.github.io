@@ -26,3 +26,6 @@ Survivalist
 Immortality
 Tempered Flesh
 Rupture
+Blood Rage
+Mana Steal
+Astral Infusion
