@@ -4725,6 +4725,7 @@ var loadtraits=function(){
 				strokeWeight(10);
 				stroke(255,255,255,100);
 				ellipse(760,10+dto*20,tick%120*15/120,tick%120*15/120);
+				noStroke();
 			}
 		});
 		append(traitfuncs.damagetaken,function(){
