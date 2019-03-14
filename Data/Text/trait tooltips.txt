@@ -27,7 +27,7 @@ Shield Overload
 Roar
 [Active] Shout furiously, regaining 15% of your missing mana, stunning nearby enemies for up to 3 seconds while increasing your strength by {ox10c10}%, mana regeneration by 30%, and haste by 15%, all decaying over 10 seconds. 20 second cooldown. Can be used mid-action.
 Dash
-[Active] Dash swiftly in the direction you are currently facing. Dash speed is reduced by action speed modifier at 25% effectiveness. Your normal movement speed is reduced by 100% during dash. {ox1.25c-0.05} second cooldown. Costs {ox4.5c-0.5} mana. Can be used mid-action.
+[Active] Dash swiftly in the direction you are currently facing, briefly increasing dodge chance to 100%. Dash speed is reduced by action speed modifier at 25% effectiveness. Your normal movement speed is reduced by 100% during dash. 0.75 second cooldown. Can be used mid-action. Requires a dash charge to use. Dash charges are shown next to your stat changes, and regenerate at a base rate of 1 per 3 seconds, up to {ox0c1} charges. Charge generation rate is increased by 10% per trait level (currently {ox0c10}%).
 Stamina
 [Passive] Increases mana regeneration rate by {ox0c5}% while moving.
 Focus
@@ -446,6 +446,8 @@ Shattering Steel
 [Passive] Your hits generate stacks for this passive. After reaching stacks worth {ox600c-200}% proc power, your next hit gains pierce property and {a0.17} physical damage.
 Tenacity
 [Passive] Increases your stun resistance generation rate by {ox0c10}%.
+Evasion
+[Passive] Grants a {ox0c1}% chance to dodge hits.
 
 
 
