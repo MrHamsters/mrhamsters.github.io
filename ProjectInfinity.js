@@ -1,4 +1,4 @@
-var version="0.8.3f";
+var version="0.8.3g";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -3971,7 +3971,7 @@ var loadkeystoneps=function(){
 	if(playertemp.keystonepassives[30]>0){
 		append(keystonefuncs.damagedealt,function(){
 			if(willhit){
-				player.mp+=procc*playertemp.keystonepassives[30]/2;
+				player.mp+=procc*playertemp.keystonepassives[30]*0.3;
 			}
 		});
 	}
@@ -4058,7 +4058,7 @@ var loadkeystoneps=function(){
 	}
 	//Post % Mit
 	if(playertemp.keystonepassives[23]>0){
-		append(keystonefuncs.passive,function(){
+		append(keystonefuncs.passives,function(){
 			if(playertemp.aegistimer>0){
 				playertemp.aegistimer-=1;
 			}
@@ -4188,9 +4188,9 @@ var loadkeystoneps=function(){
 			}
 			if(playertemp.spiritrage>0){
 				playertemp.spiritrage-=1;
-				if(playertemp.spiritragea<playertemp.keystonepassives[10]/2){
-					playertemp.haste+=playertemp.keystonepassives[10]/2-playertemp.spiritragea;
-					playertemp.spiritragea+=playertemp.keystonepassives[10]/2-playertemp.spiritragea;
+				if(playertemp.spiritragea<playertemp.keystonepassives[10]/200){
+					playertemp.haste+=playertemp.keystonepassives[10]/200-playertemp.spiritragea;
+					playertemp.spiritragea+=playertemp.keystonepassives[10]/200-playertemp.spiritragea;
 				}
 				if(playertemp.spiritrage<=0){
 					playertemp.haste-=playertemp.spiritragea;
@@ -4689,6 +4689,59 @@ var loadtraits=function(){
 			}
 		}
 	});
+	if(playertemp.traits[15]>0){
+		append(traitfuncs.passives,function(){
+			if(!(playertemp.dashcharges)){
+				playertemp.dashcharges=0;
+			}
+			if(!(playertemp.dashdodge)){
+				playertemp.dashdodge=0;
+			}
+			if(!(playertemp.dashchargeup)){
+				playertemp.dashchargeup=0;
+			}
+			if(playertemp.dashcharges>playertemp.traits[15]){
+				playertemp.dashcharges=playertemp.traits[15];
+			}
+			else if(playertemp.dashcharges<playertemp.traits[15]){
+				playertemp.dashchargeup+=1+playertemp.traits[15]/10;
+				if(playertemp.dashchargeup>180){
+					playertemp.dashchargeup-=180;
+					playertemp.dashcharges+=1;
+				}
+			}
+			if(playertemp.dashdodge>0){
+				playertemp.dashdodge-=1;
+			}
+		});
+		append(traitfuncs.overlay,function(){
+			ellipseMode(CENTER);
+			for(dto=0;dto<playertemp.dashcharges;dto+=1){
+				fill(80,80,80);
+				ellipse(760,10+dto*20,20,20);
+				fill(100,255,50);
+				ellipse(760,10+dto*20,15,15);
+				noFill();
+				strokeWeight(10);
+				stroke(255,255,255,100);
+				ellipse(760,10+dto*20,tick%120*15/120,tick%120*15/120);
+			}
+		});
+		append(traitfuncs.damagetaken,function(){
+			if(willhit){
+				if(playertemp.dashdodge>0){
+					pdmg=0;
+					mdmg=0;
+					willhit=0;
+					willdamage=0;
+					append(dmgind,new cdmgind(playertemp.x+random(-10,10),
+					playertemp.y+random(-10,10),
+					"Miss",9,150,150,150));
+					dmgsound=0;
+				}
+			}
+		});
+	}
 	if(playertemp.traits[225]>0){
 		append(traitfuncs.damagetaken,function(){
 			if(willhit){
@@ -13575,62 +13628,63 @@ append(doaction,function(lv,hand){
 });
 //Dash
 append(doaction,function(lv,hand){
-	if(player.mp>=4.5-0.5*playertemp.traits[15]){
-		player.mp-=4.5-0.5*playertemp.traits[15];
-		playertemp.traitcd[hand]=78-3*playertemp.traits[15];
-			playertemp.speed-=1;
-			append(stateffects,{name:'dash',dir:lastDir,tick:0,run:function(){
-					if(input[0]){
-						if(input[1]){
-							stateffects[n].dir=7*PI/4;
-						}
-						else if(input[3]){
-							stateffects[n].dir=PI/4;
-						}
-						else{
-							stateffects[n].dir=0;
-						}
+	if(playertemp.dashcharges>0){
+		playertemp.dashcharges-=1;
+		playertemp.dashdodge=10;
+		playertemp.speed-=1;
+		append(stateffects,{name:'dash',dir:lastDir,tick:0,run:function(){
+				if(input[0]){
+					if(input[1]){
+						stateffects[n].dir=7*PI/4;
 					}
 					else if(input[3]){
-						if(input[2]){
-							stateffects[n].dir=3*PI/4;
-						}
-						else{
-							stateffects[n].dir=PI/2;
-						}
+						stateffects[n].dir=PI/4;
 					}
-					else if(input[2]){
-						if(input[1]){
-							stateffects[n].dir=5*PI/4;
-						}
-						else{
-							stateffects[n].dir=PI;
-						}
-					}
-					else if(input[1]){
-							stateffects[n].dir=3*PI/2;
-					}
-				playertemp.xvelo+=1.5*(playertemp.action.speedm+3)*player.speed*sin(stateffects[n].dir)/(stateffects[n].tick+1);
-				playertemp.yvelo-=1.5*(playertemp.action.speedm+3)*player.speed*cos(stateffects[n].dir)/(stateffects[n].tick+1);
-				dowalk(100*player.speed/(stateffects[n].tick+1)/player.size);
-				resetMatrix();
-				if(stateffects[n].tick==3){
-					if(options.loadAudio){
-						sfx.dash.rate(random(0.9,1.1));
-						sfx.dash.play();
+					else{
+						stateffects[n].dir=0;
 					}
 				}
-				if(stateffects[n].tick>=5){
-					playertemp.xvelo*=0.6;
-					playertemp.yvelo*=0.6;
+				else if(input[3]){
+					if(input[2]){
+						stateffects[n].dir=3*PI/4;
+					}
+					else{
+						stateffects[n].dir=PI/2;
+					}
 				}
-				if(stateffects[n].tick>=10){
-					playertemp.speed+=1;
-					stateffects.splice(n,1);
-					n-=1;
+				else if(input[2]){
+					if(input[1]){
+						stateffects[n].dir=5*PI/4;
+					}
+					else{
+						stateffects[n].dir=PI;
+					}
+				}
+				else if(input[1]){
+						stateffects[n].dir=3*PI/2;
+				}
+			playertemp.xvelo+=1.5*(playertemp.action.speedm+3)*player.speed*sin(stateffects[n].dir)/(stateffects[n].tick+1);
+			playertemp.yvelo-=1.5*(playertemp.action.speedm+3)*player.speed*cos(stateffects[n].dir)/(stateffects[n].tick+1);
+			dowalk(100*player.speed/(stateffects[n].tick+1)/player.size);
+			resetMatrix();
+			append(particles,new createparticle(random(390,410),random(340,360),0,0,0,0,'circle','',10,-0.3,140,-5,255,255,255));
+			if(stateffects[n].tick==3){
+				if(options.loadAudio){
+					sfx.dash.rate(random(0.9,1.1));
+					sfx.dash.play();
 				}
 			}
-			});
+			if(stateffects[n].tick>=5){
+				playertemp.xvelo*=0.6;
+				playertemp.yvelo*=0.6;
+			}
+			if(stateffects[n].tick>=10){
+				playertemp.speed+=1;
+				stateffects.splice(n,1);
+				n-=1;
+			}
+		}
+		});
 	}
 	else{
 		playertemp.traitcd[hand]=1;
