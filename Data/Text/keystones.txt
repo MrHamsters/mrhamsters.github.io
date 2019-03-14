@@ -543,7 +543,7 @@ Heal for {ox0c1}% of damage dealt. {ox0c3}% of direct leeching effects is conver
 0
 10
 Mana Steal
-Gain {ox0c0.5} mana per 100% proc power on hit.
+Gain {ox0c0.3} mana per 100% proc power on hit.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 30/1
