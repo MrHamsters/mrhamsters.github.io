@@ -222,3 +222,4 @@ Honed Edge
 Heavy Impact
 Shattering Steel
 Tenacity
+Evasion
