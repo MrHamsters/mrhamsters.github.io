@@ -1,4 +1,4 @@
-var version="0.8.3h";
+var version="0.8.3h test";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -17404,7 +17404,8 @@ if(tick%10==0){
 		shape(playertemp.activetraitsprites.space,850,607,180,270);
 		fill(0,0,255);
 		textFont(0,15);
-		text("SPACE",825,572);
+		//text("SPACE",825,572);
+		text(player.activetraits.space,825,572);
 		if(traitcd[player.activetraits.space]>=30){
 			fill(0,0,0,130+playertemp.traitcd.space/traitcd[player.activetraits.space]*125);
 			ellipseMode(CENTER);
