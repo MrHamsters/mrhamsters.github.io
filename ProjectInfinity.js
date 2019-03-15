@@ -1,4 +1,4 @@
-var version="0.8.3h test2";
+var version="0.8.3h";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -8552,10 +8552,12 @@ var convergingdialog={
 										res:0.85
 									}
 								};
-								player.activetraits.e=18;
 								loadtraits();
 								recalstats();
 								getstances();
+								player.activetraits.e=18;
+								gettraits();
+								playertemp.traitcd.e=traitcd[player.activetraits.e];
 								convergingdialog.introarmor();
 							}
 						},
@@ -8605,6 +8607,8 @@ var convergingdialog={
 								recalstats();
 								getstances();
 								player.activetraits.e=63;
+								gettraits();
+								playertemp.traitcd.e=traitcd[player.activetraits.e];
 								convergingdialog.introarmor();
 							}
 						},
@@ -8716,10 +8720,12 @@ var convergingdialog={
 										res:0.85
 									}
 								};
-								player.activetraits.space=15;
 								loadtraits();
 								recalstats();
 								getstances();
+								player.activetraits.space=15;
+								gettraits();
+								playertemp.traitcd.e=traitcd[player.activetraits.e];
 								convergingdialog.introend();
 							}
 						},
