@@ -1146,7 +1146,7 @@ var invquicksell=0;
 noStroke();
 window.onbeforeunload = function () {
 	if(loaded){
-		if(options.autosave){
+		if(options.autosave&(player.level>1||player.xp>0)){
 			savegame();
 		}
 	}
@@ -8723,6 +8723,7 @@ var convergingdialog={
 								loadtraits();
 								recalstats();
 								getstances();
+								getplayersprite();
 								player.activetraits.space=15;
 								gettraits();
 								playertemp.traitcd.e=traitcd[player.activetraits.e];
@@ -8805,6 +8806,7 @@ var convergingdialog={
 								loadtraits();
 								recalstats();
 								getstances();
+								getplayersprite();
 								convergingdialog.introend();
 							}
 						},
@@ -8884,6 +8886,7 @@ var convergingdialog={
 								loadtraits();
 								recalstats();
 								getstances();
+								getplayersprite();
 								convergingdialog.introend();
 							}
 						},
