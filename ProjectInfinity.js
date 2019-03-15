@@ -1,4 +1,4 @@
-var version="0.8.3g";
+var version="0.8.3h";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -334,6 +334,7 @@ var loadassetscache=function(){
 				challengearena:new Howl({src: ['Data/Sound/sfx/challengearena.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
 				levelup:new Howl({src: ['Data/Sound/sfx/levelup.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 				ksblock:new Howl({src: ['Data/Sound/sfx/passiveblock.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+				ghastlydig:new Howl({src: ['Data/Sound/sfx/ghastlydig.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
 		};
 		}
 		loadassetscache=0;
@@ -398,6 +399,7 @@ for(i=1;i<keystoner.length/10;i+=1){
 keystoner=0;
 var keystoneselec;
 var mouselock;
+var tkeylock;
 var traitcd=loadStrings('Data/Text/trait CDs.txt');
 var traitusage=loadStrings('Data/Text/trait usage.txt');
 var attacktt=loadStrings('Data/Text/attack tt.txt');
@@ -3557,7 +3559,7 @@ var levelup=function(){
 		}
 		player.xp-=player.xpr;
 		player.level+=1;
-		player.xpr=round(100*pow(1.1,player.level-1));
+		//player.xpr=round(100*pow(1.1,player.level-1));
 		player.pp+=(player.level-player.lvpprew)*500;
 		player.record.pp.levels+=(player.level-player.lvpprew)*500;
 		player.lvpprew=player.level;
@@ -3610,12 +3612,13 @@ var levelup=function(){
 		}
 		loadtraits();
 		recalstats();
-		if(player.hp<(plshp(1))){
+		/*if(player.hp<(plshp(1))){
 			player.hp=(plshp(1));
 		}
 		if(player.mp<(plsmp(1))){
 			player.mp=(plsmp(1));
-		}
+		}*/
+		buff(2,60,100);
 	}
 }
 var getequipstat=function(statid){
@@ -3862,7 +3865,7 @@ var loadkeystoneps=function(){
 			if(!(playertemp.pentakillv)){
 				playertemp.pentakillv=0;
 			}
-			if(playertemp.pentakill<900){
+			if(playertemp.pentakill<1200-playertemp.keystonepassives[6]*60){
 				playertemp.pentakill+=player.haste*playertemp.haste;
 			}
 			if(playertemp.pentakillt<=0){
@@ -3875,13 +3878,13 @@ var loadkeystoneps=function(){
 		});
 		append(keystonefuncs.onkill,function(f){
 			if(playertemp.pentakill>=1200-playertemp.keystonepassives[6]*60){
-				playertemp.pentakillv+=round((enemies[i].xp*pow(1.1,min(enemies[i].lv,player.level)-1))/10);
+				/*playertemp.pentakillv+=round((enemies[i].xp*pow(1.1,min(enemies[i].lv,player.level)-1))/10);
 				if(playertemp.traits[22]>0){
 					playertemp.pentakillv+=round(enemies[i].xp*pow(1.1,min(enemies[i].lv,player.level)-1)*playertemp.traits[22]/1000);
 				}
 				if(playertemp.traits[23]>0){
 					playertemp.pentakillv-=round(enemies[i].xp*pow(1.1,min(enemies[i].lv,player.level)-1)*playertemp.traits[23]/1000);
-				}
+				}*/
 				playertemp.pentakillc+=1;
 				playertemp.pentakillt=300;
 				if(playertemp.pentakillc==2){
@@ -3897,9 +3900,9 @@ var loadkeystoneps=function(){
 					append(particles,new createparticle(400,100,0,0,0,0,'text','Penta Kill!',30,0,255,-2.5,255,100,0));
 					playertemp.pentakill=0;
 					playertemp.pentakillc=0;
-					player.xp+=playertemp.pentakillv;
-					playertemp.pentakillv=0;
-					buff(2,60,100);
+					//player.xp+=playertemp.pentakillv;
+					//playertemp.pentakillv=0;
+					buff(2,120,50);
 					player.sp+=10;
 					player.mp+=10;
 					heal(((1.8+player.level/5)*(1+player.passives[0]/50))*playertemp.keystonepassives[6],"direct");
@@ -4056,6 +4059,59 @@ var loadkeystoneps=function(){
 			}
 		});
 	}
+	if(playertemp.keystonepassives[32]>0){
+		append(keystonefuncs.passives,function(){
+			if(!(playertemp.shockwavecharges)){
+				playertemp.shockwavecharges=0;
+			}
+			while(playertemp.shockwavecharges>=5){
+				playertemp.shockwavecharges-=5;
+				sfx.ghastlydig.rate(random(0.9,1.1));
+				sfx.ghastlydig.play();
+				playertemp.armor+=playertemp.keystonepassives[32]*0.005;
+				playertemp.res+=playertemp.keystonepassives[32]*0.005;
+				append(stateffects,{name:'shockwave shield',tick:0,bst:playertemp.keystonepassives[32]*0.005,run:function(){
+					if(stateffects[n].tick>=120){
+						playertemp.armor-=stateffects[n].bst;
+						playertemp.res-=stateffects[n].bst;
+						stateffects.splice(n,1);
+						n-=1;
+					}
+				}});
+				append(objects,{
+					type:'projectile',
+					vfx:1,
+					draw:function(){
+						fill(160,150,70,50+objects[n].duration*5);
+						ellipseMode(CENTER);
+						ellipse(0,0,140-objects[n].duration*12,140-objects[n].duration*12);
+					},
+					target:'enemy',
+					size:25,
+					speed:20,
+					pierce:999,
+					duration:10,
+					dir:lastDir,
+					x:playertemp.x,
+					y:playertemp.y,
+					pdmgmin:(plshp(0.2)+plsar(0.2)+plsre(0.2))*playertemp.keystonepassives[32],
+					pdmgmax:(plshp(0.2)+plsar(0.2)+plsre(0.2))*playertemp.keystonepassives[32],
+					mdmgmin:0,
+					mdmgmax:0,
+					armorE:1,
+					resE:1,
+					procc:0.04*playertemp.keystonepassives[32],
+					run:function(){
+						objects[n].size+=12;
+						for(jrt=0;jrt<12-objects[n].duration;jrt+=1){
+							append(particles,new createparticle(objects[n].x+random(-objects[n].size/2,objects[n].size/2),objects[n].y+random(-objects[n].size/2,objects[n].size/2),random(-0.25,0.25),random(-0.25,0.25),0,0,'circle','',random(10,15),-0.1,200,-15,150+random(100),140+random(110),random(150),1));
+						}
+					},
+					hits:new Array(999),
+				});
+			}
+		});
+	}
 	//Post % Mit
 	if(playertemp.keystonepassives[23]>0){
 		append(keystonefuncs.passives,function(){
@@ -4081,7 +4137,16 @@ var loadkeystoneps=function(){
 						}
 					}});
 					playertemp.aegis=1;
+					if(!(blocked)){
+						blocked=1;
+						if(playertemp.keystonepassives[32]>0){
+							playertemp.shockwavecharges+=1;
+						}
+					}
 					playertemp.aegistimer=30;
+					if(playertemp.guard>0&!(playertemp.action.name=='defend')){
+						playertemp.guardrecblock=max(playertemp.guardrecblock,30);
+					}
 					pdmg*=0.8;
 					mdmg*=0.8;
 				}
@@ -4147,6 +4212,8 @@ var loadkeystoneps=function(){
 							sfx.ksblock.play();
 						}
 						else{
+							sfx.ksblock.rate(random(0.9,1.1));
+							sfx.ksblock.volume(options.sfx*2);
 							sfx.ksblock.play();
 							dmgsound=0;
 						}
@@ -4718,13 +4785,13 @@ var loadtraits=function(){
 			ellipseMode(CENTER);
 			for(dto=0;dto<playertemp.dashcharges;dto+=1){
 				fill(80,80,80);
-				ellipse(760,10+dto*20,20,20);
+				ellipse(790,10+dto*20,28,28);
 				fill(100,255,50);
-				ellipse(760,10+dto*20,15,15);
+				ellipse(790,10+dto*20,22,22);
 				noFill();
-				strokeWeight(10);
-				stroke(255,255,255,100);
-				ellipse(760,10+dto*20,tick%120*15/120,tick%120*15/120);
+				strokeWeight(7-tick%120/24);
+				stroke(255,255,255,120-tick%120);
+				ellipse(790,10+dto*20,tick%120*18/120,tick%120*18/120);
 				noStroke();
 			}
 		});
@@ -4838,7 +4905,7 @@ var loadtraits=function(){
 					playertemp.y+random(-10,10),
 					"Blocked",10,150,150,255));
 					sfx.glacialwardshatter.rate(random(0.95,1.05));
-					sfx.glacialwardshatter.volume(0.3);
+					sfx.glacialwardshatter.volume(options.sfx*0.3);
 					sfx.glacialwardshatter.play();
 					dmgsound=0;
 					append(particles,new createparticle(playertemp.x,playertemp.y,0,0,0,0,'circle','',20,2,255,-13,120,120,255,1));
@@ -5265,7 +5332,7 @@ var loadtraits=function(){
 		append(traitfuncs.damagedealt,function(){
 			if(willhit&random(100)<playertemp.traits[98]){
 				sfx.crit.rate(random(0.9,1.2));
-				sfx.crit.volume(min(0.6,procc));
+				sfx.crit.volume(options.sfx*min(0.6,procc));
 				sfx.crit.play();
 				for(cp=0;cp<procc*15+1;cp+=1){
 					append(particles,new createparticle(enemies[index].x,enemies[index].y,random(-2,2),random(-2,2),0,0,'circle','',20,-0.5,255,-13,random(200,255),random(180,230),random(120,160),1));
@@ -5704,6 +5771,14 @@ var loadtraits=function(){
 					}
 					playertemp.guard=0;
 				}
+				if(willhit){
+					if(!(blocked)){
+						blocked=1;
+						if(playertemp.keystonepassives[32]>0){
+							playertemp.shockwavecharges+=1;
+						}
+					}
+				}
 				if(willhit&options.loadAudio){
 					if(sfxstock.block>0){
 						sfxstock.block-=1;
@@ -5720,6 +5795,15 @@ var loadtraits=function(){
 		}
 		else if(playertemp.action.name=="rapier lunge"||playertemp.traits[94]>0&random(1)<=playertemp.guard/((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb)+playertemp.traits[94]/10+(0.2*(max(0,player.speed-2)))-1){
 			if(willhit){
+				if(playertemp.guard>0){
+					playertemp.guardrecblock=max(playertemp.guardrecblock,30);
+					if(!(blocked)){
+						blocked=1;
+						if(playertemp.keystonepassives[32]>0){
+							playertemp.shockwavecharges+=1;
+						}
+					}
+				}
 				if(playertemp.guard>pdmg){
 					playertemp.guard-=pdmg;
 					if(playertemp.traits[116]>0){
@@ -6493,20 +6577,31 @@ var loadtraits=function(){
 			}
 		});
 		append(traitfuncs.passives,function(){
+			if(!(playertemp.guardrecblock)){
+				playertemp.guardrecblock=0;
+			}
+			if(!(playertemp.guardrecmod)){
+				playertemp.guardrecmod=0;
+			}
+			if(playertemp.guardrecblock>0){
+				playertemp.guardrecblock-=1;
+			}
 			if(playertemp.traits[92]>0){
 				if(playertemp.action.name=="defend"){
-					if(playertemp.aegistimer>0&playertemp.keystonepassives[23]>0){
-						playertemp.guard=min((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+playertemp.keystonepassives[23]*0.1*(plshp(1))*(playertemp.traits[92]/60000));
-						if(playertemp.traits[94]>0&player.speed>2){
-							playertemp.guard=min(((plshp(1)))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+playertemp.keystonepassives[23]*0.1*(((plshp(1))*0.01+(plsst(1))*0.006)*(min(7,player.speed)-2)/60));
-						}
-					}
+					playertemp.guardrecblock=max(playertemp.guardrecblock,1);
+				}
+				if(playertemp.guardrecblock>0){
+					playertemp.guardrecmod=0;
 				}
 				else{
-					playertemp.guard=min((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+(plshp(1))*(playertemp.traits[92]/60000));
-					if(playertemp.traits[94]>0&player.speed>2){
-						playertemp.guard=min(((plshp(1)))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+(((plshp(1))*0.01+(plsst(1))*0.006)*(min(7,player.speed)-2)/60));
-					}
+					playertemp.guardrecmod=1;
+				}
+				if(playertemp.aegistimer>0&playertemp.keystonepassives[23]>0){
+					playertemp.guardrecmod+=playertemp.keystonepassives[23]/20;
+				}
+				playertemp.guard=min((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+playertemp.guardrecmod*(plshp(1))*(playertemp.traits[92]/60000));
+				if(playertemp.traits[94]>0&player.speed>2){
+					playertemp.guard=min(((plshp(1)))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+playertemp.guardrecmod*(((plshp(1))*0.01+(plsst(1))*0.006)*(min(7,player.speed)-2)/60));
 				}
 			}
 		});
@@ -7863,6 +7958,7 @@ var spdmg=0;
 var smdmg=0;
 var atkprop=0;
 var armorsfx;
+var blocked;
 var clearobjects=function(){
 	for(n=1;n<objects.length;n+=1){
 		if(objects[n].deleted){
@@ -7897,6 +7993,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 	dmgsound=1;
 	willdamage=1;
 	willhit=1;
+	blocked=0;
 	indicatedmg=1;
 	attacker=attackers;
 	procc=proccs;
@@ -8404,7 +8501,7 @@ var convergingdialog={
 			dialog=function(){
 				sdialogb({
 					speaker:"Unknown Voice",
-					speech:"Welcome to Project Infinity! This is an RPG focusing on adventure and character building. To get you started, I will give you a weapon, because it's dangerous to go alone. No, really. Pretty much everything outside the Nexus will attempt to kill you. Which weapon will you choose?",
+					speech:"To get you started, I will give you a weapon, because it's dangerous to go alone. No, really. Pretty much everything outside the Nexus will attempt to kill you. Which weapon will you choose?",
 					answers:[
 						{
 							answer:"Sword and Shield",
@@ -8455,52 +8552,11 @@ var convergingdialog={
 										res:0.85
 									}
 								};
+								player.activetraits.e=18;
 								loadtraits();
 								recalstats();
 								getstances();
-								dialog=function(){
-									sdialogb({
-										speaker:"Unknown Voice",
-										speech:"Use the fountain to enter the wilderness. For further assistance, you can open the help screen by pressing 'H'. Good luck!",
-										answers:[
-											{
-												answer:"Thanks",
-												effect:function(){
-													player.record.quests.start=1;
-													player.sp+=1;
-													dialog=0;
-													cinematic[0]=0;
-													dialoga=0;
-													savegame();
-													if(!(player.intro.basics)&player.enableintro){
-														openhelpscreen();
-														player.intro.basics=1;
-													}
-													else{
-														helpscreen={active:0,help:0};
-													}
-												}
-											},
-											{
-												answer:"(Say nothing)",
-												effect:function(){
-													player.record.quests.start=1;
-													dialog=0;
-													cinematic[0]=0;
-													dialoga=0;
-													savegame();
-													if(!(player.intro.basics)&player.enableintro){
-														openhelpscreen();
-														player.intro.basics=1;
-													}
-													else{
-														helpscreen={active:0,help:0};
-													}
-												}
-											},
-										]
-									});
-								}
+								convergingdialog.introarmor();
 							}
 						},
 						{
@@ -8524,49 +8580,7 @@ var convergingdialog={
 								loadtraits();
 								recalstats();
 								getstances();
-								dialog=function(){
-									sdialogb({
-										speaker:"Unknown Voice",
-										speech:"Use the fountain to enter the wilderness. For further assistance, you can open the help screen by pressing 'H'. Good luck!",
-										answers:[
-											{
-												answer:"Thanks",
-												effect:function(){
-													player.record.quests.start=1;
-													player.sp+=1;
-													dialog=0;
-													cinematic[0]=0;
-													dialoga=0;
-													savegame();
-													if(!(player.intro.basics)&player.enableintro){
-														openhelpscreen();
-														player.intro.basics=1;
-													}
-													else{
-														helpscreen={active:0,help:0};
-													}
-												}
-											},
-											{
-												answer:"(Say nothing)",
-												effect:function(){
-													player.record.quests.start=1;
-													dialog=0;
-													cinematic[0]=0;
-													dialoga=0;
-													savegame();
-													if(!(player.intro.basics)&player.enableintro){
-														openhelpscreen();
-														player.intro.basics=1;
-													}
-													else{
-														helpscreen={active:0,help:0};
-													}
-												}
-											},
-										]
-									});
-								}
+								convergingdialog.introarmor();
 							}
 						},
 						{
@@ -8587,52 +8601,11 @@ var convergingdialog={
 										res:0.85
 									}
 								};
+								player.activetraits.e=63;
 								loadtraits();
 								recalstats();
 								getstances();
-								dialog=function(){
-									sdialogb({
-										speaker:"Unknown Voice",
-										speech:"Use the fountain to enter the wilderness. For further assistance, you can open the help screen by pressing 'H'. Good luck!",
-										answers:[
-											{
-												answer:"Thanks",
-												effect:function(){
-													player.record.quests.start=1;
-													player.sp+=1;
-													dialog=0;
-													cinematic[0]=0;
-													dialoga=0;
-													savegame();
-													if(!(player.intro.basics)&player.enableintro){
-														openhelpscreen();
-														player.intro.basics=1;
-													}
-													else{
-														helpscreen={active:0,help:0};
-													}
-												}
-											},
-											{
-												answer:"(Say nothing)",
-												effect:function(){
-													player.record.quests.start=1;
-													dialog=0;
-													cinematic[0]=0;
-													dialoga=0;
-													savegame();
-													if(!(player.intro.basics)&player.enableintro){
-														openhelpscreen();
-														player.intro.basics=1;
-													}
-													else{
-														helpscreen={active:0,help:0};
-													}
-												}
-											},
-										]
-									});
-								}
+								convergingdialog.introarmor();
 							}
 						},
 						{
@@ -8656,55 +8629,307 @@ var convergingdialog={
 								loadtraits();
 								recalstats();
 								getstances();
-								dialog=function(){
-									sdialogb({
-										speaker:"Unknown Voice",
-										speech:"Of course! Use the fountain to enter the wilderness. For further assistance, you can open the help screen by pressing 'H'. Good luck!",
-										answers:[
-											{
-												answer:"Thanks",
-												effect:function(){
-													player.record.quests.start=1;
-													player.sp+=1;
-													dialog=0;
-													cinematic[0]=0;
-													dialoga=0;
-													savegame();
-													if(!(player.intro.basics)&player.enableintro){
-														openhelpscreen();
-														player.intro.basics=1;
-													}
-													else{
-														helpscreen={active:0,help:0};
-													}
-												}
-											},
-											{
-												answer:"(Say nothing)",
-												effect:function(){
-													player.record.quests.start=1;
-													dialog=0;
-													cinematic[0]=0;
-													dialoga=0;
-													savegame();
-													if(!(player.intro.basics)&player.enableintro){
-														openhelpscreen();
-														player.intro.basics=1;
-													}
-													else{
-														helpscreen={active:0,help:0};
-													}
-												}
-											},
-										]
-									});
-								}
+								convergingdialog.introarmor();
 							}
 						},
 					]
 				});
 			}
 		
+	},
+	introarmor:function(){
+			dialog=function(){
+				sdialogb({
+					speaker:"Unknown Voice",
+					speech:"Now, which armor set would you like? There was a time when I did not give out armor, but noobs kept dying, so here we are.",
+					answers:[
+						{
+							answer:"Cloth (augmented mobility)",
+							effect:function(){
+								player.inventory.helmet={
+									id:3,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.chest={
+									id:2,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.pants={
+									id:4,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.gloves={
+									id:6,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.shoes={
+									id:7,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.activetraits.space=15;
+								loadtraits();
+								recalstats();
+								getstances();
+								convergingdialog.introend();
+							}
+						},
+						{
+							answer:"Plate (extra defense - more effective with a shield)",
+							effect:function(){
+								player.inventory.helmet={
+									id:23,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.chest={
+									id:22,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.pants={
+									id:13,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.gloves={
+									id:36,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.shoes={
+									id:37,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								loadtraits();
+								recalstats();
+								getstances();
+								convergingdialog.introend();
+							}
+						},
+						{
+							answer:"Leather (damage boost)",
+							effect:function(){
+								player.inventory.helmet={
+									id:32,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.chest={
+									id:31,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.pants={
+									id:33,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.gloves={
+									id:34,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								player.inventory.shoes={
+									id:35,
+									level:1,
+									rolls:{
+										hp:0.85,
+										mp:0.85,
+										hpregen:0.85,
+										mpregen:0.85,
+										str:0.85,
+										intel:0.85,
+										armor:0.85,
+										res:0.85
+									}
+								};
+								loadtraits();
+								recalstats();
+								getstances();
+								convergingdialog.introend();
+							}
+						},
+					]
+				});
+			}
+		
+	},
+	introend:function(){
+		dialog=function(){
+			sdialogb({
+				speaker:"Unknown Voice",
+				speech:"Use the fountain to enter the wilderness. For further assistance, you can open the help screen by pressing 'H'. Good luck!",
+				answers:[
+					{
+						answer:"Thanks",
+						effect:function(){
+							player.record.quests.start=1;
+							player.sp+=1;
+							dialog=0;
+							cinematic[0]=0;
+							dialoga=0;
+							savegame();
+							if(!(player.intro.basics)&player.enableintro){
+								openhelpscreen();
+								player.intro.basics=1;
+							}
+							else{
+								helpscreen={active:0,help:0};
+							}
+						}
+					},
+					{
+						answer:"(Say nothing)",
+						effect:function(){
+							player.record.quests.start=1;
+							dialog=0;
+							cinematic[0]=0;
+							dialoga=0;
+							savegame();
+							if(!(player.intro.basics)&player.enableintro){
+								openhelpscreen();
+								player.intro.basics=1;
+							}
+							else{
+								helpscreen={active:0,help:0};
+							}
+						}
+					},
+				]
+			});
+		}
 	}
 };
 //biome funcs
@@ -8766,7 +8991,7 @@ var getBiomeScripts=function(){
 	//Nexus structures
 	if(player.biomeID==1){
 		if(player.enableintro){
-			if(!(player.intro.enchantnotice)&!(player.intro.enchanter)&player.xp>=500&player.reactant>=200){
+			if(!(player.intro.enchantnotice)&!(player.intro.enchanter)&player.sp>=500&player.reactant>=200){
 				openhelpscreen("enchantnotice");
 				player.intro.enchantnotice=1;
 			}
@@ -9442,7 +9667,7 @@ var getBiomeScripts=function(){
 									}});
 								}
 								append(particles,new createparticle(terraineffects[n].x,terraineffects[n].y,0,0,0,0,'circle','',2025,-40,2,2,190,140,0,1));
-								player.xp+=round((challengearena.souls/10+max(0,(challengearena.souls-1000)/10))*(pow(1.1,min(player.level,biomedata[9]+floor(challengearena.souls/100)))));
+								player.xp+=round((challengearena.souls/10+max(0,(challengearena.souls-1000)/10))*(pow(1.1,min(0,biomedata[9]-player.level+floor(challengearena.souls/100)))));
 								player.sp+=floor(challengearena.souls/100)*30;
 								player.reactant+=floor(challengearena.souls/100)*10;
 								append(particles,new createparticle(90,100,0,0.5,0,0,'text','+ '+floor(challengearena.souls/100)*30+' SP',22,0,255,-1.5,130,130,220));
@@ -11168,12 +11393,13 @@ var statpanel=function(){
 			append(stemp,'');
 			append(stemp,'Costs: 3PP');
 			append(stemp,'Hold shift to apply 10 per click.');
+			append(stemp,'Hold control to spend half of your PP per click.');
 			tooltipdraw={
 				type:1,
 				x:mouseX,
 				y:mouseY-100,
 				w:375,
-				h:270,
+				h:300,
 				title:"Power: "+player.passives[0],
 				tip:stemp,
 				colors:0
@@ -11187,6 +11413,14 @@ var statpanel=function(){
 							player.pp-=stemp*300;
 							player.passives[0]+=stemp;
 							recalstats();
+					}
+				}
+				else if(keyPressed&keyCode==17){
+					stemp=floor(player.pp/600);
+					if(stemp>0){
+						player.pp-=stemp*300;
+						player.passives[0]+=stemp;
+						recalstats();
 					}
 				}
 				else{
@@ -11242,12 +11476,13 @@ var statpanel=function(){
 			append(stemp,'');
 			append(stemp,'Costs: 3PP');
 			append(stemp,'Hold shift to apply 10 per click.');
+			append(stemp,'Hold control to spend half of your PP per click.');
 			tooltipdraw={
 				type:1,
 				x:mouseX,
 				y:mouseY-100,
 				w:375,
-				h:270,
+				h:300,
 				title:"Fortitude: "+player.passives[1],
 				tip:stemp,
 				colors:0
@@ -11261,6 +11496,14 @@ var statpanel=function(){
 							player.pp-=stemp*300;
 							player.passives[1]+=stemp;
 							recalstats();
+					}
+				}
+				else if(keyPressed&keyCode==17){
+					stemp=floor(player.pp/600);
+					if(stemp>0){
+						player.pp-=stemp*300;
+						player.passives[1]+=stemp;
+						recalstats();
 					}
 				}
 				else{
@@ -11316,12 +11559,13 @@ var statpanel=function(){
 			append(stemp,'');
 			append(stemp,'Costs: 6PP');
 			append(stemp,'Hold shift to apply 10 per click.');
+			append(stemp,'Hold control to spend half of your PP per click.');
 			tooltipdraw={
 				type:1,
 				x:mouseX,
 				y:mouseY-100,
 				w:375,
-				h:270,
+				h:300,
 				title:"Omnipotency: "+player.passives[2],
 				tip:stemp,
 				colors:0
@@ -11332,9 +11576,17 @@ var statpanel=function(){
 				if(keyPressed&keyCode==16){
 					stemp=min(10,floor(player.pp/600));
 					if(stemp>0){
-							player.pp-=stemp*600;
-							player.passives[2]+=stemp;
-							recalstats();
+						player.pp-=stemp*600;
+						player.passives[2]+=stemp;
+						recalstats();
+					}
+				}
+				else if(keyPressed&keyCode==17){
+					stemp=floor(player.pp/1200);
+					if(stemp>0){
+						player.pp-=stemp*600;
+						player.passives[2]+=stemp;
+						recalstats();
 					}
 				}
 				else{
@@ -12227,6 +12479,7 @@ append(doaction,function(lv,hand){
 						playertemp.parrycharge=min(10,playertemp.parrycharge+min(5,hits));
 						if(options.loadAudio){
 						sfx.ksblock.rate(random(0.9,1.1));
+						sfx.ksblock.volume(options.sfx*3.5);
 						sfx.ksblock.play();}
 					}
 					if(playertemp.bswordc==3){
@@ -13668,7 +13921,7 @@ append(doaction,function(lv,hand){
 			playertemp.yvelo-=1.5*(playertemp.action.speedm+3)*player.speed*cos(stateffects[n].dir)/(stateffects[n].tick+1);
 			dowalk(100*player.speed/(stateffects[n].tick+1)/player.size);
 			resetMatrix();
-			append(particles,new createparticle(random(390,410),random(340,360),0,0,0,0,'circle','',10,-0.3,140,-5,255,255,255));
+			append(particles,new createparticle(playertemp.x+random(-10,10),playertemp.y+random(-10,10),0,0,0,0,'circle','',10,-0.3,140,-5,255,255,255,1));
 			if(stateffects[n].tick==3){
 				if(options.loadAudio){
 					sfx.dash.rate(random(0.9,1.1));
@@ -16259,12 +16512,12 @@ if(tick%10==0){
 					append(particles,new createparticle(275+random(150),300,0,-1,0,0,'text','+ '+round(enemies[i].reactant)+' R',22,0,255,-2,160,130,50));
 					player.reactant+=round(enemies[i].reactant);
 				}
-				player.xp+=round(enemies[i].xp*(pow(1.1,min(player.level,enemies[i].lv)-1)));
+				player.xp+=round(enemies[i].xp*(pow(1.1,min(0,enemies[i].lv-player.level)-1)));
 				if(playertemp.traits[22]>0){
-					player.xp+=round(enemies[i].xp*(pow(1.1,min(player.level,enemies[i].lv)-1))*playertemp.traits[22]/100);
+					player.xp+=round(enemies[i].xp*(pow(1.1,min(0,enemies[i].lv-player.level)-1))*playertemp.traits[22]/100);
 				}
 				if(playertemp.traits[23]>0){
-					player.xp-=round(enemies[i].xp*(pow(1.1,min(player.level,enemies[i].lv)-1))*playertemp.traits[23]/100);
+					player.xp-=round(enemies[i].xp*(pow(1.1,min(0,enemies[i].lv-player.level)-1))*playertemp.traits[23]/100);
 				}
 				if(enemies[i].cloot){
 					if(playertemp.traits[68]>0){
@@ -16568,7 +16821,7 @@ if(tick%10==0){
 											objects[n].sound.rate(objects[n].soundefx.rate);
 										}
 										if(objects[n].soundefx.volume){
-											objects[n].sound.volume(objects[n].soundefx.volume);
+											objects[n].sound.volume(options.sfx*objects[n].soundefx.volume);
 										}
 									}
 									objects[n].sound.play();
@@ -17039,7 +17292,7 @@ if(tick%10==0){
 	text('Mana: '+round(player.mp)+' / '+round((plsmp(1))),825,310);
 	textFont(0,15);
 	fill(0,100,0);
-	text('XP: '+player.xp+' / '+player.xpr,825,390);
+	text('XP: '+round(player.xp*10)/10+"%",825,390);
 	fill(0,0,0);
 	rect(825,245,300,30);
 	fill(255-(min(1,player.hp/((plshp(1)))))*100,0,0);
@@ -17232,7 +17485,7 @@ if(tick%10==0){
 						playertemp.inBossFight=0;
 						player.hp=(plshp(1));
 						player.mp=(plsmp(1));
-						player.xp-=round(player.xpr*(max(0.1,min(player.level,100)/100)));
+						player.xp-=round(max(10,min(player.level,100)));
 						dots=new Array();
 						if(player.xp<0){
 							player.xp=0;
@@ -18603,6 +18856,9 @@ if(tick%10==0){
 		if(!(mousePressed||keyPressed)){
 			mouselock=0;
 		}
+		if(!(keyPressed)){
+			tkeylock=0;
+		}
 		fill(70,140,70);
 		rect(0,0,1133,700);
 		fill(140,70,70);
@@ -18637,33 +18893,33 @@ if(tick%10==0){
 					tip:tooltipcache[1],
 					colors:0
 				};
-				if(mouselock==0&keyPressed&key.code==65535){
+				if(tkeylock==0&keyPressed&key.code==65535){
 					tooltipcache[0]=-1;
-					mouselock=1;
+					tkeylock=1;
 					if(options.loadAudio){sfx.click.play();}
 					player.activetraits.shift=traits.inactive[i];
 					gettraits();
 					playertemp.traitcd.shift=traitcd[player.activetraits.shift];
 				}
-				if(mouselock==0&keyPressed&key.code==32){
+				if(tkeylock==0&keyPressed&key.code==32){
 					tooltipcache[0]=-1;
-					mouselock=1;
+					tkeylock=1;
 					if(options.loadAudio){sfx.click.play();}
 					player.activetraits.space=traits.inactive[i];
 					gettraits();
 					playertemp.traitcd.space=traitcd[player.activetraits.space];
 				}
-				if(mouselock==0&keyPressed&(key.code==113||key.code==81)){
+				if(tkeylock==0&keyPressed&(key.code==113||key.code==81)){
 					tooltipcache[0]=-1;
-					mouselock=1;
+					tkeylock=1;
 					if(options.loadAudio){sfx.click.play();}
 					player.activetraits.q=traits.inactive[i];
 					gettraits();
 					playertemp.traitcd.q=traitcd[player.activetraits.q];
 				}
-				if(mouselock==0&keyPressed&(key.code==101||key.code==69)){
+				if(tkeylock==0&keyPressed&(key.code==101||key.code==69)){
 					tooltipcache[0]=-1;
-					mouselock=1;
+					tkeylock=1;
 					if(options.loadAudio){sfx.click.play();}
 					player.activetraits.e=traits.inactive[i];
 					gettraits();
@@ -19562,11 +19818,12 @@ void mouseClicked(){
 						name:textinput,
 						xp:0,
 						xpr:100,
-						sp:100,
+						sp:500,
 						pp:500,
 						generation:1,
 						update:{newqnb:1},
 						reactant:200,
+						autoanvil:1,
 						record:{
 							enemies:new Array(9999),
 							quests:{},
@@ -19672,6 +19929,11 @@ var loadplayer=function(){
 	loaded=1;
 }
 var updateplayerdat=function(){
+	if(!(player.xpr==100)){
+		player.xp/=player.xpr;
+		player.xp*=100;
+		player.xpr=100;
+	}
 	if(!(player.fixqbcjsg)){
 		player.update=0;
 		player.fixqbcjsg=1;
