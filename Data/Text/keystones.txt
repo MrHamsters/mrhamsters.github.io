@@ -313,7 +313,7 @@ Kills generate a stack of Victory, doubled to 2 stacks if the enemy was near you
 0
 10
 Pentakill
-Getting 5 kills within 5 seconds of eachother grants 1 second of invincibility, 10 SP and 10% of the defeated enemies' XP, as well as restoring 5 mana and {ox0c1.8+ox0c0.036Pp+lx0c0.2+lx0c0.004Pp} health. {ox20c-1} second cooldown after completing a pentakill.
+Getting 5 kills within 5 seconds of eachother (timer resets per kill) grants 2 seconds of 50% damage reduction, 50 SP, as well as restoring {m0.01x0c1} mana and {ox0c1.8+ox0c0.036Pp+lx0c0.2+lx0c0.004Pp} health. {ox20c-1} second cooldown (affected by haste) after completing a pentakill.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 6/1
@@ -323,7 +323,7 @@ Getting 5 kills within 5 seconds of eachother grants 1 second of invincibility, 
 0
 10
 Aegis
-Grants a {ox0c6}% chance to block hits, reducing damage by 20% and absorbing the remaining damage using your guard meter. Allows guard meter to recharge at {ox0c10}% efficiency for 0.5 sec after activating.
+Grants a {ox0c6}% chance to block hits, reducing damage by 20% and absorbing the remaining damage using your guard meter. Increases guard meter recharge rate by {ox0c5}% for 0.5 sec after activating (allows for recharge when normally disabled).
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 23/1
@@ -567,3 +567,13 @@ Reduces damage taken by {ox0c1}%. Additionally, while your Omni Shell has durabi
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 21/1
+
+2
+4
+0
+10
+Shockwave
+Every 5th block you perform increases your armor and resistance by {ox0c0.5}% for 2 seconds and generates a shockwave in the direction you are facing. The shockwave deals {h0.01x0c1+a0.01x0c1+r0.01x0c1} physical damage to enemies hit.
+0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+32/1

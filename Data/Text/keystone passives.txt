@@ -18,7 +18,7 @@ Intelligence
 Armor
 Resistance
 Frenzy
-Reinforced Shell
+Armored Shell
 Victory
 Aegis
 Unyielding
@@ -29,3 +29,4 @@ Rupture
 Blood Rage
 Mana Steal
 Astral Infusion
+Shockwave
