@@ -1,4 +1,4 @@
-var version="0.8.3h";
+var version="0.8.3i";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -268,7 +268,7 @@ var loadassetscache=function(){
 				mswordbeam:new Howl({src: ['Data/Sound/sfx/master sword beam.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
 				mswordhit:new Howl({src: ['Data/Sound/sfx/master sword hit.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
 				upgrade:new Howl({src: ['Data/Sound/sfx/upgrade.wav'], autoplay: false,loop: false,volume: options.sfx*0.7,}),
-				enchant:new Howl({src: ['Data/Sound/sfx/enchant.wav'], autoplay: false,loop: false,volume: options.sfx*0.4,}),
+				enchant:new Howl({src: ['Data/Sound/sfx/enchant.wav'], autoplay: false,loop: false,volume: options.sfx*0.2,}),
 				obliteration:new Howl({src: ['Data/Sound/sfx/obliteration.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
 				glacialwardcharge:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
 				glacialwardshatter:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
@@ -3903,9 +3903,32 @@ var loadkeystoneps=function(){
 					//player.xp+=playertemp.pentakillv;
 					//playertemp.pentakillv=0;
 					buff(2,120,50);
-					player.sp+=10;
-					player.mp+=10;
+					player.sp+=playertemp.keystonepassives[6]*3;
+					player.mp+=plsmp(playertemp.keystonepassives[6]/100);
 					heal(((1.8+player.level/5)*(1+player.passives[0]/50))*playertemp.keystonepassives[6],"direct");
+					playertemp.maxhp+=playertemp.keystonepassives[6]*0.01;
+					playertemp.maxmp+=playertemp.keystonepassives[6]*0.01;
+					playertemp.hpregen+=playertemp.keystonepassives[6]*0.01;
+					playertemp.mpregen+=playertemp.keystonepassives[6]*0.01;
+					playertemp.str+=playertemp.keystonepassives[6]*0.01;
+					playertemp.intel+=playertemp.keystonepassives[6]*0.01;
+					playertemp.armor+=playertemp.keystonepassives[6]*0.01;
+					playertemp.res+=playertemp.keystonepassives[6]*0.01;
+					append(stateffects,{name:'pentakill',tick:0,pow:playertemp.keystonepassives[6],run:function(){
+						if(stateffects[n].tick>=600){
+							playertemp.maxhp-=stateffects[n].pow;
+							playertemp.maxmp-=stateffects[n].pow;
+							playertemp.hpregen-=stateffects[n].pow;
+							playertemp.mpregen-=stateffects[n].pow;
+							playertemp.str-=stateffects[n].pow;
+							playertemp.intel-=stateffects[n].pow;
+							playertemp.armor-=stateffects[n].pow;
+							playertemp.res-=stateffects[n].pow;
+							stateffects.splice(n,1);
+							n-=1;
+						}
+					}
+					});
 				}
 			}
 		});
@@ -4687,6 +4710,21 @@ var loadtraits=function(){
 			}
 		}
 	});
+	//Adaptive additional damage
+	if(playertemp.traits[91]>0){
+		append(traitfuncs.damagedealt,function(){
+			if(willhit){
+				if(playertemp.defendcounterattack>0){
+					if(pdmg>mdmg){
+						pdmg+=plshp(procc*0.1)+plsar(procc*0.1)+plsre(procc*0.08);
+					}
+					else{
+						mdmg+=plshp(procc*0.1)+plsar(procc*0.1)+plsre(procc*0.08);
+					}
+				}
+			}
+		});
+	}
 	//Other Base modifications========
 	if(playertemp.traits[91]>0){
 		append(traitfuncs.damagetaken,function(){
@@ -5626,6 +5664,12 @@ var loadtraits=function(){
 		}
 	if(playertemp.traits[91]>0){
 		append(traitfuncs.passives,function(){
+			if(!(playertemp.defendcounterattack)){
+				playertemp.defendcounterattack=0;
+			}
+			if(playertemp.defendcounterattack>0){
+				playertemp.defendcounterattack-=1;
+			}
 			if(!(playertemp.eartharmor)){
 				playertemp.eartharmor=0;
 			}
@@ -5680,7 +5724,7 @@ var loadtraits=function(){
 				mdmg*=1-min(10,playertemp.traits[40])*0.03;
 			}
 			if(willhit&playertemp.guard>pdmg+mdmg){
-				playertemp.action.proc=1;
+				playertemp.action.proc=30;
 			}
 			if(willhit||playertemp.traits[93]>0){
 				if(playertemp.guard>pdmg){
@@ -12271,7 +12315,7 @@ var ts={
 	explosivemunitions:function(tpm){
 			if(playertemp.traits[65]/10>=random(1)){
 				sfx.bomb.play();
-				append(particles,new createparticle(400+objects[n].x-playertemp.x,350+objects[n].y-playertemp.y,0,0,0,0,'circle','',50,3,255,-13,180,150,0));
+				append(particles,new createparticle(objects[n].x-playertemp.x,objects[n].y-playertemp.y,0,0,0,0,'circle','',50,3,255,-13,180,150,0,1));
 				append(objects,{
 					type:'AoE',
 					target:'enemy',
@@ -12535,10 +12579,16 @@ append(doaction,function(lv,hand){
 			playertemp.action.dir=PI-atan((mouseX-400)/(mouseY-350));
 			playertemp.action.diro=PI-atan((mouseX-400)/(mouseY-350));
 		}
+		if(playertemp.bswordc>2){
+			playertemp.defendcounterattack=60;
+		}
 		if(playertemp.bswordc>3){
 			playertemp.bswordc=0;
 			sfx.fissurec.play();
 			playertemp.action.run=function(){
+				if(playertemp.defendcounterattack>0){
+					playertemp.defendcounterattack=60;
+				}
 				ellipseMode(CENTER);
 				if(playertemp.action.tick<15){
 					fill(170,170-playertemp.action.tick*4,150-playertemp.action.tick*5);
@@ -12627,7 +12677,7 @@ append(doaction,function(lv,hand){
 							mdmgmax:0,
 							armorE:1,
 							resE:1,
-							procc:0.3,
+							procc:0.5,
 							properties:["impact","earth"],
 							hits:new Array(999)
 						});
@@ -13987,6 +14037,7 @@ append(doaction,function(lv,hand){
 			if(options.loadAudio){sfx.shield.play();}
 		}
 		if(playertemp.action.active){
+			playertemp.action.proc=max(playertemp.action.proc-1,0);
 			if(playertemp.guard>=((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb)*0.8){
 				fill(120,120,255,190);
 				ellipseMode(CENTER);
@@ -14008,7 +14059,16 @@ append(doaction,function(lv,hand){
 				ellipse(400,350,30,30);
 			}
 			else{
+				playertemp.action.proc=0;
 				stroke(255,0,0,90);
+				strokeWeight(7);
+				noFill();
+				ellipseMode(CENTER);
+				ellipse(400,350,39,39);
+				noStroke();
+			}
+			if(playertemp.action.proc>0){
+				stroke(255,255,105+abs(tick%20-10)*15,105+abs(tick%20-10)*15);
 				strokeWeight(7);
 				noFill();
 				ellipseMode(CENTER);
@@ -14017,20 +14077,9 @@ append(doaction,function(lv,hand){
 			}
 			if(!(mousePressed)){
 				playertemp.action.active=0;
-				if(playertemp.action.proc){
-					playertemp.strfb+=plshp(0.15)+plsar(0.1)+plsre(0.1);
-					playertemp.intelfb+=plshp(0.15);
-					append(stateffects,{name:'Counter attack',pow:plshp(0.15),strpow:plsar(0.1)+plsre(0.1),tick:0,run:function(){
-						playertemp.strfb-=(stateffects[n].pow+stateffects[n].strpow)/120;
-						playertemp.intelfb-=(stateffects[n].pow)/120;
-						if(stateffects[n].tick>=60){
-							playertemp.strfb-=(stateffects[n].pow+stateffects[n].strpow)/2;
-							playertemp.intelfb-=(stateffects[n].pow)/2;
-							stateffects.splice(n,1);
-							n-=1;
-						}
-					}
-					});
+				if(playertemp.action.proc>0){
+					append(particles,new createparticle(400,350,0,0,0,0,'circle','',100,-4,10,8,200,200,100));
+					playertemp.defendcounterattack=60;
 					buff(1,60,1);
 				}
 			}
