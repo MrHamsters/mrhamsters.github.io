@@ -4236,7 +4236,7 @@ var loadkeystoneps=function(){
 						}
 						else{
 							sfx.ksblock.rate(random(0.9,1.1));
-							sfx.ksblock.volume(options.sfx*2);
+							sfx.ksblock.volume(options.sfx*1.2);
 							sfx.ksblock.play();
 							dmgsound=0;
 						}
@@ -12580,7 +12580,9 @@ append(doaction,function(lv,hand){
 			playertemp.action.diro=PI-atan((mouseX-400)/(mouseY-350));
 		}
 		if(playertemp.bswordc>2){
-			playertemp.defendcounterattack=60;
+			if(playertemp.defendcounterattack>0){
+				playertemp.defendcounterattack=60;
+			}
 		}
 		if(playertemp.bswordc>3){
 			playertemp.bswordc=0;
