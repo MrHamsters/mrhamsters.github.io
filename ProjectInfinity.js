@@ -1,4 +1,4 @@
-var version="0.8.3i";
+var version="0.8.3j";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -1712,8 +1712,8 @@ function cdmgind(x,y,text,size,R,G,B){
 	this.g=G;
 	this.b=B;
 	this.t=0;
-	this.xvelo=random(-1,1);
-	this.yvelo=random(-4,-2);
+	this.xvelo=random(-1.35,1.35);
+	this.yvelo=random(-6,-2);
 }
 function createterrain(sprite,x,y,hitbox,direction){
 	this.sprite=sprite;
@@ -8354,16 +8354,16 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				else{
 					indcol=[160,160,160];
 				}
-				if(mdmg>0){
-					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length,6+dmgind.length),
+				//if(mdmg>0){
+					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-15+random(-6-dmgind.length,6+dmgind.length),
-					round(pdmg)+dmgixtra,11,indcol[0],indcol[1],indcol[2]));
-				}
+					round(pdmg)+dmgixtra,min(18,max(7,pdmg/(5*nmelvsc(biomedata[9])))),indcol[0],indcol[1],indcol[2]));
+				/*}
 				else{
-					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length,6+dmgind.length),
+					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-5+random(-6-dmgind.length,6+dmgind.length),
 					round(pdmg)+dmgixtra,13,indcol[0],indcol[1],indcol[2]));
-				}
+				}*/
 			}
 			if(mdmg>0){
 				if(options.showmit==2){
@@ -8375,16 +8375,16 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				else{
 					indcol=[160,160,160];
 				}
-				if(pdmg>0){
-					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length,6+dmgind.length),
+				//if(pdmg>0){
+					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-5+random(-6-dmgind.length,6+dmgind.length),
-					round(mdmg)+dmgixtra,11,indcol[0],indcol[1],indcol[2]));
-				}
+					round(mdmg)+dmgixtra,min(18,max(7,mdmg/(5*nmelvsc(biomedata[9])))),indcol[0],indcol[1],indcol[2]));
+				/*}
 				else{
-					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length,6+dmgind.length),
+					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-5+random(-6-dmgind.length,6+dmgind.length),
 					round(mdmg)+dmgixtra,13,indcol[0],indcol[1],indcol[2]));
-				}
+				}*/
 			}
 		}
 	}
@@ -19713,7 +19713,7 @@ text(dmgind[y].text,400+dmgind[y].x-playertemp.x,350+dmgind[y].y-playertemp.y);}
 			else */if(dmgind[y].size<6){
 				dmgind[y].x+=dmgind[y].xvelo;
 				dmgind[y].y+=dmgind[y].yvelo;
-				dmgind[y].yvelo+=0.15;
+				dmgind[y].yvelo+=0.23;
 				dmgind[y].size*=0.97;
 			}
 			else{
