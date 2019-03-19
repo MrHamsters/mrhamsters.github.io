@@ -313,7 +313,7 @@ Kills generate a stack of Victory, doubled to 2 stacks if the enemy was near you
 0
 10
 Pentakill
-Getting 5 kills within 5 seconds of eachother (timer resets per kill) grants 2 seconds of 50% damage reduction, 50 SP, as well as restoring {m0.01x0c1} mana and {ox0c1.8+ox0c0.036Pp+lx0c0.2+lx0c0.004Pp} health. {ox20c-1} second cooldown (affected by haste) after completing a pentakill.
+Getting 5 kills within 5 seconds of eachother (timer resets per kill) grants 2 seconds of 50% damage reduction, {ox0c3} SP, increases your stats by {ox0c1}% for 10 seconds, as well as restoring {m0.01x0c1} mana and {ox0c1.8+ox0c0.036Pp+lx0c0.2+lx0c0.004Pp} health. {ox20c-1} second cooldown (affected by haste) after completing a pentakill.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 6/1
