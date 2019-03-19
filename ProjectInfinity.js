@@ -1,4 +1,4 @@
-var version="0.8.3j";
+var version="0.8.3j2";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -8357,7 +8357,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				//if(mdmg>0){
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-15+random(-6-dmgind.length,6+dmgind.length),
-					round(pdmg)+dmgixtra,min(18,max(7,pdmg/(5*nmelvsc(biomedata[9])))),indcol[0],indcol[1],indcol[2]));
+					round(pdmg)+dmgixtra,8+procc*3,indcol[0],indcol[1],indcol[2]));
 				/*}
 				else{
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
@@ -8378,7 +8378,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				//if(pdmg>0){
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-5+random(-6-dmgind.length,6+dmgind.length),
-					round(mdmg)+dmgixtra,min(18,max(7,mdmg/(5*nmelvsc(biomedata[9])))),indcol[0],indcol[1],indcol[2]));
+					round(mdmg)+dmgixtra,8+procc*3,indcol[0],indcol[1],indcol[2]));
 				/*}
 				else{
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
