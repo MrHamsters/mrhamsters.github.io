@@ -10,7 +10,7 @@ wth
 wth
 wth
 wth
-[Guard] Raise your shield, causing damage from hits to be absorbed by your guard meter. Can be held indefinitely. Blocking a hit grants counter-attack buff for 1 second upon lowering. Each point in Shield Mastery reduces damage taken while defending by 3%.
+[Guard] Raise your shield, causing damage from hits to be absorbed by your guard meter. Can be held indefinitely. If you lower your shield within 0.5 sec of blocking a hit, you gain the Counter-Attack buff for 1 second. Counter attack buff grants {h0.1+a0.1+r0.08} (per 100% proc power) adaptive damage on hit. Each point in Shield Mastery reduces damage taken while defending by 3%.
 [Master Sword] Swing your Master Sword, hitting all enemies in an arc for {s0.6}-{s0.7} physical slash damage. If used while at full health, also fires a medium ranged beam which deals {i0.6}-{i0.7} magic damage to the first 2 enemies it hits. No cost to use, but doesn't auto-swing. Each point in Blade Mastery reduces the movement speed penalty of swinging by 10%.
 [Rapier Slash] Slash with your rapier, hitting all enemies in an arc for {s0.5}-{s0.65} physical slash damage. Re-clicking during use causes the next strike to be replaced with a lunge. Lunge costs 6 mana and deals {s1}-{s1.2} physical pierce damage. You gain 40% damage reduction during lunge. Hitting at least 1 enemy with either attack increases your movement speed by 10% for 1 second. Each point in Blade Mastery leeches 1% of the damage dealt as guard meter.
 wth
