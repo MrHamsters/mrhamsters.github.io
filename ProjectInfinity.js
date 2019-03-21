@@ -1,4 +1,4 @@
-var version="0.8.3j2";
+var version="0.8.3j3";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -5021,7 +5021,7 @@ var loadtraits=function(){
 		append(traitfuncs.damagedealt,function(){
 			if(willhit){
 				if(findprop("slash")||findprop("pierce")){
-					if(random(1)<=playertemp.traits[36]/20){
+					if(random(1)<=playertemp.traits[36]*0.075){
 						if(!(enemies[index].dots)){
 							enemies[index].dots=new Array();
 						}
@@ -8357,7 +8357,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				//if(mdmg>0){
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-15+random(-6-dmgind.length,6+dmgind.length),
-					round(pdmg)+dmgixtra,8+procc*6,indcol[0],indcol[1],indcol[2]));
+					round(pdmg)+dmgixtra,getindsize(pdmg),indcol[0],indcol[1],indcol[2]));
 				/*}
 				else{
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
@@ -8378,7 +8378,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				//if(pdmg>0){
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-5+random(-6-dmgind.length,6+dmgind.length),
-					round(mdmg)+dmgixtra,8+procc*6,indcol[0],indcol[1],indcol[2]));
+					round(mdmg)+dmgixtra,getindsize(mdmg),indcol[0],indcol[1],indcol[2]));
 				/*}
 				else{
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
@@ -8388,6 +8388,15 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 			}
 		}
 	}
+}
+var getindsize=function(val){
+	if(val<nmelvsc(biomedata[9])*8){
+		return(7);
+	}
+	else if(val<nmelvsc(biomedata[9])*150){
+		return(20*val/(nmelvsc(biomedata[9])*150));
+	}
+	return(20);
 }
 //////////////////////////////LOAD//////////////////////////////////////=======================================
 var loadArea=function(){
