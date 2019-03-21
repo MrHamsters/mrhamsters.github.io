@@ -1,4 +1,4 @@
-var version="0.8.3j4";
+var version="0.8.3j";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -868,6 +868,7 @@ var showkeystonetree=function(ctree){
 	text("III",400,315);
 	text("IV",400,415);
 	text("V",400,515);
+	text("VI",400,615);
 	for(kt=1;kt<keystonecache[ctree].length;kt+=1){
 		for(sk=0;sk<keystonecache[ctree][kt].length;sk+=1){
 			shape(sprites.keystone,400+(sk+1)*700/(1+keystonecache[ctree][kt].length),kt*100,350,468);
@@ -3688,27 +3689,64 @@ var loadkeystoneps=function(){
 		});
 	}
 	if(playertemp.keystonepassives[33]>0){
+		append(keystonefuncs.damagedealtpostmit,function(){
+			if(!(playertemp.sacrificialwella>0)){
+				if(pdmg>0){
+					playertemp.sacrificialwell=min((plshp(0.2)+plshr(4)+plsst(0.8)+plsin(0.8))*playertemp.keystonepassives[33],playertemp.sacrificialwell+pdmg*playertemp.keystonepassives[33]/100);
+				}
+				if(mdmg>0){
+					playertemp.sacrificialwell=min((plshp(0.2)+plshr(4)+plsst(0.8)+plsin(0.8))*playertemp.keystonepassives[33],playertemp.sacrificialwell+mdmg*playertemp.keystonepassives[33]/100);
+				}
+			}
+		});
+		append(keystonefuncs.overlay,function(){
+			fill(50,0,0,150);
+			rect(760,400,40,playertemp.keystonepassives[33]*15);
+			fill(255,0,0,150);
+			rect(760,400+playertemp.keystonepassives[33]*15-(playertemp.sacrificialwell/(plshp(0.2)+plshr(4)+plsst(0.8)+plsin(0.8)))*15,40,(playertemp.sacrificialwell/(plshp(0.2)+plshr(4)+plsst(0.8)+plsin(0.8)))*15);
+		});
+		append(keystonefuncs.passives,function(){
+			if(!(playertemp.sacrificialwell)){
+				playertemp.sacrificialwell=0;
+			}
+			if(playertemp.sacrificialwell>=(plshp(0.2)+plshr(4)+plsst(0.8)+plsin(0.8))*playertemp.keystonepassives[33]){
+				playertemp.sacrificialwella=1;
+			}
+			else if(playertemp.sacrificialwell<=0){
+				playertemp.sacrificialwella=0;
+			}
+			if(playertemp.sacrificialwella>0){
+				append(particles,new createparticle(780+random(-17,17),400+playertemp.keystonepassives[33]*15,0,0,0,random(-0.1,-0.3),'circle','',10,-0.2,255,random(-5,-10),255,random(160),0));
+			}
+			else{
+				if(player.hp>plshp(0.8)){
+					playertemp.sacrificialwell=min((plshp(0.2)+plshr(4)+plsst(0.8)+plsin(0.8))*playertemp.keystonepassives[33],playertemp.sacrificialwell+(player.hp*(0.02+playertemp.keystonepassives[33]*0.003))*playertemp.keystonepassives[33]/60);
+					player.hp*=1-playertemp.keystonepassives[33]/3000;
+				}
+			}
+			
+		});
 		append(keystonefuncs.dmgdealtpremod,function(){
 			if(playertemp.sacrificialwella>0){
 				if(playertemp.sacrificialwell>0){
 					if(pdmg>mdmg){
 						if(willhit){
-							pdmg+=playertemp.sacrificialwell/10;
-							playertemp.sacrificialwell*=0.9;
+							pdmg+=min(playertemp.sacrificialwell,(plshp(0.005)+plshr(0.1)+plsst(0.02)+plsin(0.02))+playertemp.sacrificialwell/20);
+							playertemp.sacrificialwell-=min(playertemp.sacrificialwell,(plshp(0.005)+plshr(0.1)+plsst(0.02)+plsin(0.02))+playertemp.sacrificialwell/20);
 						}
 						else{
-							pdmg+=playertemp.sacrificialwell/600;
-							playertemp.sacrificialwell-=playertemp.sacrificialwell/600;
+							pdmg+=min(playertemp.sacrificialwell,((plshp(0.005)+plshr(0.1)+plsst(0.02)+plsin(0.02))+playertemp.sacrificialwell/10)/60);
+							playertemp.sacrificialwell-=min(playertemp.sacrificialwell,((plshp(0.005)+plshr(0.1)+plsst(0.02)+plsin(0.02))+playertemp.sacrificialwell/20)/60);
 						}
 					}
 					else{
 						if(willhit){
-							mdmg+=playertemp.sacrificialwell/10;
-							playertemp.sacrificialwell*=0.9;
+							mdmg+=min(playertemp.sacrificialwell,(plshp(0.005)+plshr(0.1)+plsst(0.02)+plsin(0.02))+playertemp.sacrificialwell/10);
+							playertemp.sacrificialwell-=min(playertemp.sacrificialwell,(plshp(0.005)+plshr(0.1)+plsst(0.02)+plsin(0.02))+playertemp.sacrificialwell/20);
 						}
 						else{
-							mdmg+=playertemp.sacrificialwell/600;
-							playertemp.sacrificialwell-=playertemp.sacrificialwell/600;
+							mdmg+=min(playertemp.sacrificialwell,((plshp(0.005)+plshr(0.1)+plsst(0.02)+plsin(0.02))+playertemp.sacrificialwell/10)/60);
+							playertemp.sacrificialwell-=min(playertemp.sacrificialwell,((plshp(0.005)+plshr(0.1)+plsst(0.02)+plsin(0.02))+playertemp.sacrificialwell/20)/60);
 						}
 					}
 				}
@@ -8390,7 +8428,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				//if(mdmg>0){
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-15+random(-6-dmgind.length,6+dmgind.length),
-					round(pdmg)+dmgixtra,12,indcol[0],indcol[1],indcol[2]));
+					round(pdmg)+dmgixtra,getindsize(pdmg),indcol[0],indcol[1],indcol[2]));
 				/*}
 				else{
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
@@ -8411,7 +8449,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				//if(pdmg>0){
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-5+random(-6-dmgind.length,6+dmgind.length),
-					round(mdmg)+dmgixtra,12,indcol[0],indcol[1],indcol[2]));
+					round(mdmg)+dmgixtra,getindsize(mdmg),indcol[0],indcol[1],indcol[2]));
 				/*}
 				else{
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
@@ -8423,10 +8461,8 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 	}
 }
 var getindsize=function(val){
-	if(val<nmelvsc(biomedata[9])*150){
-		return(13*val/(nmelvsc(biomedata[9])*150));
-	}
-	return(13);
+	//console.log(7+20*val/(nmelvsc(biomedata[9])*200));
+	return(round(min(20,7+20*val/(nmelvsc(biomedata[9])*300))));
 }
 //////////////////////////////LOAD//////////////////////////////////////=======================================
 var loadArea=function(){
@@ -9149,6 +9185,10 @@ var getBiomeScripts=function(){
 				playertemp.yvelo=0;
 			}
 			if(!(cinematic||dialoga)){
+				if(pow(playertemp.x,2)+pow(playertemp.y+190,2)<pow(100+player.size,2)){
+					player.hp+=plshp(0.01);
+					player.mp+=plsmp(0.01);
+				}
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&pow(playertemp.x,2)+pow(playertemp.y+190,2)<pow(62+player.size,2)){
 					getAtlas();
 					inventory=3;
@@ -12354,7 +12394,7 @@ var ts={
 	explosivemunitions:function(tpm){
 			if(playertemp.traits[65]/10>=random(1)){
 				sfx.bomb.play();
-				append(particles,new createparticle(objects[n].x-playertemp.x,objects[n].y-playertemp.y,0,0,0,0,'circle','',50,3,255,-13,180,150,0,1));
+				append(particles,new createparticle(objects[n].x,objects[n].y,0,0,0,0,'circle','',50,3,255,-13,180,150,0,1));
 				append(objects,{
 					type:'AoE',
 					target:'enemy',
