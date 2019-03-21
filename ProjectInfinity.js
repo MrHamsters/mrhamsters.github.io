@@ -1,4 +1,4 @@
-var version="0.8.3j4 test";
+var version="0.8.3j4";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -3669,6 +3669,7 @@ var loadkeystoneps=function(){
 		whenhit:new Array(),
 		dmgpremod:new Array(),
 		damagedealt:new Array(),
+		dmgdealtpremod:new Array(),
 		damagetaken:new Array(),
 		damagetakenpm:new Array(),
 		damagetakenpa:new Array(),
@@ -3683,6 +3684,34 @@ var loadkeystoneps=function(){
 			if(willhit){
 				pdmg*=(1-playertemp.keystonepassives[3]*0.025);
 				mdmg*=(1-playertemp.keystonepassives[3]*0.025);
+			}
+		});
+	}
+	if(playertemp.keystonepassives[33]>0){
+		append(keystonefuncs.dmgdealtpremod,function(){
+			if(playertemp.sacrificialwella>0){
+				if(playertemp.sacrificialwell>0){
+					if(pdmg>mdmg){
+						if(willhit){
+							pdmg+=playertemp.sacrificialwell/10;
+							playertemp.sacrificialwell*=0.9;
+						}
+						else{
+							pdmg+=playertemp.sacrificialwell/600;
+							playertemp.sacrificialwell-=playertemp.sacrificialwell/600;
+						}
+					}
+					else{
+						if(willhit){
+							mdmg+=playertemp.sacrificialwell/10;
+							playertemp.sacrificialwell*=0.9;
+						}
+						else{
+							mdmg+=playertemp.sacrificialwell/600;
+							playertemp.sacrificialwell-=playertemp.sacrificialwell/600;
+						}
+					}
+				}
 			}
 		});
 	}
@@ -8262,6 +8291,9 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 		if(options.showmit>0){
 			origdmg=[pdmg,mdmg];
 		}
+		for(tfdd=0;tfdd<keystonefuncs.dmgdealtpremod.length;tfdd+=1){
+			keystonefuncs.dmgdealtpremod[tfdd]();
+		}
 		for(tfdd=0;tfdd<traitfuncs.damagedealt.length;tfdd+=1){
 			traitfuncs.damagedealt[tfdd]();
 		}
@@ -8358,7 +8390,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				//if(mdmg>0){
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-15+random(-6-dmgind.length,6+dmgind.length),
-					round(pdmg)+dmgixtra,7+getindsize(pdmg),indcol[0],indcol[1],indcol[2]));
+					round(pdmg)+dmgixtra,12,indcol[0],indcol[1],indcol[2]));
 				/*}
 				else{
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
@@ -8379,7 +8411,7 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				//if(pdmg>0){
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
 					enemies[index].y-5+random(-6-dmgind.length,6+dmgind.length),
-					round(mdmg)+dmgixtra,7+getindsize(mdmg),indcol[0],indcol[1],indcol[2]));
+					round(mdmg)+dmgixtra,12,indcol[0],indcol[1],indcol[2]));
 				/*}
 				else{
 					append(dmgind,new cdmgind(enemies[index].x-10+random(-6-dmgind.length/3,6+dmgind.length/3),
