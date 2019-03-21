@@ -1,4 +1,4 @@
-var version="0.8.3j3";
+var version="0.8.3j4";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -8395,7 +8395,7 @@ var getindsize=function(val){
 		return(7);
 	}
 	else if(val<nmelvsc(biomedata[9])*150){
-		return(20*val/(nmelvsc(biomedata[9])*150));
+		return(7+13*val/(nmelvsc(biomedata[9])*150));
 	}
 	return(20);
 }
