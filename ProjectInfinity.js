@@ -1,4 +1,4 @@
-var version="0.8.3j4";
+var version="0.8.3j3";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -8390,13 +8390,13 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 	}
 }
 var getindsize=function(val){
-	if(val<nmelvsc(biomedata[9])*10){
+	if(val<nmelvsc(biomedata[9])*8){
 		return(7);
 	}
-	else if(val<nmelvsc(biomedata[9])*200){
-		return(20*val/(nmelvsc(biomedata[9])*200)+6);
+	else if(val<nmelvsc(biomedata[9])*150){
+		return(20*val/(nmelvsc(biomedata[9])*150));
 	}
-	return(26);
+	return(20);
 }
 //////////////////////////////LOAD//////////////////////////////////////=======================================
 var loadArea=function(){
