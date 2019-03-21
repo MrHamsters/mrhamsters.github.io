@@ -3558,6 +3558,7 @@ var levelup=function(){
 			player.lvpprew=0;
 		}
 		player.xp-=player.xpr;
+		player.xp*=0.9;
 		player.level+=1;
 		//player.xpr=round(100*pow(1.1,player.level-1));
 		player.pp+=(player.level-player.lvpprew)*500;
