@@ -8390,11 +8390,8 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 	}
 }
 var getindsize=function(val){
-	if(val<nmelvsc(biomedata[9])*8){
-		return(7);
-	}
-	else if(val<nmelvsc(biomedata[9])*150){
-		return(20*val/(nmelvsc(biomedata[9])*150));
+	if(val<nmelvsc(biomedata[9])*168){
+		return(7+val/(nmelvsc(biomedata[9])*12));
 	}
 	return(20);
 }
