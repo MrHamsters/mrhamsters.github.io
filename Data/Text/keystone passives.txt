@@ -30,3 +30,4 @@ Blood Rage
 Mana Steal
 Astral Infusion
 Shockwave
+Sacrificial Well

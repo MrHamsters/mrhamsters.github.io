@@ -577,3 +577,13 @@ Every 5th block you perform increases your armor and resistance by {ox0c0.5}% fo
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 32/1
+
+1
+6
+0
+10
+Sacrificial Well
+While the well is inactive and you are above 80% health, lose {ox0c2}% of your current health per second, adding {ox100c15}% of it to your Sacrificial Well. Additionally, {ox0c1}% of damage dealt is added to the well while inactive. Once at maximum capacity, the well activates. While it is active, damage you deal consumes {h0.005+p0.1+s0.02+i0.02}, plus 5% (on hit while per second for DoT) of your Sacrificial Well to gain the amount consumed as additional adaptive damage. Sacrificial Well can store up to {h0.1x0c1+p2x0c1+s0.4x0c1+i0.4x0c1}.
+0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+33/1
