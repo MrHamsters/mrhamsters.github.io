@@ -3982,7 +3982,7 @@ var loadkeystoneps=function(){
 					playertemp.intel+=playertemp.keystonepassives[6]*0.01;
 					playertemp.armor+=playertemp.keystonepassives[6]*0.01;
 					playertemp.res+=playertemp.keystonepassives[6]*0.01;
-					append(stateffects,{name:'pentakill',tick:0,pow:playertemp.keystonepassives[6],run:function(){
+					append(stateffects,{name:'pentakill',tick:0,pow:playertemp.keystonepassives[6]*0.01,run:function(){
 						if(stateffects[n].tick>=600){
 							playertemp.maxhp-=stateffects[n].pow;
 							playertemp.maxmp-=stateffects[n].pow;
