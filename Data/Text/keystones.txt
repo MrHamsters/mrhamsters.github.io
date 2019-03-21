@@ -173,8 +173,8 @@ Fires a blast in the target direction when you left click, dealing {s0.05+i0.05+
 0
 20
 Might
-+{ox0c2} to base strength.
-0/0/0/0/2/0/0/0/0/0/0
++{ox0c3} to base strength.
+0/0/0/0/3/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -183,8 +183,8 @@ Might
 0
 20
 Cleverness
-+{ox0c2} to base intelligence.
-0/0/0/0/0/2/0/0/0/0/0
++{ox0c3} to base intelligence.
+0/0/0/0/0/3/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -193,8 +193,8 @@ Cleverness
 0
 10
 Stamina
-+{ox0c5} to mana and +{ox0c0.15} to mana regen.
-0/0/5/0.15/0/0/0/0/0/0/0
++{ox0c7} to mana and +{ox0c0.25} to mana regen.
+0/0/7/0.25/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -203,8 +203,8 @@ Stamina
 0
 20
 Physique
-+{ox0c6} to base health.
-6/0/0/0/0/0/0/0/0/0/0
++{ox0c9} to base health.
+9/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -213,8 +213,8 @@ Physique
 0
 20
 Vigor
-+{ox0c0.2} to base health regen.
-0/0.2/0/0/0/0/0/0/0/0/0
++{ox0c0.3} to base health regen.
+0/0.3/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -223,8 +223,8 @@ Vigor
 0
 20
 Hard Skin
-+{ox0c2} to base armor.
-0/0/0/0/0/0/2/0/0/0/0
++{ox0c3} to base armor.
+0/0/0/0/0/0/3/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -233,8 +233,8 @@ Hard Skin
 0
 20
 Thick Skin
-+{ox0c2} to base resistance.
-0/0/0/0/0/0/0/2/0/0/0
++{ox0c3} to base resistance.
+0/0/0/0/0/0/0/3/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -243,8 +243,8 @@ Thick Skin
 0
 10
 Stamina
-+{ox0c5} to mana and +{ox0c0.15} to mana regen.
-0/0/5/0.15/0/0/0/0/0/0/0
++{ox0c7} to mana and +{ox0c0.25} to mana regen.
+0/0/7/0.25/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -253,8 +253,8 @@ Stamina
 0
 20
 Celestial Body
-+{ox0c6} to base health.
-6/0/0/0/0/0/0/0/0/0/0
++{ox0c9} to base health.
+9/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -263,8 +263,8 @@ Celestial Body
 0
 20
 Astral Sorcery
-+{ox0c6} to mana.
-0/0/6/0/0/0/0/0/0/0/0
++{ox0c9} to mana.
+0/0/9/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -273,8 +273,8 @@ Astral Sorcery
 0
 20
 Essence Tap
-+{ox0c0.12} to mana regen and base health regen.
-0/0.12/0/0.12/0/0/0/0/0/0/0
++{ox0c0.18} to mana regen and base health regen.
+0/0.18/0/0.18/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -283,8 +283,8 @@ Essence Tap
 0
 20
 Ferocity
-+{ox0c2} to base strength and intelligence.
-0/0/0/0/2/2/0/0/0/0/0
++{ox0c3} to base strength and intelligence.
+0/0/0/0/3/3/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
@@ -293,8 +293,8 @@ Ferocity
 0
 20
 Bastion
-+{ox0c2} to base armor and resistance.
-0/0/0/0/0/0/2/2/0/0/0
++{ox0c3} to base armor and resistance.
+0/0/0/0/0/0/3/3/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 
 
