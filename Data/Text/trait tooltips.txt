@@ -17,7 +17,7 @@ Mana Battery
 Vampire
 [Passive] Heal for {ox0c1}% of all damage dealt.
 Zealot's Oath
-[Passive] Adds the {s0.0002x0c1} to Arcane Armor's mana damage division.
+[Passive] Adds {s0.0002x0c1} to Arcane Armor's mana damage division.
 Spores
 [Passive] Getting hit releases {ox0c1} spores which deal {i0.35}-{i0.4} magic poison damage to enemies.
 Energy Shield
@@ -33,7 +33,7 @@ Stamina
 Focus
 [Active] Toggles this trait. Toggle on on at the cost of 10 mana to to drain {ox10.6c-0.6} mana per second and gain 100% increased strength and intelligence.
 Spectral Shield
-[Active] Projects an ethereal shield which flies in the target direction for 1 second while deccelerating, then accelerates back towards you. Deals {s0.5+a0.2}-{s0.65+a0.25} physical and {i0.5+r0.2}-{i0.65+r0.25} magic damage to enemies hit, and briefly stuns them. Grants a {h0.3+a0.12+r0.06} point damage shield which decays over {ox3c2} seconds on return, as well as restoring 40% of your maximum guard meter. Each point in Shield Mastery increases shield value by 10%. 6 second cooldown and 5 mana cost.
+[Active] Projects an ethereal shield which flies in the target direction for 1 second while deccelerating, then accelerates back towards you. Deals {s0.5+a0.2}-{s0.65+a0.25} physical and {i0.5+r0.2}-{i0.65+r0.25} magic damage to enemies hit, and briefly stuns them. Grants a {h0.3+a0.12+r0.06} point damage shield which decays over 3 seconds on return, as well as restoring 50% of your maximum guard meter. Each point in Shield Mastery increases shield value and guard meter recovery by 5%. 6 second cooldown and 5 mana cost.
 Flash Step
 [Passive] Causes an annoying flash of light with each step, dealing {i0.22x0c1}-{i0.3x0c1} magic light damage to nearby enemies. Damage is modified by your player size. Each step costs 1 mana. Disabled while below half mana.
 Scavenging
@@ -53,7 +53,7 @@ Obliteration
 Warmog's Heart
 [Passive] Restores {h0.1} health per second after not taking damage for at least 4 seconds.
 Glacial Ward
-[Passive] Avoids the first hit you take while releasing an icy blast which freezes nearby enemies for up to {ox0c0.4} seconds. Recharges after not being hit for a base of 10 seconds. {ox0c20}% increased recharge speed at this trait level.
+[Passive] Blocks the first hit you take while releasing an icy blast which freezes nearby enemies for up to {ox0c0.4} seconds. Recharges after not being hit for a base of 10 seconds. {ox0c20}% increased recharge speed at this trait level. Cold hits have a 50% chance to be avoided entirely while active.
 Traction
 [Passive] Stabilizes your movement by a factor of {ox0c1}.
 Matrix Armor
@@ -123,7 +123,7 @@ Magic Aura
 Meditation
 [Passive] Increases maximum mana regeneration bonus gained from resting by {ox0c10}%.
 Arcane Reconstruction
-[Passive] Not taking damage for at least 2 seconds heals you for {i0.01x0c1} per second, increased by up to 100% after another 2 seconds. [Active] Instantly heal for {i0.08x2c1}. 1 second cooldown. Costs 20 mana.
+[Passive] Not taking damage for at least 2 seconds heals you for {i0.01x0c1} per second, increased by up to 100% after another 2 seconds. [Active] Instantly heal for {i0.08x4c1}. 1 second cooldown. Costs 20 mana.
 Wind Slash
 [Passive] Sword and sword-like attacks release a projectile that pierces enemies, dealing {s0.325x0.75c0.25+i0.325x0.75c0.25} magic wind damage. Damage is modified based on sword type (faster swords generally deal less damage). The wave's damage decreases as it travels.
 Explosive Munitions
@@ -223,7 +223,7 @@ Phase Door
 Specter's Cowl
 [Passive] Increases health regeneration by 20% for 3 seconds after taking damage. Duration is refreshed upon taking more damage, but this effect does not stack.
 Timeless
-[Passive] Reduces health damage taken by {ox27c3}%, but also all healing recieved by 15%. (Applies after ALL forms of damage reduction and absorbtion effects.)
+[Passive] Reduces health damage taken by {ox31c4}%, but also all healing recieved by 15%. (Applies after ALL forms of damage reduction and absorbtion effects.)
 Essence Vampire
 [Passive] Converts 90% of direct healing from leech effects into damage shields at {ox145c5}% efficiency. Shields last 3 seconds.
 Ant

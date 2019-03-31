@@ -5,3 +5,4 @@ shroom.svg
 dead tree.svg
 pillar.svg
 house.svg
+tablet.svg

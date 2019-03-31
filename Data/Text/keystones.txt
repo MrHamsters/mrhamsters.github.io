@@ -513,7 +513,7 @@ Augmented Mana
 0
 10
 Tempered Flesh
-Your health takes {ox0c3}% less damage.
+Your health takes {ox0c2.5}% less damage.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 27/1
@@ -573,7 +573,7 @@ Reduces damage taken by {ox0c1}%. Additionally, while your Omni Shell has durabi
 0
 10
 Shockwave
-Every 5th block you perform increases your armor and resistance by {ox0c0.5}% for 2 seconds and generates a shockwave in the direction you are facing. The shockwave deals {h0.01x0c1+a0.01x0c1+r0.01x0c1} physical damage to enemies hit.
+Every 5th block you perform increases your armor and resistance by {ox0c0.5}% for 3 seconds and generates a shockwave in the direction you are facing. The shockwave deals {h0.01x0c1+a0.01x0c1+r0.01x0c1} physical damage to enemies hit, doubled for the first hit.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 32/1
@@ -587,3 +587,53 @@ While the well is inactive and you are above 80% health, lose {ox0c2}% of your c
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 33/1
+
+2
+6
+0
+10
+Elemental Ward
+Gain an elemental ward which charges at a rate of {h0.0005x0c1+p0.05x0c1} per second (tripled if you haven't taken damage in the last 3 seconds), up to {H0.3x0c1}. Damage with fire, water, earth, nature, electric, or cold property is absorbed by the ward (until it breaks).
+0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+34/1
+
+1
+6
+0
+10
+Infernal Boon
+Randomly gain Infernal Boon for 6 seconds. While affected by Infernal Boon, your damage is increased by {ox0c1}% for hits and {ox0c3}% for DoTs and gains Fire property. Additionally, your hits have a {ox0c5}% chance to Ignite, dealing 50% of the hit's damage as true damage over 3 seconds.
+0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+35/1
+
+2
+6
+0
+10
+Aqua Boon
+Randomly gain Aqua Boon for 6 seconds. While affected by Aqua Boon, your damage is increased by {ox0c1}% for hits and {ox0c3}% for DoTs and gains Water property. Additionally, your hits have a {ox0c10}% (per 100% proc power) chance to Drench for 2 seconds with 10 effectiveness.
+0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+36/1
+
+3
+6
+0
+10
+Earthen Boon
+Randomly gain Earthen Boon for 6 seconds. While affected by Earthen Boon, your damage is increased by {ox0c1}% for hits and {ox0c3}% for DoTs and gains Earth property. Additionally, your hits have a {ox0c10}% (per 100% proc power) chance to Unbalance for 2 seconds with 10 effectiveness.
+0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+37/1
+
+3
+6
+0
+10
+Charged Boon
+Randomly gain Charged Boon for 6 seconds. While affected by Charged Boon, your damage is increased by {ox0c1}% for hits and {ox0c3}% for DoTs and gains Electric property. Additionally, your hits have a {ox0c10}% (per 100% proc power) chance to Shock for 2 seconds with 10 effectiveness.
+0/0/0/0/0/0/0/0/0/0/0
+0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
+38/1

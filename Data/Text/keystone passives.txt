@@ -31,3 +31,8 @@ Mana Steal
 Astral Infusion
 Shockwave
 Sacrificial Well
+Elemental Ward
+Fire Boon
+Aqua Boon
+Earthen Boon
+Charged Boon

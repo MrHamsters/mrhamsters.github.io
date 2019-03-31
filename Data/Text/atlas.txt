@@ -86,3 +86,9 @@ Undead Suburbs
 Haunted Derelict
 440
 550
+
+
+Forgotten Halls
+400
+550
+
