@@ -114,7 +114,7 @@ Not sure how this is here (rune)
 Not sure how this is here (rune)
 Your size is reduced to minimum
 Absorbing damage with your guard meter heals you
-Active skill (converts a large portion of your mana into strength and intelligence)
+Active skill (blasts nearby enemies using your mana)
 Thorns and Reflection damage is boosted by your armor
 Steal defenses of deceased enemies, use as an Active skill to spend health to boost your defenses
 Deal more fire damage

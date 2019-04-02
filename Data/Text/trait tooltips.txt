@@ -31,7 +31,7 @@ Dash
 Stamina
 [Passive] Increases mana regeneration rate by {ox0c5}% while moving.
 Focus
-[Active] Toggles this trait. Toggle on on at the cost of 10 mana to to drain {ox10.6c-0.6} mana per second and gain 100% increased strength and intelligence.
+[Active] Toggles this trait. Toggle on on at the cost of 10 mana to to drain {ox23c-3} mana per second and gain 100% increased strength and intelligence.
 Spectral Shield
 [Active] Projects an ethereal shield which flies in the target direction for 1 second while deccelerating, then accelerates back towards you. Deals {s0.5+a0.2}-{s0.65+a0.25} physical and {i0.5+r0.2}-{i0.65+r0.25} magic damage to enemies hit, and briefly stuns them. Grants a {h0.3+a0.12+r0.06} point damage shield which decays over 3 seconds on return, as well as restoring 50% of your maximum guard meter. Each point in Shield Mastery increases shield value and guard meter recovery by 5%. 6 second cooldown and 5 mana cost.
 Flash Step
@@ -45,9 +45,9 @@ Wisdom
 Ignorance
 [Passive] Reduces XP gain from kills by {ox0c1}%.
 Overgrowth
-[Passive] Health is no longer capped at maximum. Excess health decays based on your level and current excess health. Decay rate is divided by {oxc01}.
+[Passive] Health is now capped at {h3x0c3}. Excess health decays based on your level and current excess health. Decay rate is divided by {oxc01}.
 Soul Eater
-[Passive] Kills grant 2% movement speed (up to {ox0c6}%), 1% haste (up to {ox0c3}%), and {ox2c3}% of the killed enemy's base strength and intelligence (decaying over 30 seconds), heal for {ox1c0.5}% of the killed enemy's maximum health, and restore {m0.03} mana.
+[Passive] Kills grant 1% (up to {ox0c3}%) movement speed, haste, and increased damage dealt, as well as 2% (reduced to 1% during challenge arenas) of the killed enemy's base strength and intelligence (decaying over 30 seconds), heal for {ox1c0.5}% of the killed enemy's maximum health, and restore {m0.03} mana.
 Obliteration
 [Passive] Hits that deal at least 20% of the target's maximum health release a shockwave, dealing {s0.075x0.5c0.5+i0.075x0.5c0.5}-{s0.1x0.5c0.5+i0.1x0.5c0.5} true void damage to nearby enemies. The shockwave does not proc on-hits.
 Warmog's Heart
@@ -131,13 +131,13 @@ Explosive Munitions
 Esoteric Anomaly
 [Passive] Every 30 mana spent on magic actions triggers an explosion near you which deals {i0.65x0.6c0.4}-{i0.75x0.6c0.4} magic arcane damage and leeches 5 mana to you for each enemy hit, up to 15 mana. Mana cost reductions do not affect gains for calculating mana spent. Lose all charge after not gaining any for 30 seconds.
 Reciprocation
-[Passive] {ox0c3}% of prevented damage is stored. After 1.5 seconds of not storing damage, or if the stored damage exceeds {h2}, an explosion is triggered, dealing the stored damage as magic fire-explsion-reflected damage to nearby enemies. All forms of damage mitigation, including health extensions, counts as preventing damage for this.
+[Passive] {ox0c3}% of prevented damage is stored. After 1.5 seconds of not storing damage, or if the stored damage exceeds {H1}, an explosion is triggered, dealing the stored damage as magic fire-explsion-reflected damage to nearby enemies. All forms of damage mitigation, including health extensions, counts as preventing damage for this.
 Fortune
 [Passive] Increases item drops by {ox0c1}%.
 Brawler
-[Passive] Reduces damage taken from melee hits by {ox17c3}%, but increases it by 15% for ranged.
+[Passive] Reduces damage taken from melee hits by {ox22c3}%, but increases it by 15% for ranged.
 Kiter
-[Passive] Reduces damage taken from ranged hits by {ox17c3}%, but increases it by 15% for melee.
+[Passive] Reduces damage taken from ranged hits by {ox22c3}%, but increases it by 15% for melee.
 Plated
 [Passive] Reduces physical damage taken by {ox0c1}%.
 Antimagic
@@ -225,13 +225,13 @@ Specter's Cowl
 Timeless
 [Passive] Reduces health damage taken by {ox31c4}%, but also all healing recieved by 15%. (Applies after ALL forms of damage reduction and absorbtion effects.)
 Essence Vampire
-[Passive] Converts 90% of direct healing from leech effects into damage shields at {ox145c5}% efficiency. Shields last 3 seconds.
+[Passive] Converts {ox46c4}% of direct healing from leech effects into damage shields. Shields last 5 seconds.
 Ant
 [Passive] Reduces your size to 1 (1/6th of normal).
 Mending Guard
 [Passive] 10% of the damage absorbed by your Guard Meter is recieved as healing. Each point in Shield Mastery increases this by 1%.
 Overload
-[Active] Spends 30% of your current mana. Gain {ox2.5c0.5}% increased strength and intelligence decaying over 12 seconds for every point of mana above 70 lost. Requires at least 80 mana to use. 20 second cooldown. Can be used mid-action.
+[Active] Spends 30% of your current mana. Deals {s2+i3} magic arcane damage to nearby enemies per 100 mana spent. Enemies that haven't been hit with Overload before permanently lose some tenacity (increasing the durations of stuns on them by 10%) and are stunned for up to 1 (+3 per 100 mana spent) second(s). {ox0c25}% increased range at this trait level. 3 second cooldown. Can be used mid-action.
 Augmented Thorns
 [Passive] Damage dealt by Thorns and Reflection is increased by {a0.02}.
 Bone Armor

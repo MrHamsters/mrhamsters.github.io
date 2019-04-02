@@ -533,7 +533,7 @@ Store up to 10 spirit charges from kills (+2) or when out of combat (+1 per seco
 0
 10
 Blood Rage
-Heal for {ox0c1}% of damage dealt. {ox0c3}% of direct leeching effects is converted to a strength and intelligence buff at 20% efficiency which lasts for 5 seconds.
+Heal for {ox0c0.75}% of damage dealt. {ox0c3}% of direct leeching effects is converted to a strength and intelligence buff at 15% efficiency which lasts for 5 seconds.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 29/1
@@ -543,7 +543,7 @@ Heal for {ox0c1}% of damage dealt. {ox0c3}% of direct leeching effects is conver
 0
 10
 Mana Steal
-Gain {ox0c0.3} mana per 100% proc power on hit.
+Dealing damage restores mana equal to {ox0c10}% of the enemy's soul value per 100% of its maximum health. Additionally, gain {ox0c0.2} mana per 100% proc power on hit.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 30/1
