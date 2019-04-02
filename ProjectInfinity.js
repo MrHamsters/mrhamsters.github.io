@@ -3828,10 +3828,10 @@ var getequipstat=function(statid){
 var targetdir=function(){
 	if(mouseY==350){
 		if(mouseX<400){
-			return(PI);
+			return(3*PI/2);
 		}
 		else{
-			return(0);
+			return(PI/2);
 		}
 	}
 	else{
