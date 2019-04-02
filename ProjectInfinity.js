@@ -18032,7 +18032,7 @@ if(tick%10==0){
 		rect(825,245,(min(1,(player.hp-(plshp(1)))/max(player.level*10+90,(plshp(1)))))*300,30);
 		if(playertemp.traits[24]>0){
 			fill(200,255,0);
-			rect(835,245,(player.hp/(plshp(playertemp.traits[24]*3)))*300,10);
+			rect(825,245,(player.hp/(plshp(playertemp.traits[24]*3)))*300,10);
 		}
 	}
 	if(playertemp.shield.hp.reduce(add,0)>0){
