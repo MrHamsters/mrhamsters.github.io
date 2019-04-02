@@ -45,7 +45,7 @@ Wisdom
 Ignorance
 [Passive] Reduces XP gain from kills by {ox0c1}%.
 Overgrowth
-[Passive] Health is now capped at {h3x0c3}. Excess health decays based on your level and current excess health. Decay rate is divided by {oxc01}.
+[Passive] Health is now capped at {h1x0c3}. Excess health decays based on your level and current excess health. Decay rate is divided by {oxc01}.
 Soul Eater
 [Passive] Kills grant 1% (up to {ox0c3}%) movement speed, haste, and increased damage dealt, as well as 2% (reduced to 1% during challenge arenas) of the killed enemy's base strength and intelligence (decaying over 30 seconds), heal for {ox1c0.5}% of the killed enemy's maximum health, and restore {m0.03} mana.
 Obliteration
