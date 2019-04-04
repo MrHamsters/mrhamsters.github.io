@@ -1,4 +1,4 @@
-var version="0.8.4b";
+var version="0.8.4c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -5443,6 +5443,17 @@ var loadtraits=function(){
 			}
 		});
 	}
+	if(playertemp.traits[94]>0){
+		append(traitfuncs.damagetaken,function(){
+			if(willhit){
+				if(playertemp.action.name=="rapier lunge"){
+					if(random(100)<20){
+						dodgehit();
+					}
+				}
+			}
+		});
+	}
 	if(playertemp.traits[38]>0){
 		append(traitfuncs.damagetaken,function(){
 			if(willhit){
@@ -6512,7 +6523,7 @@ var loadtraits=function(){
 				}
 			}
 		}
-		else if(playertemp.action.name=="rapier lunge"||playertemp.traits[94]>0&random(1)<=playertemp.guard/((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb)+playertemp.traits[94]/10+(0.2*(max(0,player.speed-2)))-1){
+		else if(playertemp.action.name=="rapier lunge"||playertemp.traits[94]>0&random(1)<=playertemp.guard/((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb)+playertemp.traits[94]/10+(0.1*(max(0,player.speed-2)))-1){
 			if(willhit){
 				if(playertemp.guard>0){
 					playertemp.guardrecblock=max(playertemp.guardrecblock,30);
@@ -7532,7 +7543,6 @@ var getstances=function(){
 }
 var recalstatcache=0;
 var recalstats=function(){
-	playertemp.combo={LH:{num:0,timer:1},RH:{num:0,timer:1}};
 	recalstatcache=getequipstat(0);
 	player.maxhp=(player.baseStats.hp+player.keystonestats.hp)*(0.9+player.level/10)+recalstatcache;
 	playertemp.equipstatdata.hp=recalstatcache;
@@ -13052,6 +13062,46 @@ var ts={
 				}
 			}});
 	},
+	arrow:function(actionm,basediv,pierce){
+		append(objects,{
+			type:'projectile',
+			sprite:sprites.arrow,
+			target:'enemy',
+			size:18,
+			speed:actionm/4,
+			pierce:999,
+			piercem:pierce,
+			duration:20+actionm/6,
+			sound:sfx.arrowhit,
+			dir:playertemp.action.dir,
+			x:playertemp.x,
+			y:playertemp.y,
+			pdmgmin:(plsst(65)*actionm)/60/basediv,
+			pdmgmax:(plsst(65)*actionm)/60/basediv,
+			mdmgmin:0,
+			mdmgmax:0,
+			armorE:1,
+			resE:1,
+			procc:actionm*2.1/60,
+			properties:playertemp.action.props,
+			hits:new Array(999),
+			onhit:function(i){
+				if(!(objects[n].piercem)){
+					objects[n].speed*=0.7;
+					objects[n].procc*=0.7;
+					objects[n].pdmgmin*=0.7;
+					objects[n].pdmgmax*=0.7;
+					objects[n].mdmgmin*=0.7;
+					objects[n].mdmgmax*=0.7;
+				}
+			},
+			endfunc:function(){
+				if(playertemp.traits[65]>0){
+					ts.explosivemunitions(actionm/30);
+					}
+				}
+		});
+	},
 	bonearmor:function(armorval,resval){
 		if(!(playertemp.bonearmor)){
 			playertemp.bonearmor=1;
@@ -13598,6 +13648,7 @@ append(doaction,function(lv,hand){
 		level:lv,
 		fired:0,
 		pierce:0,
+		dmgdiv:0.75,
 		speedm:0.8,
 		props:["pierce"]
 	};
@@ -13606,7 +13657,8 @@ append(doaction,function(lv,hand){
 	}
 	else{
 		if(stancecache[hand].current==2){
-			playertemp.action.pierce=1000;
+			playertemp.action.pierce=1;
+			playertemp.action.dmgdiv=1;
 			playertemp.action.props=["pierce","wind"];
 		}
 		playertemp.action.autofire=0;
@@ -13659,39 +13711,7 @@ append(doaction,function(lv,hand){
 			if(stancecache[hand].current==2){
 				if(options.loadAudio){sfx.windslash.play();}
 			}
-			append(objects,{
-				type:'projectile',
-				sprite:sprites.arrow,
-				target:'enemy',
-				size:18,
-				speed:15,
-				pierce:playertemp.action.pierce,
-				duration:30,
-				sound:sfx.arrowhit,
-				dir:playertemp.action.dir,
-				x:playertemp.x,
-				y:playertemp.y,
-				pdmgmin:(plsst(52*(1+playertemp.action.pierce/5000)))/0.94,
-				pdmgmax:(plsst(60*(1+playertemp.action.pierce/5000)))/0.94,
-				mdmgmin:0,
-				mdmgmax:0,
-				armorE:1,
-				resE:1,
-				procc:2.1,
-				properties:playertemp.action.props,
-				hits:new Array(999),
-				onhit:function(i){
-					objects[n].pdmgmin*=0.94;
-					objects[n].pdmgmax*=0.94;
-					objects[n].mdmgmin*=0.94;
-					objects[n].mdmgmax*=0.94;
-				},
-				endfunc:function(){
-					if(playertemp.traits[65]>0){
-						ts.explosivemunitions(2);
-					}
-				}
-			});
+			ts.arrow(60,playertemp.action.dmgdiv,playertemp.action.pierce);
 			player.mp-=8.5*(1-0.04*min(10,traitpow))*player.rcostm[0]*playertemp.rcostm[0];
 			spendmana("ranged",8.5,8.5*(1-0.04*min(10,traitpow)));
 			playertemp.action.fired=1;
@@ -13702,39 +13722,7 @@ append(doaction,function(lv,hand){
 			if(stancecache[hand].current==2){
 				if(options.loadAudio){sfx.windslash.play();}
 			}
-			append(objects,{
-				type:'projectile',
-				sprite:sprites.arrow,
-				target:'enemy',
-				size:18,
-				speed:playertemp.action.tick/4,
-				pierce:playertemp.action.pierce,
-				duration:20+playertemp.action.tick/6,
-				sound:sfx.arrowhit,
-				dir:playertemp.action.dir,
-				x:playertemp.x,
-				y:playertemp.y,
-				pdmgmin:(plsst(60*(1+playertemp.action.pierce/5000))*playertemp.action.tick)/60/0.94,
-				pdmgmax:(plsst(60*(1+playertemp.action.pierce/5000))*playertemp.action.tick)/60/0.94,
-				mdmgmin:0,
-				mdmgmax:0,
-				armorE:1,
-				resE:1,
-				procc:playertemp.action.tick*2.1/60,
-				properties:playertemp.action.props,
-				hits:new Array(999),
-				onhit:function(i){
-					objects[n].pdmgmin*=0.94;
-					objects[n].pdmgmax*=0.94;
-					objects[n].mdmgmin*=0.94;
-					objects[n].mdmgmax*=0.94;
-				},
-				endfunc:function(){
-					if(playertemp.traits[65]>0){
-						ts.explosivemunitions(playertemp.action.tick/30);
-						}
-					}
-			});
+			ts.arrow(playertemp.action.tick,playertemp.action.dmgdiv,playertemp.action.pierce);
 			player.mp-=(playertemp.action.tick/8+1)*(1-0.04*min(10,traitpow))*player.rcostm[0]*playertemp.rcostm[0];
 			spendmana("ranged",(playertemp.action.tick/8+1),(playertemp.action.tick/8+1)*(1-0.04*min(10,traitpow)));
 			playertemp.action.fired=1;
@@ -14291,8 +14279,8 @@ append(doaction,function(lv,hand){
 		level:lv,
 		speedm:0.2
 	};
-	if(playertemp.combo[hand].num==0&player.hp>0.5*10*player.rcostm[1]*playertemp.rcostm[1]){
-		player.hp-=0.5*(player.level+9)*player.rcostm[1]*playertemp.rcostm[1];
+	if(playertemp.combo[hand].num==0&player.hp>plshp(0.04)){
+		player.hp-=plshp(0.04);
 		playertemp.combo[hand].num=1;
 	}
 	if(mouseY<350){
@@ -14340,19 +14328,14 @@ append(doaction,function(lv,hand){
 				playertemp.action.dir-=0.04;
 				ellipseMode(CENTER);
 				fill(140,120,140,500-playertemp.action.tick*10);
-				ellipse(400+sin(playertemp.action.diro)*35,350-cos(playertemp.action.diro)*35,60*(1+traitpow/10),60*(1+traitpow/10));
+				ellipse(400+sin(playertemp.action.diro)*35,350-cos(playertemp.action.diro)*35,80*(1+traitpow/10),80*(1+traitpow/10));
 				if(playertemp.action.tick==36){
 					hits=0;
 					for(i=0;i<enemies.length;i+=1){
 						if(!(enemies[i].invinci>0)){
-							if(hits<2&pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*30,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*30,2)<pow(30*(1+traitpow/10)+enemies[i].size,2)){
-									hits+=1;
-									damage("enemies",i,random(13*(plsst(1)),
-									(plsst(1))*14),random(
-									(plsin(1))*17,
-									(plsin(1))*18),1,1,"melee","player",1.3,["impact","ironmanshield"]
-									);
-									
+							if(hits<4&pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*30,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*30,2)<pow(40*(1+traitpow/10)+enemies[i].size,2)){
+								hits+=1;
+								damage("enemies",i,random((plsst(22)+plshp(2.4)),(plsst(24)+plshp(3))),random((plsin(22)+plshp(2.4)),(plsin(24)+plshp(3))),1,1,"melee","player",1.8,["impact","ironmanshield"]);
 								if(hits<2){
 									if(options.loadAudio){sfx.MoS.one.play();}
 								}
@@ -14385,19 +14368,14 @@ append(doaction,function(lv,hand){
 				playertemp.action.dir+=0.04;
 				ellipseMode(CENTER);
 				fill(140,120,140,500-playertemp.action.tick*10);
-				ellipse(400+sin(playertemp.action.diro)*35,350-cos(playertemp.action.diro)*35,60*(1+traitpow/10),60*(1+traitpow/10));
+				ellipse(400+sin(playertemp.action.diro)*35,350-cos(playertemp.action.diro)*35,80*(1+traitpow/10),80*(1+traitpow/10));
 				if(playertemp.action.tick==36){
 					hits=0;
 					for(i=0;i<enemies.length;i+=1){
 						if(!(enemies[i].invinci>0)){
-							if(hits<2&pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*30,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*30,2)<pow(30*(1+traitpow/10)+enemies[i].size,2)){
-									hits+=1;
-									damage("enemies",i,random(1.3*(plsst(1))*10,
-									(plsst(1))*1.4*10),random(
-									(plsin(1))*1.7*10,
-									(plsin(1))*1.8*10),1,1,"melee","player",1.3,["impact","ironmanshield"]
-									);
-									
+							if(hits<4&pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*30,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*30,2)<pow(40*(1+traitpow/10)+enemies[i].size,2)){
+								hits+=1;
+								damage("enemies",i,random((plsst(22)+plshp(2.4)),(plsst(24)+plshp(3))),random((plsin(22)+plshp(2.4)),(plsin(24)+plshp(3))),1,1,"melee","player",1.8,["impact","ironmanshield"]);
 								if(hits<2){
 									if(options.loadAudio){sfx.MoS.too.play();}
 								}
@@ -14431,17 +14409,13 @@ append(doaction,function(lv,hand){
 				resetMatrix();
 				ellipseMode(CENTER);
 				fill(140,120,140,500-playertemp.action.tick*10);
-				ellipse(400+sin(playertemp.action.diro)*35,350-cos(playertemp.action.diro)*35,90*(1+traitpow/10),90*(1+traitpow/10));
+				ellipse(400+sin(playertemp.action.diro)*35,350-cos(playertemp.action.diro)*35,110*(1+traitpow/10),110*(1+traitpow/10));
 				if(playertemp.action.tick==30){
 					hits=0;
 					for(i=0;i<enemies.length;i+=1){
-						if(pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*30,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*30,2)<pow(45*(1+traitpow/10)+enemies[i].size,2)){
-								hits+=1;
-								damage("enemies",i,random(1.3*(plsst(1))*10,
-								(plsst(1))*1.4*10),random(
-								(plsin(1))*3.4*10,
-								(plsin(1))*3.6*10),1,1,"melee","player",1.7,["impact","ironmanshield"]
-								);
+						if(pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*30,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*30,2)<pow(55*(1+traitpow/10)+enemies[i].size,2)){
+							hits+=1;
+							damage("enemies",i,random((plsst(22)+plshp(2.4)),(plsst(24)+plshp(3))),random((plsin(22)+plshp(2.4)),(plsin(24)+plshp(3)))*2,1,1,"melee","player",2.3,["impact","ironmanshield"]);
 						}
 					}
 					if(hits>0){
@@ -14449,7 +14423,7 @@ append(doaction,function(lv,hand){
 					}
 				}
 			}
-			if(playertemp.action.tick>=40){
+			if(playertemp.action.tick>=35){
 				playertemp.action.speedm=1;
 				if(playertemp.action.tick>=55){
 					playertemp.combo[hand].num=0;
@@ -14896,10 +14870,10 @@ append(doaction,function(lv,hand){
 					}
 				}
 				if(playertemp.action.hitc>0){
-					playertemp.speed+=0.1;
+					playertemp.speed+=0.05;
 					append(stateffects,{name:'rapier speed',dir:playertemp.action.dir,tick:0,run:function(){
 						if(stateffects[n].tick>=60){
-							playertemp.speed-=0.1;
+							playertemp.speed-=0.05;
 							stateffects.splice(n,1);
 							n-=1;
 						}
@@ -14952,7 +14926,7 @@ append(doaction,function(lv,hand){
 							if(options.loadAudio){sfx.arrowhit.play();}
 							playertemp.action.hits[i]=1;
 							playertemp.action.hitc+=1;
-							damage("enemies",i,random((plsst(20)),(plsst(24))),0,1,1,"melee","player",1.3,["rapier","pierce"]);
+							damage("enemies",i,random((plsst(16)),(plsst(20))),0,1,1,"melee","player",1.3,["rapier","pierce"]);
 						}
 					}
 				}
@@ -14962,10 +14936,9 @@ append(doaction,function(lv,hand){
 					sfx.rapier.rate(random(0.9,1.1));
 					sfx.rapier.play();
 				}
-				buff(2,15,40);
 				append(stateffects,{name:'rapier dash',dir:playertemp.action.dir,tick:0,run:function(){
-					playertemp.xvelo+=6.5*player.speed*sin(stateffects[n].dir)/(stateffects[n].tick+1);
-					playertemp.yvelo-=6.5*player.speed*cos(stateffects[n].dir)/(stateffects[n].tick+1);
+					playertemp.xvelo+=25*sin(stateffects[n].dir)/(stateffects[n].tick+1);
+					playertemp.yvelo-=25*cos(stateffects[n].dir)/(stateffects[n].tick+1);
 					dowalk(100*player.speed/(stateffects[n].tick+2)/player.size);
 					resetMatrix();
 					if(stateffects[n].tick==2){
@@ -14974,11 +14947,11 @@ append(doaction,function(lv,hand){
 							sfx.dash.play();
 						}
 					}
-					if(stateffects[n].tick>=7){
-						playertemp.xvelo*=0.6;
-						playertemp.yvelo*=0.6;
+					if(stateffects[n].tick>=6){
+						playertemp.xvelo*=0.5;
+						playertemp.yvelo*=0.5;
 					}
-					if(stateffects[n].tick>=15){
+					if(stateffects[n].tick>=10){
 						stateffects.splice(n,1);
 						n-=1;
 					}
@@ -14990,10 +14963,10 @@ append(doaction,function(lv,hand){
 			}
 			if(playertemp.action.tick>=15){
 				if(playertemp.action.hitc>0){
-					playertemp.speed+=0.1;
+					playertemp.speed+=0.05;
 					append(stateffects,{name:'rapier speed',dir:playertemp.action.dir,tick:0,run:function(){
 						if(stateffects[n].tick>=60){
-							playertemp.speed-=0.1;
+							playertemp.speed-=0.05;
 							stateffects.splice(n,1);
 							n-=1;
 						}
@@ -16415,7 +16388,7 @@ append(doaction,function(lv,hand){
 					pdmgmax:0,
 					mdmgmin:(plsin(1.5)),
 					mdmgmax:(plsin(2)),
-					burnd:plsin(9)/240,
+					burnd:plsin(8)/240,
 					armorE:1,
 					resE:1,
 					procc:0.16,
@@ -16448,7 +16421,7 @@ append(doaction,function(lv,hand){
 								}
 							}
 						});
-						objects[n].burnd*=0.95;
+						objects[n].burnd*=0.9;
 					}
 				});
 			}
@@ -16659,7 +16632,8 @@ append(doaction,function(lv,hand){
 			y:0,
 			charge:0,
 			flare:0,
-			req:random(15,100)
+			req:random(15,100),
+			indboltloc:{dir:0,dist:0}
 		};
 		playertemp.action.run=function(){
 			playertemp.action.dir=targetdir();
@@ -16674,7 +16648,7 @@ append(doaction,function(lv,hand){
 			if(player.mp>=0.22){
 				player.mp-=0.22;
 				spendmana("magic",0.22,0.22);
-				playertemp.action.ammo+=1+playertemp.action.charge/120;
+				playertemp.action.ammo+=1.75*(1+playertemp.action.charge/120);
 			}
 			else{
 				playertemp.action.charge=0;
@@ -16682,17 +16656,22 @@ append(doaction,function(lv,hand){
 			}
 			if(playertemp.action.ammo>=playertemp.action.ammoreq){
 				playertemp.action.ammo-=playertemp.action.ammoreq;
-				playertemp.action.x=random(-40,40);
-				playertemp.action.y=random(-40,40);
-				if(options.loadAudio){sfx.surges.play();}
-				append(particles,new createparticle(mouseX+playertemp.action.x,mouseY+playertemp.action.y,0,0,0,0,'circle','',110,-10,255,0,150,150,255));
-				for(cp=0;cp<25;cp+=1){
+				playertemp.action.indboltloc={dir:random(0,2*PI),dist:random(70)};
+				playertemp.action.x=sin(playertemp.action.indboltloc.dir)*playertemp.action.indboltloc.dist;
+				playertemp.action.y=cos(playertemp.action.indboltloc.dir)*playertemp.action.indboltloc.dist;
+				if(options.loadAudio){
+					sfx.surges.rate(random(0.85,1.15));
+					sfx.surges.volume(0.5);
+					sfx.surges.play();
+				}
+				append(particles,new createparticle(mouseX+playertemp.action.x,mouseY+playertemp.action.y,0,0,0,0,'circle','',130,-12,255,0,150,150,255));
+				for(cp=0;cp<30;cp+=1){
 					append(particles,new createparticle(mouseX+playertemp.action.x,mouseY+playertemp.action.y,0,0,0,0,'circle','',15+cp*5,0,20+cp/2,-4,200+random(55),200+random(55),180+random(45)));
 				}
 				for(i=0;i<enemies.length;i+=1){
-					if(pow(enemies[i].x-playertemp.x+400-mouseX+playertemp.action.x,2)+pow(enemies[i].y-playertemp.y+350-mouseY+playertemp.action.y,2)<pow(60+enemies[i].size,2)){
-						enemies[i].stun+=round((random(10,20))*(100-enemies[i].tenacity)/100);
-						damage("enemies",i,0,random((plsin(4)),(plsin(24))),1,1,"ranged","player",1.8,["electric"]);
+					if(pow(enemies[i].x-playertemp.x+400-mouseX+playertemp.action.x,2)+pow(enemies[i].y-playertemp.y+350-mouseY+playertemp.action.y,2)<pow(70+enemies[i].size,2)){
+						enemies[i].stun+=round((random(5,10))*(100-enemies[i].tenacity)/100);
+						damage("enemies",i,0,random((plsin(12)),(plsin(20))),1,1,"ranged","player",1.3,["electric"]);
 					}
 				}
 				playertemp.action.ammoreq=random(20,45);
@@ -16736,13 +16715,13 @@ append(doaction,function(lv,hand){
 			if(!(mousePressed)){
 				if(playertemp.action.tick>=120&playertemp.action.charge>=120){
 					if(options.loadAudio){sfx.surge.play();}
-					append(particles,new createparticle(mouseX,mouseY,0,0,0,0,'circle','',150,-10,255,0,150,150,255));
-					for(cp=0;cp<40;cp+=1){
+					append(particles,new createparticle(mouseX,mouseY,0,0,0,0,'circle','',180,-12,255,0,150,150,255));
+					for(cp=0;cp<50;cp+=1){
 						append(particles,new createparticle(mouseX,mouseY,0,0,0,0,'circle','',15+cp*5,0,20+cp/2,-4,200+random(55),200+random(55),180+random(45)));
 					}
 					for(i=0;i<enemies.length;i+=1){
-						if(pow(enemies[i].x-playertemp.x+400-mouseX,2)+pow(enemies[i].y-playertemp.y+350-mouseY,2)<pow(80+enemies[i].size,2)){
-							damage("enemies",i,0,random((plsin(60)),(plsin(80)))*(1.1-max(0.1,pow(pow(enemies[i].x-playertemp.x+400-mouseX,2)+pow(enemies[i].y-playertemp.y+350-mouseY,2),0.5)/80)),1,1,"ranged","player",1.8,["electric"]);
+						if(pow(enemies[i].x-playertemp.x+400-mouseX,2)+pow(enemies[i].y-playertemp.y+350-mouseY,2)<pow(100+enemies[i].size,2)){
+							damage("enemies",i,0,random((plsin(60)),(plsin(80)))*(1.1-max(0.1,pow(pow(enemies[i].x-playertemp.x+400-mouseX,2)+pow(enemies[i].y-playertemp.y+350-mouseY,2),0.5)/100)),1,1,"ranged","player",1.8,["electric"]);
 						}
 					}
 				}
@@ -18032,7 +18011,7 @@ if(tick%10==0){
 		rect(825,245,(min(1,(player.hp-(plshp(1)))/max(player.level*10+90,(plshp(1)))))*300,30);
 		if(playertemp.traits[24]>0){
 			fill(200,255,0);
-			rect(825,255,(player.hp/(plshp(playertemp.traits[24]*3)))*300,10);
+			rect(825,255,((player.hp-plshp(1))/(plshp(playertemp.traits[24]*3-1)))*300,10);
 		}
 	}
 	if(playertemp.shield.hp.reduce(add,0)>0){
