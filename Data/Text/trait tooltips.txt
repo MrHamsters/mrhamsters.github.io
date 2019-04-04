@@ -185,7 +185,7 @@ Defender's Stamina
 Holy Shield
 [Passive] Guarding now works against damage over time.
 En Garde
-[Passive] Guard meter now has a {ox0c10}% chance to automatically absorb hits, increased by 20% per 1 movement speed above 2, but reduced by 1% for every 1% of depleted guard meter. Additionally, maximum guard meter is increased by {h0.05+s0.03} and guard meter regeneration by {h0.01+s0.006} per 1 movement speed above 2 (maximum bonus at 7 movement speed). Calculations ignore temporary movement speed modifiers. Block chance is 100% during Lunge.
+[Passive] Guard meter now has a {ox0c10}% chance to automatically block hits, increased by 10% per 1 movement speed above 2, but reduced by 1% for every 1% of depleted guard meter. Additionally, maximum guard meter is increased by {h0.05+s0.03} and guard meter regeneration by {h0.01+s0.006} per 1 movement speed above 2 (maximum bonus at 7 movement speed). Calculations ignore temporary movement speed modifiers. Block chance is 100% during Lunge.
 Berserking
 [Passive] Gain {ox0c3}% strength, intelligence, and movement speed per second for 3 seconds while below 40% health or have killed in the last 3 seconds.
 An Acquired Taste
