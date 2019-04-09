@@ -7,7 +7,7 @@ Starfish
 Vitality
 [Passive] Grants {h0.005x0c1} additional health regeneration.
 Arcane Armor
-[Passive] A portion of damage is taken from mana before health. Base absorbed amount is {ox0c0.5}%. For every 100 points of maximum mana, the un-absorbed portion is divided by an extra {ox0c0.04}. Damage taken by mana is divided by {i0.001x0.95c0.05+h0.002x0.95c0.05}. Absorbtion stops at 40% mana.
+[Passive] A portion of damage is taken from mana before health. Base absorbed amount is {ox0c0.5}%. For every 100 points of maximum mana, the un-absorbed portion is divided by an extra {ox0c0.04}. Damage taken by mana is divided by {i0.001x0.95c0.05+h0.002x0.95c0.05}. Absorbtion stops at 30% mana.
 Relic Shield
 [Active] Gives you {ox23c2}% damage reduction, 25% slow, and 36% increased armor and resistance for 12 seconds. The armor and resistance decays over its duration. Heals you for {h0.15} health on expiration. 15 second cooldown. Each point in Shield Mastery increases damage reduction by 1%.
 Grit
@@ -47,7 +47,7 @@ Ignorance
 Overgrowth
 [Passive] Health is now capped at {h1x0c3}. Excess health decays based on your level and current excess health. Decay rate is divided by {oxc01}.
 Soul Eater
-[Passive] Kills grant 1% (up to {ox0c3}%) movement speed, haste, and increased damage dealt, as well as 2% (reduced to 1% during challenge arenas) of the killed enemy's base strength and intelligence (decaying over 30 seconds), heal for {ox1c0.5}% of the killed enemy's maximum health, and restore {m0.03} mana.
+[Passive] Kills grant 1% (up to {ox0c3}%) movement speed, haste, and increased damage dealt, as well as {ox0.85c0.15}% (halved during challenge arenas) of the killed enemy's base strength and intelligence (decaying over 30 seconds), heal for {ox1c0.5}% of the killed enemy's maximum health, and restore {m0.03} mana.
 Obliteration
 [Passive] Hits that deal at least 20% of the target's maximum health release a shockwave, dealing {s0.075x0.5c0.5+i0.075x0.5c0.5}-{s0.1x0.5c0.5+i0.1x0.5c0.5} true void damage to nearby enemies. The shockwave does not proc on-hits.
 Warmog's Heart
@@ -63,7 +63,7 @@ Entropy
 Indestructible
 [Passive] Fatal damage instead brings you to 1 health and grants you {ox0c1} second(s) of invincibility. 60 second cooldown. A blue dot appears next to your health bar when off cooldown.
 Void Barrier
-[Active] Become invulnerable for up to 3 seconds while held. When released, a pulse of void energy is released, launching enemies and projectiles away from you. 30 second cooldown. Immunity to damage over time persists for 1 second, increased by up to 1 depending on use time. Ignores haste.
+[Active] Become invulnerable for up to 3 seconds while held. When released, a pulse of void energy is released, launching enemies and projectiles away from you. 15 second cooldown. Immunity to damage over time persists for up to 2 seconds, based on how long it was used for. Ignores haste.
 Equilibrium
 [Passive] Increases your health, health regen, strength, intelligence, armor, and resistance by {ox0c10}% of your lowest one. Health is reduced by 40% and health regen multiplied by 20 for this calculation.
 Perseverance
@@ -147,13 +147,13 @@ Iron Man
 Siphon of Harvesting
 [Active] Damages all nearby enemies for {i1.3}-{i1.45} magic void damage and generates {ox11c4}% of maximum Iron Man shield for each enemy hit, plus 25% of the magic damage dealt. 4 second cooldown. Costs {ox9c0+lx1c0} health.
 Traveller's Call
-[Passive] Your mana regeneration is disabled. Instead, mana orbs spawn nearby. Each one restores mana equal to {ox350c150}% of your mana regeneration. You can still regenerate mana during boss battles. Additionally, increases your maximum mana by {ox0c5}%.
+[Passive] Your mana regeneration is disabled. Instead, mana orbs spawn nearby. Each one restores mana equal to {ox500c100}% of your mana regeneration. You can still regenerate mana during boss battles. Additionally, increases your maximum mana by {ox0c5}%.
 Recall Boomerangs
 [Active] Empowers all boomerangs and increases their speed. Ones that haven't started returning to you yet do so immediately. {ox1.5c-0.5} second cooldown.
 Detonate Boomerangs
 [Active] Blows up all active boomerangs. Each explosion deals {s0.75+i0.75}-{s0.85+i0.85} physical and magic explosion damage to nearby enemies. {ox3c-1} second cooldown.
 Freeze Boomerangs
-[Active] Freezes all active boomerangs, pausing them for 3.5 seconds and stunning enemies near them for up to 1 second (stun can stack if multiple blasts hit). {ox12c-4} second cooldown. Costs 5 mana.
+[Active] Freezes all active boomerangs, adding Cold property to them and pausing them for 3.5 seconds and stunning enemies near them for up to 1 second (stun can stack if multiple blasts hit). {ox12c-4} second cooldown. Costs 5 mana.
 Intensity
 [Passive] Increases damage over time dealt by {ox0c1}%.
 Resilience
