@@ -121,7 +121,7 @@ Artisan's Touch
 Magic Aura
 [Passive] Grants a chance to gain a reactant on kill, varying based on soul value (average is approximately {ox0c45}%, stronger enemies are worth more). Values over 100% always give reactant (i.e. 180% means 1 reactant with an 80% chance for 2).
 Meditation
-[Passive] Increases maximum mana regeneration bonus gained from resting by {ox0c10}%.
+[Passive] Increases maximum mana regeneration bonus gained from resting by {ox0c20}% (maximum resting bonus is now {ox300c60}% at {ox4c0.8} seconds).
 Arcane Reconstruction
 [Passive] Not taking damage for at least 2 seconds heals you for {i0.01x0c1} per second, increased by up to 100% after another 2 seconds. [Active] Instantly heal for {i0.08x4c1}. 1 second cooldown. Costs 20 mana.
 Wind Slash
@@ -129,7 +129,7 @@ Wind Slash
 Explosive Munitions
 [Passive] Most of your ranged projectiles have a {ox0c10}% chance of exploding, dealing {s0.15+i0.15}-{s0.2+i0.2} physical and magic explosion damage to nearby enemies. Damage is modified based on the projectile (those that are fired faster generally deal less damage).
 Esoteric Anomaly
-[Passive] Every 30 mana spent on magic actions triggers an explosion near you which deals {i0.65x0.6c0.4}-{i0.75x0.6c0.4} magic arcane damage and leeches 5 mana to you for each enemy hit, up to 15 mana. Mana cost reductions do not affect gains for calculating mana spent. Lose all charge after not gaining any for 30 seconds.
+[Passive] Every 8 mana spent on magic actions triggers an explosion near you which deals {i0.55x0.6c0.4}-{i0.6x0.6c0.4} magic arcane damage and leeches 5 mana to you if it hits at least 1 enemy. Mana cost reductions do not affect gains for calculating mana spent. Lose all charge after not gaining any for 30 seconds.
 Reciprocation
 [Passive] {ox0c3}% of prevented damage is stored. After 1.5 seconds of not storing damage, or if the stored damage exceeds {H1}, an explosion is triggered, dealing the stored damage as magic fire-explsion-reflected damage to nearby enemies. All forms of damage mitigation, including health extensions, counts as preventing damage for this.
 Fortune
