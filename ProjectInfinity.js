@@ -1,4 +1,4 @@
-var version="0.8.4d";
+var version="0.8.4d2";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -4596,6 +4596,7 @@ var loadkeystoneps=function(){
 			if(mousePressed&mouseButton==LEFT&(!(input[8]))){
 				if(playertemp.omnicannon>=120-10.8*playertemp.keystonepassives[2]&player.mp>=0.2){
 					player.mp-=0.2;
+					spendmana("arcane",0.2,0.2);
 					playertemp.omnicannon=0;
 					append(objects,{
 						type:'projectile',
@@ -6906,6 +6907,7 @@ var loadtraits=function(){
 					append(particles,new createparticle(random(390,410),random(340,360),random(-0.1,0.1),random(-0.1,0.1),0,0,'circle','',10,-0.3,255,-15,255,190,0));
 				}
 				player.mp-=(23-playertemp.traits[17]*3)/60;
+				spendmana("buff",(23-playertemp.traits[17]*3)/60,(23-playertemp.traits[17]*3)/60);
 				if(player.mp<0.1){
 					playertemp.focus=0;
 					playertemp.str-=1;
@@ -11667,6 +11669,7 @@ var dowalk=function(rate){
 			playertemp.walklock=0;
 			if(playertemp.traits[19]>0&player.mp>=(plsmp(1))/2){
 				player.mp-=1;
+				spendmana("device",1,1);
 				append(particles,new createparticle(400,350,0,0,0,0,'circle','',140,0,180,-8,random(150,255),random(150,255),random(150,255)));
 				for(i=0;i<enemies.length;i+=1){
 					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(70+enemies[i].size,2)){
@@ -11685,6 +11688,7 @@ var dowalk=function(rate){
 			playertemp.walklock=1;
 			if(playertemp.traits[19]>0&player.mp>=(plsmp(1))/2){
 				player.mp-=1;
+				spendmana("device",1,1);
 				append(particles,new createparticle(400,350,0,0,0,0,'circle','',140,0,180,-8,random(150,255),random(150,255),random(150,255)));
 				for(i=0;i<enemies.length;i+=1){
 					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(70+enemies[i].size,2)){
@@ -13370,6 +13374,7 @@ append(doaction,function(lv,hand){
 	}
 	else if(player.mp>=2){
 		player.mp-=2;
+		spendmana("melee",2,2);
 		findbuff(1);
 		if(buffind>=0){
 			removebuff(buffind);
@@ -13970,6 +13975,7 @@ append(doaction,function(lv,hand){
 			playertemp.timesinceaction=0;
 			playertemp.timesincemove=0;
 			player.mp-=0.125;
+			spendmana("arcane",0.125,0.125);
 			playertemp.action.dir=targetdir();
 			playertemp.action.xvelo*=0.985;
 			playertemp.action.yvelo*=0.985;
@@ -14699,6 +14705,7 @@ append(doaction,function(lv,hand){
 append(doaction,function(lv,hand){
 	if(playertemp.focus==0&player.mp>10){
 		player.mp-=10;
+		spendmana("buff",10,10);
 		if(options.loadAudio){sfx.focus.play();}
 		playertemp.focus=1;
 		playertemp.str+=1;
@@ -15790,6 +15797,7 @@ append(doaction,function(lv,hand){
 append(doaction,function(lv,hand){
 	if(player.mp>=(max(0,40-playertemp.traits[86]*10))*player.rcostm[0]*playertemp.rcostm[0]){
 		player.mp-=max(0,40-playertemp.traits[86]*10)*player.rcostm[0]*playertemp.rcostm[0];
+		spendmana("arcane",max(0,40-playertemp.traits[86]*10),max(0,40-playertemp.traits[86]*10));
 	playertemp.action={
 		name:'timewarp',
 		tick:0,
@@ -17114,7 +17122,7 @@ if(tick%30==0){
 		playertemp.yvelo*=player.traction*playertemp.traction;
 		playertemp.y+=playertemp.yvelo;
 	}
-	////////////////////////=================MainDisplay===================//////////////////////////////////////////////
+	////////////////////////=================MainDisplay===================///////////
 	if(render){fill(biomedata[2][0],biomedata[2][1],biomedata[2][2]);
 	rect(0,0,1133,700);}
 	if(input[0]||input[1]||input[2]||input[3]){
@@ -17186,7 +17194,6 @@ if(tick%30==0){
 	resetMatrix();
 	}
 	////////////////RUN PLAYER ACTIONS===========================================================
-	//===========================================================================================
 	if(!(cinematic||dialoga)){
 	if(playertemp.action.ignorehaste){
 		playeractionstockr=1;
