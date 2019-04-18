@@ -99,7 +99,7 @@ var player={
 		ellipseMode(CENTER);
 		fill(100,100,255,120);
 		ellipse(400,400,50+abs(tick%10-5),75+abs*((tick+5)%10-5)*1.5);
-		ellipse(400,400,100,100);
+		ellipse(player.x,player.y,100,100);
 	},
 	x:500,
 	y:600,
