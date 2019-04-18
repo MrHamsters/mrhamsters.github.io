@@ -88,9 +88,22 @@ var options={
 var controlmode=0;
 var ingame=0;
 var player={
+	hp:100,
+	mhp:100,
+	shielding:0,
+	shield:30,
+	mshield:30,
+	shieldregen:5,
+	shielddecay:5,
+	shielddraw:function(){
+		ellipseMode(CENTER);
+		fill(100,100,255,120);
+		ellipse(player.x,player.y,50+abs(tick%10-5),75+abs*((tick+5)%10-5)*1.5);
+	},
 	x:500,
 	y:600,
 	speed:5,
+	staticspeed:15,
 	size:30,
 	movedir:0,
 	sprite:loadShape('Data/Graphics/ships/astrohawk.svg')
@@ -100,6 +113,7 @@ var input={
 	left:0,
 	down:0,
 	right:0,
+	shield:0,
 };
 var particles=new Array();
 var dirgeneric=function(x1,y1,x2,y2){
@@ -175,10 +189,34 @@ var getmovedir=function(){
 }
 var moveinf;
 var domove=function(){
-	moveinf=getmovedir();
-	player.movedir;
-	player.x=min(900,max(100,player.x+sin(moveinf.dir)*moveinf.scl*player.speed));
-	player.y=min(700,max(100,player.y-cos(moveinf.dir)*moveinf.scl*player.speed));
+	if(!(player.shielding)){
+		moveinf=getmovedir();
+		player.movedir;
+		player.x=min(900,max(100,player.x+sin(moveinf.dir)*moveinf.scl*max(player.staticspeed,player.speed)));
+		player.y=min(700,max(100,player.y-cos(moveinf.dir)*moveinf.scl*max(player.staticspeed,player.speed)));
+	}
+}
+var doshield=function(){
+	player.shielding=0;
+	if(player.shield>0){
+		if(controlmode==0){
+			if(mousePressed){
+				if(mouseButton==RIGHT){
+					player.shielding=1;
+				}
+			}
+		}
+		else if(controlmode==1){
+			if(rawkeys.n||rawkeys.m){
+				player.shielding=1;
+			}
+		}
+		else if(controlmode==2){
+			if(rawkeys.n||rawkeys.m){
+				player.shielding=1;
+			}
+		}
+	}
 }
 var parallax=new Array();
 var test=loadShape('Data/Graphics/ships/astrohawk.svg');
@@ -282,15 +320,17 @@ var runpara=function(){
 	for(a=0;a<parallax.length;a+=1){
 		//fill(parallax[a].c.r,parallax[a].c.g,parallax[a].c.b,parallax[a].o);
 		//ellipse(parallax[a].x,parallax[a].y,parallax[a].size/parallax[a].d,parallax[a].size/parallax[a].d);
-		if(options.graphics){
-			fill(parallax[a].c.r/2,parallax[a].c.g/2,parallax[a].c.b/2,parallax[a].d*parallax[a].o/10);
-			for(b=0;b<60/parallax[a].d;b+=1){
-				ellipse(parallax[a].x,parallax[a].y,(parallax[a].size*b/30),(parallax[a].size*b/30));
+		if(render){
+			if(options.graphics){
+				fill(parallax[a].c.r/2,parallax[a].c.g/2,parallax[a].c.b/2,parallax[a].d*parallax[a].o/10);
+				for(b=0;b<60/parallax[a].d;b+=1){
+					ellipse(parallax[a].x,parallax[a].y,(parallax[a].size*b/30),(parallax[a].size*b/30));
+				}
 			}
-		}
-		else{
-			fill(parallax[a].c.r/2,parallax[a].c.g/2,parallax[a].c.b/2,parallax[a].o);
-			ellipse(parallax[a].x,parallax[a].y,(parallax[a].size*2),(parallax[a].size*2));
+			else{
+				fill(parallax[a].c.r/2,parallax[a].c.g/2,parallax[a].c.b/2,parallax[a].o);
+				ellipse(parallax[a].x,parallax[a].y,(parallax[a].size*2),(parallax[a].size*2));
+			}
 		}
 		parallax[a].y+=3/parallax[a].d;
 		if(parallax[a].y>800){
@@ -302,32 +342,65 @@ var runpara=function(){
 for(a=0;a<500;a+=1){
 	createstar(a*8-100);
 };
+var drawcap=8;
+var cdraw=0;
+var render=1;
 void draw(){
+cdraw=0;
+fps.count+=1;
+fps.second=second();
+if(!(fps.second==fps.lastsecond)){
+	fps.fps=fps.count;
+	fps.lastsecond=fps.second;
+	fps.count=0;
+}
+ms=millis();
+drawcount+=(ms-mslast);
+mslast=ms;
+if(drawcount>166){
+	drawcount=16.6;
+	console.log("Resetting ticks - too much lag");
+}
+//Actual game loop
+while(drawcount>=16.6&cdraw<=drawcap){
+	drawcount-=16.6;
+	cdraw+=1;
+	if(drawcount<16.6){
+		render=1;
+	}
+	else{
+		render=0;
+	}
 	noStroke();
 	tick+=1;
-	fps.count+=1;
-	fps.second=second();
-	if(!(fps.second==fps.lastsecond)){
-		fps.fps=fps.count;
-		fps.lastsecond=fps.second;
-		fps.count=0;
-	}
 	fill(15,10,40);
 	rect(0,0,1000,700);
-	if(tick%4==0){
-		createstar(-100);
-	}
 	if(options.stars){
+		if(tick%4==0){
+			createstar(-100);
+		}
 		ellipseMode(CENTER);
 		runpara();
 	}
 	//Run player stuff
 	domove();
-	shape(player.sprite,player.x,player.y,450,600);
+	if(render){
+		shape(player.sprite,player.x,player.y,450,600);
+	}
 	engineparticles+=0.2+moveinf.scl*1.8;
+	doshield();
+	if(player.shielding){
+		player.shield-=player.shielddecay/60;
+		if(render){
+			player.shielddraw();
+		}
+	}
+	else{
+		player.shield=min(player.mshield,player.shield+player.shieldregen/60);
+	}
 	while(engineparticles>0){
 		engineparticles-=1;
-		append(particles,{x:player.x,y:player.y+player.size,xvelo:random(-1,1)-sin(moveinf.dir)*moveinf.scl*player.speed,yvelo:random(-1,3)+cos(moveinf.dir)*moveinf.scl*player.speed,
+		append(particles,{x:player.x,y:player.y+player.size,xvelo:random(-1,1)-sin(moveinf.dir)*moveinf.scl*max(player.staticspeed,player.speed),yvelo:random(-1,3)+cos(moveinf.dir)*moveinf.scl*max(player.staticspeed,player.speed),
 		size:random(3,5),op:random(120,180),opc:-4,exp:1,color:[random(180,220),random(180,220),random(100,120)]});
 	}
 	if(ingame==0){
@@ -380,22 +453,40 @@ void draw(){
 			text("Right click to shield",300,400);
 			text("Space to use special",300,430);
 		}
+		else if(controlmode==1){
+			text("W,A,S,D to move",300,340);
+			text("V to shoot",300,370);
+			text("N or M to shield",300,400);
+			text("B to use special",300,430);
+		}
+		else if(controlmode==2){
+			text("D-Pad to move",300,340);
+			text("B to shoot",300,370);
+			text("Left or Right Trigger to shield",300,400);
+			text("A to use special",300,430);
+		}
 	}
 	//INGAME
 	else{
+	}
 	//PANELS
 		fill(80,70,20);
 		rect(0,0,100,700);
 		rect(900,0,100,700);
+		fill(210+abs(tick%180-90)/2,abs(tick%180-90)/2,abs(tick%180-90)/2);
+		rect(915,900-(player.hp/player.mhp)*700,50,(player.hp/player.mhp)*700);
+		fill(abs(tick%120-50),abs(tick%120-60),130+abs(tick%120-60),150+(player.shield/player.mshield)*50);
+		rect(950,900-(player.shield/player.mshield)*700,30,(player.shield/player.mshield)*700);
 		textFont(0,15);
 		fill(255,100,150);
 		text('FPS: '+fps.fps,940,680);
-	}
 	//Particles
 	ellipseMode(CENTER);
 	for(a=0;a<particles.length;a+=1){
-		fill(particles[a].color[0],particles[a].color[1],particles[a].color[2],particles[a].op);
-		ellipse(particles[a].x,particles[a].y,particles[a].size,particles[a].size);
+		if(render){
+			fill(particles[a].color[0],particles[a].color[1],particles[a].color[2],particles[a].op);
+			ellipse(particles[a].x,particles[a].y,particles[a].size,particles[a].size);
+		}
 		if(particles[a].sizec){
 			particles[a].size+=particles[a].sizec;
 		}
@@ -431,4 +522,5 @@ void draw(){
 	if(loadassetscache){
 		loadassetscache();
 	}
+}
 }
