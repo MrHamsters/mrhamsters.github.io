@@ -98,7 +98,7 @@ var player={
 	shielddraw:function(){
 		ellipseMode(CENTER);
 		fill(100,100,255,120);
-		ellipse(player.x,player.y,50+abs(tick%10-5),75+abs*((tick+5)%10-5)*1.5);
+		ellipse(400,400,50+abs(tick%10-5),75+abs*((tick+5)%10-5)*1.5);
 	},
 	x:500,
 	y:600,
@@ -477,9 +477,14 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		rect(0,0,100,700);
 		rect(900,0,100,700);
 		fill(210+abs(tick%180-90)/2,abs(tick%180-90)/2,abs(tick%180-90)/2);
-		rect(915,900-(player.hp/player.mhp)*700,50,(player.hp/player.mhp)*700);
+		rect(915,800-(player.hp/player.mhp)*500,50,(player.hp/player.mhp)*500);
 		fill(abs(tick%120-50),abs(tick%120-60),130+abs(tick%120-60),150+(player.shield/player.mshield)*50);
-		rect(950,900-(player.shield/player.mshield)*700,30,(player.shield/player.mshield)*700);
+		if(player.shielding){
+			rect(940,800-(player.shield/player.mshield)*500,45,(player.shield/player.mshield)*500);
+		}
+		else{
+			rect(955,800-(player.shield/player.mshield)*500,30,(player.shield/player.mshield)*500);
+		}
 		textFont(0,15);
 		fill(255,100,150);
 		text('FPS: '+fps.fps,940,680);
