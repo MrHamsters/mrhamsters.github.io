@@ -342,9 +342,12 @@ var runpara=function(){
 for(a=0;a<500;a+=1){
 	createstar(a*8-100);
 };
+var drawcount=0;
 var drawcap=8;
 var cdraw=0;
 var render=1;
+var ms=0;
+var mslast=0;
 void draw(){
 cdraw=0;
 fps.count+=1;
