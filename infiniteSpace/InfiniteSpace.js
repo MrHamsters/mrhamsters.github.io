@@ -99,6 +99,7 @@ var player={
 		ellipseMode(CENTER);
 		fill(100,100,255,120);
 		ellipse(400,400,50+abs(tick%10-5),75+abs*((tick+5)%10-5)*1.5);
+		ellipse(400,400,100,100);
 	},
 	x:500,
 	y:600,
@@ -189,7 +190,10 @@ var getmovedir=function(){
 }
 var moveinf;
 var domove=function(){
-	if(!(player.shielding)){
+	if(player.shielding){
+		moveinf={dir:0,scl:0};
+	}
+	else{
 		moveinf=getmovedir();
 		player.movedir;
 		player.x=min(900,max(100,player.x+sin(moveinf.dir)*moveinf.scl*max(player.staticspeed,player.speed)));
@@ -477,13 +481,13 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		rect(0,0,100,700);
 		rect(900,0,100,700);
 		fill(210+abs(tick%180-90)/2,abs(tick%180-90)/2,abs(tick%180-90)/2);
-		rect(915,800-(player.hp/player.mhp)*500,50,(player.hp/player.mhp)*500);
+		rect(915,600-(player.hp/player.mhp)*500,50,(player.hp/player.mhp)*500);
 		fill(abs(tick%120-50),abs(tick%120-60),130+abs(tick%120-60),150+(player.shield/player.mshield)*50);
 		if(player.shielding){
-			rect(940,800-(player.shield/player.mshield)*500,45,(player.shield/player.mshield)*500);
+			rect(940,600-(player.shield/player.mshield)*500,45,(player.shield/player.mshield)*500);
 		}
 		else{
-			rect(955,800-(player.shield/player.mshield)*500,30,(player.shield/player.mshield)*500);
+			rect(955,600-(player.shield/player.mshield)*500,30,(player.shield/player.mshield)*500);
 		}
 		textFont(0,15);
 		fill(255,100,150);
