@@ -1,4 +1,4 @@
-var version="DEMO 0.2";
+var version="DEMO 0.2.1";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -90,7 +90,6 @@ var fps={
 var options={
 	graphics:1,
 	stars:1,
-	fancystars:0,
 	music:0.7,
 	sfx:0.7
 };
@@ -237,11 +236,13 @@ var applymods=function(){
 		player.speed*=0.85;
 	}
 	if(player.mods[1]){
+		player.mshield*=0.8;
+		player.shield*=0.8;
 		append(player.modfuncs.passive,function(){
-			player.energy=min(player.menergy,player.energy+0.001);
+			player.energy=min(player.menergy,player.energy+0.0012);
 		});
 		append(player.modfuncs.damagetakenps,function(){
-			if(random(1)<0.2){
+			if(random(1)<0.4){
 				dmg.dmg*=1.5;
 				for(cp=0;cp<dmg.dmg*2;cp+=1){
 					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-2,2),yvelo:random(-2,2),
@@ -362,7 +363,7 @@ var applymods=function(){
 var playertemp={};
 var mods=[
 	{name:"Reinforced Hull",desc:"Extra plating for survivability",pro:"Increases ship health by 50%",con:"Reduces speed by 15%"},
-	{name:"Reactors",desc:"Adds reactors to your ship",pro:"Passively generates energy",con:"Hits to your ship (after shields) have a 20% chance to deal 150% damage"},
+	{name:"Reactors",desc:"Adds reactors to your ship",pro:"Passively generates energy",con:"Hits to your ship (after shields) have a 40% chance to deal 150% damage, reduces maximum shield by 20%"},
 	{name:"Augmented Shields",desc:"Rerouts most of your ship's batteries to its shield",pro:"Increases maximum shields by 50%",con:"Reduces maximum energy by 70%"},
 	{name:"Shield Recharger",desc:"Activates while below 50% shield - recharge is doubled while not shielding",pro:"Rapidly recharges shield",con:"Uses energy"},
 	{name:"Mobile Shield",desc:"Allows your ship's thrusters to bypass its shield",pro:"Allows movement while shielding",con:"Also allows 5% of damage to bypass shield"},
@@ -719,7 +720,7 @@ var runpara=function(){
 		//fill(parallax[a].c.r,parallax[a].c.g,parallax[a].c.b,parallax[a].o);
 		//ellipse(parallax[a].x,parallax[a].y,parallax[a].size/parallax[a].d,parallax[a].size/parallax[a].d);
 		if(render){
-			if(options.fancystars){
+			if(options.stars>1){
 				fill(parallax[a].c.r/2,parallax[a].c.g/2,parallax[a].c.b/2,parallax[a].d*parallax[a].o/10);
 				for(b=0;b<60/parallax[a].d;b+=1){
 					ellipse(parallax[a].x,parallax[a].y,(parallax[a].size*b/30),(parallax[a].size*b/30));
@@ -854,7 +855,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	tick+=1;
 	fill(15,10,40);
 	rect(0,0,1000,700);
-	if(options.stars){
+	if(options.stars>0){
 		if(tick%12==0){
 			createstar(-100);
 		}
@@ -1125,6 +1126,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			ellipse(750,300,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
 			ellipse(200,300,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
 			ellipse(200,600,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
+			ellipse(750,600,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
 			noStroke();
 			textFont(0,18);
 			fill(255,255,200);
@@ -1133,6 +1135,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			text("Change",165,295);
 			text("Ship",180,315);
 			text("Ship",180,615);
+			text("Options",720,605);
 			textFont(0,14);
 			text("Customize",170,595);
 			if(pow(pow(player.x-750,2)+pow(player.y-300,2),0.5)<75&input.shoot){
@@ -1151,6 +1154,11 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			}
 			if(pow(pow(player.x-200,2)+pow(player.y-600,2),0.5)<75&input.shoot){
 				menumode=2;
+				player.x=500;
+				player.y=500;
+			}
+			if(pow(pow(player.x-750,2)+pow(player.y-600,2),0.5)<75&input.shoot){
+				menumode=3;
 				player.x=500;
 				player.y=500;
 			}
@@ -1208,7 +1216,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				textFont(0,14);
 				fill(255,255,200);
 				text(mods[a].name,125+floor(a/6)*120,25+(a%6)*120,55,55);
-				if(pow(pow(player.x-150-floor(a/6)*120,2)+pow(player.y-50-(a%6)*120,2),0.5)<75){
+				if(pow(pow(player.x-150-floor(a/6)*120,2)+pow(player.y-50-(a%6)*120,2),0.5)<55){
 					viewmod=a;
 					if(input.shoot&!(shootlock)){
 						shootlock=1;
@@ -1224,18 +1232,92 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			textAlign(CENTER);
 			textFont(0,25);
 			fill(255,255,255);
-			text(mods[viewmod].name,700,130,200,100);
+			text(mods[viewmod].name,660,130,240,100);
 			textFont(0,22);
 			fill(220,220,220);
-			text(mods[viewmod].desc,700,230,200,150);
+			text(mods[viewmod].desc,660,230,240,150);
 			fill(0,255,0);
-			text(mods[viewmod].pro,700,380,200,150);
+			text(mods[viewmod].pro,660,380,240,150);
 			fill(255,0,0);
-			text(mods[viewmod].con,700,530,200,150);
+			text(mods[viewmod].con,660,530,240,150);
 			if(player.mods[viewmod]){
 				textFont(0,28);
 				fill(100,100,255);
 				text("SELECTED",700,650,200,50);
+			}
+			textAlign(TOP,LEFT);
+			
+		}
+		else if(menumode==3){
+			noFill();
+			strokeWeight(20+abs(tick%120-60)/6);
+			stroke(220,255,140+abs(tick%90-45));
+			ellipseMode(CENTER);
+			ellipse(770,50,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
+			noStroke();
+			
+			
+			textAlign(CENTER);
+			if(!(input.shoot)){
+				shootlock=0;
+			}
+			if(options.stars>0){
+				if(options.stars>1){
+					fill(0,255,0,150);
+				}
+				else{
+					fill(255,220,140,150);
+				}
+			}
+			else{
+				noFill();
+			}
+			strokeWeight(20+abs(tick%120-60)/6);
+			stroke(220,255,140+abs(tick%90-45));
+			ellipse(150,100,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
+			noStroke();
+			textFont(0,16);
+			fill(255,255,255);
+			text("Stars",125,95,55,55);
+			if(pow(pow(player.x-150,2)+pow(player.y-50,2),0.5)<75){
+				if(input.shoot&!(shootlock)){
+					shootlock=1;
+					options.stars+=1;
+					if(options.stars>2){
+						options.stars=0;
+					}
+				}
+			}
+			if(options.graphics>0){
+				fill(0,255,0,150);
+			}
+			else{
+				noFill();
+			}
+			strokeWeight(20+abs(tick%120-60)/6);
+			stroke(220,255,140+abs(tick%90-45));
+			ellipse(150,220,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
+			noStroke();
+			textFont(0,15);
+			fill(255,255,255);
+			text("Graphics",125,215,55,55);
+			if(pow(pow(player.x-150,2)+pow(player.y-170,2),0.5)<75){
+				if(input.shoot&!(shootlock)){
+					shootlock=1;
+					options.graphics+=1;
+					if(options.graphics>1){
+						options.graphics=0;
+					}
+				}
+			}
+			textAlign(TOP,LEFT);
+			textFont(0,25);
+			fill(255,255,200);
+			text("Back",740,55);
+			if(pow(pow(player.x-770,2)+pow(player.y-50,2),0.5)<75&input.shoot){
+				menumode=0;
+				player.x=500;
+				player.y=500;
 			}
 			
 		}
@@ -1280,8 +1362,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					}
 				});
 			}
-			if(gametick%(round(70-min(15,max(0,gametick-6000)/360)))==0){
-				if(random(1)<0.7-min(0.3,gametick/18000)){
+			if(gametick%(round(35-min(10,max(0,gametick-7200)/720)))==0){
+				if(random(1)<0.85-min(0.1,gametick/72000)){
 					append(enemies,{
 						name:"meteor",
 						isTerrain:1,
@@ -1289,6 +1371,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 						mhp:40,
 						size:15,
 						x:random(100,900),
+						xvelo:random(-1,1),
 						y:-20,
 						id:tick%6000,
 						color:[random(40,80),random(20,60),random(0,40)],
@@ -1315,12 +1398,13 @@ while(drawcount>=16.6&cdraw<=drawcap){
 							ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,15);
 						},
 						run:function(){
+							enemies[a].x+=enemies[a].xvelo;
 							enemies[a].y+=2;
 							if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
 								enemies[a].exp=1;
 								takedamage({dmg:10});
 							}
-							if(enemies[a].y>720){
+							if(enemies[a].y>720||enemies[a].x>930||enemies[a].x<70){
 								enemies[a].exp=1;
 							}
 						},
@@ -1334,7 +1418,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 						hp:60,
 						mhp:40,
 						size:15,
-						xvelo:random(-1,1),
+						xvelo:random(-1.5,1.5),
 						x:random(100,900),
 						y:-20,
 						id:tick%6000,
@@ -1495,7 +1579,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 								}
 							}
 							if(random(1)<0.03){
-								enemies[a].xvelo=random(-1,1);
+								enemies[a].xvelo=random(-1.5,1.5);
 							}
 							if(enemies[a].x<110){
 								enemies[a].xvelo=random(0,1);
@@ -1554,11 +1638,11 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		strokeWeight(7);
 		stroke(abs(tick%120-60),abs(tick%120-60),abs(tick%120-60));
 		for(a=0;a<floor(player.energy);a+=1){
-			rect(30,320-a*30,40,22,6);
+			rect(30,340-a*300/player.menergy-220/player.menergy,40,220/player.menergy,6);
 		}
 		if(player.energy%1>0){
 			noStroke();
-			rect(30,320-floor(player.energy)*30,player.energy%1*40,22,6);
+			rect(30,340-floor(player.energy)*300/player.menergy-220/player.menergy,player.energy%1*40,220/player.menergy,6);
 		}
 		noStroke();
 		textFont(0,15);
