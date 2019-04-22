@@ -1,15 +1,9 @@
-var version="DEMO 0.2.1";
+var version="DEMO 0.2.1b";
 void setup(){
   size(1000,700);
   frameRate(60);  
 }
 var tick=0;
-window.addEventListener("gamepadconnected", function(e) {
-  var gp = navigator.getGamepads()[e.gamepad.index];
-  console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
-    gp.index, gp.id,
-    gp.buttons.length, gp.axes.length);
-});
 window.onkeydown=function(e){
     var code = e.keyCode ? e.keyCode : e.which;
 	if(code==87){
