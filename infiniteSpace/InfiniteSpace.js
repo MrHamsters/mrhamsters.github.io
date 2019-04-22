@@ -1,4 +1,4 @@
-var version="DEMO 0.1";
+var version="DEMO 0.2";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -96,6 +96,7 @@ var options={
 };
 var enemies=new Array();
 var projectiles=new Array();
+var objects=new Array();
 var controlmode=0;
 var ingame=0;
 var menumode=0;
@@ -132,6 +133,9 @@ var shoot=[
 			sfx.minigun.play();
 		}
 		else{
+			if(player.mods[8]){
+				player.shield=max(0,player.shield-4.5);
+			}
 			sfx.click.rate(random(0.9,1.1));
 			sfx.click.play();
 		}
@@ -209,14 +213,166 @@ var applyshipstats=[
 		player.shipName="Astro Hawk";
 		player.hp=100;
 		player.mhp=100;
-		player.shield=30;
-		player.mshield=30;
-		player.shieldregen=5;
-		player.shielddecay=8;
+		player.shield=40;
+		player.mshield=40;
+		player.energy=10;
+		player.menergy=10;
+		player.shieldregen=7;
+		player.shielddecay=10;
 		player.speed=7;
 		player.ammor=25;
 		player.size=20;
 	},
+];
+var applymods=function(){
+	player.modfuncs={
+		passive:new Array(),
+		damagetaken:new Array(),
+		damagetakenps:new Array(),
+		damagedealt:new Array(),
+	};
+	if(player.mods[0]){
+		player.mhp*=1.5;
+		player.hp*=1.5;
+		player.speed*=0.85;
+	}
+	if(player.mods[1]){
+		append(player.modfuncs.passive,function(){
+			player.energy=min(player.menergy,player.energy+0.001);
+		});
+		append(player.modfuncs.damagetakenps,function(){
+			if(random(1)<0.2){
+				dmg.dmg*=1.5;
+				for(cp=0;cp<dmg.dmg*2;cp+=1){
+					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-2,2),yvelo:random(-2,2),
+					size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(160,190),random(70,120)]});
+				}
+			}
+		});
+	}
+	if(player.mods[2]){
+		player.mshield*=1.5;
+		player.shield*=1.5;
+		player.menergy*=0.3;
+		player.energy*=0.3;
+	}
+	if(player.mods[3]){
+		append(player.modfuncs.passive,function(){
+			if(player.shield<player.mshield*0.5){
+				if(player.energy>=0.003){
+					player.energy-=0.003;
+					player.shield+=0.06+player.mshield*0.0015;
+					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-2,2),yvelo:random(-2,2),
+					size:random(7,10),op:random(120,180),opc:-10,exp:1,color:[random(60,100),random(150,200),random(200,255)]});
+				}
+				if(!(player.shielding)){
+					if(player.energy>=0.0015){
+						player.energy-=0.0015;
+						player.shield+=0.06+player.mshield*0.0015;
+						append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-2,2),yvelo:random(-2,2),
+						size:random(7,10),op:random(120,180),opc:-10,exp:1,color:[random(60,100),random(150,200),random(200,255)]});
+					}
+				}
+			}
+		});
+	}
+	if(player.mods[4]){
+		append(player.modfuncs.damagetaken,function(){
+			playertemp.mobileshield=dmg.dmg/20;
+		});
+		append(player.modfuncs.damagetakenps,function(){
+			dmg.dmg+=playertemp.mobileshield;
+		});
+	}
+	if(player.mods[6]){
+		append(player.modfuncs.passive,function(){
+			if(playertemp.timesincedamagetaken>300){
+				if(player.hp<player.mhp&player.energy>0.002){
+					player.energy-=0.002;
+					player.hp+=0.0002+player.mhp*0.0001;
+					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-2,2),yvelo:random(-2,2),
+					size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(60,100),random(150,190),random(90,130)]});
+				}
+			}
+		});
+	}
+	if(player.mods[7]){
+		append(player.modfuncs.passive,function(){
+			player.energy=max(0,player.energy-0.001);
+		});
+		append(player.modfuncs.damagetaken,function(){
+			playertemp.energycapacitor=dmg.dmg;
+		});
+		append(player.modfuncs.damagetakenps,function(){
+			player.energy=min(player.menergy,player.energy+(playertemp.energycapacitor-dmg.dmg)/30);
+		});
+	}
+	if(player.mods[10]){
+		append(player.modfuncs.damagedealt,function(edmg,target){
+			player.energy=min(player.menergy,player.energy+edmg/300);
+		});
+		append(player.modfuncs.damagetaken,function(){
+			player.energy=max(0,player.energy-dmg.dmg/30);
+		});
+		append(player.modfuncs.damagetakenps,function(){
+			player.energy=max(0,player.energy-dmg.dmg/30);
+		});
+	}
+	if(player.mods[11]){
+		append(player.modfuncs.damagedealt,function(edmg,target){
+			dmg*=1.5;
+			if(!(playertemp.heavyimpact)){
+				playertemp.heavyimpact=0;
+			}
+			playertemp.heavyimpact+=edmg;
+			while(playertemp.heavyimpact>5){
+				playertemp.heavyimpact-=5;
+				append(projectiles,{
+					target:0,
+					draw:function(){
+						ellipseMode(CENTER);
+						fill(100,80,60);
+						ellipse(projectiles[a].x,projectiles[a].y,14,14);
+						if(options.graphics){
+							if(projectiles[a].target){
+								fill(0,0,255,10);
+							}
+							else{
+								fill(255,0,0,10);
+							}
+							for(b=0;b<7;b+=1){
+								ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
+							}
+						}
+					},
+					x:enemies[target].x,
+					y:enemies[target].y,
+					end:0,
+					dur:90,
+					pierce:0,
+					dir:random(2*PI),
+					speed:4,
+					size:10,
+					damage:6
+				});
+			}
+		});
+	}
+}
+var playertemp={};
+var mods=[
+	{name:"Reinforced Hull",desc:"Extra plating for survivability",pro:"Increases ship health by 50%",con:"Reduces speed by 15%"},
+	{name:"Reactors",desc:"Adds reactors to your ship",pro:"Passively generates energy",con:"Hits to your ship (after shields) have a 20% chance to deal 150% damage"},
+	{name:"Augmented Shields",desc:"Rerouts most of your ship's batteries to its shield",pro:"Increases maximum shields by 50%",con:"Reduces maximum energy by 70%"},
+	{name:"Shield Recharger",desc:"Activates while below 50% shield - recharge is doubled while not shielding",pro:"Rapidly recharges shield",con:"Uses energy"},
+	{name:"Mobile Shield",desc:"Allows your ship's thrusters to bypass its shield",pro:"Allows movement while shielding",con:"Also allows 5% of damage to bypass shield"},
+	{name:"Reactive Shield",desc:"Adds automatic collision detection to your ship",pro:"Your shield has a 50% chance to block hits even while inactive",con:"Uses energy"},
+	{name:"Nano Repairbots",desc:"Adds repair bots on your ship",pro:"Passively repairs your ship if it hasn't taken damage recently",con:"Uses a fair amount of energy"},
+	{name:"Energy Capacitor",desc:"Replaces your energy storage with a capacitor",pro:"Gain energy when your shield is hit",con:"Slowly lose energy passively"},
+	{name:"Charged Weapons",desc:"Charges your main weapon",pro:"Increases rate of fire by 40%",con:"Attempting to fire without sufficient ammo damages your shield"},
+	{name:"Rapid Reload",desc:"Boosts your ammo regeneration",pro:"Increases ammo recharge rate by 50%",con:"Your shield cannot recharge unless at full ammo"},
+	{name:"Energized Feedback",desc:"Absorbs the entropy created from destruction",pro:"Gain energy when you deal damage",con:"Backfires when you take damage, losing energy (halved for damage blocked by shielding)"},
+	{name:"Heavy Impact",desc:"Makes things go boom",pro:"Increases damage dealt by 50%",con:"Your hits fling debris which can hit you"},
 ];
 var player={
 	hpl:0,
@@ -227,19 +383,17 @@ var player={
 	staticspeed:15,
 	stun:0,
 	ammo:100,
-	energy:10,
-	energybits:0,
 	shootcd:0,
 	specialcd:0,
 	movedir:0,
 	score:0,
 	deathtimer:0,
 	mods:new Array(99),
-	modc:3
+	modfuncs:{
+		passive:new Array(),
+		damagetaken:new Array(),
+	}
 };
-player.mods[0]=1;
-player.mods[1]=1;
-player.mods[2]=1;
 var spawnplayer=function(){
 	player.hpl=0;
 	player.shielding=0;
@@ -248,14 +402,14 @@ var spawnplayer=function(){
 	player.y=600;
 	player.staticspeed=15;
 	player.stun=0;
+	player.shielddisable=0;
 	player.ammo=100;
-	player.energy=10;
-	player.energybits=0;
 	player.shootcd=0;
 	player.specialcd=0;
 	player.movedir=0;
 	player.score=0;
 	player.deathtimer=0;
+	playertemp={timesincedamagetaken:999};
 }
 applyshipstats[0]();
 var input={
@@ -312,12 +466,12 @@ var ctrdir=function(){
 	}
 }
 var ctrmov=function(){
-	if(navigator.getGamepads()[0].axes[0]==-1||navigator.getGamepads()[0].axes[1]==-1||navigator.getGamepads()[0].axes[0]+navigator.getGamepads()[0].axes[1]>0.01||navigator.getGamepads()[0].axes[0]+navigator.getGamepads()[0].axes[1]<-0.01){
-		if(abs(navigator.getGamepads()[0].axes[0])>abs(navigator.getGamepads()[0].axes[1])){
-			return(abs(navigator.getGamepads()[0].axes[0]));
+		if(navigator.getGamepads()[0].axes[0]==-1||navigator.getGamepads()[0].axes[1]==-1||navigator.getGamepads()[0].axes[0]+navigator.getGamepads()[0].axes[1]>0.01||navigator.getGamepads()[0].axes[0]+navigator.getGamepads()[0].axes[1]<-0.01){
+			if(abs(navigator.getGamepads()[0].axes[0])>abs(navigator.getGamepads()[0].axes[1])){
+				return(abs(navigator.getGamepads()[0].axes[0]));
+			}
+			return(abs(navigator.getGamepads()[0].axes[1]));
 		}
-		return(abs(navigator.getGamepads()[0].axes[1]));
-	}
 	return(0);
 }
 var getmovedir=function(){
@@ -330,14 +484,16 @@ var getmovedir=function(){
 		}
 	}
 	else if(controlmode==2){
-		return({dir:ctrdir(),scl:ctrmov()});
+		if(navigator.getGamepads()[0]){
+			return({dir:ctrdir(),scl:ctrmov()});
+		}
 	}
 	return({dir:0,scl:0});
 }
 var moveinf;
 var temp;
 var domove=function(){
-	if(player.shielding){
+	if(player.shielding&!(player.mods[4])){
 		moveinf={dir:0,scl:0};
 	}
 	else{
@@ -349,11 +505,12 @@ var domove=function(){
 }
 var doshield=function(){
 	if(player.shield<=0){
-		player.stun=15;
+		player.shielddisable=15;
+		player.shield=0.1;
 	}
 	temp=player.shielding;
 	player.shielding=0;
-	if(player.shield>0){
+	if(player.shield>0&!(player.shielddisable)){
 		if(controlmode==0){
 			if(mousePressed){
 				if(mouseButton==RIGHT){
@@ -367,8 +524,10 @@ var doshield=function(){
 			}
 		}
 		else if(controlmode==2){
-			if(navigator.getGamepads()[0].buttons[8].value||navigator.getGamepads()[0].buttons[9].value){
-				player.shielding=1;
+			if(navigator.getGamepads()[0]){
+				if(navigator.getGamepads()[0].buttons[8].value||navigator.getGamepads()[0].buttons[9].value){
+					player.shielding=1;
+				}
 			}
 		}
 	}
@@ -405,11 +564,13 @@ var doinputs=function(){
 		}
 	}
 	else if(controlmode==2){
-		if(navigator.getGamepads()[0].buttons[1].value){
-			input.shoot=1;
-		}
-		if(navigator.getGamepads()[0].buttons[0].value){
-			input.special=1;
+		if(navigator.getGamepads()[0]){
+			if(navigator.getGamepads()[0].buttons[1].value){
+				input.shoot=1;
+			}
+			if(navigator.getGamepads()[0].buttons[0].value){
+				input.special=1;
+			}
 		}
 	}
 }
@@ -515,6 +676,7 @@ var setbgm=[
 	}
 ];
 var engineparticles=0;
+var viewmod=0;
 var createstar=function(y){
 		if(random(1)<0.3){
 			//oddstar
@@ -590,8 +752,22 @@ var hitbox=function(x1,y1,x2,y2,size){
 	}
 	return(false);
 }
-var takedamage=function(dmg){
+var dmg;
+var takedamage=function(dmgs){
+	dmg=dmgs;
+	for(z=0;z<player.modfuncs.damagetaken.length;z+=1){
+		player.modfuncs.damagetaken[z]();
+	}
+	dmg.blocked=0;
 	if(player.shielding){
+		dmg.blocked=true;
+	}
+	if(!(dmg.blocked)&(player.mods[5]&random(1)<=0.5&player.energy>=0.2)){
+		dmg.blocked=true;
+		player.energy-=0.2;
+		dmg.dmg*=0.9;
+	}
+	if(dmg.blocked){
 		if(dmg.dmg>player.shield){
 			dmg.dmg-=player.shield;
 			player.shieldboing+=player.shield;
@@ -613,12 +789,23 @@ var takedamage=function(dmg){
 			dmg.dmg=0;
 		}
 	}
+	for(z=0;z<player.modfuncs.damagetakenps.length;z+=1){
+		player.modfuncs.damagetakenps[z]();
+	}
 	if(dmg.dmg>0){
+		playertemp.timesincedamagetaken=0;
 		sfx.hull.rate(random(0.9,1.1));
 		sfx.hull.play();
 		player.hp-=dmg.dmg;
 		player.hpl+=dmg.dmg;
 	}
+}
+var dealdamage=function(dmgs,target){
+	dmg=dmgs;
+	for(z=0;z<player.modfuncs.damagedealt.length;z+=1){
+		player.modfuncs.damagedealt[z](min(enemies[target].hp,dmgs),target);
+	}
+	return(dmg);
 }
 var canhitenemy=function(){
 	for(c=0;c<projectiles[a].hits.length;c+=1){
@@ -635,7 +822,9 @@ var cdraw=0;
 var render=1;
 var ms=0;
 var mslast=0;
+var shootlock=0;
 void draw(){
+textAlign(TOP,LEFT);
 cdraw=0;
 fps.count+=1;
 fps.second=second();
@@ -672,6 +861,15 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		ellipseMode(CENTER);
 		runpara();
 	}
+	//Run objects
+	for(a=0;a<objects.length;a+=1){
+		if(render){
+			objects[a].draw();
+		}
+		if(objects[a].run){
+			objects[a].run();
+		}
+	}
 	//Run projectiles
 	for(a=0;a<projectiles.length;a+=1){
 		if(render){
@@ -693,7 +891,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 						if(canhitenemy()){
 							projectiles[a].pierce-=1;
 							append(projectiles[a].hits,enemies[b].id);
-							enemies[b].hp-=projectiles[a].damage;
+							enemies[b].hp-=dealdamage(projectiles[a].damage,b);
 							sfx.hit.rate(random(0.8,1.2));
 							sfx.hit.volume(min(1.5,projectiles[a].damage/20));
 							sfx.hit.play();
@@ -764,6 +962,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			if(input.shoot){
 				spawnplayer();
 				applyshipstats[player.shipId]();
+				applymods();
 				ingame=0;
 				bgm.stop();
 				bgmn="start";
@@ -790,8 +989,15 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		}
 	}
 	else{
+		playertemp.timesincedamagetaken+=1;
+		for(z=0;z<player.modfuncs.passive.length;z+=1){
+			player.modfuncs.passive[z]();
+		}
 		if(render&tick>1){
 			playerdraw[player.shipId]();
+		}
+		if(player.shielddisable>0){
+			player.shielddisable-=1;
 		}
 		if(player.stun>0){
 			player.stun-=1;
@@ -831,8 +1037,18 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			}
 		}
 		player.ammo=min(100,player.ammo+player.ammor/60);
-		player.shield=min(player.mshield,player.shield+player.shieldregen/60);
-		player.shootcd=max(0,player.shootcd-1);
+		if(player.mods[9]){
+			player.ammo=min(100,player.ammo+player.ammor/120);
+		}
+		if(!(player.mods[9])||player.ammo==100){
+			player.shield=min(player.mshield,player.shield+player.shieldregen/60);
+		}
+		if(player.shootcd>0){
+			player.shootcd-=1;
+			if(player.mods[8]){
+				player.shootcd-=0.4;
+			}
+		}
 		player.specialcd=max(0,player.specialcd-1);
 	}
 	if(ingame==0){
@@ -853,6 +1069,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			textFont(0,55);
 			fill(150,150,50+abs(tick%240-120));
 			text("Infinite Space",350,55);
+			textFont(0,25);
+			fill(150,150,150);
+			text("Version: "+version,380,95);
 			textFont(0,23);
 			fill(200,200,100);
 			text("Control Mode",400,150);
@@ -920,6 +1139,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				setbgm[choosebgm(-1)]();
 				spawnplayer();
 				applyshipstats[player.shipId]();
+				applymods();
 				player.staticspeed=0;
 				gametick=0;
 				ingame=1;
@@ -960,14 +1180,62 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			ellipseMode(CENTER);
 			ellipse(770,50,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
 			noStroke();
-			
-			textFont(0,25);
+			textFont(0,20);
 			fill(255,255,200);
-			text("Back",740,55);
+			textAlign(TOP,LEFT);
+			text("Confirm",735,55);
 			if(pow(pow(player.x-770,2)+pow(player.y-50,2),0.5)<75&input.shoot){
 				menumode=0;
-				player.x=500;
-				player.y=500;
+				spawnplayer();
+				applyshipstats[player.shipId]();
+				applymods();
+			}
+			textAlign(CENTER);
+			if(!(input.shoot)){
+				shootlock=0;
+			}
+			for(a=0;a<mods.length;a+=1){
+				if(player.mods[a]){
+					fill(0,255,0);
+				}
+				else{
+					noFill();
+				}
+				strokeWeight(20+abs(tick%120-60)/12);
+				stroke(220,255,140+abs(tick%90-45));
+				ellipse(150+floor(a/6)*120,50+(a%6)*120,100+abs(tick%120-60)/12,100+abs(tick%120-60)/12);
+				noStroke();
+				textFont(0,14);
+				fill(255,255,200);
+				text(mods[a].name,125+floor(a/6)*120,25+(a%6)*120,55,55);
+				if(pow(pow(player.x-150-floor(a/6)*120,2)+pow(player.y-50-(a%6)*120,2),0.5)<75){
+					viewmod=a;
+					if(input.shoot&!(shootlock)){
+						shootlock=1;
+						if(player.mods[a]){
+							player.mods[a]=0;
+						}
+						else{
+							player.mods[a]=1;
+						}
+					}
+				}
+			}
+			textAlign(CENTER);
+			textFont(0,25);
+			fill(255,255,255);
+			text(mods[viewmod].name,700,130,200,100);
+			textFont(0,22);
+			fill(220,220,220);
+			text(mods[viewmod].desc,700,230,200,150);
+			fill(0,255,0);
+			text(mods[viewmod].pro,700,380,200,150);
+			fill(255,0,0);
+			text(mods[viewmod].con,700,530,200,150);
+			if(player.mods[viewmod]){
+				textFont(0,28);
+				fill(100,100,255);
+				text("SELECTED",700,650,200,50);
 			}
 			
 		}
@@ -986,6 +1254,32 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		}
 		//Currently playing
 		if(!(player.deathtimer>10)){
+			if(gametick%600==0){
+				append(objects,{
+					x:random(130,870),
+					y:-30,
+					draw:function(){
+						fill(abs(tick%120-60)*2,255,abs(tick%120-60)*2,180+abs(tick%90-45));
+						ellipseMode(CENTER);
+						ellipse(objects[a].x,objects[a].y,20+abs(tick%50-25)/5,20+abs((tick+25)%50-25)/5);
+					},
+					run:function(){
+						if(playerhitbox(objects[a].x,objects[a].y,15)){
+							objects[a].y=999;
+							player.energy=min(player.menergy,player.energy+1);
+							for(cp=0;cp<30;cp+=1){
+								append(particles,{x:random(15,85),y:random(340,360),xvelo:random(-2,2),yvelo:random(-6,-3),
+								size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(50,100),random(200,255),random(50,100)]});
+							}
+						}
+						objects[a].y+=3;
+						if(objects[a].y>730){
+							objects.splice(a,1);
+							a-=1;
+						}
+					}
+				});
+			}
 			if(gametick%(round(70-min(15,max(0,gametick-6000)/360)))==0){
 				if(random(1)<0.7-min(0.3,gametick/18000)){
 					append(enemies,{
@@ -1001,6 +1295,18 @@ while(drawcount>=16.6&cdraw<=drawcap){
 						rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
 						draw:function(){
 							ellipseMode(CENTER);
+							if(options.graphics){
+								fill(255,255,255,10);
+								for(b=0;b<16;b+=1){
+									ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+								}
+							}
+							else{
+								fill(255,255,255,10);
+								for(b=0;b<4;b+=1){
+									ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+								}
+							}
 							fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
 							ellipse(enemies[a].x,enemies[a].y,18,18);
 							ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],15,15);
@@ -1037,6 +1343,18 @@ while(drawcount>=16.6&cdraw<=drawcap){
 						rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
 						draw:function(){
 							ellipseMode(CENTER);
+							if(options.graphics){
+								fill(255,255,255,10);
+								for(b=0;b<16;b+=1){
+									ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+								}
+							}
+							else{
+								fill(255,255,255,10);
+								for(b=0;b<4;b+=1){
+									ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+								}
+							}
 							fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
 							ellipse(enemies[a].x,enemies[a].y,22,22);
 							ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],20,15);
@@ -1058,7 +1376,12 @@ while(drawcount>=16.6&cdraw<=drawcap){
 											fill(100,80,20);
 											ellipse(projectiles[a].x,projectiles[a].y,18,18);
 											if(options.graphics){
-												fill(255,0,0,10);
+												if(projectiles[a].target){
+													fill(0,0,255,10);
+												}
+												else{
+													fill(255,0,0,10);
+												}
 												for(b=0;b<8;b+=1){
 													ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
 												}
@@ -1083,7 +1406,12 @@ while(drawcount>=16.6&cdraw<=drawcap){
 											fill(100,80,20);
 											ellipse(projectiles[a].x,projectiles[a].y,18,18);
 											if(options.graphics){
-												fill(255,0,0,10);
+												if(projectiles[a].target){
+													fill(0,0,255,10);
+												}
+												else{
+													fill(255,0,0,10);
+												}
 												for(b=0;b<8;b+=1){
 													ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
 												}
@@ -1106,7 +1434,12 @@ while(drawcount>=16.6&cdraw<=drawcap){
 											fill(100,80,20);
 											ellipse(projectiles[a].x,projectiles[a].y,18,18);
 											if(options.graphics){
-												fill(255,0,0,10);
+												if(projectiles[a].target){
+													fill(0,0,255,10);
+												}
+												else{
+													fill(255,0,0,10);
+												}
 												for(b=0;b<8;b+=1){
 													ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
 												}
@@ -1138,7 +1471,12 @@ while(drawcount>=16.6&cdraw<=drawcap){
 												fill(100,80,20);
 												ellipse(projectiles[a].x,projectiles[a].y,18,18);
 												if(options.graphics){
-													fill(255,0,0,10);
+													if(projectiles[a].target){
+														fill(0,0,255,10);
+													}
+													else{
+														fill(255,0,0,10);
+													}
 													for(b=0;b<8;b+=1){
 														ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
 													}
@@ -1193,7 +1531,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		}
 		rect(915,100,50,500);
 		fill(210+abs(tick%180-90)/2,abs(tick%180-90)/2,abs(tick%180-90)/2);
-		rect(915,600-(max(0,player.hp/player.mhp))*500,50,(max(0,player.hp/player.mhp))*500);
+		rect(915,600-(max(0,min(1,player.hp/player.mhp)))*500,50,(max(0,min(1,player.hp/player.mhp)))*500);
 		if(player.hp>0){
 			if(player.hpl>0){
 				fill(180,0,180);
@@ -1215,13 +1553,17 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		fill(100,255,100);
 		strokeWeight(7);
 		stroke(abs(tick%120-60),abs(tick%120-60),abs(tick%120-60));
-		for(a=0;a<player.energy;a+=1){
+		for(a=0;a<floor(player.energy);a+=1){
 			rect(30,320-a*30,40,22,6);
+		}
+		if(player.energy%1>0){
+			noStroke();
+			rect(30,320-floor(player.energy)*30,player.energy%1*40,22,6);
 		}
 		noStroke();
 		textFont(0,15);
 		fill(255,100,150);
-		text('FPS: '+fps.fps,940,680);
+		text('FPS: '+fps.fps,920,680);
 		textFont(0,18);
 		fill(180,200,255);
 		text('SCORE',910,25);
