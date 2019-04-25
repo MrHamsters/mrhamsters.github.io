@@ -1,4 +1,4 @@
-var version="DEMO 0.3";
+var version="DEMO 0.3b";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -965,8 +965,8 @@ var loadassetscache=function(){
 			hawk:new Howl({src: ['Data/Sound/sfx/hawk.ogg'],autoplay:false,loop:false,volume:options.sfx}),
 			hull:new Howl({src: ['Data/Sound/sfx/armorpartial.ogg'],autoplay:false,loop:false,volume:options.sfx*2}),
 			hit:new Howl({src: ['Data/Sound/sfx/arrow hit.wav'],autoplay:false,loop:false,volume:options.sfx*2}),
-			glacialshoot:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'],autoplay:false,loop:false,volume:options.sfx*0.4}),
-			glacialhit:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'],autoplay:false,loop:false,volume:options.sfx*0.4}),
+			glacialshoot:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'],autoplay:false,loop:false,volume:options.sfx*0.3}),
+			glacialhit:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'],autoplay:false,loop:false,volume:options.sfx*0.2}),
 			distortion:new Howl({src: ['Data/Sound/sfx/distortion.ogg'],autoplay:false,loop:false,volume:options.sfx*0.9}),
 			incinerate:new Howl({src: ['Data/Sound/sfx/incinerate.ogg'],autoplay:false,loop:false,volume:options.sfx*0.9}),
 		};
@@ -1501,11 +1501,13 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			}
 			if(pow(pow(player.x-200,2)+pow(player.y-300,2),0.5)<75&input.shoot){
 				menumode=1;
+				viewmod=player.shipId;
 				player.x=500;
 				player.y=500;
 			}
 			if(pow(pow(player.x-200,2)+pow(player.y-600,2),0.5)<75&input.shoot){
 				menumode=2;
+				viewmod=random(mods.length);
 				player.x=500;
 				player.y=500;
 			}
