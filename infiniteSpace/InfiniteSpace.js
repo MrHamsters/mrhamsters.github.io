@@ -1,4 +1,4 @@
-var version="DEMO 0.2.1b";
+var version="DEMO 0.3";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -93,11 +93,31 @@ var objects=new Array();
 var controlmode=0;
 var ingame=0;
 var menumode=0;
+var getshipstatcolor=function(val){
+	if(val<2){
+		fill(255,0,0);
+	}
+	else if(val<3){
+		fill(255,150,0);
+	}
+	else if(val<5){
+		fill(255,255,50);
+	}
+	else if(val<7){
+		fill(0,255,0);
+	}
+	else if(val<9){
+		fill(0,0,255);
+	}
+	else{
+		fill(100,100,255);
+	}
+}
 var shoot=[
 	function(){
-		player.shootcd=10;
-		if(player.ammo>9){
-			player.ammo-=9;
+		player.shootcd=7;
+		if(player.ammo>4){
+			player.ammo-=4;
 			for(b=0;b<2;b+=1){
 				append(projectiles,{
 					target:1,
@@ -117,13 +137,129 @@ var shoot=[
 					end:1,
 					pierce:0,
 					dir:0,
-					speed:11,
+					speed:25,
+					scans:3,
 					size:9,
-					damage:10
+					damage:15,
+					isSingleTarget:true
 				});
 			}
 			sfx.minigun.rate(random(0.9,1.1));
 			sfx.minigun.play();
+		}
+		else{
+			if(player.mods[8]){
+				player.shield=max(0,player.shield-4.5);
+			}
+			sfx.click.rate(random(0.9,1.1));
+			sfx.click.play();
+		}
+	},
+	function(){
+		player.shootcd=15;
+		if(player.ammo>10){
+			player.ammo-=10;
+			append(projectiles,{
+				target:1,
+				draw:function(){
+					ellipseMode(CENTER);
+					fill(180,200,255);
+					triangle(projectiles[a].x-10,projectiles[a].y,projectiles[a].x+10,projectiles[a].y,projectiles[a].x,projectiles[a].y-15);
+					triangle(projectiles[a].x-10,projectiles[a].y,projectiles[a].x+10,projectiles[a].y,projectiles[a].x,projectiles[a].y+15);
+					if(options.graphics){
+						fill(200,200,255,10);
+						for(b=0;b<10;b+=1){
+							ellipse(projectiles[a].x,projectiles[a].y,10+b*3,10+b*3);
+						}
+					}
+				},
+				x:player.x,
+				y:player.y,
+				end:1,
+				pierce:0,
+				dir:0,
+				speed:20,
+				scans:2,
+				size:16,
+				damage:50,
+				onend:function(){
+				sfx.glacialhit.rate(random(0.9,1.1));
+				sfx.glacialhit.play();
+					for(b=0;b<12;b+=1){
+						append(projectiles,{
+							target:1,
+							draw:function(){
+								ellipseMode(CENTER);
+								fill(180,200,255);
+								triangle(projectiles[a].x-6,projectiles[a].y,projectiles[a].x+6,projectiles[a].y,projectiles[a].x,projectiles[a].y-10);
+								triangle(projectiles[a].x-6,projectiles[a].y,projectiles[a].x+6,projectiles[a].y,projectiles[a].x,projectiles[a].y+10);
+								if(options.graphics){
+									fill(200,200,255,10);
+									for(b=0;b<8;b+=1){
+										ellipse(projectiles[a].x,projectiles[a].y,7+b*2.5,7+b*2.5);
+									}
+								}
+							},
+							x:projectiles[a].x,
+							y:projectiles[a].y,
+							hits:projectiles[a].hits,
+							dur:10,
+							pierce:0,
+							dir:random(2*PI),
+							speed:20,
+							scans:2,
+							size:14,
+							damage:10
+						});
+					}
+				}
+			});
+			sfx.glacialshoot.rate(random(0.9,1.1));
+			sfx.glacialshoot.play();
+		}
+		else{
+			if(player.mods[8]){
+				player.shield=max(0,player.shield-17.5);
+			}
+			sfx.click.rate(random(0.9,1.1));
+			sfx.click.play();
+		}
+	},
+	function(){
+		player.shootcd=6;
+		if(player.ammo>3.5){
+			player.ammo-=3.5;
+			append(projectiles,{
+				target:1,
+				draw:function(){
+					ellipseMode(CENTER);
+					fill(20,140,60);
+					ellipse(projectiles[a].x,projectiles[a].y+30,projectiles[a].size,projectiles[a].size);
+					ellipse(projectiles[a].x,projectiles[a].y,projectiles[a].size*2,projectiles[a].size*2);
+					if(options.graphics){
+						fill(70,200,50,10);
+						for(b=0;b<6;b+=1){
+							ellipse(projectiles[a].x,projectiles[a].y,projectiles[a].size*2+b*2,projectiles[a].size*2+b*4);
+						}
+						append(particles,{x:projectiles[a].x+random(-projectiles[a].size,projectiles[a].size),y:projectiles[a].y+random(-projectiles[a].size,projectiles[a].size),xvelo:random(-5,5),yvelo:random(-8,-3),
+						size:random(7,10),op:random(180,220),opc:-12,exp:1,color:[random(40,60),random(100,120),random(70,90)]});
+					}
+				},
+				run:function(){
+					projectiles[a].size+=1;
+				},
+				x:player.x,
+				y:player.y,
+				dur:18,
+				pierce:999,
+				dir:0,
+				speed:15,
+				scans:2,
+				size:15,
+				damage:10
+			});
+			sfx.incinerate.rate(random(0.93,1.07));
+			sfx.incinerate.play();
 		}
 		else{
 			if(player.mods[8]){
@@ -160,6 +296,7 @@ var special=[
 						if(projectiles[b].target==0&!(projectiles[b].reflected)){
 							if(pow(projectiles[b].x-projectiles[a].x,2)+pow(projectiles[b].y-projectiles[a].y,2)<pow(45+projectiles[a].size+projectiles[b].size,2)){
 								projectiles[b].speed*=2;
+								projectiles[b].scans*=2;
 								projectiles[b].damage*=1.5;
 								projectiles[b].dir+=PI;
 								projectiles[b].reflected=1;
@@ -186,18 +323,76 @@ var special=[
 			sfx.click.play();
 		}
 	},
+	function(){
+		player.shootcd=5;
+		player.specialcd=15;
+		if(player.energy>=1){
+			player.shootcd=20;
+			player.specialcd=240;
+			player.energy-=1;
+			sfx.distortion.rate(random(0.9,1.1));
+			sfx.distortion.play();
+			playertemp.crystalstorm=240;
+		}
+		else{
+			sfx.click.rate(random(0.9,1.1));
+			sfx.click.play();
+		}
+	},
 ];
 var shielddraw=[
 	function(){
 		ellipseMode(CENTER);
 		fill(100,100,215+abs(tick%40-20)*2,110+abs(tick%60-30));
-		ellipse(400,400,50+abs(tick%10-5),75+abs*((tick+5)%10-5)*1.5);
 		ellipse(player.x,player.y,86+(abs(tick%12-6)-3)*min(20,player.shieldboing)/3,100+(abs((tick+6)%12-6)-3)*min(20,player.shieldboing)/3);
+	},
+	function(){
+		ellipseMode(CENTER);
+		fill(150,170,215+abs(tick%40-20)*2,110+abs(tick%60-30));
+		ellipse(player.x,player.y,95+(abs(tick%12-6)-3)*min(20,player.shieldboing)/3,95+(abs((tick+6)%12-6)-3)*min(20,player.shieldboing)/3);
+	},
+	function(){
+		ellipseMode(CENTER);
+		fill(40,170+abs(tick%40-20)*2,150,70+abs(tick%60-30));
+		ellipse(player.x,player.y,70+(abs(tick%12-6)-3)*min(20,player.shieldboing)/3,115+(abs((tick+6)%12-6)-3)*min(20,player.shieldboing)/2.5);
+	},
+	function(){
+		ellipseMode(CENTER);
+		fill(200+abs(tick%40-20)*2,50,80,120+abs(tick%60-30));
+		ellipse(player.x,player.y,130+(abs(tick%12-6)-3)*min(20,player.shieldboing)/2,130+(abs((tick+6)%12-6)-3)*min(20,player.shieldboing)/2);
 	},
 ];
 var playerdraw=[
 	function(){
 		shape(sprites.astrohawk,player.x,player.y,450,600);
+	},
+	function(){
+		shape(sprites.crystalvanguard,player.x,player.y,450,600);
+	},
+	function(){
+		shape(sprites.fairgravesvessel,player.x,player.y,450,600);
+		if(tick%2==0){
+			append(objects,{
+				x:player.x,
+				y:player.y,
+				dur:15,
+				draw:function(){
+					fill(0,150,75,objects[a].dur*4);
+					ellipseMode(CENTER);
+					ellipse(objects[a].x,objects[a].y,45,90);
+				},
+				run:function(){
+					objects[a].dur-=1;
+					if(objects[a].dur<=0){
+						objects.splice(a,1);
+						a-=1;
+					}
+				}
+			});
+		}
+	},
+	function(){
+		shape(sprites.cybersphere,player.x,player.y,450,600);
 	},
 ];
 var applyshipstats=[
@@ -213,8 +408,128 @@ var applyshipstats=[
 		player.shieldregen=7;
 		player.shielddecay=10;
 		player.speed=7;
-		player.ammor=25;
+		player.ammor=18;
 		player.size=20;
+		player.shipfuncs={};
+	},
+	function(){
+		player.shipId=1;
+		player.shipName="Crystal Vanguard";
+		player.hp=40;
+		player.mhp=40;
+		player.shield=33;
+		player.mshield=33;
+		player.energy=8;
+		player.menergy=8;
+		player.shieldregen=5.5;
+		player.shielddecay=8;
+		player.speed=6.2;
+		player.ammor=20;
+		player.size=20;
+		player.shipfuncs={
+			passive:function(){
+				if(playertemp.crystalstorm>0){
+					if(playertemp.crystalstorm<60){
+						fill(160+abs(tick%30-15)*5,40,60,255-playertemp.crystalstorm*3);
+						triangle(player.x-40,player.y,player.x+40,player.y,player.x,player.y-55);
+						triangle(player.x-40,player.y,player.x+40,player.y,player.x,player.y+55);
+					}
+					playertemp.crystalstorm-=1;
+					append(objects,{
+						x1:player.x+random(-90,90),
+						y1:player.y+random(-90,90),
+						x2:player.x+random(-90,90),
+						y2:player.y+random(-90,90),
+						x3:player.x+random(-90,90),
+						y3:player.y+random(-90,90),
+						dur:6,
+						draw:function(){
+							fill(160+abs(tick%30-15)*5,210,255,objects[a].dur*15);
+							triangle(objects[a].x1-6,objects[a].y1,objects[a].x1+6,objects[a].y1,objects[a].x1,objects[a].y1-10);
+							triangle(objects[a].x1-6,objects[a].y1,objects[a].x1+6,objects[a].y1,objects[a].x1,objects[a].y1+10);
+							triangle(objects[a].x2-6,objects[a].y2,objects[a].x2+6,objects[a].y2,objects[a].x2,objects[a].y2-10);
+							triangle(objects[a].x2-6,objects[a].y2,objects[a].x2+6,objects[a].y2,objects[a].x2,objects[a].y2+10);
+							triangle(objects[a].x3-6,objects[a].y3,objects[a].x3+6,objects[a].y3,objects[a].x3,objects[a].y2-10);
+							triangle(objects[a].x3-6,objects[a].y3,objects[a].x3+6,objects[a].y3,objects[a].x3,objects[a].y2+10);
+						},
+						run:function(){
+							objects[a].dur-=1;
+							if(objects[a].dur<=0){
+								objects.splice(a,1);
+								a-=1;
+							}
+						}
+					});
+					if(tick%6==0){
+						for(b=0;b<enemies.length;b+=1){
+							if(playerhitbox(enemies[b].x,enemies[b].y,enemies[b].size+95)){
+								enemies[b].hp-=dealdamage(12,b);
+								sfx.hit.rate(random(0.8,1.2));
+								sfx.hit.volume(0.6);
+								sfx.hit.play();
+								for(cp=0;cp<6;cp+=1){
+									append(particles,{x:enemies[b].x+random(-enemies[b].size,enemies[b].size),y:enemies[b].y+random(-enemies[b].size,enemies[b].size),xvelo:random(-2,2),yvelo:random(-2,2),
+									size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(120,160),random(70,120)]});
+								}
+							}
+						}
+					}
+				}
+			},
+			dmgtaken:function(){
+				if(playertemp.crystalstorm>0){
+					dmg.dmg=max(0,dmg.dmg-5);
+					dmg.dmg*=0.25;
+				}
+			}
+		};
+	},
+	function(){
+		player.shipId=2;
+		player.shipName="Fairgrave's Vessel";
+		player.hp=80;
+		player.mhp=80;
+		player.shield=25;
+		player.mshield=25;
+		player.energy=7;
+		player.menergy=7;
+		player.shieldregen=4;
+		player.shielddecay=6;
+		player.speed=8.2;
+		player.ammor=16;
+		player.size=22;
+		player.shipfuncs={
+			passive:function(){
+				if(player.energy>0.05){
+					playertemp.cannotdie=1;
+				}
+				else{
+					playertemp.cannotdie=0;
+				}
+				if(player.hp<0){
+					player.energy+=player.hp/6000;
+				}
+			},
+			onkill:function(a){
+				player.hp=min(player.mhp,player.hp+(enemies[a].mhp/60)*(2-player.hp/player.mhp));
+			}
+		};
+	},
+	function(){
+		player.shipId=3;
+		player.shipName="Cyber Sphere";
+		player.hp=180;
+		player.mhp=180;
+		player.shield=56;
+		player.mshield=56;
+		player.energy=12;
+		player.menergy=12;
+		player.shieldregen=9.5;
+		player.shielddecay=12;
+		player.speed=2.3;
+		player.ammor=18;
+		player.size=30;
+		player.shipfuncs={};
 	},
 ];
 var applymods=function(){
@@ -233,7 +548,7 @@ var applymods=function(){
 		player.mshield*=0.8;
 		player.shield*=0.8;
 		append(player.modfuncs.passive,function(){
-			player.energy=min(player.menergy,player.energy+0.0012);
+			player.energy=min(player.menergy,player.energy+0.0008+player.menergy*0.00004);
 		});
 		append(player.modfuncs.damagetakenps,function(){
 			if(random(1)<0.4){
@@ -281,7 +596,7 @@ var applymods=function(){
 	}
 	if(player.mods[6]){
 		append(player.modfuncs.passive,function(){
-			if(playertemp.timesincedamagetaken>300){
+			if(playertemp.timesincedamagetaken>240){
 				if(player.hp<player.mhp&player.energy>0.002){
 					player.energy-=0.002;
 					player.hp+=0.0002+player.mhp*0.0001;
@@ -353,6 +668,12 @@ var applymods=function(){
 			}
 		});
 	}
+	if(player.mods[12]){
+		player.mhp*=0.65;
+		player.hp*=0.65;
+		player.menergy*=1.5;
+		player.energy*=1.5;
+	}
 }
 var playertemp={};
 var mods=[
@@ -368,6 +689,13 @@ var mods=[
 	{name:"Rapid Reload",desc:"Boosts your ammo regeneration",pro:"Increases ammo recharge rate by 50%",con:"Your shield cannot recharge unless at full ammo"},
 	{name:"Energized Feedback",desc:"Absorbs the entropy created from destruction",pro:"Gain energy when you deal damage",con:"Backfires when you take damage, losing energy (halved for damage blocked by shielding)"},
 	{name:"Heavy Impact",desc:"Makes things go boom",pro:"Increases damage dealt by 50%",con:"Your hits fling debris which can hit you"},
+	{name:"Additional Energy",desc:"Adds more batteries to store energy",pro:"Increases maximum energy by 50%",con:"Your ship becomes less structurally stable, reducing ship health by 35%."},
+];
+var ships=[
+	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while reflecting enemy projectiles.",misc:"A well-rounded ship."},
+	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while greatly reducing damage taken.",misc:"Normal shots fragment on hit."},
+	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:4,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly around randomly.",misc:"Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
+	{name:"Cyber Sphere",sprite:"cybersphere",damage:9,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
 ];
 var player={
 	hpl:0,
@@ -387,7 +715,8 @@ var player={
 	modfuncs:{
 		passive:new Array(),
 		damagetaken:new Array(),
-	}
+	},
+	shipfuncs:{}
 };
 var spawnplayer=function(){
 	player.hpl=0;
@@ -570,7 +899,6 @@ var doinputs=function(){
 	}
 }
 var parallax=new Array();
-var test=loadShape('Data/Graphics/ships/astrohawk.svg');
 var findpspot=function(dis){
 	for(b=0;b<parallax.length;b+=1){
 		if(dis>=parallax[b].d){
@@ -616,6 +944,9 @@ var loadassetscache=function(){
 		text("1/3",500,370);
 		sprites={
 			astrohawk:loadShape('Data/Graphics/ships/astrohawk.svg'),
+			crystalvanguard:loadShape('Data/Graphics/ships/crystalvanguard.svg'),
+			fairgravesvessel:loadShape('Data/Graphics/ships/fairgravesvessel.svg'),
+			cybersphere:loadShape('Data/Graphics/ships/cybersphere.svg'),
 		};
 		fill(0,0,0);
 		rect(400,350,300,100);
@@ -634,6 +965,10 @@ var loadassetscache=function(){
 			hawk:new Howl({src: ['Data/Sound/sfx/hawk.ogg'],autoplay:false,loop:false,volume:options.sfx}),
 			hull:new Howl({src: ['Data/Sound/sfx/armorpartial.ogg'],autoplay:false,loop:false,volume:options.sfx*2}),
 			hit:new Howl({src: ['Data/Sound/sfx/arrow hit.wav'],autoplay:false,loop:false,volume:options.sfx*2}),
+			glacialshoot:new Howl({src: ['Data/Sound/sfx/glacial ward charge.wav'],autoplay:false,loop:false,volume:options.sfx*0.4}),
+			glacialhit:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'],autoplay:false,loop:false,volume:options.sfx*0.4}),
+			distortion:new Howl({src: ['Data/Sound/sfx/distortion.ogg'],autoplay:false,loop:false,volume:options.sfx*0.9}),
+			incinerate:new Howl({src: ['Data/Sound/sfx/incinerate.ogg'],autoplay:false,loop:false,volume:options.sfx*0.9}),
 		};
 		loadassetscache=0;
 		canstart=1;
@@ -753,6 +1088,9 @@ var takedamage=function(dmgs){
 	for(z=0;z<player.modfuncs.damagetaken.length;z+=1){
 		player.modfuncs.damagetaken[z]();
 	}
+	if(player.shipfuncs.dmgtaken){
+		player.shipfuncs.dmgtaken();
+	}
 	dmg.blocked=0;
 	if(player.shielding){
 		dmg.blocked=true;
@@ -867,54 +1205,61 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	}
 	//Run projectiles
 	for(a=0;a<projectiles.length;a+=1){
+		if(!(projectiles[a].scans)){
+			projectiles[a].scans=1;
+		}
 		if(render){
 			projectiles[a].draw();
 		}
 		if(projectiles[a].run){
 			projectiles[a].run();
 		}
-		projectiles[a].x+=sin(projectiles[a].dir)*projectiles[a].speed;
-		projectiles[a].y-=cos(projectiles[a].dir)*projectiles[a].speed;
-		if(projectiles[a].target){
-			if(!(projectiles[a].hits)){
-				projectiles[a].hits=new Array();
-			}
-			for(b=0;b<enemies.length;b+=1){
-				if(!(projectiles[a].pierce<0)){
-					if(projectiles[a].x-enemies[b].x<projectiles[a].size+enemies[b].size&projectiles[a].x-enemies[b].x>-projectiles[a].size-enemies[b].size&
-					projectiles[a].y-enemies[b].y<projectiles[a].size+enemies[b].size&projectiles[a].y-enemies[b].y>-projectiles[a].size-enemies[b].size){
-						if(canhitenemy()){
-							projectiles[a].pierce-=1;
-							append(projectiles[a].hits,enemies[b].id);
-							enemies[b].hp-=dealdamage(projectiles[a].damage,b);
-							sfx.hit.rate(random(0.8,1.2));
-							sfx.hit.volume(min(1.5,projectiles[a].damage/20));
-							sfx.hit.play();
-							for(cp=0;cp<projectiles[a].damage/2;cp+=1){
-								append(particles,{x:enemies[b].x+random(-enemies[b].size,enemies[b].size),y:enemies[b].y+random(-enemies[b].size,enemies[b].size),xvelo:random(-2,2),yvelo:random(-2,2),
-								size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(120,160),random(70,120)]});
-							}
-							if(projectiles[a].pierce<0){
-								projectiles[a].exp=1;
+		for(scn=0;scn<projectiles[a].scans;scn+=1){
+			projectiles[a].x+=sin(projectiles[a].dir)*projectiles[a].speed/projectiles[a].scans;
+			projectiles[a].y-=cos(projectiles[a].dir)*projectiles[a].speed/projectiles[a].scans;
+			if(projectiles[a].target){
+				if(!(projectiles[a].hits)){
+					projectiles[a].hits=new Array();
+				}
+				for(b=0;b<enemies.length;b+=1){
+					if(!(projectiles[a].pierce<0)){
+						if(enemies[b].hp>0){
+							if(projectiles[a].x-enemies[b].x<projectiles[a].size+enemies[b].size&projectiles[a].x-enemies[b].x>-projectiles[a].size-enemies[b].size&
+							projectiles[a].y-enemies[b].y<projectiles[a].size+enemies[b].size&projectiles[a].y-enemies[b].y>-projectiles[a].size-enemies[b].size){
+								if(canhitenemy()){
+									projectiles[a].pierce-=1;
+									append(projectiles[a].hits,enemies[b].id);
+									enemies[b].hp-=dealdamage(projectiles[a].damage,b);
+									sfx.hit.rate(random(0.8,1.2));
+									sfx.hit.volume(min(1.5,projectiles[a].damage/20));
+									sfx.hit.play();
+									for(cp=0;cp<projectiles[a].damage/2;cp+=1){
+										append(particles,{x:enemies[b].x+random(-enemies[b].size,enemies[b].size),y:enemies[b].y+random(-enemies[b].size,enemies[b].size),xvelo:random(-2,2),yvelo:random(-2,2),
+										size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(120,160),random(70,120)]});
+									}
+									if(projectiles[a].pierce<0){
+										projectiles[a].exp=1;
+									}
+								}
 							}
 						}
 					}
 				}
 			}
-		}
-		else{
-			if(playerhitbox(projectiles[a].x,projectiles[a].y,projectiles[a].size)){
-				takedamage({dmg:projectiles[a].damage});
-				projectiles[a].exp=1;
+			else{
+				if(playerhitbox(projectiles[a].x,projectiles[a].y,projectiles[a].size)){
+					takedamage({dmg:projectiles[a].damage});
+					projectiles[a].exp=1;
+				}
 			}
 		}
 		if(projectiles[a].end==1){
-			if(projectiles[a].y<0){
+			if(projectiles[a].y<-100){
 				projectiles[a].exp=1;
 			}
 		}
 		else if(projectiles[a].end==2){
-			if(projectiles[a].y>700){
+			if(projectiles[a].y>800){
 				projectiles[a].exp=1;
 			}
 		}
@@ -925,6 +1270,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			}
 		}
 		if(projectiles[a].exp){
+			if(projectiles[a].onend){
+				projectiles[a].onend();
+			}
 			projectiles.splice(a,1);
 			a-=1;
 		}
@@ -938,6 +1286,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			enemies[a].run();
 		}
 		if(enemies[a].hp<=0){
+			if(player.shipfuncs.onkill){
+				player.shipfuncs.onkill(a);
+			}
 			sfx.destroy.rate(random(0.85,1.15));
 			sfx.destroy.play();
 			if(!(player.respawntimer>10)){
@@ -952,7 +1303,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	}
 	//Run player stuff
 	doinputs();
-	if(player.hp<=0){
+	if(player.hp<=0&!(playertemp.cannotdie)){
 		if(player.deathtimer>60){
 			if(input.shoot){
 				spawnplayer();
@@ -988,7 +1339,10 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		for(z=0;z<player.modfuncs.passive.length;z+=1){
 			player.modfuncs.passive[z]();
 		}
-		if(render&tick>1){
+		if(player.shipfuncs.passive){
+			player.shipfuncs.passive();
+		}
+		if(render&tick>2){
 			playerdraw[player.shipId]();
 		}
 		if(player.shielddisable>0){
@@ -1015,12 +1369,16 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			else{
 				if(input.special){
 					if(player.specialcd<=0){
-						special[player.shipId]();
+						if(special[player.shipId]){
+							special[player.shipId]();
+						}
 					}
 				}
 				else if(input.shoot){
 					if(player.shootcd<=0){
-						shoot[player.shipId]();
+						if(shoot[player.shipId]){
+							shoot[player.shipId]();
+						}
 					}
 				}
 			}
@@ -1159,15 +1517,89 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		}
 		else if(menumode==1){
 			noFill();
+			ellipseMode(CENTER);
 			strokeWeight(20+abs(tick%120-60)/6);
 			stroke(220,255,140+abs(tick%90-45));
-			ellipseMode(CENTER);
 			ellipse(770,50,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
 			noStroke();
 			
+			
+			textAlign(CENTER);
+			if(!(input.shoot)){
+				shootlock=0;
+			}
+			for(a=0;a<ships.length;a+=1){
+				if(ships[a].unlocked){
+					if(player.shipId==a){
+						fill(0,255,0);
+					}
+					else{
+						noFill();
+					}
+					ellipseMode(CENTER);
+					strokeWeight(20+abs(tick%120-60)/12);
+					stroke(220,255,140+abs(tick%90-45));
+					ellipse(150+floor(a/6)*120,50+(a%6)*120,100+abs(tick%120-60)/12,100+abs(tick%120-60)/12);
+					noStroke();
+					shape(sprites[ships[a].sprite],150+floor(a/6)*120,50+(a%6)*120,300,400);
+					if(pow(pow(player.x-150-floor(a/6)*120,2)+pow(player.y-50-(a%6)*120,2),0.5)<55){
+						viewmod=a;
+						if(input.shoot&!(shootlock)){
+							shootlock=1;
+							player.shipId=a;
+							menumode=0;
+							spawnplayer();
+							applyshipstats[player.shipId]();
+							applymods();
+						}
+					}
+				}
+			}
+			textAlign(CENTER);
+			textFont(0,25);
+			fill(255,255,255);
+			text(ships[viewmod].name,500,130,400,100);
+			textFont(0,22);
+			fill(220,220,220);
+			text(ships[viewmod].misc,500,210,400,120);
+			fill(255,255,0);
+			text("Special:  "+ships[viewmod].special,500,330,400,120);
+			fill(255,255,255);
+			textFont(0,20);
+			text("Damage",550,445,100,50);
+			text("Health",550,475,100,50);
+			text("Shield",550,505,100,50);
+			text("Speed",550,535,100,50);
+			text("Energy",550,565,100,50);
+			
+			strokeWeight(3);
+			stroke(0,0,0);
+			getshipstatcolor(ships[viewmod].damage);
+			for(a=0;a<ships[viewmod].damage;a+=1){
+				rect(660+a*20,450,18,10,4);
+			}
+			getshipstatcolor(ships[viewmod].health);
+			for(a=0;a<ships[viewmod].health;a+=1){
+				rect(660+a*20,480,18,10,4);
+			}
+			getshipstatcolor(ships[viewmod].shield);
+			for(a=0;a<ships[viewmod].shield;a+=1){
+				rect(660+a*20,510,18,10,4);
+			}
+			getshipstatcolor(ships[viewmod].speed);
+			for(a=0;a<ships[viewmod].speed;a+=1){
+				rect(660+a*20,540,18,10,4);
+			}
+			getshipstatcolor(ships[viewmod].energy*0.7);
+			for(a=0;a<ships[viewmod].energy;a+=1){
+				rect(660+a*15,570,14,10,4);
+			}
+			noStroke();
+			ellipseMode(CENTER);
+			
 			textFont(0,25);
 			fill(255,255,200);
-			text("Back",740,55);
+			text("Back",770,55);
 			if(pow(pow(player.x-770,2)+pow(player.y-50,2),0.5)<75&input.shoot){
 				menumode=0;
 				player.x=500;
@@ -1444,6 +1876,10 @@ while(drawcount>=16.6&cdraw<=drawcap){
 						},
 						run:function(){
 							enemies[a].ammo+=1;
+							if(enemies[a].ammo>60){
+								append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
+								size:random(7,10),op:random(160,200),opc:-7,exp:1,color:[random(120,150),random(100,130),random(30,55)]});
+							}
 							if(enemies[a].ammo>90){
 								if(random(1)<0.55){
 									enemies[a].ammo-=90;
@@ -1472,7 +1908,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 										dir:PI,
 										speed:6,
 										size:14,
-										damage:10
+										damage:10,
+										isSingleTarget:true
 									});
 								}
 								else if(random(1)<0.5){
@@ -1502,7 +1939,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 										dir:PI,
 										speed:6,
 										size:14,
-										damage:9
+										damage:9,
+										isSingleTarget:true
 									});
 									append(projectiles,{
 										target:0,
@@ -1536,7 +1974,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 										dir:PI,
 										speed:0,
 										size:14,
-										damage:9
+										damage:9,
+										isSingleTarget:true
 									});
 								}
 								else{
@@ -1567,7 +2006,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 											dir:PI-PI/8+b*PI/8,
 											speed:7,
 											size:14,
-											damage:7
+											damage:7,
+											isSingleTarget:true
 										});
 									}
 								}
