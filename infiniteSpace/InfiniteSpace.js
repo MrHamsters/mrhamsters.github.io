@@ -1507,7 +1507,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			}
 			if(pow(pow(player.x-200,2)+pow(player.y-600,2),0.5)<75&input.shoot){
 				menumode=2;
-				viewmod=random(mods.length);
+				viewmod=0;
 				player.x=500;
 				player.y=500;
 			}
