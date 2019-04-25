@@ -1,4 +1,4 @@
-var version="DEMO 0.3b";
+var version="DEMO 0.3.1";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -93,6 +93,14 @@ var objects=new Array();
 var controlmode=0;
 var ingame=0;
 var menumode=0;
+var dirgeneric=function(x1,y1,x2,y2){
+	if(x1-x2<0){
+		return(atan((y1-y2)/(x1-x2))+PI/2);
+	}
+	else{
+		return(atan((y1-y2)/(x1-x2))-PI/2);
+	}
+}
 var getshipstatcolor=function(val){
 	if(val<2){
 		fill(255,0,0);
@@ -339,6 +347,22 @@ var special=[
 			sfx.click.play();
 		}
 	},
+	function(){
+		player.shootcd=5;
+		player.specialcd=15;
+		if(player.energy>=1){
+			player.shootcd=30;
+			player.specialcd=120;
+			player.energy-=1;
+			sfx.might.rate(random(0.9,1.1));
+			sfx.might.play();
+			playertemp.ragingspirits=120;
+		}
+		else{
+			sfx.click.rate(random(0.9,1.1));
+			sfx.click.play();
+		}
+	},
 ];
 var shielddraw=[
 	function(){
@@ -463,14 +487,7 @@ var applyshipstats=[
 					if(tick%6==0){
 						for(b=0;b<enemies.length;b+=1){
 							if(playerhitbox(enemies[b].x,enemies[b].y,enemies[b].size+95)){
-								enemies[b].hp-=dealdamage(12,b);
-								sfx.hit.rate(random(0.8,1.2));
-								sfx.hit.volume(0.6);
-								sfx.hit.play();
-								for(cp=0;cp<6;cp+=1){
-									append(particles,{x:enemies[b].x+random(-enemies[b].size,enemies[b].size),y:enemies[b].y+random(-enemies[b].size,enemies[b].size),xvelo:random(-2,2),yvelo:random(-2,2),
-									size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(120,160),random(70,120)]});
-								}
+								dohit(12,b);
 							}
 						}
 					}
@@ -500,14 +517,72 @@ var applyshipstats=[
 		player.size=22;
 		player.shipfuncs={
 			passive:function(){
-				if(player.energy>0.05){
+				if(player.hp<0){
+					player.energy+=(player.hp/player.mhp)/100;
+				}
+				if(player.energy>0){
 					playertemp.cannotdie=1;
 				}
 				else{
 					playertemp.cannotdie=0;
 				}
-				if(player.hp<0){
-					player.energy+=player.hp/6000;
+				if(playertemp.ragingspirits>0){
+					playertemp.ragingspirits-=1;
+					if(playertemp.ragingspirits%10==0){
+					append(objects,{
+						x:player.x+random(-15,15),
+						y:player.y+random(-15,15),
+						dur:180,
+						dir:0,
+						target:{
+							found:0,
+							index:0
+						},
+						draw:function(){
+							fill(100,130,110);
+							ellipse(objects[a].x,objects[a].y,20,20);
+							if(options.graphics){
+								fill(70,200,50,10);
+								for(b=0;b<6;b+=1){
+									ellipse(objects[a].x,objects[a].y,15+b*2,15+b*2);
+								}
+								append(particles,{x:objects[a].x+random(-20,20),y:objects[a].y+random(-20,20),xvelo:random(-5,5),yvelo:random(-5,5),
+								size:random(7,10),op:random(180,220),opc:-12,exp:1,color:[random(40,60),random(100,120),random(70,90)]});
+							}
+						},
+						run:function(){
+							if(objects[a].target.found){
+								if(enemies[objects[a].target.index]){
+									objects[a].dir=dirgeneric(objects[a].x,objects[a].y,enemies[objects[a].target.index].x,enemies[objects[a].target.index].y);
+									objects[a].x+=sin(objects[a].dir)*5;
+									objects[a].y-=cos(objects[a].dir)*5;
+									if(hitbox(objects[a].x,objects[a].y,enemies[objects[a].target.index].x,enemies[objects[a].target.index].y,enemies[objects[a].target.index].size+20)){
+										objects[a].dur=0;
+										dohit(20,b);
+										append(particles,{x:objects[a].x,y:objects[a].y,size:15,sizec:2,op:255,opc:-12,exp:1,color:[random(40,60),random(100,120),random(70,90)]});
+									}
+								}
+								else{
+									objects[a].target={
+										found:0,
+										index:0
+									};
+								}
+							}
+							else{
+								if(enemies.length>0){
+									objects[a].target.index=round(-0.49,enemies.length-0.51);
+									objects[a].target.found=1;
+								}
+							}
+							objects[a].dur-=1;
+							if(objects[a].dur<=0){
+								objects.splice(a,1);
+								a-=1;
+							}
+						}
+					});
+					}
 				}
 			},
 			onkill:function(a){
@@ -694,7 +769,7 @@ var mods=[
 var ships=[
 	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while reflecting enemy projectiles.",misc:"A well-rounded ship."},
 	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while greatly reducing damage taken.",misc:"Normal shots fragment on hit."},
-	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:4,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly around randomly.",misc:"Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
+	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:4,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
 	{name:"Cyber Sphere",sprite:"cybersphere",damage:9,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
 ];
 var player={
@@ -969,6 +1044,7 @@ var loadassetscache=function(){
 			glacialhit:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'],autoplay:false,loop:false,volume:options.sfx*0.2}),
 			distortion:new Howl({src: ['Data/Sound/sfx/distortion.ogg'],autoplay:false,loop:false,volume:options.sfx*0.9}),
 			incinerate:new Howl({src: ['Data/Sound/sfx/incinerate.ogg'],autoplay:false,loop:false,volume:options.sfx*0.9}),
+			might:new Howl({src: ['Data/Sound/sfx/might.ogg'],autoplay:false,loop:false,volume:options.sfx*1.1}),
 		};
 		loadassetscache=0;
 		canstart=1;
@@ -1139,6 +1215,16 @@ var dealdamage=function(dmgs,target){
 		player.modfuncs.damagedealt[z](min(enemies[target].hp,dmgs),target);
 	}
 	return(dmg);
+}
+var dohit=function(damage,target){
+	enemies[target].hp-=dealdamage(damage,target);
+	sfx.hit.rate(random(0.8,1.2));
+	sfx.hit.volume(min(1.5,damage/20));
+	sfx.hit.play();
+	for(cp=0;cp<damage/2;cp+=1){
+		append(particles,{x:enemies[target].x+random(-enemies[target].size,enemies[target].size),y:enemies[target].y+random(-enemies[target].size,enemies[target].size),xvelo:random(-2,2),yvelo:random(-2,2),
+		size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(120,160),random(70,120)]});
+	}
 }
 var canhitenemy=function(){
 	for(c=0;c<projectiles[a].hits.length;c+=1){
