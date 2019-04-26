@@ -457,14 +457,16 @@ var special=[
 					}
 				}
 				playertemp.autoshield=1;
-				fill(255,0,0,150+abs(tick%6-3)*40);
-				rect(player.x-50,0,100,player.y-30);
-				ellipseMode(CENTER);
-				fill(255,60,60,150+abs(tick%12-6)*5);
-				ellipse(player.x,player.y,120,120);
-				for(cp=0;cp<8;cp+=1){
-					append(particles,{x:player.x+random(-player.size,player.size),y:random(player.y),xvelo:random(-8,8),yvelo:random(-15,-3),
-					size:random(7,10),op:random(200,255),opc:-7,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
+				if(render){
+					fill(255,0,0,150+abs(tick%6-3)*40);
+					rect(player.x-50,0,100,player.y-30);
+					ellipseMode(CENTER);
+					fill(255,60,60,150+abs(tick%12-6)*5);
+					ellipse(player.x,player.y,120,120);
+				}
+				for(cp=0;cp<3+options.graphics*4;cp+=1){
+					append(particles,{x:player.x+random(-player.size,player.size),y:random(player.y),xvelo:random(-10,10),yvelo:random(-30,-7),
+					size:random(7,10),op:random(200,255),opc:-12,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
 				}
 			}
 		}
