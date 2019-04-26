@@ -1,4 +1,4 @@
-var version="DEMO 0.3.1";
+var version="DEMO 0.3.2";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -277,6 +277,71 @@ var shoot=[
 			sfx.click.play();
 		}
 	},
+	function(){
+		player.shootcd=7;
+		if(player.ammo>4){
+			player.ammo-=4;
+			append(projectiles,{
+				target:1,
+				draw:function(){
+					ellipseMode(CENTER);
+					fill(255,0,0);
+					rect(projectiles[a].x-7,projectiles[a].y-20,14,40);
+					if(options.graphics){
+						fill(255,0,0,10);
+						for(b=0;b<10;b+=1){
+							ellipse(projectiles[a].x,projectiles[a].y,10+b*2,30+b*5);
+						}
+					}
+				},
+				x:player.x,
+				y:player.y-35,
+				end:1,
+				pierce:1,
+				dir:0,
+				speed:28,
+				scans:3,
+				size:15,
+				damage:17,
+				isSingleTarget:true
+			});
+			for(b=0;b<2;b+=1){
+				append(projectiles,{
+					target:1,
+					draw:function(){
+						ellipseMode(CENTER);
+						fill(255,0,0);
+						ellipse(projectiles[a].x,projectiles[a].y,15,15);
+						if(options.graphics){
+							fill(255,0,0,10);
+							for(b=0;b<10;b+=1){
+								ellipse(projectiles[a].x,projectiles[a].y,10+b*3,10+b*3);
+							}
+						}
+					},
+					x:player.x,
+					y:player.y-35,
+					dur:30,
+					pierce:0,
+					dir:b*PI/4-PI/8+random(-PI/4,PI/4),
+					speed:20,
+					scans:2,
+					size:15,
+					damage:12,
+					isSingleTarget:true
+				});
+			}
+			sfx.laser.rate(random(0.9,1.1));
+			sfx.laser.play();
+		}
+		else{
+			if(player.mods[8]){
+				player.shield=max(0,player.shield-4.5);
+			}
+			sfx.click.rate(random(0.9,1.1));
+			sfx.click.play();
+		}
+	},
 ];
 var special=[
 	function(){
@@ -339,8 +404,9 @@ var special=[
 			player.specialcd=240;
 			player.energy-=1;
 			sfx.distortion.rate(random(0.9,1.1));
+			sfx.distortion.volume(0.9);
 			sfx.distortion.play();
-			playertemp.crystalstorm=240;
+			playertemp.crystalstorm=300;
 		}
 		else{
 			sfx.click.rate(random(0.9,1.1));
@@ -352,11 +418,55 @@ var special=[
 		player.specialcd=15;
 		if(player.energy>=1){
 			player.shootcd=30;
-			player.specialcd=120;
+			player.specialcd=60;
 			player.energy-=1;
 			sfx.might.rate(random(0.9,1.1));
 			sfx.might.play();
-			playertemp.ragingspirits=120;
+			playertemp.ragingspirits=60;
+		}
+		else{
+			sfx.click.rate(random(0.9,1.1));
+			sfx.click.play();
+		}
+	},
+	function(){
+		player.shootcd=5;
+		player.specialcd=15;
+		if(player.energy>=0.007){
+			player.shootcd=30;
+			player.specialcd=0;
+			player.energy-=0.007;
+			if(!(playertemp.deathlaser)){
+				playertemp.deathlaser=0;
+			}
+			if(playertemp.deathlaser==0){
+				sfx.deathlaser.rate(random(0.95,1.05));
+				sfx.deathlaser.play();
+			}
+			playertemp.deathlaser=min(60,playertemp.deathlaser+4);
+			append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-55,-25),xvelo:random(-2,2),yvelo:random(-2,2),
+			size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
+			if(playertemp.deathlaser>=60){
+				sfx.distortion.volume(0.12);
+				sfx.distortion.play();
+				if(tick%5==0){
+					for(b=0;b<enemies.length;b+=1){
+						if(enemies[b].x-player.x<55+enemies[b].size&enemies[b].x-player.x>-55-enemies[b].size&enemies[b].y<player.y){
+							dohit(12,b);
+						}
+					}
+				}
+				playertemp.autoshield=1;
+				fill(255,0,0,150+abs(tick%6-3)*40);
+				rect(player.x-50,0,100,player.y-30);
+				ellipseMode(CENTER);
+				fill(255,60,60,150+abs(tick%12-6)*5);
+				ellipse(player.x,player.y,120,120);
+				for(cp=0;cp<8;cp+=1){
+					append(particles,{x:player.x+random(-player.size,player.size),y:random(player.y),xvelo:random(-8,8),yvelo:random(-15,-3),
+					size:random(7,10),op:random(200,255),opc:-7,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
+				}
+			}
 		}
 		else{
 			sfx.click.rate(random(0.9,1.1));
@@ -395,25 +505,6 @@ var playerdraw=[
 	},
 	function(){
 		shape(sprites.fairgravesvessel,player.x,player.y,450,600);
-		if(tick%2==0){
-			append(objects,{
-				x:player.x,
-				y:player.y,
-				dur:15,
-				draw:function(){
-					fill(0,150,75,objects[a].dur*4);
-					ellipseMode(CENTER);
-					ellipse(objects[a].x,objects[a].y,45,90);
-				},
-				run:function(){
-					objects[a].dur-=1;
-					if(objects[a].dur<=0){
-						objects.splice(a,1);
-						a-=1;
-					}
-				}
-			});
-		}
 	},
 	function(){
 		shape(sprites.cybersphere,player.x,player.y,450,600);
@@ -528,11 +619,11 @@ var applyshipstats=[
 				}
 				if(playertemp.ragingspirits>0){
 					playertemp.ragingspirits-=1;
-					if(playertemp.ragingspirits%10==0){
+					if(playertemp.ragingspirits%6==0){
 					append(objects,{
 						x:player.x+random(-15,15),
-						y:player.y+random(-15,15),
-						dur:180,
+						y:player.y+random(-30,-15),
+						dur:300,
 						dir:0,
 						target:{
 							found:0,
@@ -546,20 +637,24 @@ var applyshipstats=[
 								for(b=0;b<6;b+=1){
 									ellipse(objects[a].x,objects[a].y,15+b*2,15+b*2);
 								}
-								append(particles,{x:objects[a].x+random(-20,20),y:objects[a].y+random(-20,20),xvelo:random(-5,5),yvelo:random(-5,5),
-								size:random(7,10),op:random(180,220),opc:-12,exp:1,color:[random(40,60),random(100,120),random(70,90)]});
+								if(tick%2==0){
+									append(particles,{x:objects[a].x+random(-20,20),y:objects[a].y+random(-20,20),xvelo:random(-5,5),yvelo:random(-5,5),
+									size:random(7,10),op:random(180,220),opc:-12,exp:1,color:[random(40,60),random(100,120),random(70,90)]});
+								}
 							}
 						},
 						run:function(){
 							if(objects[a].target.found){
 								if(enemies[objects[a].target.index]){
 									objects[a].dir=dirgeneric(objects[a].x,objects[a].y,enemies[objects[a].target.index].x,enemies[objects[a].target.index].y);
-									objects[a].x+=sin(objects[a].dir)*5;
-									objects[a].y-=cos(objects[a].dir)*5;
-									if(hitbox(objects[a].x,objects[a].y,enemies[objects[a].target.index].x,enemies[objects[a].target.index].y,enemies[objects[a].target.index].size+20)){
-										objects[a].dur=0;
-										dohit(20,b);
-										append(particles,{x:objects[a].x,y:objects[a].y,size:15,sizec:2,op:255,opc:-12,exp:1,color:[random(40,60),random(100,120),random(70,90)]});
+									objects[a].x+=sin(objects[a].dir)*9;
+									objects[a].y-=cos(objects[a].dir)*9;
+									for(b=0;b<enemies.length;b+=1){
+										if(hitbox(objects[a].x,objects[a].y,enemies[b].x,enemies[b].y,enemies[b].size+20)){
+											objects[a].dur=0;
+											dohit(15,b);
+											append(particles,{x:objects[a].x,y:objects[a].y,size:15,sizec:2,op:255,opc:-12,exp:1,color:[random(40,60),random(100,120),random(70,90)]});
+										}
 									}
 								}
 								else{
@@ -571,7 +666,7 @@ var applyshipstats=[
 							}
 							else{
 								if(enemies.length>0){
-									objects[a].target.index=round(-0.49,enemies.length-0.51);
+									objects[a].target.index=round(random(-0.49,enemies.length-0.51));
 									objects[a].target.found=1;
 								}
 							}
@@ -584,6 +679,25 @@ var applyshipstats=[
 					});
 					}
 				}
+				if(tick%2==0){
+					append(objects,{
+						x:player.x,
+						y:player.y,
+						dur:15,
+						draw:function(){
+							fill(0,150,75,objects[a].dur*4);
+							ellipseMode(CENTER);
+							ellipse(objects[a].x,objects[a].y,45,90);
+						},
+						run:function(){
+							objects[a].dur-=1;
+							if(objects[a].dur<=0){
+								objects.splice(a,1);
+								a-=1;
+							}
+						}
+					});
+				}
 			},
 			onkill:function(a){
 				player.hp=min(player.mhp,player.hp+(enemies[a].mhp/60)*(2-player.hp/player.mhp));
@@ -593,18 +707,28 @@ var applyshipstats=[
 	function(){
 		player.shipId=3;
 		player.shipName="Cyber Sphere";
-		player.hp=180;
-		player.mhp=180;
-		player.shield=56;
-		player.mshield=56;
+		player.hp=250;
+		player.mhp=250;
+		player.shield=70;
+		player.mshield=70;
 		player.energy=12;
 		player.menergy=12;
-		player.shieldregen=9.5;
-		player.shielddecay=12;
-		player.speed=2.3;
+		player.shieldregen=12;
+		player.shielddecay=14.5;
+		player.speed=2.7;
 		player.ammor=18;
-		player.size=30;
-		player.shipfuncs={};
+		player.size=32;
+		player.shipfuncs={
+			passive:function(){
+				if(playertemp.deathlaser>0){
+					playertemp.deathlaser-=3;
+					if(playertemp.deathlaser<=0){
+						playertemp.autoshield=0;
+						sfx.deathlaser.stop();
+					}
+				}
+			}
+		};
 	},
 ];
 var applymods=function(){
@@ -664,6 +788,7 @@ var applymods=function(){
 	if(player.mods[4]){
 		append(player.modfuncs.damagetaken,function(){
 			playertemp.mobileshield=dmg.dmg/20;
+			dmg.dmg*=0.95;
 		});
 		append(player.modfuncs.damagetakenps,function(){
 			dmg.dmg+=playertemp.mobileshield;
@@ -693,14 +818,27 @@ var applymods=function(){
 		});
 	}
 	if(player.mods[10]){
+		append(player.modfuncs.passive,function(){
+			if(!(player.energizedfeedback)){
+				player.energizedfeedback=0;
+			}
+			player.energizedfeedback=min(2,player.energizedfeedback+1/300);
+		});
 		append(player.modfuncs.damagedealt,function(edmg,target){
-			player.energy=min(player.menergy,player.energy+edmg/300);
+			if(player.energizedfeedback>edmg/250){
+				player.energizedfeedback-=edmg/250;
+				player.energy=min(player.menergy,player.energy+edmg/250);
+			}
+			else{
+				player.energy=min(player.menergy,player.energy+player.energizedfeedback);
+				player.energizedfeedback=0;
+			}
 		});
 		append(player.modfuncs.damagetaken,function(){
-			player.energy=max(0,player.energy-dmg.dmg/30);
+			player.energy=max(0,player.energy-dmg.dmg/50);
 		});
 		append(player.modfuncs.damagetakenps,function(){
-			player.energy=max(0,player.energy-dmg.dmg/30);
+			player.energy=max(0,player.energy-dmg.dmg/50);
 		});
 	}
 	if(player.mods[11]){
@@ -770,7 +908,7 @@ var ships=[
 	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while reflecting enemy projectiles.",misc:"A well-rounded ship."},
 	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while greatly reducing damage taken.",misc:"Normal shots fragment on hit."},
 	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:4,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
-	{name:"Cyber Sphere",sprite:"cybersphere",damage:9,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
+	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:9,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
 ];
 var player={
 	hpl:0,
@@ -1028,11 +1166,11 @@ var loadassetscache=function(){
 		fill(255,150,0);
 		text("2/3",500,370);
 		sfx={
-			laser:new Howl({src: ['Data/Sound/sfx/laser.ogg'],autoplay:false,loop:false,volume:options.sfx}),
+			laser:new Howl({src: ['Data/Sound/sfx/laser.ogg'],autoplay:false,loop:false,volume:options.sfx*1.5}),
 			destroy:new Howl({src: ['Data/Sound/sfx/destroy.ogg'],autoplay:false,loop:false,volume:options.sfx*7}),
 			minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'],autoplay:false,loop:false,volume:options.sfx*0.7}),
 			boom:new Howl({src: ['Data/Sound/sfx/avalanche.ogg'],autoplay:false,loop:false,volume:options.sfx}),
-			click:new Howl({src: ['Data/Sound/sfx/click.wav'],autoplay:false,loop:false,volume:options.sfx*0.7}),
+			click:new Howl({src: ['Data/Sound/sfx/click.wav'],autoplay:false,loop:false,volume:options.sfx*0.55}),
 			shieldon:new Howl({src: ['Data/Sound/sfx/shield.wav'],autoplay:false,loop:false,volume:options.sfx}),
 			shieldoff:new Howl({src: ['Data/Sound/sfx/shieldoff.wav'],autoplay:false,loop:false,volume:options.sfx}),
 			shieldbreak:new Howl({src: ['Data/Sound/sfx/shieldbreak.wav'],autoplay:false,loop:false,volume:options.sfx}),
@@ -1044,7 +1182,8 @@ var loadassetscache=function(){
 			glacialhit:new Howl({src: ['Data/Sound/sfx/glacial ward shatter.wav'],autoplay:false,loop:false,volume:options.sfx*0.2}),
 			distortion:new Howl({src: ['Data/Sound/sfx/distortion.ogg'],autoplay:false,loop:false,volume:options.sfx*0.9}),
 			incinerate:new Howl({src: ['Data/Sound/sfx/incinerate.ogg'],autoplay:false,loop:false,volume:options.sfx*0.9}),
-			might:new Howl({src: ['Data/Sound/sfx/might.ogg'],autoplay:false,loop:false,volume:options.sfx*1.1}),
+			might:new Howl({src: ['Data/Sound/sfx/might.ogg'],autoplay:false,loop:false,volume:options.sfx*1.8}),
+			deathlaser:new Howl({src: ['Data/Sound/sfx/shockwavecannoncharge.ogg'],autoplay:false,loop:false,volume:options.sfx*1.8}),
 		};
 		loadassetscache=0;
 		canstart=1;
@@ -1168,7 +1307,7 @@ var takedamage=function(dmgs){
 		player.shipfuncs.dmgtaken();
 	}
 	dmg.blocked=0;
-	if(player.shielding){
+	if(player.shielding||playertemp.autoshield){
 		dmg.blocked=true;
 	}
 	if(!(dmg.blocked)&(player.mods[5]&random(1)<=0.5&player.energy>=0.2)){
