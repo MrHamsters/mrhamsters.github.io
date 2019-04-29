@@ -440,10 +440,10 @@ var special=[
 	function(){
 		player.shootcd=5;
 		player.specialcd=15;
-		if(player.energy>=0.007){
+		if(player.energy>=0.01){
 			player.shootcd=30;
 			player.specialcd=0;
-			player.energy-=0.007;
+			player.energy-=0.01;
 			if(!(playertemp.deathlaser)){
 				playertemp.deathlaser=0;
 			}
@@ -454,14 +454,14 @@ var special=[
 			playertemp.deathlaser=min(60,playertemp.deathlaser+4);
 			append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-55,-25),xvelo:random(-2,2),yvelo:random(-2,2),
 			size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
-			if(playertemp.deathlaser>=60){
+			if(playertemp.deathlaser>=40){
 				sfx.distortion.rate(1);
 				sfx.distortion.volume(0.12);
 				sfx.distortion.play();
 				if(tick%5==0){
 					for(b=0;b<enemies.length;b+=1){
 						if(enemies[b].x-player.x<55+enemies[b].size&enemies[b].x-player.x>-55-enemies[b].size&enemies[b].y<player.y){
-							dohit(12,b);
+							dohit(20,b);
 						}
 					}
 				}
@@ -1760,7 +1760,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			else{
 				fill(80,80,80);
 			}
-			text("Game Controller - Alternate (Left or Right Trigger to select)",300,270);
+			textFont(0,16);
+			text("Game Controller - Alternate (Left or Right Trigger to select)",270,270);
 			fill(255,255,255);
 			textFont(0,20);
 			if(controlmode==0){
