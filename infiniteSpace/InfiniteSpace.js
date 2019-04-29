@@ -1,4 +1,4 @@
-var version="DEMO 0.4";
+var version="DEMO 0.4b";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -156,7 +156,7 @@ var shoot=[
 					speed:25,
 					scans:3,
 					size:9,
-					damage:15,
+					damage:13,
 					isSingleTarget:true
 				});
 			}
@@ -185,7 +185,7 @@ var shoot=[
 					if(options.graphics){
 						fill(200,200,255,10);
 						for(b=0;b<10;b+=1){
-							ellipse(projectiles[a].x,projectiles[a].y,10+b*3,10+b*3);
+							ellipse(projectiles[a].x,projectiles[a].y,10+b*4,10+b*4);
 						}
 					}
 				},
@@ -272,8 +272,40 @@ var shoot=[
 				speed:15,
 				scans:2,
 				size:15,
-				damage:10
+				damage:11
 			});
+			for(b=0;b<2;b+=1){
+				append(projectiles,{
+					target:1,
+					draw:function(){
+						ellipseMode(CENTER);
+						fill(20,140,60);
+						ellipse(projectiles[a].x,projectiles[a].y,projectiles[a].size*2,projectiles[a].size*2);
+						if(options.graphics){
+							fill(70,200,50,10);
+							for(b=0;b<6;b+=1){
+								ellipse(projectiles[a].x,projectiles[a].y,projectiles[a].size*2+b*2,projectiles[a].size*2+b*4);
+							}
+							if(tick%2==0){
+								append(particles,{x:projectiles[a].x+random(-projectiles[a].size,projectiles[a].size),y:projectiles[a].y+random(-projectiles[a].size,projectiles[a].size),xvelo:random(-5,5),yvelo:random(-8,-3),
+								size:random(7,10),op:random(180,220),opc:-12,exp:1,color:[random(40,60),random(100,120),random(70,90)]});
+							}
+						}
+					},
+					run:function(){
+						projectiles[a].size+=0.5;
+					},
+					x:player.x,
+					y:player.y,
+					dur:18,
+					pierce:999,
+					dir:b*PI/3-PI/6,
+					speed:15,
+					scans:2,
+					size:8,
+					damage:6
+				});
+			}
 			sfx.incinerate.rate(random(0.93,1.07));
 			sfx.incinerate.play();
 		}
@@ -310,7 +342,7 @@ var shoot=[
 				speed:28,
 				scans:3,
 				size:15,
-				damage:17,
+				damage:20,
 				isSingleTarget:true
 			});
 			for(b=0;b<2;b+=1){
@@ -335,7 +367,7 @@ var shoot=[
 					speed:20,
 					scans:2,
 					size:15,
-					damage:12,
+					damage:14,
 					isSingleTarget:true
 				});
 			}
@@ -718,10 +750,10 @@ var applyshipstats=[
 	function(){
 		player.shipId=3;
 		player.shipName="Cyber Sphere";
-		player.hp=250;
-		player.mhp=250;
-		player.shield=70;
-		player.mshield=70;
+		player.hp=220;
+		player.mhp=220;
+		player.shield=65;
+		player.mshield=65;
 		player.energy=12;
 		player.menergy=12;
 		player.shieldregen=12;
@@ -919,7 +951,7 @@ var mods=[
 var ships=[
 	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while reflecting enemy projectiles.",misc:"A well-rounded ship."},
 	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while greatly reducing damage taken.",misc:"Normal shots fragment on hit."},
-	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:4,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
+	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
 	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:9,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
 ];
 var player={
@@ -1197,9 +1229,9 @@ var loadassetscache=function(){
 		sfx={
 			laser:new Howl({src: ['Data/Sound/sfx/laser.ogg'],autoplay:false,loop:false,volume:options.sfx*1.8}),
 			destroy:new Howl({src: ['Data/Sound/sfx/destroy.ogg'],autoplay:false,loop:false,volume:options.sfx*7}),
-			minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'],autoplay:false,loop:false,volume:options.sfx*0.7}),
+			minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'],autoplay:false,loop:false,volume:options.sfx*0.55}),
 			boom:new Howl({src: ['Data/Sound/sfx/avalanche.ogg'],autoplay:false,loop:false,volume:options.sfx}),
-			click:new Howl({src: ['Data/Sound/sfx/click.wav'],autoplay:false,loop:false,volume:options.sfx*0.55}),
+			click:new Howl({src: ['Data/Sound/sfx/click.wav'],autoplay:false,loop:false,volume:options.sfx*0.5}),
 			shieldon:new Howl({src: ['Data/Sound/sfx/shield.wav'],autoplay:false,loop:false,volume:options.sfx}),
 			shieldoff:new Howl({src: ['Data/Sound/sfx/shieldoff.wav'],autoplay:false,loop:false,volume:options.sfx}),
 			shieldbreak:new Howl({src: ['Data/Sound/sfx/shieldbreak.wav'],autoplay:false,loop:false,volume:options.sfx}),
@@ -2335,7 +2367,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 								if(enemies[a].y<50){
 									enemies[a].yacc=random(0.1,0.25);
 								}
-								else if(enemies[a].y>400){
+								else if(enemies[a].y>350){
 									enemies[a].yacc=random(-0.25,-0.1);
 								}
 							}
