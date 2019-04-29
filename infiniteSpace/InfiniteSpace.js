@@ -1,4 +1,4 @@
-var version="DEMO 0.3.2";
+var version="DEMO 0.4";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -33,6 +33,9 @@ window.onkeydown=function(e){
 	else if(code==32){
 		rawkeys.space=1;
 	}
+	else if(code==27){
+		rawkeys.esc=1;
+	}
 }
 window.onkeyup=function(e){
     var code = e.keyCode ? e.keyCode : e.which;
@@ -63,6 +66,9 @@ window.onkeyup=function(e){
 	else if(code==32){
 		rawkeys.space=0;
 	}
+	else if(code==27){
+		rawkeys.esc=0;
+	}
 }
 var rawkeys={
 	w:0,
@@ -73,7 +79,8 @@ var rawkeys={
 	b:0,
 	n:0,
 	m:0,
-	space:0
+	space:0,
+	esc:0
 };
 var fps={
 	fps:0,
@@ -81,6 +88,7 @@ var fps={
 	lastsecond:0,
 	fpscount:0
 };
+var unpaused=1;
 var options={
 	graphics:1,
 	stars:1,
@@ -157,7 +165,7 @@ var shoot=[
 		}
 		else{
 			if(player.mods[8]){
-				player.shield=max(0,player.shield-4.5);
+				player.shield=max(0,player.shield-2);
 			}
 			sfx.click.rate(random(0.9,1.1));
 			sfx.click.play();
@@ -165,8 +173,8 @@ var shoot=[
 	},
 	function(){
 		player.shootcd=15;
-		if(player.ammo>10){
-			player.ammo-=10;
+		if(player.ammo>9){
+			player.ammo-=9;
 			append(projectiles,{
 				target:1,
 				draw:function(){
@@ -189,7 +197,7 @@ var shoot=[
 				speed:20,
 				scans:2,
 				size:16,
-				damage:50,
+				damage:70,
 				onend:function(){
 				sfx.glacialhit.rate(random(0.9,1.1));
 				sfx.glacialhit.play();
@@ -211,13 +219,13 @@ var shoot=[
 							x:projectiles[a].x,
 							y:projectiles[a].y,
 							hits:projectiles[a].hits,
-							dur:10,
+							dur:random(8,13),
 							pierce:0,
 							dir:random(2*PI),
-							speed:20,
+							speed:random(15,20),
 							scans:2,
 							size:14,
-							damage:10
+							damage:random(15,40)
 						});
 					}
 				}
@@ -227,7 +235,7 @@ var shoot=[
 		}
 		else{
 			if(player.mods[8]){
-				player.shield=max(0,player.shield-17.5);
+				player.shield=max(0,player.shield-4.5);
 			}
 			sfx.click.rate(random(0.9,1.1));
 			sfx.click.play();
@@ -271,7 +279,7 @@ var shoot=[
 		}
 		else{
 			if(player.mods[8]){
-				player.shield=max(0,player.shield-4.5);
+				player.shield=max(0,player.shield-1.75);
 			}
 			sfx.click.rate(random(0.9,1.1));
 			sfx.click.play();
@@ -331,12 +339,12 @@ var shoot=[
 					isSingleTarget:true
 				});
 			}
-			sfx.laser.rate(random(0.9,1.1));
+			sfx.laser.rate(random(0.85,1.16));
 			sfx.laser.play();
 		}
 		else{
 			if(player.mods[8]){
-				player.shield=max(0,player.shield-4.5);
+				player.shield=max(0,player.shield-2);
 			}
 			sfx.click.rate(random(0.9,1.1));
 			sfx.click.play();
@@ -357,14 +365,14 @@ var special=[
 					ellipseMode(CENTER);
 					noFill();
 					strokeWeight(6);
-					stroke(180,70,180,min(5,projectiles[a].dur)*30);
-					for(b=0;b<11-projectiles[a].dur/3;b+=1){
+					stroke(180,70,180,min(5,projectiles[a].dur/2)*30);
+					for(b=0;b<11-projectiles[a].dur/6;b+=1){
 						ellipse(projectiles[a].x,projectiles[a].y,20+20*b,20+20*b);
 					}
 					noStroke();
 				},
 				run:function(){
-					projectiles[a].size+=3;
+					projectiles[a].size+=1.5;
 					for(b=0;b<projectiles.length;b+=1){
 						if(projectiles[b].target==0&!(projectiles[b].reflected)){
 							if(pow(projectiles[b].x-projectiles[a].x,2)+pow(projectiles[b].y-projectiles[a].y,2)<pow(45+projectiles[a].size+projectiles[b].size,2)){
@@ -382,11 +390,11 @@ var special=[
 				y:player.y,
 				end:0,
 				pierce:9999,
-				dur:30,
+				dur:60,
 				dir:0,
-				speed:4,
+				speed:2,
 				size:5,
-				damage:50
+				damage:100
 			});
 			sfx.hawk.rate(random(0.9,1.1));
 			sfx.hawk.play();
@@ -447,6 +455,7 @@ var special=[
 			append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-55,-25),xvelo:random(-2,2),yvelo:random(-2,2),
 			size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
 			if(playertemp.deathlaser>=60){
+				sfx.distortion.rate(1);
 				sfx.distortion.volume(0.12);
 				sfx.distortion.play();
 				if(tick%5==0){
@@ -599,8 +608,8 @@ var applyshipstats=[
 		player.shipName="Fairgrave's Vessel";
 		player.hp=80;
 		player.mhp=80;
-		player.shield=25;
-		player.mshield=25;
+		player.shield=28;
+		player.mshield=28;
 		player.energy=7;
 		player.menergy=7;
 		player.shieldregen=4;
@@ -702,7 +711,7 @@ var applyshipstats=[
 				}
 			},
 			onkill:function(a){
-				player.hp=min(player.mhp,player.hp+(enemies[a].mhp/60)*(2-player.hp/player.mhp));
+				player.hp=min(player.mhp,player.hp+(enemies[a].mhp/30)*(1.5-player.hp/player.mhp));
 			}
 		};
 	},
@@ -891,6 +900,7 @@ var applymods=function(){
 	}
 }
 var playertemp={};
+var stagetemp={};
 var mods=[
 	{name:"Reinforced Hull",desc:"Extra plating for survivability",pro:"Increases ship health by 50%",con:"Reduces speed by 15%"},
 	{name:"Reactors",desc:"Adds reactors to your ship",pro:"Passively generates energy",con:"Hits to your ship (after shields) have a 40% chance to deal 150% damage, reduces maximum shield by 20%"},
@@ -1022,7 +1032,7 @@ var getmovedir=function(){
 			return({dir:mapwasd(),scl:1});
 		}
 	}
-	else if(controlmode==2){
+	else if(controlmode==2||controlmode==3){
 		if(navigator.getGamepads()[0]){
 			return({dir:ctrdir(),scl:ctrmov()});
 		}
@@ -1069,6 +1079,13 @@ var doshield=function(){
 				}
 			}
 		}
+		else if(controlmode==3){
+			if(navigator.getGamepads()[0]){
+				if(navigator.getGamepads()[0].buttons[0].value||navigator.getGamepads()[0].buttons[1].value){
+					player.shielding=1;
+				}
+			}
+		}
 	}
 	if(temp&!(player.shielding)){
 		sfx.shieldoff.rate(random(0.9,1.1));
@@ -1108,6 +1125,16 @@ var doinputs=function(){
 				input.shoot=1;
 			}
 			if(navigator.getGamepads()[0].buttons[0].value){
+				input.special=1;
+			}
+		}
+	}
+	else if(controlmode==3){
+		if(navigator.getGamepads()[0]){
+			if(navigator.getGamepads()[0].buttons[9].value){
+				input.shoot=1;
+			}
+			if(navigator.getGamepads()[0].buttons[8].value){
 				input.special=1;
 			}
 		}
@@ -1168,7 +1195,7 @@ var loadassetscache=function(){
 		fill(255,150,0);
 		text("2/3",500,370);
 		sfx={
-			laser:new Howl({src: ['Data/Sound/sfx/laser.ogg'],autoplay:false,loop:false,volume:options.sfx*1.5}),
+			laser:new Howl({src: ['Data/Sound/sfx/laser.ogg'],autoplay:false,loop:false,volume:options.sfx*1.8}),
 			destroy:new Howl({src: ['Data/Sound/sfx/destroy.ogg'],autoplay:false,loop:false,volume:options.sfx*7}),
 			minigun:new Howl({src: ['Data/Sound/sfx/minigun.wav'],autoplay:false,loop:false,volume:options.sfx*0.7}),
 			boom:new Howl({src: ['Data/Sound/sfx/avalanche.ogg'],autoplay:false,loop:false,volume:options.sfx}),
@@ -1383,7 +1410,51 @@ var render=1;
 var ms=0;
 var mslast=0;
 var shootlock=0;
+var pauselock=0;
 void draw(){
+if(controlmode==0||controlmode==1){
+	if(rawkeys.esc){
+		if(!(pauselock)){
+			pauselock=1;
+			if(unpaused){
+				unpaused=0;
+				fill(0,0,0,100);
+				rect(0,0,1000,700);
+				textFont(0,40);
+				fill(255,160,40);
+				text("GAME PAUSED",350,300);
+			}
+			else{
+				unpaused=1;
+			}
+		}
+	}
+	else{
+		pauselock=0;
+	}
+}
+else if(controlmode==2||controlmode==3){
+	if(navigator.getGamepads()[0].buttons[11].value>0){
+		if(!(pauselock)){
+			pauselock=1;
+			if(unpaused){
+				unpaused=0;
+				fill(0,0,0,100);
+				rect(0,0,1000,700);
+				textFont(0,40);
+				fill(255,160,40);
+				text("GAME PAUSED",350,300);
+			}
+			else{
+				unpaused=1;
+			}
+		}
+	}
+	else{
+		pauselock=0;
+	}
+}
+if(unpaused){
 textAlign(TOP,LEFT);
 cdraw=0;
 fps.count+=1;
@@ -1480,13 +1551,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				}
 			}
 		}
-		if(projectiles[a].end==1){
-			if(projectiles[a].y<-100){
-				projectiles[a].exp=1;
-			}
-		}
-		else if(projectiles[a].end==2){
-			if(projectiles[a].y>800){
+		if(projectiles[a].end==1||projectiles[a].end==2){
+			if(projectiles[a].y<-200||projectiles[a].y>900||projectiles[a].x>1100||projectiles[a].x<-100){
 				projectiles[a].exp=1;
 			}
 		}
@@ -1516,6 +1582,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			if(player.shipfuncs.onkill){
 				player.shipfuncs.onkill(a);
 			}
+			if(enemies[a].ondeath){
+				enemies[a].ondeath();
+			}
 			sfx.destroy.rate(random(0.85,1.15));
 			sfx.destroy.play();
 			if(!(player.respawntimer>10)){
@@ -1524,6 +1593,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			enemies[a].exp=1;
 		}
 		if(enemies[a].exp){
+			if(enemies[a].onend){
+				enemies[a].onend();
+			}
 			enemies.splice(a,1);
 			a-=1;
 		}
@@ -1569,7 +1641,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		if(player.shipfuncs.passive){
 			player.shipfuncs.passive();
 		}
-		if(render&tick>2){
+		if(render&canstart){
 			playerdraw[player.shipId]();
 		}
 		if(player.shielddisable>0){
@@ -1646,6 +1718,11 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					controlmode=2;
 				}
 			}
+			if(navigator.getGamepads()[0]){
+				if(navigator.getGamepads()[0].buttons[8].value>0||navigator.getGamepads()[0].buttons[9].value>0){
+					controlmode=3;
+				}
+			}
 			textFont(0,55);
 			fill(150,150,50+abs(tick%240-120));
 			text("Infinite Space",350,55);
@@ -1677,6 +1754,13 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				fill(80,80,80);
 			}
 			text("Game Controller (press A or B to select)",300,240);
+			if(controlmode==3){
+				fill(255,255,255);
+			}
+			else{
+				fill(80,80,80);
+			}
+			text("Game Controller - Alternate (Left or Right Trigger to select)",300,270);
 			fill(255,255,255);
 			textFont(0,20);
 			if(controlmode==0){
@@ -1684,18 +1768,28 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				text("Left click to shoot",300,370);
 				text("Right click to shield",300,400);
 				text("Space to use special",300,430);
+				text("Esc to pause/unpause",300,460);
 			}
 			else if(controlmode==1){
 				text("W,A,S,D to move",300,340);
 				text("V to shoot",300,370);
 				text("N or M to shield",300,400);
 				text("B to use special",300,430);
+				text("Esc to pause/unpause",300,460);
 			}
 			else if(controlmode==2){
 				text("Left stick to move",300,340);
 				text("B to shoot",300,370);
 				text("Left or Right Trigger to shield",300,400);
 				text("A to use special",300,430);
+				text("START to pause/unpause",300,460);
+			}
+			else if(controlmode==3){
+				text("Left stick to move",300,340);
+				text("Right Trigger to shoot",300,370);
+				text("A or B to shield",300,400);
+				text("Right Trigger to use special",300,430);
+				text("START to pause/unpause",300,460);
 			}
 			text("Shoot while in one of these circles to use it",270,500);
 			noFill();
@@ -1720,6 +1814,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			if(pow(pow(player.x-750,2)+pow(player.y-300,2),0.5)<75&input.shoot){
 				setbgm[choosebgm(-1)]();
 				spawnplayer();
+				stagetemp={};
 				applyshipstats[player.shipId]();
 				applymods();
 				player.staticspeed=0;
@@ -2017,8 +2112,264 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					}
 				});
 			}
-			if(gametick%(round(35-min(10,max(0,gametick-7200)/720)))==0){
-				if(random(1)<0.85-min(0.1,gametick/72000)){
+			if(gametick%(round(40-min(8,max(0,gametick-7200)/720)))==0){
+				if(gametick>12960&random(1)<0.03&(stagetemp.comets<1||!(stagetemp.comets))){
+					if(!(stagetemp.comets)){
+						stagetemp.comets=0;
+					}
+					stagetemp.comets+=1;
+					append(enemies,{
+						name:"comet",
+						hp:1000,
+						mhp:1000,
+						size:40,
+						xvelo:random(-1.5,1.5),
+						yvelo:6,
+						xacc:0,
+						yacc:0,
+						x:random(100,900),
+						y:-20,
+						contactcd:30,
+						timer:0,
+						id:tick%6000,
+						ammo:0,
+						color:[random(70,120),random(40,120),random(100,120)],
+						mcolor:[random(40,120),random(40,120),random(200,255)],
+						rockpos:[[random(-60,60),random(-60,60)],[random(-60,60),random(-60,60)],[random(-60,60),random(-60,60)],[random(-60,60),random(-60,60)]],
+						draw:function(){
+							ellipseMode(CENTER);
+							if(options.graphics){
+								fill(255,210,180,10);
+								for(b=0;b<32;b+=1){
+									ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+								}
+							}
+							else{
+								fill(255,210,180,10);
+								for(b=0;b<8;b+=1){
+									ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+								}
+							}
+							fill(enemies[a].mcolor[0],enemies[a].mcolor[1],enemies[a].mcolor[2]);
+							ellipse(enemies[a].x,enemies[a].y,50,50);
+							fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+							ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],20,15);
+							ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,20);
+							ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],20,15);
+							ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,20);
+							strokeWeight(10);
+							noFill();
+							stroke(0,255,0);
+							arc(enemies[a].x,enemies[a].y,60,60,0,(enemies[a].hp/enemies[a].mhp)*2*PI);
+							noStroke();
+						},
+						run:function(){
+							enemies[a].ammo+=1;
+							if(enemies[a].ammo>70){
+								append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
+								size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[255,random(100,150),random(30,55)]});
+							}
+							if(enemies[a].ammo>90){
+								if(random(1)<0.55){
+									enemies[a].ammo-=35;
+									for(b=-4;b<5;b+=1){
+										append(projectiles,{
+											target:0,
+											draw:function(){
+												ellipseMode(CENTER);
+												fill(100,100,255);
+												ellipse(projectiles[a].x,projectiles[a].y,20,20);
+												if(options.graphics){
+													if(projectiles[a].target){
+														fill(0,0,255,10);
+													}
+													else{
+														fill(255,0,0,10);
+													}
+													for(b=0;b<8;b+=1){
+														ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
+													}
+												}
+											},
+											x:enemies[a].x,
+											y:enemies[a].y,
+											end:2,
+											pierce:0,
+											dir:PI+b*PI/4,
+											speed:4,
+											size:16,
+											damage:10,
+											isSingleTarget:true
+										});
+									}
+								}
+								else if(random(1)<0.4){
+									enemies[a].ammo-=25;
+									if(random(1)<0.5){
+										for(b=-2;b<3;b+=1){
+											append(projectiles,{
+												target:0,
+												draw:function(){
+													ellipseMode(CENTER);
+													fill(100,100,255);
+													ellipse(projectiles[a].x,projectiles[a].y,14,14);
+													if(options.graphics){
+														if(projectiles[a].target){
+															fill(0,0,255,10);
+														}
+														else{
+															fill(255,0,0,10);
+														}
+														for(b=0;b<7;b+=1){
+															ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
+														}
+													}
+												},
+												x:enemies[a].x,
+												y:enemies[a].y,
+												end:2,
+												pierce:0,
+												dir:PI+b*PI/2,
+												speed:5,
+												size:12,
+												damage:8,
+												isSingleTarget:true
+											});
+										}
+									}
+									else{
+										for(b=-2;b<3;b+=1){
+											append(projectiles,{
+												target:0,
+												draw:function(){
+													ellipseMode(CENTER);
+													fill(100,100,255);
+													ellipse(projectiles[a].x,projectiles[a].y,14,14);
+													if(options.graphics){
+														if(projectiles[a].target){
+															fill(0,0,255,10);
+														}
+														else{
+															fill(255,0,0,10);
+														}
+														for(b=0;b<7;b+=1){
+															ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
+														}
+													}
+												},
+												x:enemies[a].x,
+												y:enemies[a].y,
+												end:2,
+												pierce:0,
+												dir:PI/2+b*PI/2,
+												speed:5,
+												size:12,
+												damage:8,
+												isSingleTarget:true
+											});
+										}
+									}
+								}
+								else{
+									enemies[a].ammo-=120;
+									for(b=-8;b<9;b+=1){
+										append(projectiles,{
+											target:0,
+											draw:function(){
+												ellipseMode(CENTER);
+												fill(100,100,255);
+												ellipse(projectiles[a].x,projectiles[a].y,24,24);
+												if(options.graphics){
+													if(projectiles[a].target){
+														fill(0,0,255,10);
+													}
+													else{
+														fill(255,0,0,10);
+													}
+													for(b=0;b<12;b+=1){
+														ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
+													}
+												}
+											},
+											timer:0,
+											activate:random(30),
+											run:function(){
+												projectiles[a].timer+=1;
+												if(projectiles[a].timer>projectiles[a].activate){
+													projectiles[a].speed=max(3.5,projectiles[a].speed);
+												}
+											},
+											x:enemies[a].x,
+											y:enemies[a].y,
+											end:2,
+											pierce:0,
+											dir:2*PI/3+random(2*PI/3)+b*PI/4,
+											speed:0,
+											size:18,
+											damage:11,
+											isSingleTarget:true
+										});
+									}
+								}
+							}
+							enemies[a].timer+=1;
+							enemies[a].contactcd=max(0,enemies[a].contactcd-1);
+							if(random(1)<0.03){
+								enemies[a].xacc=random(-0.25,0.25);
+							}
+							if(enemies[a].x<170){
+								enemies[a].xacc=random(0,0.25);
+							}
+							else if(enemies[a].x>830){
+								enemies[a].xacc=random(-0.25,0);
+							}
+							if(enemies[a].timer<30){
+								enemies[a].yacc=0;
+								enemies[a].yvelo=6;
+							}
+							else if(enemies[a].timer<3600){
+								if(random(1)<0.03){
+									enemies[a].yacc=random(-0.25,0.25);
+								}
+								if(enemies[a].y<50){
+									enemies[a].yacc=random(0.1,0.25);
+								}
+								else if(enemies[a].y>400){
+									enemies[a].yacc=random(-0.25,-0.1);
+								}
+							}
+							else{
+								enemies[a].yacc=0;
+								enemies[a].yvelo=-4;
+							}
+							enemies[a].xvelo=max(-4,min(4,enemies[a].xvelo+enemies[a].xacc));
+							enemies[a].yvelo=max(-4,min(4,enemies[a].yvelo+enemies[a].yacc));
+							enemies[a].x+=enemies[a].xvelo;
+							enemies[a].y+=enemies[a].yvelo;
+							if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+								if(player.y>enemies[a].y){
+									player.y=enemies[a].y+enemies[a].size+4;
+								}
+								else{
+									player.y=enemies[a].y-enemies[a].size-4;
+								}
+								if(enemies[a].contactcd<=0){
+									enemies[a].contactcd=60;
+									takedamage({dmg:10});
+								}
+							}
+							if(enemies[a].y>750||enemies[a].y<-100){
+								enemies[a].exp=1;
+							}
+						},
+						onend:function(){
+							stagetemp.comets-=1;
+						},
+						exp:0,
+						score:500
+					});
+				}
+				else if(random(1)<0.85-min(0.1,gametick/72000)){
 					append(enemies,{
 						name:"meteor",
 						isTerrain:1,
@@ -2135,7 +2486,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 										end:2,
 										pierce:0,
 										dir:PI,
-										speed:6,
+										speed:4.5,
 										size:14,
 										damage:10,
 										isSingleTarget:true
@@ -2166,7 +2517,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 										end:2,
 										pierce:0,
 										dir:PI,
-										speed:6,
+										speed:4.5,
 										size:14,
 										damage:9,
 										isSingleTarget:true
@@ -2193,7 +2544,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 										run:function(){
 											projectiles[a].timer+=1;
 											if(projectiles[a].timer<24){
-												projectiles[a].speed+=0.25;
+												projectiles[a].speed+=0.1875;
 											}
 										},
 										x:enemies[a].x,
@@ -2233,7 +2584,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 											end:2,
 											pierce:0,
 											dir:PI-PI/8+b*PI/8,
-											speed:7,
+											speed:5.5,
 											size:14,
 											damage:7,
 											isSingleTarget:true
@@ -2268,6 +2619,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		}
 	}
 	//PANELS
+		ellipseMode(CENTER);
 		fill(80,70,20);
 		rect(0,0,100,700);
 		rect(900,0,100,700);
@@ -2285,18 +2637,60 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				rect(915,600-(max(0,(player.hp+player.hpl)/player.mhp))*500,50,(max(0,(player.hpl)/player.mhp))*500);
 			}
 		}
+		if(options.graphics){
+			if(player.hpl>5){
+				fill(255,0,0);
+			}
+			else{
+				fill(60,60,60,60);
+			}
+			for(a=1;a<(player.hp/player.mhp)*9.9;a+=1){
+				ellipse(925,610-a*50,18,18);
+			}
+			for(a=1;a<(player.hp/player.mhp)*10.4;a+=1){
+				ellipse(940,635-a*50,18,18);
+			}
+			for(a=1;a<(player.hp/player.mhp)*9.9;a+=1){
+				ellipse(955,610-a*50,18,18);
+			}
+		}
 		fill(abs(tick%120-50),abs(tick%120-60),130+abs(tick%120-60),150+(player.shield/player.mshield)*50);
 		if(player.shielding){
 			rect(940,600-(player.shield/player.mshield)*500,45,(player.shield/player.mshield)*500);
+			if(options.graphics){
+				fill(200,200,255,20+abs(tick%50-25));
+				rect(940+tick%30*4/3,600-(player.shield/player.mshield)*500,5,(player.shield/player.mshield)*500);
+				rect(940+(tick+10)%30*4/3,600-(player.shield/player.mshield)*500,5,(player.shield/player.mshield)*500);
+				rect(940+(tick+20)%30*4/3,600-(player.shield/player.mshield)*500,5,(player.shield/player.mshield)*500);
+			}
 		}
 		else{
 			rect(955,600-(player.shield/player.mshield)*500,30,(player.shield/player.mshield)*500);
+			if(options.graphics){
+				fill(200,200,255,20);
+				rect(955+tick%30*2.5/3,600-(player.shield/player.mshield)*500,5,(player.shield/player.mshield)*500);
+				rect(955+(tick+10)%30*2.5/3,600-(player.shield/player.mshield)*500,5,(player.shield/player.mshield)*500);
+				rect(955+(tick+20)%30*2.5/3,600-(player.shield/player.mshield)*500,5,(player.shield/player.mshield)*500);
+			}
 		}
-		fill(170,130,0);
+		fill(170,130,(130-player.ammo)*abs(tick%150-75)/150);
 		rect(30,360,40,player.ammo*3);
-		ellipseMode(CENTER);
 		fill(20,20,20);
 		ellipse(50,350,70,30);
+		if(player.ammo>=100){
+			noFill();
+			strokeWeight(12);
+			stroke(200,200,80);
+			arc(50,350,60,20,0,PI);
+			noStroke();
+		}
+		if(player.energy>=player.menergy){
+			noFill();
+			strokeWeight(12);
+			stroke(200,200,80);
+			arc(50,350,60,20,PI,2*PI);
+			noStroke();
+		}
 		fill(100,255,100);
 		strokeWeight(7);
 		stroke(abs(tick%120-60),abs(tick%120-60),abs(tick%120-60));
@@ -2359,5 +2753,6 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	if(loadassetscache){
 		loadassetscache();
 	}
+}
 }
 }
