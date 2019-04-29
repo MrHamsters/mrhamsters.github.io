@@ -1210,7 +1210,7 @@ var loadassetscache=function(){
 			src: 'Data/Sound/bgm/Mysterious.mp3',
 			autoplay: true,
 			loop: true,
-			volume: options.music*0.5,
+			volume: options.music*0.4,
 		});
 		fill(0,0,0);
 		rect(400,350,300,100);
@@ -1265,7 +1265,7 @@ var setbgm=[
 			src: 'Data/Sound/bgm/SkyFortress.mp3',
 			autoplay: true,
 			loop: false,
-			volume: options.music*0.8,
+			volume: options.music*0.7,
 			onend:function(){setbgm[choosebgm(0)]();}
 		});
 	},
@@ -1276,7 +1276,7 @@ var setbgm=[
 			src: 'Data/Sound/bgm/Lifeformed The Magnetic Tree.mp3',
 			autoplay: true,
 			loop: false,
-			volume: options.music*1.2,
+			volume: options.music*1.3,
 			onend:function(){setbgm[choosebgm(1)]();}
 		});
 	}
