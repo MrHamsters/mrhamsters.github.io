@@ -243,8 +243,8 @@ var shoot=[
 	},
 	function(){
 		player.shootcd=6;
-		if(player.ammo>3.5){
-			player.ammo-=3.5;
+		if(player.ammo>4){
+			player.ammo-=4;
 			append(projectiles,{
 				target:1,
 				draw:function(){
@@ -272,7 +272,7 @@ var shoot=[
 				speed:15,
 				scans:2,
 				size:15,
-				damage:11
+				damage:10
 			});
 			for(b=0;b<2;b+=1){
 				append(projectiles,{
@@ -303,7 +303,7 @@ var shoot=[
 					speed:15,
 					scans:2,
 					size:8,
-					damage:6
+					damage:5
 				});
 			}
 			sfx.incinerate.rate(random(0.93,1.07));
@@ -311,7 +311,7 @@ var shoot=[
 		}
 		else{
 			if(player.mods[8]){
-				player.shield=max(0,player.shield-1.75);
+				player.shield=max(0,player.shield-2);
 			}
 			sfx.click.rate(random(0.9,1.1));
 			sfx.click.play();
@@ -914,10 +914,10 @@ var applymods=function(){
 					x:enemies[target].x,
 					y:enemies[target].y,
 					end:0,
-					dur:90,
+					dur:120,
 					pierce:0,
 					dir:random(2*PI),
-					speed:4,
+					speed:3,
 					size:10,
 					damage:6
 				});
