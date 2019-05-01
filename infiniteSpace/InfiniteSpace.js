@@ -1,4 +1,4 @@
-var version="DEMO 0.4b";
+var version="DEMO 0.5";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -129,6 +129,766 @@ var getshipstatcolor=function(val){
 		fill(100,100,255);
 	}
 }
+var enemyproj=function(args){
+	append(projectiles,new cenemyproj(args));
+	/*if(args.run){
+		projectiles[projectiles.length-1].run=args.run;
+	}*/
+}
+function cenemyproj(args){
+	this.target=0;
+	this.timer=0;
+	if(args.draw){
+		this.draw=args.draw;
+	}
+	else{
+		this.draw=function(){
+			ellipseMode(CENTER);
+			fill(args.r,args.g,args.b);
+			ellipse(projectiles[a].x,projectiles[a].y,args.size*1.1+1,args.size*1.1+1);
+			if(options.graphics){
+				if(projectiles[a].target){
+					fill(0,0,255,10);
+				}
+				else{
+					fill(255,0,0,10);
+				}
+				for(b=0;b<args.size*0.4;b+=1){
+					ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
+				}
+			}
+		};
+	}
+	this.x=enemies[args.source].x;
+	this.y=enemies[args.source].y;
+	this.end=2;
+	this.pierce=0;
+	this.dir=args.dir;
+	this.speed=args.speed;
+	this.size=args.size;
+	this.damage=args.damage;
+	this.isSingleTarget=true;
+	if(args.run){
+		this.run=args.run;
+	}
+	if(args.misc){
+		this.misc=args.misc;
+	}
+}
+var biome={
+	id:0,
+	color:{r:15,g:10,b:40},
+	timer:0
+};
+var bgcolor=function(r,g,b){
+	if(biome.color.r>r){
+		biome.color.r=max(r,biome.color.r-0.5);
+	}
+	if(biome.color.r<r){
+		biome.color.r=min(r,biome.color.r+0.5);
+	}
+	if(biome.color.g>g){
+		biome.color.g=max(g,biome.color.g-0.5);
+	}
+	if(biome.color.g<g){
+		biome.color.g=min(g,biome.color.g+0.5);
+	}
+	if(biome.color.b>b){
+		biome.color.b=max(b,biome.color.b-0.5);
+	}
+	if(biome.color.b<b){
+		biome.color.b=min(b,biome.color.b+0.5);
+	}
+}
+var biomescripts=[
+//0: asteroids
+function(){
+	bgcolor(15,10,40);
+	if(gametick%(round(40-min(10,max(0,gametick-7200)/1440)))==0){
+		if(gametick>7200&random(1)<0.01+min(0.05,max(0,gametick-7200)/720000)&(stagetemp.comets<1||!(stagetemp.comets))){
+			if(!(stagetemp.comets)){
+				stagetemp.comets=0;
+			}
+			stagetemp.comets+=1;
+			append(enemies,{
+				name:"comet",
+				hp:850,
+				mhp:850,
+				size:40,
+				xvelo:random(-1.5,1.5),
+				yvelo:6,
+				xacc:0,
+				yacc:0,
+				x:random(100,900),
+				y:-20,
+				contactcd:30,
+				timer:0,
+				id:tick%6000,
+				ammo:0,
+				stdm:0.6,
+				dmgm:1.4,
+				color:[random(70,120),random(40,120),random(100,120)],
+				mcolor:[random(40,120),random(40,120),random(200,255)],
+				rockpos:[[random(-60,60),random(-60,60)],[random(-60,60),random(-60,60)],[random(-60,60),random(-60,60)],[random(-60,60),random(-60,60)]],
+				draw:function(){
+					ellipseMode(CENTER);
+					if(options.graphics){
+						fill(255,210,180,10);
+						for(b=0;b<32;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+						}
+					}
+					else{
+						fill(255,210,180,10);
+						for(b=0;b<8;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+						}
+					}
+					fill(enemies[a].mcolor[0],enemies[a].mcolor[1],enemies[a].mcolor[2]);
+					ellipse(enemies[a].x,enemies[a].y,50,50);
+					fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+					for(b=0;b<enemies[a].rockpos.length;b+=1){
+						ellipse(enemies[a].x+enemies[a].rockpos[b][0],enemies[a].y+enemies[a].rockpos[b][1],20,15);
+					}
+					strokeWeight(10);
+					noFill();
+					stroke(0,255,0);
+					arc(enemies[a].x,enemies[a].y,60,60,0,(enemies[a].hp/enemies[a].mhp)*2*PI);
+					noStroke();
+				},
+				run:function(){
+					enemies[a].ammo+=1;
+					if(enemies[a].ammo>70){
+						append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
+						size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[255,random(100,150),random(30,55)]});
+					}
+					if(enemies[a].ammo>90){
+						if(random(1)<0.55){
+							enemies[a].ammo-=35;
+							for(b=-4;b<5;b+=1){
+								enemyproj({r:100,g:100,b:255,size:16,speed:4,damage:10,dir:PI+b*PI/4,source:a});
+							}
+						}
+						else if(random(1)<0.4){
+							enemies[a].ammo-=25;
+							if(random(1)<0.5){
+								for(b=-2;b<3;b+=1){
+									enemyproj({r:100,g:100,b:255,size:12,speed:5,damage:8,dir:PI+b*PI/2,source:a});
+								}
+							}
+							else{
+								for(b=-2;b<3;b+=1){
+									enemyproj({r:100,g:100,b:255,size:12,speed:5,damage:8,dir:PI/4+b*PI/2,source:a});
+								}
+							}
+						}
+						else{
+							enemies[a].ammo-=120;
+							for(b=-8;b<9;b+=1){
+								enemyproj({r:100,g:100,b:255,size:18,speed:0,damage:11,dir:2*PI/3+random(2*PI/3)+b*PI/4,source:a,misc:{timer:0,activate:random(3,15)},
+								run:function(){
+									projectiles[a].misc.timer+=1;
+									if(projectiles[a].misc.timer>projectiles[a].misc.activate){
+										projectiles[a].speed=max(3.5,projectiles[a].speed);
+									}
+								}});
+							}
+						}
+					}
+					enemies[a].timer+=1;
+					enemies[a].contactcd=max(0,enemies[a].contactcd-1);
+					if(random(1)<0.03){
+						enemies[a].xacc=random(-0.25,0.25);
+					}
+					if(enemies[a].x<170){
+						enemies[a].xacc=random(0,0.25);
+					}
+					else if(enemies[a].x>830){
+						enemies[a].xacc=random(-0.25,0);
+					}
+					if(enemies[a].timer<30){
+						enemies[a].yacc=0;
+						enemies[a].yvelo=6;
+					}
+					else if(enemies[a].timer<3600){
+						if(random(1)<0.03){
+							enemies[a].yacc=random(-0.25,0.25);
+						}
+						if(enemies[a].y<50){
+							enemies[a].yacc=random(0.1,0.25);
+						}
+						else if(enemies[a].y>350){
+							enemies[a].yacc=random(-0.25,-0.1);
+						}
+					}
+					else{
+						enemies[a].yacc=0;
+						enemies[a].yvelo=-4;
+					}
+					enemies[a].xvelo=max(-4,min(4,enemies[a].xvelo+enemies[a].xacc));
+					enemies[a].yvelo=max(-4,min(4,enemies[a].yvelo+enemies[a].yacc));
+					enemies[a].x+=enemies[a].xvelo;
+					enemies[a].y+=enemies[a].yvelo;
+					if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+						if(player.y>enemies[a].y){
+							player.y=enemies[a].y+enemies[a].size+4;
+						}
+						else{
+							player.y=enemies[a].y-enemies[a].size-4;
+						}
+						if(enemies[a].contactcd<=0){
+							enemies[a].contactcd=60;
+							takedamage({dmg:10});
+						}
+					}
+					if(enemies[a].y>750||enemies[a].y<-100){
+						enemies[a].exp=1;
+					}
+				},
+				onend:function(){
+					stagetemp.comets-=1;
+				},
+				exp:0,
+				score:500
+			});
+		}
+		else if(random(1)<0.85-min(0.1,gametick/72000)){
+			append(enemies,{
+				name:"meteor",
+				isTerrain:1,
+				hp:40,
+				mhp:40,
+				size:15,
+				x:random(100,900),
+				xvelo:random(-1,1),
+				y:-20,
+				id:tick%6000,
+				color:[random(40,80),random(20,60),random(0,40)],
+				rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
+				draw:function(){
+					ellipseMode(CENTER);
+					if(options.graphics){
+						fill(255,255,255,10);
+						for(b=0;b<16;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+						}
+					}
+					else{
+						fill(255,255,255,10);
+						for(b=0;b<4;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+						}
+					}
+					fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+					ellipse(enemies[a].x,enemies[a].y,18,18);
+					ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],15,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],15,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,15);
+				},
+				run:function(){
+					enemies[a].x+=enemies[a].xvelo;
+					enemies[a].y+=2;
+					if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+						enemies[a].exp=1;
+						takedamage({dmg:10});
+					}
+					if(enemies[a].y>720||enemies[a].x>930||enemies[a].x<70){
+						enemies[a].exp=1;
+					}
+				},
+				exp:0,
+				score:10
+			});
+		}
+		else{
+			append(enemies,{
+				name:"meteor drone",
+				hp:60,
+				mhp:40,
+				size:15,
+				xvelo:random(-1.5,1.5),
+				xacc:0,
+				x:random(100,900),
+				y:-20,
+				id:tick%6000,
+				ammo:0,
+				color:[random(40,80),random(20,60),random(0,40)],
+				rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
+				draw:function(){
+					ellipseMode(CENTER);
+					if(options.graphics){
+						fill(255,255,255,10);
+						for(b=0;b<16;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+						}
+					}
+					else{
+						fill(255,255,255,10);
+						for(b=0;b<4;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+						}
+					}
+					fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+					ellipse(enemies[a].x,enemies[a].y,22,22);
+					ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],20,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,20);
+					ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],20,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,20);
+					fill(255,0,0,150+abs(tick%120-60)*2);
+					ellipse(enemies[a].x,enemies[a].y,10,10);
+				},
+				run:function(){
+					enemies[a].ammo+=1;
+					if(enemies[a].ammo>60){
+						append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
+						size:random(7,10),op:random(160,200),opc:-7,exp:1,color:[random(120,150),random(100,130),random(30,55)]});
+					}
+					if(enemies[a].ammo>90){
+						if(random(1)<0.55){
+							enemies[a].ammo-=90;
+							enemyproj({r:100,g:80,b:20,size:14,speed:4.5,damage:10,dir:PI,source:a});
+						}
+						else if(random(1)<0.5){
+							enemies[a].ammo-=150;
+							enemyproj({r:100,g:80,b:20,size:14,speed:4.5,damage:9,dir:PI,source:a});
+							enemyproj({r:100,g:80,b:20,size:14,speed:0,damage:10,dir:PI,source:a,misc:{timer:0},
+							run:function(){
+								projectiles[a].misc.timer+=1;
+								if(projectiles[a].misc.timer<=24){
+									projectiles[a].speed+=0.1875;
+								}
+							}});
+						}
+						else{
+							enemies[a].ammo-=180;
+							for(b=0;b<3;b+=1){
+								enemyproj({r:100,g:80,b:20,size:14,speed:5.5,damage:7,dir:PI-PI/8+b*PI/8,source:a});
+							}
+						}
+					}
+					if(random(1)<0.03){
+						enemies[a].xacc=random(-0.1,0.1);
+					}
+					if(enemies[a].x<140){
+						enemies[a].xacc=random(0,0.15);
+					}
+					if(enemies[a].x>860){
+						enemies[a].xacc=random(-0.15,0);
+					}
+					enemies[a].xvelo=min(3,max(-3,enemies[a].xvelo+enemies[a].xacc));
+					enemies[a].x+=enemies[a].xvelo;
+					enemies[a].y+=0.5;
+					if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+						enemies[a].exp=1;
+						takedamage({dmg:12});
+					}
+					if(enemies[a].y>720){
+						enemies[a].exp=1;
+					}
+				},
+				exp:0,
+				score:25
+			});
+		}
+	}
+	if(stagetemp.biomecd>0){
+		stagetemp.biomecd-=1;
+	}
+	else if(gametick>1200&gametick%30==0&random(1)<0.01+min(0.02,gametick/720000)){
+		biome.id=round(random(0.51,biomescripts.length-0.51));
+		biome.timer=0;
+	}
+},
+//1: scorched skies
+function(){
+	bgcolor(80,50,20);
+	biome.timer+=1;
+	if(biome.timer<=100){
+		bgm.volume((1-biome.timer/100)*options.music*bgmv);
+		if(biome.timer==100){
+			bgm.pause();
+			bgmt=new Howl({
+				src:'Data/Sound/bgm/Inviolate.mp3',
+				autoplay:false,
+				loop:true,
+				volume:options.music*0.45
+			});
+			bgmt.play();
+		}
+	}
+	if(biome.timer<3600){
+		if(gametick%(round(35-min(10,max(0,gametick-7200)/1440)))==0){
+			if(random(1)<0.85-min(0.1,gametick/72000)){
+				append(enemies,{
+					name:"lava meteor",
+					isTerrain:1,
+					hp:40,
+					mhp:40,
+					size:15,
+					x:random(100,900),
+					xvelo:random(-1,1),
+					y:-20,
+					id:tick%6000,
+					color:[random(120,200),random(20,190),random(0,40)],
+					rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
+					draw:function(){
+						ellipseMode(CENTER);
+						if(options.graphics){
+							fill(255,255,255,10);
+							for(b=0;b<16;b+=1){
+								ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+							}
+						}
+						else{
+							fill(255,255,255,10);
+							for(b=0;b<4;b+=1){
+								ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+							}
+						}
+						fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+						ellipse(enemies[a].x,enemies[a].y,18,18);
+						ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],15,15);
+						ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,15);
+						ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],15,15);
+						ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,15);
+					},
+					run:function(){
+						enemies[a].x+=enemies[a].xvelo;
+						enemies[a].y+=2;
+						if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+							enemies[a].exp=1;
+							takedamage({dmg:4});
+						}
+						if(enemies[a].y>770||enemies[a].x>1050||enemies[a].x<-50){
+							enemies[a].exp=1;
+						}
+					},
+					onend:function(){
+						append(objects,{
+							x:enemies[a].x,
+							y:enemies[a].y,
+							draw:function(){
+								fill(130+abs(tick%120-60)*2,80+abs(tick%120-60)*2,abs(tick%120-60)*2,140+abs(tick%90-45));
+								ellipseMode(CENTER);
+								ellipse(objects[a].x,objects[a].y,100+abs(tick%50-25),100+abs((tick+25)%50-25));
+							},
+							run:function(){
+								if(objects[a].hitcd>0){
+									objects[a].hitcd-=1;
+								}
+								else{
+									if(playerhitbox(objects[a].x,objects[a].y,45)){
+										objects[a].hitcd=13;
+										takedamage({dmg:3});
+									}
+								}
+								append(particles,{x:objects[a].x+random(-50,50),y:objects[a].y+random(-50,50),xvelo:random(-3,3),yvelo:random(-2,4),
+								size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+								objects[a].y+=3;
+								if(objects[a].y>770){
+									objects.splice(a,1);
+									a-=1;
+								}
+							}
+						});
+					},
+					exp:0,
+					score:15
+				});
+			}
+			else{
+				append(enemies,{
+					name:"lava sentry",
+					isTerrain:1,
+					hp:110,
+					mhp:110,
+					size:22,
+					x:random(100,900),
+					xvelo:random(-1,1),
+					firing:0,
+					ammo:0,
+					y:-20,
+					id:tick%6000,
+					color:[random(60,90),random(50,80),random(30,60)],
+					rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
+					draw:function(){
+						ellipseMode(CENTER);
+						if(options.graphics){
+							fill(255,255,255,10);
+							for(b=0;b<16;b+=1){
+								ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+							}
+						}
+						else{
+							fill(255,255,255,10);
+							for(b=0;b<4;b+=1){
+								ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+							}
+						}
+						fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+						ellipse(enemies[a].x,enemies[a].y,15,40);
+						ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],15,15);
+						ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,15);
+						ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],15,15);
+						ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,15);
+						fill(255,0,0,150+abs(tick%120-60)*2);
+						ellipse(enemies[a].x,enemies[a].y,10,10);
+					},
+					run:function(){
+						enemies[a].ammo+=1;
+						if(enemies[a].ammo>150){
+							if(enemies[a].ammo>180){
+								enemies[a].firing=1;
+							}
+							append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
+							size:random(7,10),op:random(160,200),opc:-7,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+						}
+						else if(enemies[a].ammo<0){
+							enemies[a].firing=0;
+						}
+						if(enemies[a].firing){
+							enemies[a].ammo-=2;
+							if(enemies[a].ammo%7==0){
+								enemyproj({r:255,g:220,b:120,size:25,speed:9,damage:7,dir:PI,source:a,misc:{timer:0,b:random(100)},
+								run:function(){
+									projectiles[a].misc.timer+=1;
+									if(projectiles[a].misc.timer>20){
+										projectiles[a].exp=1;
+									}
+									append(particles,{x:projectiles[a].x+random(-projectiles[a].size,projectiles[a].size),y:projectiles[a].y+random(-projectiles[a].size,projectiles[a].size),xvelo:random(-3,3),yvelo:random(-1,6),
+									size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+								},
+								draw:function(){
+									ellipseMode(CENTER);
+									fill(255,220,projectiles[a].misc.b);
+									ellipse(projectiles[a].x+5,projectiles[a].y-10,30,30);
+									ellipse(projectiles[a].x,projectiles[a].y+10,30,30);
+									ellipse(projectiles[a].x-5,projectiles[a].y-10,30,30);
+									if(options.graphics){
+										if(projectiles[a].target){
+											fill(90,90,255,10);
+										}
+										else{
+											fill(255,90,90,10);
+										}
+										for(b=0;b<12;b+=1){
+											ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
+										}
+									}
+								}
+								});
+							}
+						}
+						if(random(1)<0.03){
+							enemies[a].xacc=random(-0.03,0.03);
+						}
+						if(enemies[a].x<140){
+							enemies[a].xacc=random(0,0.05);
+						}
+						if(enemies[a].x>860){
+							enemies[a].xacc=random(-0.05,0);
+						}
+						enemies[a].xvelo=min(1,max(-1,enemies[a].xvelo+enemies[a].xacc));
+						enemies[a].x+=enemies[a].xvelo;
+						enemies[a].y+=0.5;
+						if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+							enemies[a].exp=1;
+							takedamage({dmg:7});
+						}
+						if(enemies[a].y>720){
+							enemies[a].exp=1;
+						}
+					},
+					onend:function(){
+						append(objects,{
+							x:enemies[a].x,
+							y:enemies[a].y,
+							draw:function(){
+								fill(130+abs(tick%120-60)*2,80+abs(tick%120-60)*2,abs(tick%120-60)*2,140+abs(tick%90-45));
+								ellipseMode(CENTER);
+								ellipse(objects[a].x,objects[a].y,100+abs(tick%50-25),100+abs((tick+25)%50-25));
+							},
+							run:function(){
+								if(objects[a].hitcd>0){
+									objects[a].hitcd-=1;
+								}
+								else{
+									if(playerhitbox(objects[a].x,objects[a].y,45)){
+										objects[a].hitcd=13;
+										takedamage({dmg:3});
+									}
+								}
+								append(particles,{x:objects[a].x+random(-50,50),y:objects[a].y+random(-50,50),xvelo:random(-3,3),yvelo:random(-2,4),
+								size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+								objects[a].y+=3;
+								if(objects[a].y>770){
+									objects.splice(a,1);
+									a-=1;
+								}
+							}
+						});
+					},
+					exp:0,
+					score:50
+				});
+			}
+		}
+	}
+	else if(biome.timer==4200){
+		append(enemies,{
+			name:"Blazing Sun",
+			hp:3000+min(2000,gametick/10),
+			mhp:3000+min(2000,gametick/10),
+			size:40,
+			xvelo:random(-1.5,1.5),
+			yvelo:6,
+			xacc:0,
+			yacc:0,
+			x:random(100,900),
+			y:-20,
+			contactcd:30,
+			timer:0,
+			id:tick%6000,
+			ammo:0,
+			stdm:0.5,
+			dmgm:1.5,
+			refdmgm:0.3,
+			color:[random(220,255),random(185,225),random(50,100)],
+			rockpos:[[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)]],
+			draw:function(){
+				ellipseMode(CENTER);
+				if(options.graphics){
+					fill(255,210,180,10);
+					for(b=0;b<48;b+=1){
+						ellipse(enemies[a].x,enemies[a].y,b*7,b*7);
+					}
+				}
+				else{
+					fill(255,210,180,10);
+					for(b=0;b<12;b+=1){
+						ellipse(enemies[a].x,enemies[a].y,b*28,b*28);
+					}
+				}
+				fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+				ellipse(enemies[a].x,enemies[a].y,75,75);
+				fill(190+abs(tick%120-60),190+abs(tick%120-60),190+abs(tick%120-60),190+abs(tick%120-60));
+				for(b=0;b<enemies[a].rockpos.length;b+=2){
+					ellipse(enemies[a].x+enemies[a].rockpos[b][0],enemies[a].y+enemies[a].rockpos[b][1],15,8+abs(tick%120-60)/4);
+				}
+				for(b=1;b<enemies[a].rockpos.length;b+=2){
+					ellipse(enemies[a].x+enemies[a].rockpos[b][0],enemies[a].y+enemies[a].rockpos[b][1],8+abs(tick%120-60)/4,15);
+				}
+				strokeWeight(10);
+				noFill();
+				stroke(0,255,0);
+				arc(enemies[a].x,enemies[a].y,85,85,0,(enemies[a].hp/enemies[a].mhp)*2*PI);
+				noStroke();
+			},
+			run:function(){
+				enemies[a].ammo+=1;
+				if(enemies[a].ammo>70){
+					append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
+					size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[255,random(100,150),random(30,55)]});
+				}
+				if(enemies[a].ammo>90){
+					if(random(1)<0.55){
+						enemies[a].ammo-=25;
+						for(b=-4;b<5;b+=1){
+							enemyproj({r:255,g:200,b:50,size:18,speed:4,damage:12,dir:PI+b*PI/4,source:a});
+						}
+					}
+					else if(random(1)<0.6){
+						enemies[a].ammo-=20;
+						if(random(1)<0.5){
+							for(b=-2;b<3;b+=1){
+								enemyproj({r:255,g:200,b:50,size:14,speed:5,damage:10,dir:PI+b*PI/2,source:a});
+							}
+						}
+						else{
+							for(b=-2;b<3;b+=1){
+								enemyproj({r:255,g:200,b:50,size:14,speed:5,damage:10,dir:PI/4+b*PI/2,source:a});
+							}
+						}
+					}
+					else{
+						enemies[a].ammo-=120;
+						enemies[a].xvelo=0;
+						enemies[a].yvelo=0;
+						enemies[a].xacc=0;
+						enemies[a].yacc=0;
+						for(b=-24;b<25;b+=1){
+							enemyproj({r:255,g:200,b:50,size:10,speed:0,damage:7,dir:2*PI/3+random(2*PI/3)+b*PI/4,source:a,misc:{timer:0,activate:random(3,110)},
+							run:function(){
+								projectiles[a].misc.timer+=1;
+								if(projectiles[a].misc.timer>projectiles[a].misc.activate){
+									projectiles[a].speed=max(2.5,projectiles[a].speed);
+								}
+							}});
+						}
+					}
+				}
+				enemies[a].timer+=1;
+				enemies[a].contactcd=max(0,enemies[a].contactcd-1);
+				if(random(1)<0.03){
+					enemies[a].xacc=random(-0.02,0.02);
+				}
+				if(enemies[a].x<170){
+					enemies[a].xacc=random(0,0.03);
+				}
+				else if(enemies[a].x>830){
+					enemies[a].xacc=random(-0.03,0);
+				}
+				if(enemies[a].timer<30){
+					enemies[a].yacc=0;
+					enemies[a].yvelo=4;
+				}
+				else{
+					if(random(1)<0.03){
+						enemies[a].yacc=random(-0.01,0.01);
+					}
+					if(enemies[a].y<70){
+						enemies[a].yacc=random(0.01,0.02);
+					}
+					else if(enemies[a].y>200){
+						enemies[a].yacc=random(-0.02,-0.01);
+					}
+				}
+				enemies[a].xvelo=max(-2,min(2,enemies[a].xvelo+enemies[a].xacc));
+				enemies[a].yvelo=max(-2,min(2,enemies[a].yvelo+enemies[a].yacc));
+				enemies[a].x+=enemies[a].xvelo;
+				enemies[a].y+=enemies[a].yvelo;
+				if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+					if(player.y>enemies[a].y){
+						player.y=enemies[a].y+enemies[a].size+4;
+					}
+					else{
+						player.y=enemies[a].y-enemies[a].size-4;
+					}
+					if(enemies[a].contactcd<=0){
+						enemies[a].contactcd=60;
+						takedamage({dmg:10});
+					}
+				}
+				if(enemies[a].y>750||enemies[a].y<-100){
+					enemies[a].exp=1;
+				}
+			},
+			onend:function(){
+				sfx.might.rate(random(0.9,1.1));
+				sfx.might.volume(options.sfx*2.5);
+				sfx.might.play();
+				biome.id=0;
+				bgmt.stop();
+				bgm.volume(1);
+				bgm.play();
+			},
+			exp:0,
+			score:round(3000+min(2000,gametick/10))*2
+		});
+	}
+}
+];
 var shoot=[
 	function(){
 		player.shootcd=7;
@@ -250,7 +1010,7 @@ var shoot=[
 				draw:function(){
 					ellipseMode(CENTER);
 					fill(20,140,60);
-					ellipse(projectiles[a].x,projectiles[a].y+30,projectiles[a].size,projectiles[a].size);
+					ellipse(projectiles[a].x,projectiles[a].y+20+projectiles[a].size,projectiles[a].size,projectiles[a].size);
 					ellipse(projectiles[a].x,projectiles[a].y,projectiles[a].size*2,projectiles[a].size*2);
 					if(options.graphics){
 						fill(70,200,50,10);
@@ -262,7 +1022,7 @@ var shoot=[
 					}
 				},
 				run:function(){
-					projectiles[a].size+=1;
+					projectiles[a].size+=2;
 				},
 				x:player.x,
 				y:player.y,
@@ -272,14 +1032,14 @@ var shoot=[
 				speed:15,
 				scans:2,
 				size:15,
-				damage:10
+				damage:13
 			});
-			for(b=0;b<2;b+=1){
+			for(b=-1;b<3;b+=1){
 				append(projectiles,{
 					target:1,
 					draw:function(){
 						ellipseMode(CENTER);
-						fill(20,140,60);
+						fill(20,140,60,150);
 						ellipse(projectiles[a].x,projectiles[a].y,projectiles[a].size*2,projectiles[a].size*2);
 						if(options.graphics){
 							fill(70,200,50,10);
@@ -293,17 +1053,17 @@ var shoot=[
 						}
 					},
 					run:function(){
-						projectiles[a].size+=0.5;
+						projectiles[a].size+=2;
 					},
 					x:player.x,
 					y:player.y,
-					dur:18,
+					dur:10,
 					pierce:999,
 					dir:b*PI/3-PI/6,
 					speed:15,
 					scans:2,
-					size:8,
-					damage:5
+					size:20,
+					damage:8
 				});
 			}
 			sfx.incinerate.rate(random(0.93,1.07));
@@ -342,7 +1102,7 @@ var shoot=[
 				speed:28,
 				scans:3,
 				size:15,
-				damage:20,
+				damage:18,
 				isSingleTarget:true
 			});
 			for(b=0;b<2;b+=1){
@@ -367,7 +1127,7 @@ var shoot=[
 					speed:20,
 					scans:2,
 					size:15,
-					damage:14,
+					damage:13,
 					isSingleTarget:true
 				});
 			}
@@ -461,6 +1221,7 @@ var special=[
 			player.specialcd=60;
 			player.energy-=1;
 			sfx.might.rate(random(0.9,1.1));
+			sfx.might.volume(options.sfx*1.8);
 			sfx.might.play();
 			playertemp.ragingspirits=60;
 		}
@@ -472,10 +1233,10 @@ var special=[
 	function(){
 		player.shootcd=5;
 		player.specialcd=15;
-		if(player.energy>=0.01){
+		if(player.energy>=0.013){
 			player.shootcd=30;
 			player.specialcd=0;
-			player.energy-=0.01;
+			player.energy-=0.013;
 			if(!(playertemp.deathlaser)){
 				playertemp.deathlaser=0;
 			}
@@ -650,9 +1411,19 @@ var applyshipstats=[
 		player.ammor=16;
 		player.size=22;
 		player.shipfuncs={
+			overlay:function(){
+				if(player.hp<0){
+					fill(40,110,50,200);
+					rect(905,600,10,max(-500,(player.hp/player.mhp)*500));
+				}
+				if(player.hp<-player.mhp){
+					fill(40,200,50);
+					rect(905,600,10,max(-500,((player.hp+player.mhp)/player.mhp)*250));
+				}
+			},
 			passive:function(){
 				if(player.hp<0){
-					player.energy+=(player.hp/player.mhp)/100;
+					player.energy+=(player.hp/player.mhp)/400;
 				}
 				if(player.energy>0){
 					playertemp.cannotdie=1;
@@ -750,14 +1521,14 @@ var applyshipstats=[
 	function(){
 		player.shipId=3;
 		player.shipName="Cyber Sphere";
-		player.hp=220;
-		player.mhp=220;
-		player.shield=65;
-		player.mshield=65;
+		player.hp=200;
+		player.mhp=200;
+		player.shield=60;
+		player.mshield=60;
 		player.energy=12;
 		player.menergy=12;
-		player.shieldregen=12;
-		player.shielddecay=14.5;
+		player.shieldregen=10.5;
+		player.shielddecay=12.5;
 		player.speed=2.7;
 		player.ammor=18;
 		player.size=32;
@@ -780,6 +1551,7 @@ var applymods=function(){
 		damagetaken:new Array(),
 		damagetakenps:new Array(),
 		damagedealt:new Array(),
+		fundamentals:new Array(),
 	};
 	if(player.mods[0]){
 		player.mhp*=1.5;
@@ -805,8 +1577,10 @@ var applymods=function(){
 	if(player.mods[2]){
 		player.mshield*=1.5;
 		player.shield*=1.5;
-		player.menergy*=0.3;
-		player.energy*=0.3;
+		player.shieldregen*=1.3;
+		player.shielddecay*=1.2;
+		player.menergy*=0.4;
+		player.energy*=0.4;
 	}
 	if(player.mods[3]){
 		append(player.modfuncs.passive,function(){
@@ -837,6 +1611,11 @@ var applymods=function(){
 			dmg.dmg+=playertemp.mobileshield;
 		});
 	}
+	if(player.mods[5]){
+		append(player.modfuncs.passive,function(){
+			player.energy=max(0,player.energy-0.0003);
+		});
+	}
 	if(player.mods[6]){
 		append(player.modfuncs.passive,function(){
 			if(playertemp.timesincedamagetaken>240){
@@ -861,27 +1640,14 @@ var applymods=function(){
 		});
 	}
 	if(player.mods[10]){
-		append(player.modfuncs.passive,function(){
-			if(!(player.energizedfeedback)){
-				player.energizedfeedback=0;
-			}
-			player.energizedfeedback=min(2,player.energizedfeedback+1/300);
-		});
 		append(player.modfuncs.damagedealt,function(edmg,target){
-			if(player.energizedfeedback>edmg/250){
-				player.energizedfeedback-=edmg/250;
-				player.energy=min(player.menergy,player.energy+edmg/250);
-			}
-			else{
-				player.energy=min(player.menergy,player.energy+player.energizedfeedback);
-				player.energizedfeedback=0;
-			}
+			player.energy=min(player.menergy,player.energy+edmg/500);
 		});
 		append(player.modfuncs.damagetaken,function(){
-			player.energy=max(0,player.energy-dmg.dmg/50);
+			player.energy=max(0,player.energy-(player.energy/player.menergy)*dmg.dmg/25);
 		});
 		append(player.modfuncs.damagetakenps,function(){
-			player.energy=max(0,player.energy-dmg.dmg/50);
+			player.energy=max(0,player.energy-(player.energy/player.menergy)*dmg.dmg/25);
 		});
 	}
 	if(player.mods[11]){
@@ -930,23 +1696,38 @@ var applymods=function(){
 		player.menergy*=1.5;
 		player.energy*=1.5;
 	}
+	if(player.mods[13]){
+		append(player.modfuncs.fundamentals,function(){
+			if(!(playertemp.juketick)){
+				playertemp.juketick=0;
+			}
+			playertemp.juketick+=1;
+			bgm.rate(0.02+(abs(playertemp.juketick%720-360)/180+abs(playertemp.juketick%5000-2500)/3000)/(0.4+abs(playertemp.juketick%1234-617)/500));
+			if(!(biome.id==0)){
+				if(bgmt){
+					bgmt.rate(0.02+(abs(playertemp.juketick%720-360)/180+abs(playertemp.juketick%5000-2500)/3000)/(0.4+abs(playertemp.juketick%1234-617)/500));
+				}
+			}
+		});
+	}
 }
 var playertemp={};
 var stagetemp={};
 var mods=[
 	{name:"Reinforced Hull",desc:"Extra plating for survivability",pro:"Increases ship health by 50%",con:"Reduces speed by 15%"},
 	{name:"Reactors",desc:"Adds reactors to your ship",pro:"Passively generates energy",con:"Hits to your ship (after shields) have a 40% chance to deal 150% damage, reduces maximum shield by 20%"},
-	{name:"Augmented Shields",desc:"Rerouts most of your ship's batteries to its shield",pro:"Increases maximum shields by 50%",con:"Reduces maximum energy by 70%"},
+	{name:"Augmented Shields",desc:"Rerouts most of your ship's batteries to its shield",pro:"Increases maximum shields by 50%, shield regeneration by 30%, and shield decay by 20%",con:"Reduces maximum energy by 60%"},
 	{name:"Shield Recharger",desc:"Activates while below 50% shield - recharge is doubled while not shielding",pro:"Rapidly recharges shield",con:"Uses energy"},
 	{name:"Mobile Shield",desc:"Allows your ship's thrusters to bypass its shield",pro:"Allows movement while shielding",con:"Also allows 5% of damage to bypass shield"},
-	{name:"Reactive Shield",desc:"Adds automatic collision detection to your ship",pro:"Your shield has a 50% chance to block hits even while inactive",con:"Uses energy"},
+	{name:"Reactive Shield",desc:"Adds automatic collision detection to your ship",pro:"Your shield blocks hits even while inactive",con:"Constantly drains a small amount of energy, uses more when activated"},
 	{name:"Nano Repairbots",desc:"Adds repair bots on your ship",pro:"Passively repairs your ship if it hasn't taken damage recently",con:"Uses a fair amount of energy"},
 	{name:"Energy Capacitor",desc:"Replaces your energy storage with a capacitor",pro:"Gain energy when your shield is hit",con:"Slowly lose energy passively"},
 	{name:"Charged Weapons",desc:"Charges your main weapon",pro:"Increases rate of fire by 40%",con:"Attempting to fire without sufficient ammo damages your shield"},
 	{name:"Rapid Reload",desc:"Boosts your ammo regeneration",pro:"Increases ammo recharge rate by 50%",con:"Your shield cannot recharge unless at full ammo"},
 	{name:"Energized Feedback",desc:"Absorbs the entropy created from destruction",pro:"Gain energy when you deal damage",con:"Backfires when you take damage, losing energy (halved for damage blocked by shielding)"},
 	{name:"Heavy Impact",desc:"Makes things go boom",pro:"Increases damage dealt by 50%",con:"Your hits fling debris which can hit you"},
-	{name:"Additional Energy",desc:"Adds more batteries to store energy",pro:"Increases maximum energy by 50%",con:"Your ship becomes less structurally stable, reducing ship health by 35%."},
+	{name:"Additional Energy",desc:"Adds more batteries to store energy",pro:"Increases maximum energy by 50%",con:"Your ship becomes less structurally stable, reducing ship health by 35%"},
+	{name:"Funky Jukebox",desc:"Messes up the background music",pro:"May be amusing",con:"May get annoying"},
 ];
 var ships=[
 	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while reflecting enemy projectiles.",misc:"A well-rounded ship."},
@@ -1202,10 +1983,11 @@ var loadassetscache=function(){
 		fill(255,150,0);
 		text("Loading game assets",300,200);
 		fill(0,0,0);
-		rect(400,350,300,100);
+		rect(400,320,300,100);
 		fill(255,150,0);
 		text("0/3",500,370);
 		bgmn="start";
+		bgmv=0.4;
 		bgm = new Howl({
 			src: 'Data/Sound/bgm/Mysterious.mp3',
 			autoplay: true,
@@ -1213,7 +1995,7 @@ var loadassetscache=function(){
 			volume: options.music*0.4,
 		});
 		fill(0,0,0);
-		rect(400,350,300,100);
+		rect(400,320,300,100);
 		fill(255,150,0);
 		text("1/3",500,370);
 		sprites={
@@ -1223,7 +2005,7 @@ var loadassetscache=function(){
 			cybersphere:loadShape('Data/Graphics/ships/cybersphere.svg'),
 		};
 		fill(0,0,0);
-		rect(400,350,300,100);
+		rect(400,320,300,100);
 		fill(255,150,0);
 		text("2/3",500,370);
 		sfx={
@@ -1257,9 +2039,12 @@ var choosebgm=function(id){
 	}
 	return(temp);
 }
+var bgmt;
+var bgmv=1;
 var setbgm=[
 	function(){
 		bgm.stop();
+		bgmv=0.7;
 		bgmn="sky fortress";
 		bgm = new Howl({
 			src: 'Data/Sound/bgm/SkyFortress.mp3',
@@ -1271,6 +2056,7 @@ var setbgm=[
 	},
 	function(){
 		bgm.stop();
+		bgmv=1.3;
 		bgmn="magnetic tree";
 		bgm = new Howl({
 			src: 'Data/Sound/bgm/Lifeformed The Magnetic Tree.mp3',
@@ -1371,9 +2157,9 @@ var takedamage=function(dmgs){
 	if(player.shielding||playertemp.autoshield){
 		dmg.blocked=true;
 	}
-	if(!(dmg.blocked)&(player.mods[5]&random(1)<=0.5&player.energy>=0.2)){
+	if(!(dmg.blocked)&(player.mods[5]&player.energy>=dmg.dmg/40)){
 		dmg.blocked=true;
-		player.energy-=0.2;
+		player.energy-=dmg.dmg/40;
 		dmg.dmg*=0.9;
 	}
 	if(dmg.blocked){
@@ -1409,8 +2195,23 @@ var takedamage=function(dmgs){
 		player.hpl+=dmg.dmg;
 	}
 }
-var dealdamage=function(dmgs,target){
+var dealdamage=function(dmgs,target,tags){
 	dmg=dmgs;
+	if(tags){
+		if(tags.singleTarget){
+			if(enemies[target].stdm){
+				dmg*=enemies[target].stdm;
+			}
+		}
+		if(tags.reflected){
+			if(enemies[target].refdmgm){
+				dmg*=enemies[target].refdmgm;
+			}
+		}
+	}
+	if(enemies[target].dmgm){
+		dmg*=enemies[target].dmgm;
+	}
 	for(z=0;z<player.modfuncs.damagedealt.length;z+=1){
 		player.modfuncs.damagedealt[z](min(enemies[target].hp,dmgs),target);
 	}
@@ -1444,6 +2245,11 @@ var mslast=0;
 var shootlock=0;
 var pauselock=0;
 void draw(){
+if(player.modfuncs.fundamentals){
+	for(z=0;z<player.modfuncs.fundamentals.length;z+=1){
+		player.modfuncs.fundamentals[z]();
+	}
+}
 if(controlmode==0||controlmode==1){
 	if(rawkeys.esc){
 		if(!(pauselock)){
@@ -1515,7 +2321,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	}
 	noStroke();
 	tick+=1;
-	fill(15,10,40);
+	fill(biome.color.r,biome.color.g,biome.color.b);
 	rect(0,0,1000,700);
 	if(options.stars>0){
 		if(tick%12==0){
@@ -1559,7 +2365,14 @@ while(drawcount>=16.6&cdraw<=drawcap){
 								if(canhitenemy()){
 									projectiles[a].pierce-=1;
 									append(projectiles[a].hits,enemies[b].id);
-									enemies[b].hp-=dealdamage(projectiles[a].damage,b);
+									temp={};
+									if(projectiles[a].isSingleTarget){
+										temp.singleTarget=1;
+									}
+									if(projectiles[a].reflected){
+										temp.reflected=1;
+									}
+									enemies[b].hp-=dealdamage(projectiles[a].damage,b,temp);
 									sfx.hit.rate(random(0.8,1.2));
 									sfx.hit.volume(min(1.5,projectiles[a].damage/20));
 									sfx.hit.play();
@@ -1638,6 +2451,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		if(player.deathtimer>60){
 			if(input.shoot){
 				spawnplayer();
+				bgmt.stop();
+				biome.id=0;
 				applyshipstats[player.shipId]();
 				applymods();
 				ingame=0;
@@ -1962,6 +2777,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				player.x=500;
 				player.y=500;
 			}
+			textAlign(TOP,LEFT);
 			
 		}
 		else if(menumode==2){
@@ -2145,510 +2961,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					}
 				});
 			}
-			if(gametick%(round(40-min(8,max(0,gametick-7200)/720)))==0){
-				if(gametick>12960&random(1)<0.03&(stagetemp.comets<1||!(stagetemp.comets))){
-					if(!(stagetemp.comets)){
-						stagetemp.comets=0;
-					}
-					stagetemp.comets+=1;
-					append(enemies,{
-						name:"comet",
-						hp:1000,
-						mhp:1000,
-						size:40,
-						xvelo:random(-1.5,1.5),
-						yvelo:6,
-						xacc:0,
-						yacc:0,
-						x:random(100,900),
-						y:-20,
-						contactcd:30,
-						timer:0,
-						id:tick%6000,
-						ammo:0,
-						color:[random(70,120),random(40,120),random(100,120)],
-						mcolor:[random(40,120),random(40,120),random(200,255)],
-						rockpos:[[random(-60,60),random(-60,60)],[random(-60,60),random(-60,60)],[random(-60,60),random(-60,60)],[random(-60,60),random(-60,60)]],
-						draw:function(){
-							ellipseMode(CENTER);
-							if(options.graphics){
-								fill(255,210,180,10);
-								for(b=0;b<32;b+=1){
-									ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
-								}
-							}
-							else{
-								fill(255,210,180,10);
-								for(b=0;b<8;b+=1){
-									ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
-								}
-							}
-							fill(enemies[a].mcolor[0],enemies[a].mcolor[1],enemies[a].mcolor[2]);
-							ellipse(enemies[a].x,enemies[a].y,50,50);
-							fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
-							ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],20,15);
-							ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,20);
-							ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],20,15);
-							ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,20);
-							strokeWeight(10);
-							noFill();
-							stroke(0,255,0);
-							arc(enemies[a].x,enemies[a].y,60,60,0,(enemies[a].hp/enemies[a].mhp)*2*PI);
-							noStroke();
-						},
-						run:function(){
-							enemies[a].ammo+=1;
-							if(enemies[a].ammo>70){
-								append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
-								size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[255,random(100,150),random(30,55)]});
-							}
-							if(enemies[a].ammo>90){
-								if(random(1)<0.55){
-									enemies[a].ammo-=35;
-									for(b=-4;b<5;b+=1){
-										append(projectiles,{
-											target:0,
-											draw:function(){
-												ellipseMode(CENTER);
-												fill(100,100,255);
-												ellipse(projectiles[a].x,projectiles[a].y,20,20);
-												if(options.graphics){
-													if(projectiles[a].target){
-														fill(0,0,255,10);
-													}
-													else{
-														fill(255,0,0,10);
-													}
-													for(b=0;b<8;b+=1){
-														ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
-													}
-												}
-											},
-											x:enemies[a].x,
-											y:enemies[a].y,
-											end:2,
-											pierce:0,
-											dir:PI+b*PI/4,
-											speed:4,
-											size:16,
-											damage:10,
-											isSingleTarget:true
-										});
-									}
-								}
-								else if(random(1)<0.4){
-									enemies[a].ammo-=25;
-									if(random(1)<0.5){
-										for(b=-2;b<3;b+=1){
-											append(projectiles,{
-												target:0,
-												draw:function(){
-													ellipseMode(CENTER);
-													fill(100,100,255);
-													ellipse(projectiles[a].x,projectiles[a].y,14,14);
-													if(options.graphics){
-														if(projectiles[a].target){
-															fill(0,0,255,10);
-														}
-														else{
-															fill(255,0,0,10);
-														}
-														for(b=0;b<7;b+=1){
-															ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
-														}
-													}
-												},
-												x:enemies[a].x,
-												y:enemies[a].y,
-												end:2,
-												pierce:0,
-												dir:PI+b*PI/2,
-												speed:5,
-												size:12,
-												damage:8,
-												isSingleTarget:true
-											});
-										}
-									}
-									else{
-										for(b=-2;b<3;b+=1){
-											append(projectiles,{
-												target:0,
-												draw:function(){
-													ellipseMode(CENTER);
-													fill(100,100,255);
-													ellipse(projectiles[a].x,projectiles[a].y,14,14);
-													if(options.graphics){
-														if(projectiles[a].target){
-															fill(0,0,255,10);
-														}
-														else{
-															fill(255,0,0,10);
-														}
-														for(b=0;b<7;b+=1){
-															ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
-														}
-													}
-												},
-												x:enemies[a].x,
-												y:enemies[a].y,
-												end:2,
-												pierce:0,
-												dir:PI/2+b*PI/2,
-												speed:5,
-												size:12,
-												damage:8,
-												isSingleTarget:true
-											});
-										}
-									}
-								}
-								else{
-									enemies[a].ammo-=120;
-									for(b=-8;b<9;b+=1){
-										append(projectiles,{
-											target:0,
-											draw:function(){
-												ellipseMode(CENTER);
-												fill(100,100,255);
-												ellipse(projectiles[a].x,projectiles[a].y,24,24);
-												if(options.graphics){
-													if(projectiles[a].target){
-														fill(0,0,255,10);
-													}
-													else{
-														fill(255,0,0,10);
-													}
-													for(b=0;b<12;b+=1){
-														ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
-													}
-												}
-											},
-											timer:0,
-											activate:random(30),
-											run:function(){
-												projectiles[a].timer+=1;
-												if(projectiles[a].timer>projectiles[a].activate){
-													projectiles[a].speed=max(3.5,projectiles[a].speed);
-												}
-											},
-											x:enemies[a].x,
-											y:enemies[a].y,
-											end:2,
-											pierce:0,
-											dir:2*PI/3+random(2*PI/3)+b*PI/4,
-											speed:0,
-											size:18,
-											damage:11,
-											isSingleTarget:true
-										});
-									}
-								}
-							}
-							enemies[a].timer+=1;
-							enemies[a].contactcd=max(0,enemies[a].contactcd-1);
-							if(random(1)<0.03){
-								enemies[a].xacc=random(-0.25,0.25);
-							}
-							if(enemies[a].x<170){
-								enemies[a].xacc=random(0,0.25);
-							}
-							else if(enemies[a].x>830){
-								enemies[a].xacc=random(-0.25,0);
-							}
-							if(enemies[a].timer<30){
-								enemies[a].yacc=0;
-								enemies[a].yvelo=6;
-							}
-							else if(enemies[a].timer<3600){
-								if(random(1)<0.03){
-									enemies[a].yacc=random(-0.25,0.25);
-								}
-								if(enemies[a].y<50){
-									enemies[a].yacc=random(0.1,0.25);
-								}
-								else if(enemies[a].y>350){
-									enemies[a].yacc=random(-0.25,-0.1);
-								}
-							}
-							else{
-								enemies[a].yacc=0;
-								enemies[a].yvelo=-4;
-							}
-							enemies[a].xvelo=max(-4,min(4,enemies[a].xvelo+enemies[a].xacc));
-							enemies[a].yvelo=max(-4,min(4,enemies[a].yvelo+enemies[a].yacc));
-							enemies[a].x+=enemies[a].xvelo;
-							enemies[a].y+=enemies[a].yvelo;
-							if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
-								if(player.y>enemies[a].y){
-									player.y=enemies[a].y+enemies[a].size+4;
-								}
-								else{
-									player.y=enemies[a].y-enemies[a].size-4;
-								}
-								if(enemies[a].contactcd<=0){
-									enemies[a].contactcd=60;
-									takedamage({dmg:10});
-								}
-							}
-							if(enemies[a].y>750||enemies[a].y<-100){
-								enemies[a].exp=1;
-							}
-						},
-						onend:function(){
-							stagetemp.comets-=1;
-						},
-						exp:0,
-						score:500
-					});
-				}
-				else if(random(1)<0.85-min(0.1,gametick/72000)){
-					append(enemies,{
-						name:"meteor",
-						isTerrain:1,
-						hp:40,
-						mhp:40,
-						size:15,
-						x:random(100,900),
-						xvelo:random(-1,1),
-						y:-20,
-						id:tick%6000,
-						color:[random(40,80),random(20,60),random(0,40)],
-						rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
-						draw:function(){
-							ellipseMode(CENTER);
-							if(options.graphics){
-								fill(255,255,255,10);
-								for(b=0;b<16;b+=1){
-									ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
-								}
-							}
-							else{
-								fill(255,255,255,10);
-								for(b=0;b<4;b+=1){
-									ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
-								}
-							}
-							fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
-							ellipse(enemies[a].x,enemies[a].y,18,18);
-							ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],15,15);
-							ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,15);
-							ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],15,15);
-							ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,15);
-						},
-						run:function(){
-							enemies[a].x+=enemies[a].xvelo;
-							enemies[a].y+=2;
-							if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
-								enemies[a].exp=1;
-								takedamage({dmg:10});
-							}
-							if(enemies[a].y>720||enemies[a].x>930||enemies[a].x<70){
-								enemies[a].exp=1;
-							}
-						},
-						exp:0,
-						score:10
-					});
-				}
-				else{
-					append(enemies,{
-						name:"meteor drone",
-						hp:60,
-						mhp:40,
-						size:15,
-						xvelo:random(-1.5,1.5),
-						x:random(100,900),
-						y:-20,
-						id:tick%6000,
-						ammo:0,
-						color:[random(40,80),random(20,60),random(0,40)],
-						rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
-						draw:function(){
-							ellipseMode(CENTER);
-							if(options.graphics){
-								fill(255,255,255,10);
-								for(b=0;b<16;b+=1){
-									ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
-								}
-							}
-							else{
-								fill(255,255,255,10);
-								for(b=0;b<4;b+=1){
-									ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
-								}
-							}
-							fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
-							ellipse(enemies[a].x,enemies[a].y,22,22);
-							ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],20,15);
-							ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,20);
-							ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],20,15);
-							ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,20);
-							fill(255,0,0,150+abs(tick%120-60)*2);
-							ellipse(enemies[a].x,enemies[a].y,10,10);
-						},
-						run:function(){
-							enemies[a].ammo+=1;
-							if(enemies[a].ammo>60){
-								append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
-								size:random(7,10),op:random(160,200),opc:-7,exp:1,color:[random(120,150),random(100,130),random(30,55)]});
-							}
-							if(enemies[a].ammo>90){
-								if(random(1)<0.55){
-									enemies[a].ammo-=90;
-									append(projectiles,{
-										target:0,
-										draw:function(){
-											ellipseMode(CENTER);
-											fill(100,80,20);
-											ellipse(projectiles[a].x,projectiles[a].y,18,18);
-											if(options.graphics){
-												if(projectiles[a].target){
-													fill(0,0,255,10);
-												}
-												else{
-													fill(255,0,0,10);
-												}
-												for(b=0;b<8;b+=1){
-													ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
-												}
-											}
-										},
-										x:enemies[a].x,
-										y:enemies[a].y,
-										end:2,
-										pierce:0,
-										dir:PI,
-										speed:4.5,
-										size:14,
-										damage:10,
-										isSingleTarget:true
-									});
-								}
-								else if(random(1)<0.5){
-									enemies[a].ammo-=150;
-									append(projectiles,{
-										target:0,
-										draw:function(){
-											ellipseMode(CENTER);
-											fill(100,80,20);
-											ellipse(projectiles[a].x,projectiles[a].y,18,18);
-											if(options.graphics){
-												if(projectiles[a].target){
-													fill(0,0,255,10);
-												}
-												else{
-													fill(255,0,0,10);
-												}
-												for(b=0;b<8;b+=1){
-													ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
-												}
-											}
-										},
-										x:enemies[a].x,
-										y:enemies[a].y,
-										end:2,
-										pierce:0,
-										dir:PI,
-										speed:4.5,
-										size:14,
-										damage:9,
-										isSingleTarget:true
-									});
-									append(projectiles,{
-										target:0,
-										timer:0,
-										draw:function(){
-											ellipseMode(CENTER);
-											fill(100,80,20);
-											ellipse(projectiles[a].x,projectiles[a].y,18,18);
-											if(options.graphics){
-												if(projectiles[a].target){
-													fill(0,0,255,10);
-												}
-												else{
-													fill(255,0,0,10);
-												}
-												for(b=0;b<8;b+=1){
-													ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
-												}
-											}
-										},
-										run:function(){
-											projectiles[a].timer+=1;
-											if(projectiles[a].timer<24){
-												projectiles[a].speed+=0.1875;
-											}
-										},
-										x:enemies[a].x,
-										y:enemies[a].y,
-										end:2,
-										pierce:0,
-										dir:PI,
-										speed:0,
-										size:14,
-										damage:9,
-										isSingleTarget:true
-									});
-								}
-								else{
-									enemies[a].ammo-=180;
-									for(b=0;b<3;b+=1){
-										append(projectiles,{
-											target:0,
-											draw:function(){
-												ellipseMode(CENTER);
-												fill(100,80,20);
-												ellipse(projectiles[a].x,projectiles[a].y,18,18);
-												if(options.graphics){
-													if(projectiles[a].target){
-														fill(0,0,255,10);
-													}
-													else{
-														fill(255,0,0,10);
-													}
-													for(b=0;b<8;b+=1){
-														ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
-													}
-												}
-											},
-											x:enemies[a].x,
-											y:enemies[a].y,
-											end:2,
-											pierce:0,
-											dir:PI-PI/8+b*PI/8,
-											speed:5.5,
-											size:14,
-											damage:7,
-											isSingleTarget:true
-										});
-									}
-								}
-							}
-							if(random(1)<0.03){
-								enemies[a].xvelo=random(-1.5,1.5);
-							}
-							if(enemies[a].x<110){
-								enemies[a].xvelo=random(0,1);
-							}
-							if(enemies[a].x>890){
-								enemies[a].xvelo=random(-1,0);
-							}
-							enemies[a].x+=enemies[a].xvelo;
-							enemies[a].y+=0.5;
-							if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
-								enemies[a].exp=1;
-								takedamage({dmg:12});
-							}
-							if(enemies[a].y>720){
-								enemies[a].exp=1;
-							}
-						},
-						exp:0,
-						score:25
-					});
-				}
-			}
+			biomescripts[biome.id]();
 		}
 	}
 	//PANELS
@@ -2717,7 +3030,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			arc(50,350,60,20,0,PI);
 			noStroke();
 		}
-		if(player.energy>=player.menergy){
+		if(player.energy>=player.menergy-0.001){
 			noFill();
 			strokeWeight(12);
 			stroke(200,200,80);
@@ -2735,12 +3048,19 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			rect(30,340-floor(player.energy)*300/player.menergy-220/player.menergy,player.energy%1*40,220/player.menergy,6);
 		}
 		noStroke();
+		if(player.shipfuncs.overlay){
+			player.shipfuncs.overlay();
+		}
 		textFont(0,15);
 		fill(255,100,150);
 		text('FPS: '+fps.fps,920,680);
 		textFont(0,18);
 		fill(180,200,255);
 		text('SCORE',910,25);
+		textFont(0,14);
+		fill(0,0,0);
+		text("Version:",925,75);
+		text(version,910,90);
 		textFont(0,16);
 		fill(180,255,200);
 		text(player.score,920,50);
