@@ -880,7 +880,7 @@ function(){
 				sfx.might.play();
 				biome.id=0;
 				bgmt.stop();
-				bgm.volume(1);
+				bgm.volume(options.music*bgmv);
 				bgm.play();
 			},
 			exp:0,
