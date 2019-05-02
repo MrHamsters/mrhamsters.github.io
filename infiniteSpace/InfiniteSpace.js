@@ -1,4 +1,4 @@
-var version="DEMO 0.5";
+var version="DEMO 0.5c";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -330,6 +330,12 @@ function(){
 					enemies[a].x+=enemies[a].xvelo;
 					enemies[a].y+=enemies[a].yvelo;
 					if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+						if(player.x>enemies[a].x){
+							player.x=enemies[a].x+enemies[a].size+4;
+						}
+						else{
+							player.x=enemies[a].x-enemies[a].size-4;
+						}
 						if(player.y>enemies[a].y){
 							player.y=enemies[a].y+enemies[a].size+4;
 						}
@@ -349,7 +355,7 @@ function(){
 					stagetemp.comets-=1;
 				},
 				exp:0,
-				score:500
+				score:400
 			});
 		}
 		else if(random(1)<0.85-min(0.1,gametick/72000)){
@@ -495,7 +501,7 @@ function(){
 	if(stagetemp.biomecd>0){
 		stagetemp.biomecd-=1;
 	}
-	else if(gametick>1200&gametick%30==0&random(1)<0.01+min(0.02,gametick/720000)){
+	else if(gametick>1200&gametick%30==0&random(1)<0.01+min(0.01,gametick/1440000)){
 		biome.id=round(random(0.51,biomescripts.length-0.51));
 		biome.timer=0;
 	}
@@ -859,6 +865,12 @@ function(){
 				enemies[a].x+=enemies[a].xvelo;
 				enemies[a].y+=enemies[a].yvelo;
 				if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+					if(player.x>enemies[a].x){
+						player.x=enemies[a].x+enemies[a].size+4;
+					}
+					else{
+						player.x=enemies[a].x-enemies[a].size-4;
+					}
 					if(player.y>enemies[a].y){
 						player.y=enemies[a].y+enemies[a].size+4;
 					}
@@ -2451,7 +2463,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		if(player.deathtimer>60){
 			if(input.shoot){
 				spawnplayer();
-				bgmt.stop();
+				if(bgmt){
+					bgmt.stop();
+				}
 				biome.id=0;
 				applyshipstats[player.shipId]();
 				applymods();
