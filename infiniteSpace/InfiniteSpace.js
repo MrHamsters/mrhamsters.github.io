@@ -1,4 +1,4 @@
-var version="DEMO 0.5.1";
+var version="DEMO 0.5.1b";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -338,7 +338,7 @@ function(){
 					enemies[a].x+=enemies[a].xvelo;
 					enemies[a].y+=enemies[a].yvelo;
 					if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
-						if(player.x>enemies[a].x){
+						/*if(player.x>enemies[a].x){
 							player.x=enemies[a].x+enemies[a].size+4;
 						}
 						else{
@@ -349,7 +349,7 @@ function(){
 						}
 						else{
 							player.y=enemies[a].y-enemies[a].size-4;
-						}
+						}*/
 						if(enemies[a].contactcd<=0){
 							enemies[a].contactcd=60;
 							takedamage({dmg:10});
@@ -761,6 +761,7 @@ function(){
 			hp:4000+min(4000,gametick/7.5),
 			mhp:4000+min(4000,gametick/7.5),
 			size:40,
+			isBoss:true,
 			xvelo:random(-1.5,1.5),
 			yvelo:6,
 			xacc:0,
@@ -773,7 +774,7 @@ function(){
 			ammo:0,
 			stdm:0.5,
 			dmgm:1.5,
-			refdmgm:0.3,
+			refdmgm:0.8,
 			color:[random(220,255),random(185,225),random(50,100)],
 			rockpos:[[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)],[random(-80,80),random(-30,30)]],
 			draw:function(){
@@ -890,7 +891,7 @@ function(){
 				enemies[a].x+=enemies[a].xvelo;
 				enemies[a].y+=enemies[a].yvelo;
 				if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
-					if(player.x>enemies[a].x){
+					/*if(player.x>enemies[a].x){
 						player.x=enemies[a].x+enemies[a].size+4;
 					}
 					else{
@@ -901,7 +902,7 @@ function(){
 					}
 					else{
 						player.y=enemies[a].y-enemies[a].size-4;
-					}
+					}*/
 					if(enemies[a].contactcd<=0){
 						enemies[a].contactcd=60;
 						takedamage({dmg:10});
@@ -1215,6 +1216,11 @@ var special=[
 								projectiles[b].target=1;
 							}
 						}
+					}
+				},
+				onhit:function(target){
+					if(enemies[target].isBoss){
+						projectiles[a].exp=1;
 					}
 				},
 				x:player.x,
@@ -1676,7 +1682,7 @@ var applymods=function(){
 			if(playertemp.timesincedamagetaken>240){
 				if(player.hp<player.mhp&player.energy>0.002){
 					player.energy-=0.002;
-					player.hp+=0.0002+player.mhp*0.0001;
+					player.hp+=0.0003+player.mhp*0.00015;
 					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-2,2),yvelo:random(-2,2),
 					size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(60,100),random(150,190),random(90,130)]});
 				}
@@ -1786,7 +1792,7 @@ var mods=[
 	{name:"Healing conversion",desc:"Converts energy from orbs into healing",pro:"Heal when collecting an energy orb",con:"Gain no energy from collecting energy orbs"},
 ];
 var ships=[
-	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while reflecting enemy projectiles.",misc:"A well-rounded ship."},
+	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while reflecting enemy projectiles. Dissipates if it hits a boss.",misc:"A well-rounded ship."},
 	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while absorbing damage taken.",misc:"Normal shots fragment on hit."},
 	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
 	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:9,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
@@ -2425,6 +2431,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 									projectiles[a].pierce-=1;
 									append(projectiles[a].hits,enemies[b].id);
 									temp={};
+									if(projectiles[a].onhit){
+										projectiles[a].onhit(b);
+									}
 									if(projectiles[a].isSingleTarget){
 										temp.singleTarget=1;
 									}
