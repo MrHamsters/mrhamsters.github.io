@@ -1,4 +1,4 @@
-var version="DEMO 0.5c";
+var version="DEMO 0.5.1";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -107,6 +107,14 @@ var dirgeneric=function(x1,y1,x2,y2){
 	}
 	else{
 		return(atan((y1-y2)/(x1-x2))-PI/2);
+	}
+}
+var getgamesecfd=function(){
+	if((round(gametick/60))%60<10){
+		return("0"+(round(gametick/60))%60);
+	}
+	else{
+		return((round(gametick/60))%60);
 	}
 }
 var getshipstatcolor=function(val){
@@ -501,7 +509,7 @@ function(){
 	if(stagetemp.biomecd>0){
 		stagetemp.biomecd-=1;
 	}
-	else if(gametick>1200&gametick%30==0&random(1)<0.01+min(0.01,gametick/1440000)){
+	else if(gametick>1200&gametick%60==0&random(1)<0.015+min(0.015,gametick/1440000)){
 		biome.id=round(random(0.51,biomescripts.length-0.51));
 		biome.timer=0;
 	}
@@ -524,7 +532,7 @@ function(){
 		}
 	}
 	if(biome.timer<3600){
-		if(gametick%(round(35-min(10,max(0,gametick-7200)/1440)))==0){
+		if(gametick%(round(35-min(12,max(0,gametick-7200)/1440)))==0){
 			if(random(1)<0.85-min(0.1,gametick/72000)){
 				append(enemies,{
 					name:"lava meteor",
@@ -589,8 +597,10 @@ function(){
 										takedamage({dmg:3});
 									}
 								}
-								append(particles,{x:objects[a].x+random(-50,50),y:objects[a].y+random(-50,50),xvelo:random(-3,3),yvelo:random(-2,4),
-								size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+								if(options.graphics){
+									append(particles,{x:objects[a].x+random(-50,50),y:objects[a].y+random(-50,50),xvelo:random(-3,3),yvelo:random(-2,4),
+									size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+								}
 								objects[a].y+=3;
 								if(objects[a].y>770){
 									objects.splice(a,1);
@@ -662,8 +672,10 @@ function(){
 									if(projectiles[a].misc.timer>20){
 										projectiles[a].exp=1;
 									}
-									append(particles,{x:projectiles[a].x+random(-projectiles[a].size,projectiles[a].size),y:projectiles[a].y+random(-projectiles[a].size,projectiles[a].size),xvelo:random(-3,3),yvelo:random(-1,6),
-									size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+									if(tick%2==0&options.graphics){
+										append(particles,{x:projectiles[a].x+random(-projectiles[a].size,projectiles[a].size),y:projectiles[a].y+random(-projectiles[a].size,projectiles[a].size),xvelo:random(-3,3),yvelo:random(-1,6),
+										size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+									}
 								},
 								draw:function(){
 									ellipseMode(CENTER);
@@ -725,8 +737,10 @@ function(){
 										takedamage({dmg:3});
 									}
 								}
-								append(particles,{x:objects[a].x+random(-50,50),y:objects[a].y+random(-50,50),xvelo:random(-3,3),yvelo:random(-2,4),
-								size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+								if(options.graphics){
+									append(particles,{x:objects[a].x+random(-50,50),y:objects[a].y+random(-50,50),xvelo:random(-3,3),yvelo:random(-2,4),
+									size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
+								}
 								objects[a].y+=3;
 								if(objects[a].y>770){
 									objects.splice(a,1);
@@ -744,8 +758,8 @@ function(){
 	else if(biome.timer==4200){
 		append(enemies,{
 			name:"Blazing Sun",
-			hp:3000+min(2000,gametick/10),
-			mhp:3000+min(2000,gametick/10),
+			hp:4000+min(4000,gametick/7.5),
+			mhp:4000+min(4000,gametick/7.5),
 			size:40,
 			xvelo:random(-1.5,1.5),
 			yvelo:6,
@@ -792,7 +806,7 @@ function(){
 				noStroke();
 			},
 			run:function(){
-				enemies[a].ammo+=1;
+				enemies[a].ammo+=0.9+min(0.6,gametick/50000);
 				if(enemies[a].ammo>70){
 					append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
 					size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[255,random(100,150),random(30,55)]});
@@ -831,6 +845,17 @@ function(){
 									projectiles[a].speed=max(2.5,projectiles[a].speed);
 								}
 							}});
+						}
+						if(gametick>30000){
+							for(b=-12;b<13;b+=1){
+								enemyproj({r:255,g:200,b:50,size:14,speed:0,damage:5,dir:2*PI/3+random(2*PI/3)+b*PI/4,source:a,misc:{timer:0,activate:random(3,110)},
+								run:function(){
+									projectiles[a].misc.timer+=1;
+									if(projectiles[a].misc.timer>projectiles[a].misc.activate){
+										projectiles[a].speed=max(2,projectiles[a].speed);
+									}
+								}});
+							}
 						}
 					}
 				}
@@ -890,13 +915,14 @@ function(){
 				sfx.might.rate(random(0.9,1.1));
 				sfx.might.volume(options.sfx*2.5);
 				sfx.might.play();
+				stagetemp.biomecd=1200;
 				biome.id=0;
 				bgmt.stop();
 				bgm.volume(options.music*bgmv);
 				bgm.play();
 			},
 			exp:0,
-			score:round(3000+min(2000,gametick/10))*2
+			score:round(2500+min(3000,gametick/10))*2
 		});
 	}
 }
@@ -972,6 +998,7 @@ var shoot=[
 				damage:70,
 				onend:function(){
 				sfx.glacialhit.rate(random(0.9,1.1));
+				sfx.glacialhit.volume(options.sfx*0.2);
 				sfx.glacialhit.play();
 					for(b=0;b<12;b+=1){
 						append(projectiles,{
@@ -1213,12 +1240,12 @@ var special=[
 		player.specialcd=15;
 		if(player.energy>=1){
 			player.shootcd=20;
-			player.specialcd=240;
+			player.specialcd=60;
 			player.energy-=1;
 			sfx.distortion.rate(random(0.9,1.1));
 			sfx.distortion.volume(0.9);
 			sfx.distortion.play();
-			playertemp.crystalstorm=300;
+			playertemp.crystalstorm=60;
 		}
 		else{
 			sfx.click.rate(random(0.9,1.1));
@@ -1360,12 +1387,12 @@ var applyshipstats=[
 		player.shipfuncs={
 			passive:function(){
 				if(playertemp.crystalstorm>0){
-					if(playertemp.crystalstorm<60){
-						fill(160+abs(tick%30-15)*5,40,60,255-playertemp.crystalstorm*3);
+					if(playertemp.crystalstorm<10){
+						fill(160+abs(tick%30-15)*5,40,60,255-playertemp.crystalstorm*25);
 						triangle(player.x-40,player.y,player.x+40,player.y,player.x,player.y-55);
 						triangle(player.x-40,player.y,player.x+40,player.y,player.x,player.y+55);
 					}
-					playertemp.crystalstorm-=1;
+					playertemp.crystalstorm-=0.1;
 					append(objects,{
 						x1:player.x+random(-90,90),
 						y1:player.y+random(-90,90),
@@ -1399,11 +1426,27 @@ var applyshipstats=[
 						}
 					}
 				}
+				strokeWeight(12);
+				noFill();
+				stroke(110+abs(tick%110-55),120+abs(tick%120-60),140+abs(tick%146-73),180+abs(tick%100-50));
+				arc(player.x,player.y,70,70,0,(playertemp.crystalstorm/60)*2*PI);
+				noStroke();
 			},
-			dmgtaken:function(){
+			dmgtakenps:function(){
 				if(playertemp.crystalstorm>0){
-					dmg.dmg=max(0,dmg.dmg-5);
-					dmg.dmg*=0.25;
+					if(playertemp.crystalstorm>dmg.dmg){
+						if(dmg.dmg>1){
+							sfx.glacialhit.rate(random(0.9,1.1));
+							sfx.glacialhit.volume(options.sfx*min(10,dmg.dmg)*0.02);
+							sfx.glacialhit.play();
+						}
+						playertemp.crystalstorm-=dmg.dmg;
+						dmg.dmg=0;
+					}
+					else{
+						dmg.dmg-=playertemp.crystalstorm;
+						playertemp.crystalstorm=0;
+					}
 				}
 			}
 		};
@@ -1625,7 +1668,7 @@ var applymods=function(){
 	}
 	if(player.mods[5]){
 		append(player.modfuncs.passive,function(){
-			player.energy=max(0,player.energy-0.0003);
+			player.energy=max(0,player.energy-0.00015);
 		});
 	}
 	if(player.mods[6]){
@@ -1736,14 +1779,15 @@ var mods=[
 	{name:"Energy Capacitor",desc:"Replaces your energy storage with a capacitor",pro:"Gain energy when your shield is hit",con:"Slowly lose energy passively"},
 	{name:"Charged Weapons",desc:"Charges your main weapon",pro:"Increases rate of fire by 40%",con:"Attempting to fire without sufficient ammo damages your shield"},
 	{name:"Rapid Reload",desc:"Boosts your ammo regeneration",pro:"Increases ammo recharge rate by 50%",con:"Your shield cannot recharge unless at full ammo"},
-	{name:"Energized Feedback",desc:"Absorbs the entropy created from destruction",pro:"Gain energy when you deal damage",con:"Backfires when you take damage, losing energy (halved for damage blocked by shielding)"},
+	{name:"Energized Feedback",desc:"Absorbs the entropy created from destruction",pro:"Gain energy when you deal damage",con:"Backfires when you take damage, losing energy - halved for damage blocked (i.e. by shielding)"},
 	{name:"Heavy Impact",desc:"Makes things go boom",pro:"Increases damage dealt by 50%",con:"Your hits fling debris which can hit you"},
 	{name:"Additional Energy",desc:"Adds more batteries to store energy",pro:"Increases maximum energy by 50%",con:"Your ship becomes less structurally stable, reducing ship health by 35%"},
 	{name:"Funky Jukebox",desc:"Messes up the background music",pro:"May be amusing",con:"May get annoying"},
+	{name:"Healing conversion",desc:"Converts energy from orbs into healing",pro:"Heal when collecting an energy orb",con:"Gain no energy from collecting energy orbs"},
 ];
 var ships=[
 	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while reflecting enemy projectiles.",misc:"A well-rounded ship."},
-	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while greatly reducing damage taken.",misc:"Normal shots fragment on hit."},
+	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while absorbing damage taken.",misc:"Normal shots fragment on hit."},
 	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
 	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:9,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
 ];
@@ -2169,9 +2213,9 @@ var takedamage=function(dmgs){
 	if(player.shielding||playertemp.autoshield){
 		dmg.blocked=true;
 	}
-	if(!(dmg.blocked)&(player.mods[5]&player.energy>=dmg.dmg/40)){
+	if(!(dmg.blocked)&(player.mods[5]&player.energy>=dmg.dmg/20)){
 		dmg.blocked=true;
-		player.energy-=dmg.dmg/40;
+		player.energy-=dmg.dmg/20;
 		dmg.dmg*=0.9;
 	}
 	if(dmg.blocked){
@@ -2198,6 +2242,9 @@ var takedamage=function(dmgs){
 	}
 	for(z=0;z<player.modfuncs.damagetakenps.length;z+=1){
 		player.modfuncs.damagetakenps[z]();
+	}
+	if(player.shipfuncs.dmgtakenps){
+		player.shipfuncs.dmgtakenps();
 	}
 	if(dmg.dmg>0){
 		playertemp.timesincedamagetaken=0;
@@ -2470,6 +2517,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				applyshipstats[player.shipId]();
 				applymods();
 				ingame=0;
+				gametick=0;
 				bgm.stop();
 				bgmn="start";
 				bgm = new Howl({
@@ -2478,6 +2526,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					loop: true,
 					volume: options.music*0.6,
 				});
+				objects=new Array();
 				enemies=new Array();
 				projectiles=new Array();
 			}
@@ -2937,7 +2986,6 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	}
 	//INGAME
 	else{
-		gametick+=1;
 		if(player.deathtimer>=60){
 			player.y=-999;
 			fill(255,0,0);
@@ -2949,6 +2997,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		}
 		//Currently playing
 		if(!(player.deathtimer>10)){
+			gametick+=1;
 			if(gametick%600==0){
 				append(objects,{
 					x:random(130,870),
@@ -2961,7 +3010,12 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					run:function(){
 						if(playerhitbox(objects[a].x,objects[a].y,15)){
 							objects[a].y=999;
-							player.energy=min(player.menergy,player.energy+1);
+							if(player.mods[14]){
+								player.hp=min(player.mhp,player.hp+7.5+player.mhp*0.025);
+							}
+							else{
+								player.energy=min(player.menergy,player.energy+1);
+							}
 							for(cp=0;cp<30;cp+=1){
 								append(particles,{x:random(15,85),y:random(340,360),xvelo:random(-2,2),yvelo:random(-6,-3),
 								size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(50,100),random(200,255),random(50,100)]});
@@ -3075,6 +3129,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		fill(0,0,0);
 		text("Version:",925,75);
 		text(version,910,90);
+		fill(0,0,0);
+		text("Time:",15,20);
+		text(floor(gametick/3600)+":"+getgamesecfd(),15,35);
 		textFont(0,16);
 		fill(180,255,200);
 		text(player.score,920,50);
