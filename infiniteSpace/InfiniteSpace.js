@@ -1,4 +1,4 @@
-var version="DEMO 0.5.1b";
+var version="DEMO 0.6";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -208,6 +208,40 @@ var bgcolor=function(r,g,b){
 		biome.color.b=min(b,biome.color.b+0.5);
 	}
 }
+var selectbiome=function(){
+	stagetemp.biomeprogress=0;
+	//return(3);
+	for(a=0;a<100;a+=1){
+		temp=round(random(0.51,biomescripts.length-0.51));
+		if(biomechance[temp]()){
+			return(temp);
+		}
+	}
+	return(0);
+}
+var biomechance=[
+	function(){
+		return(true);
+	},
+	function(){
+		if(gametick>10800&random(1)<max(0.6,gametick/72000)){
+			return(true);
+		}
+		return(false);
+	},
+	function(){
+		if(random(1)<1.101-max(0.7,gametick/36000)){
+			return(true);
+		}
+		return(false);
+	},
+	function(){
+		if(gametick>3600&random(1)<max(0.55,gametick/50000)){
+			return(true);
+		}
+		return(false);
+	},
+];
 var biomescripts=[
 //0: asteroids
 function(){
@@ -509,9 +543,16 @@ function(){
 	if(stagetemp.biomecd>0){
 		stagetemp.biomecd-=1;
 	}
-	else if(gametick>1200&gametick%60==0&random(1)<0.015+min(0.015,gametick/1440000)){
-		biome.id=round(random(0.51,biomescripts.length-0.51));
-		biome.timer=0;
+	else if(gametick%60==0){
+		if(!(stagetemp.biomestacks)){
+			stagetemp.biomestacks=0;
+		}
+		stagetemp.biomestacks+=1;
+		if(random(1)<stagetemp.biomestacks/1000-0.03){
+			stagetemp.biomestacks-=60;
+			biome.id=selectbiome();
+			biome.timer=0;
+		}
 	}
 },
 //1: scorched skies
@@ -758,8 +799,8 @@ function(){
 	else if(biome.timer==4200){
 		append(enemies,{
 			name:"Blazing Sun",
-			hp:4000+min(4000,gametick/7.5),
-			mhp:4000+min(4000,gametick/7.5),
+			hp:2000+min(4000,gametick/7.5),
+			mhp:2000+min(4000,gametick/7.5),
 			size:40,
 			isBoss:true,
 			xvelo:random(-1.5,1.5),
@@ -807,7 +848,7 @@ function(){
 				noStroke();
 			},
 			run:function(){
-				enemies[a].ammo+=0.9+min(0.6,gametick/50000);
+				enemies[a].ammo+=0.7+min(0.8,gametick/50000);
 				if(enemies[a].ammo>70){
 					append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
 					size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[255,random(100,150),random(30,55)]});
@@ -847,7 +888,7 @@ function(){
 								}
 							}});
 						}
-						if(gametick>30000){
+						if(gametick>40000){
 							for(b=-12;b<13;b+=1){
 								enemyproj({r:255,g:200,b:50,size:14,speed:0,damage:5,dir:2*PI/3+random(2*PI/3)+b*PI/4,source:a,misc:{timer:0,activate:random(3,110)},
 								run:function(){
@@ -923,8 +964,377 @@ function(){
 				bgm.play();
 			},
 			exp:0,
-			score:round(2500+min(3000,gametick/10))*2
+			score:round(1000+min(3000,gametick/10))*2
 		});
+	}
+},
+//2: tranquil forest
+function(){
+	bgcolor(0,60,20);
+	biome.timer+=1;
+	if(biome.timer<=100){
+		bgm.volume((1-biome.timer/100)*options.music*bgmv);
+		if(biome.timer==100){
+			bgm.pause();
+			bgmt=new Howl({
+				src:'Data/Sound/bgm/magickaforest.ogg',
+				autoplay:false,
+				loop:true,
+				volume:options.music*0.95
+			});
+			bgmt.play();
+		}
+	}
+	if(gametick%345==0){
+		append(objects,{
+			x:random(130,870),
+			y:-30,
+			draw:function(){
+				fill(abs(tick%120-60)*2,255,abs(tick%120-60)*2,180+abs(tick%90-45));
+				ellipseMode(CENTER);
+				ellipse(objects[a].x,objects[a].y,30+abs(tick%50-25)/3,30+abs((tick+25)%50-25)/3);
+				if(options.graphics){
+					fill(80,255,80,10);
+					for(b=0;b<5+abs(tick%60-30)/2;b+=1){
+						ellipse(objects[a].x,objects[a].y,25+b*3,25+b*3);
+					}
+				}
+			},
+			run:function(){
+				if(playerhitbox(objects[a].x,objects[a].y,25)){
+					objects[a].y=999;
+					player.hp=min(player.mhp,player.hp+15+player.mhp*0.05);
+					player.energy=min(player.menergy,player.energy+2);
+					for(cp=0;cp<40;cp+=1){
+						append(particles,{x:random(15,85),y:random(340,360),xvelo:random(-2,2),yvelo:random(-6,-3),
+						size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(50,100),random(200,255),random(50,100)]});
+					}
+					for(cp=0;cp<40;cp+=1){
+						append(particles,{x:random(915,965),y:random(590,610),xvelo:random(-2,2),yvelo:random(-6,-3),
+						size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(50,100),random(200,255),random(50,100)]});
+					}
+				}
+				objects[a].y+=3;
+				if(objects[a].y>730){
+					objects.splice(a,1);
+					a-=1;
+				}
+			}
+		});
+	}
+	if(gametick%(round(35-min(12,max(0,gametick-7200)/1440)))==0){
+		append(enemies,{
+			name:"space tree",
+			isTerrain:1,
+			hp:50,
+			mhp:50,
+			size:20,
+			x:random(100,900),
+			xvelo:random(-1,1),
+			y:-20,
+			id:tick%6000,
+			color:[random(70),random(180,255),random(70)],
+			rockpos:[[random(-20,20),random(-30,5)],[random(-20,20),random(-30,5)],[random(-20,20),random(-30,5)],[random(-20,20),random(-30,5)],[random(-20,20),random(-30,5)],[random(-20,20),random(-30,5)],[random(-20,20),random(-30,5)]],
+			draw:function(){
+				ellipseMode(CENTER);
+				if(options.graphics){
+					fill(255,255,255,10);
+					for(b=0;b<24;b+=1){
+						ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+					}
+				}
+				else{
+					fill(255,255,255,10);
+					for(b=0;b<6;b+=1){
+						ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+					}
+				}
+				fill(80,60,40);
+				rect(enemies[a].x-10,enemies[a].y-20,20,40,4);
+				fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+				ellipse(enemies[a].x,enemies[a].y-30,20,20);
+				for(b=0;b<enemies[a].rockpos.length;b+=1){
+					ellipse(enemies[a].x+enemies[a].rockpos[b][0],enemies[a].y+enemies[a].rockpos[b][1],20,20);
+				}
+			},
+			run:function(){
+				enemies[a].x+=enemies[a].xvelo;
+				enemies[a].y+=2;
+				if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+					enemies[a].exp=1;
+					takedamage({dmg:2});
+				}
+				if(enemies[a].y>770||enemies[a].x>1050||enemies[a].x<-50){
+					enemies[a].exp=1;
+				}
+			},
+			ondeath:function(){
+				stagetemp.biomeprogress+=1;
+			},
+			exp:0,
+			score:5
+		});
+	}
+	if(stagetemp.biomeprogress>=10){
+		sfx.might.rate(random(0.9,1.1));
+		sfx.might.volume(options.sfx*2.5);
+		sfx.might.play();
+		stagetemp.biomecd=600;
+		biome.id=0;
+		bgmt.stop();
+		bgm.volume(options.music*bgmv);
+		bgm.play();
+	}
+},
+//3: drowned abyss
+function(){
+	bgcolor(0,0,50);
+	biome.timer+=1;
+	if(biome.timer<=100){
+		bgm.volume((1-biome.timer/100)*options.music*bgmv);
+		if(biome.timer==100){
+			bgm.pause();
+			bgmt=new Howl({
+				src:'Data/Sound/bgm/abyss.ogg',
+				autoplay:false,
+				loop:true,
+				volume:options.music*1.2
+			});
+			bgmt.play();
+		}
+	}
+	if(gametick%(round(35-min(12,max(0,gametick-7200)/1440)))==0){
+		if(random(1)<0.85-min(0.1,gametick/72000)){
+			append(enemies,{
+				name:"abyssal rock",
+				isTerrain:1,
+				hp:45,
+				mhp:45,
+				size:15,
+				x:random(100,900),
+				xvelo:random(-0.5,0.5),
+				y:-20,
+				id:tick%6000,
+				color:[random(40),random(40),random(20,80)],
+				rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
+				draw:function(){
+					ellipseMode(CENTER);
+					if(options.graphics){
+						fill(255,255,255,13);
+						for(b=0;b<16;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+						}
+					}
+					else{
+						fill(255,255,255,10);
+						for(b=0;b<4;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+						}
+					}
+					fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+					ellipse(enemies[a].x,enemies[a].y,18,18);
+					ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],15,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],15,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,15);
+				},
+				run:function(){
+					enemies[a].x+=enemies[a].xvelo;
+					enemies[a].y+=1;
+					if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+						enemies[a].exp=1;
+						takedamage({dmg:9});
+					}
+					if(enemies[a].y>770||enemies[a].x>1050||enemies[a].x<-50){
+						enemies[a].exp=1;
+					}
+				},
+				ondeath:function(){
+					stagetemp.biomeprogress+=1;
+				},
+				onend:function(){
+					append(objects,{
+						x:enemies[a].x,
+						y:enemies[a].y,
+						size:30,
+						draw:function(){
+							fill(abs(tick%120-60)*2,abs(tick%120-60)*2,150+abs(tick%120-60)*2,140+abs(tick%90-45));
+							ellipseMode(CENTER);
+							ellipse(objects[a].x,objects[a].y,objects[a].size+abs(tick%100-50)/4,objects[a].size+abs((tick+50)%100-50)/4);
+						},
+						run:function(){
+							objects[a].size+=0.5;
+							if(playerhitbox(objects[a].x,objects[a].y,objects[a].size*0.45)){
+								playertemp.slow=max(playertemp.slow,0.6);
+							}
+							if(options.graphics){
+								append(particles,{x:objects[a].x+random(-objects[a].size/2,objects[a].size/2),y:objects[a].y+random(-objects[a].size/2,objects[a].size/2),xvelo:random(-3,3),yvelo:random(1),yacc:0.4,
+								size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(50),random(50),random(200,255)]});
+							}
+							objects[a].y+=1.25;
+							if(objects[a].y>950){
+								objects.splice(a,1);
+								a-=1;
+							}
+						}
+					});
+				},
+				exp:0,
+				score:16
+			});
+		}
+		else{
+			append(enemies,{
+				name:"abyssal drone",
+				hp:130,
+				mhp:130,
+				size:20,
+				xvelo:random(-1,1),
+				xacc:0,
+				x:random(100,900),
+				y:-20,
+				id:tick%6000,
+				ammo:0,
+				color:[random(40,70),random(20,50),random(60,90)],
+				rockpos:[[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)],[random(-20,20),random(-20,20)]],
+				draw:function(){
+					ellipseMode(CENTER);
+					if(options.graphics){
+						fill(255,255,255,10);
+						for(b=0;b<16;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*5,b*5);
+						}
+					}
+					else{
+						fill(255,255,255,10);
+						for(b=0;b<4;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*20,b*20);
+						}
+					}
+					fill(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+					ellipse(enemies[a].x,enemies[a].y,30,22);
+					ellipse(enemies[a].x+enemies[a].rockpos[0][0],enemies[a].y+enemies[a].rockpos[0][1],20,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[1][0],enemies[a].y+enemies[a].rockpos[1][1],15,20);
+					ellipse(enemies[a].x+enemies[a].rockpos[2][0],enemies[a].y+enemies[a].rockpos[2][1],20,15);
+					ellipse(enemies[a].x+enemies[a].rockpos[3][0],enemies[a].y+enemies[a].rockpos[3][1],15,20);
+					fill(255,0,0,75+abs(tick%240-120)*1.5);
+					ellipse(enemies[a].x,enemies[a].y,10,10);
+				},
+				run:function(){
+					enemies[a].ammo+=0.6;
+					if(enemies[a].ammo>60){
+						append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
+						size:random(7,10),op:random(160,200),opc:-7,exp:1,color:[random(120,150),random(100,130),random(30,55)]});
+					}
+					if(enemies[a].ammo>90){
+						if(random(1)<0.55){
+							enemies[a].ammo-=90;
+							enemyproj({r:100,g:80,b:20,size:14,speed:4.5,damage:16,dir:PI,source:a});
+						}
+						else if(random(1)<0.5){
+							enemies[a].ammo-=150;
+							enemyproj({r:100,g:80,b:20,size:14,speed:4.5,damage:15,dir:PI,source:a});
+							enemyproj({r:100,g:80,b:20,size:14,speed:0,damage:16,dir:PI,source:a,misc:{timer:0},
+							run:function(){
+								projectiles[a].misc.timer+=1;
+								if(projectiles[a].misc.timer<=24){
+									projectiles[a].speed+=0.1875;
+								}
+							}});
+						}
+						else{
+							enemies[a].ammo-=180;
+							for(b=0;b<3;b+=1){
+								enemyproj({r:100,g:80,b:20,size:14,speed:5.5,damage:12,dir:PI-PI/8+b*PI/8,source:a});
+							}
+						}
+					}
+					if(random(1)<0.03){
+						enemies[a].xacc=random(-0.07,0.07);
+					}
+					if(enemies[a].x<140){
+						enemies[a].xacc=random(0,0.1);
+					}
+					if(enemies[a].x>860){
+						enemies[a].xacc=random(-0.1,0);
+					}
+					enemies[a].xvelo=min(1.75,max(-1.75,enemies[a].xvelo+enemies[a].xacc));
+					enemies[a].x+=enemies[a].xvelo;
+					enemies[a].y+=0.35;
+					if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+						enemies[a].exp=1;
+						takedamage({dmg:14});
+					}
+					if(enemies[a].y>720){
+						enemies[a].exp=1;
+					}
+				},
+				ondeath:function(){
+					stagetemp.biomeprogress+=4;
+				},
+				onend:function(){
+					append(objects,{
+						x:enemies[a].x,
+						y:enemies[a].y,
+						size:30,
+						draw:function(){
+							fill(abs(tick%120-60)*2,abs(tick%120-60)*2,150+abs(tick%120-60)*2,140+abs(tick%90-45));
+							ellipseMode(CENTER);
+							ellipse(objects[a].x,objects[a].y,objects[a].size+abs(tick%100-50)/4,objects[a].size+abs((tick+50)%100-50)/4);
+						},
+						run:function(){
+							objects[a].size+=0.5;
+							if(playerhitbox(objects[a].x,objects[a].y,objects[a].size*0.45)){
+								playertemp.slow=max(playertemp.slow,0.6);
+							}
+							if(options.graphics){
+								append(particles,{x:objects[a].x+random(-objects[a].size/2,objects[a].size/2),y:objects[a].y+random(-objects[a].size/2,objects[a].size/2),xvelo:random(-3,3),yvelo:random(1),yacc:0.4,
+								size:random(7,10),op:random(160,200),opc:-12,exp:1,color:[random(50),random(50),random(200,255)]});
+							}
+							objects[a].y+=1.25;
+							if(objects[a].y>950){
+								objects.splice(a,1);
+								a-=1;
+							}
+						}
+					});
+				},
+				exp:0,
+				score:60
+			});
+		}
+	}
+	if(stagetemp.biomeprogress>=100){
+		sfx.might.rate(random(0.9,1.1));
+		sfx.might.volume(options.sfx*2.5);
+		sfx.might.play();
+		stagetemp.biomecd=900;
+		biome.id=0;
+		bgmt.stop();
+		bgm.volume(options.music*bgmv);
+		bgm.play();
+	}
+	if(render){
+		fill(0,0,0,min(100,biome.timer/5)-stagetemp.biomeprogress);
+		rect(0,0,1000,700);
+	}
+	append(objects,{
+		draw:function(){
+		},
+		run:function(){
+			playertemp.slow=max(playertemp.slow,0.2);
+			objects.splice(a,1);
+			a-=1;
+		}
+	});
+	for(a=0;a<projectiles.length;a+=1){
+		if(!(projectiles[a].abyssslow)){
+			projectiles[a].abyssslow=0;
+		}
+		if(projectiles[a].abyssslow<60){
+			projectiles[a].abyssslow+=1;
+			projectiles[a].speed*=0.98;
+		}
 	}
 }
 ];
@@ -1299,7 +1709,7 @@ var special=[
 				if(tick%5==0){
 					for(b=0;b<enemies.length;b+=1){
 						if(enemies[b].x-player.x<55+enemies[b].size&enemies[b].x-player.x>-55-enemies[b].size&enemies[b].y<player.y){
-							dohit(20,b);
+							dohit(13,b);
 						}
 					}
 				}
@@ -1785,7 +2195,7 @@ var mods=[
 	{name:"Energy Capacitor",desc:"Replaces your energy storage with a capacitor",pro:"Gain energy when your shield is hit",con:"Slowly lose energy passively"},
 	{name:"Charged Weapons",desc:"Charges your main weapon",pro:"Increases rate of fire by 40%",con:"Attempting to fire without sufficient ammo damages your shield"},
 	{name:"Rapid Reload",desc:"Boosts your ammo regeneration",pro:"Increases ammo recharge rate by 50%",con:"Your shield cannot recharge unless at full ammo"},
-	{name:"Energized Feedback",desc:"Absorbs the entropy created from destruction",pro:"Gain energy when you deal damage",con:"Backfires when you take damage, losing energy - halved for damage blocked (i.e. by shielding)"},
+	{name:"Energized Feedback",desc:"Absorbs the entropy created from destruction",pro:"Gain energy when you deal damage",con:"Backfires when you take damage, losing energy - halved for damage blocked by shielding"},
 	{name:"Heavy Impact",desc:"Makes things go boom",pro:"Increases damage dealt by 50%",con:"Your hits fling debris which can hit you"},
 	{name:"Additional Energy",desc:"Adds more batteries to store energy",pro:"Increases maximum energy by 50%",con:"Your ship becomes less structurally stable, reducing ship health by 35%"},
 	{name:"Funky Jukebox",desc:"Messes up the background music",pro:"May be amusing",con:"May get annoying"},
@@ -1923,8 +2333,8 @@ var domove=function(){
 	else{
 		moveinf=getmovedir();
 		player.movedir;
-		player.x=min(900,max(100,player.x+sin(moveinf.dir)*moveinf.scl*max(player.staticspeed,player.speed)));
-		player.y=min(700,max(25,player.y-cos(moveinf.dir)*moveinf.scl*max(player.staticspeed,player.speed)));
+		player.x=min(900,max(100,player.x+sin(moveinf.dir)*moveinf.scl*(1-playertemp.slow)*max(player.staticspeed,player.speed)));
+		player.y=min(700,max(25,player.y-cos(moveinf.dir)*moveinf.scl*(1-playertemp.slow)*max(player.staticspeed,player.speed)));
 	}
 }
 var doshield=function(){
@@ -2125,6 +2535,18 @@ var setbgm=[
 			autoplay: true,
 			loop: false,
 			volume: options.music*1.3,
+			onend:function(){setbgm[choosebgm(1)]();}
+		});
+	},
+	function(){
+		bgm.stop();
+		bgmv=1.2;
+		bgmn="bigman";
+		bgm = new Howl({
+			src: 'Data/Sound/bgm/bigman.ogg',
+			autoplay: true,
+			loop: false,
+			volume: options.music*1.2,
 			onend:function(){setbgm[choosebgm(1)]();}
 		});
 	}
@@ -2396,6 +2818,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		runpara();
 	}
 	//Run objects
+	playertemp.slow=0;
 	for(a=0;a<objects.length;a+=1){
 		if(render){
 			objects[a].draw();
@@ -3021,13 +3444,17 @@ while(drawcount>=16.6&cdraw<=drawcap){
 							objects[a].y=999;
 							if(player.mods[14]){
 								player.hp=min(player.mhp,player.hp+7.5+player.mhp*0.025);
+								for(cp=0;cp<30;cp+=1){
+									append(particles,{x:random(915,965),y:random(590,610),xvelo:random(-2,2),yvelo:random(-6,-3),
+									size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(50,100),random(200,255),random(50,100)]});
+								}
 							}
 							else{
 								player.energy=min(player.menergy,player.energy+1);
-							}
-							for(cp=0;cp<30;cp+=1){
-								append(particles,{x:random(15,85),y:random(340,360),xvelo:random(-2,2),yvelo:random(-6,-3),
-								size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(50,100),random(200,255),random(50,100)]});
+								for(cp=0;cp<30;cp+=1){
+									append(particles,{x:random(15,85),y:random(340,360),xvelo:random(-2,2),yvelo:random(-6,-3),
+									size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(50,100),random(200,255),random(50,100)]});
+								}
 							}
 						}
 						objects[a].y+=3;
