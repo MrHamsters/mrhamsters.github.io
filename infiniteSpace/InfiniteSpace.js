@@ -1115,12 +1115,12 @@ function(){
 		}
 	}
 	if(gametick%(round(35-min(12,max(0,gametick-7200)/1440))*2)==0){
-		if(random(1)<0.2&stagetemp.biomeprogress>=40&stagetemp.biomeprogress<85){
+		if(random(1)<0.2&stagetemp.biomeprogress>=30&stagetemp.biomeprogress<85){
 			append(enemies,{
 				name:"abyssal demon",
 				isTerrain:1,
-				hp:150,
-				mhp:150,
+				hp:250,
+				mhp:250,
 				size:14,
 				x:random(100,900),
 				xvelo:random(-0.5,0.5),
@@ -1201,7 +1201,7 @@ function(){
 					});
 				},
 				exp:0,
-				score:60
+				score:100
 			});
 		}
 		else if(random(1)<0.85-min(0.1,gametick/72000)){
@@ -1254,7 +1254,7 @@ function(){
 						timer:0,
 						run:function(){
 							objects[a].timer+=1;
-							stagetemp.biomeprogress+=0.02;
+							stagetemp.biomeprogress+=0.012;
 							if(objects[a].timer>=100){
 								objects.splice(a,1);
 								a-=1;
@@ -1360,7 +1360,7 @@ function(){
 						timer:0,
 						run:function(){
 							objects[a].timer+=1;
-							stagetemp.biomeprogress+=0.08;
+							stagetemp.biomeprogress+=0.05;
 							if(objects[a].timer>=100){
 								objects.splice(a,1);
 								a-=1;
@@ -2345,12 +2345,12 @@ var applyshipstats=[
 		player.shipName="Paper Plane";
 		player.hp=20;
 		player.mhp=20;
-		player.shield=13;
-		player.mshield=13;
+		player.shield=11;
+		player.mshield=11;
 		player.energy=10;
 		player.menergy=10;
 		player.shieldregen=3;
-		player.shielddecay=4;
+		player.shielddecay=3.1;
 		player.speed=10;
 		player.ammor=12;
 		player.size=1;
@@ -2365,7 +2365,7 @@ var applyshipstats=[
 					playertemp.paperguard-=1;
 				}
 			},
-			dmgtakenps:function(){
+			dmgtaken:function(){
 				if(playertemp.paperguard>0){
 					dmg.dmg=0;
 				}
@@ -3041,9 +3041,9 @@ var takedamage=function(dmgs){
 	if(player.shielding||playertemp.autoshield){
 		dmg.blocked=true;
 	}
-	if(!(dmg.blocked)&(player.mods[5]&player.energy>=dmg.dmg/20)){
+	if(!(dmg.blocked)&(player.mods[5]&player.energy>=dmg.dmg/(player.mshield*0.3+5))){
 		dmg.blocked=true;
-		player.energy-=dmg.dmg/20;
+		player.energy-=dmg.dmg/(player.mshield*0.3+5);
 		dmg.dmg*=0.9;
 	}
 	if(dmg.blocked){
