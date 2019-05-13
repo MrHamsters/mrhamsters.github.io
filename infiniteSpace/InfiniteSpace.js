@@ -1,4 +1,4 @@
-var version="DEMO 0.7.1";
+var version="DEMO 0.7.2";
 void setup(){
   size(1000,700);
   frameRate(60);  
