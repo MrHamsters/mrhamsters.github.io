@@ -1,4 +1,4 @@
-var version="DEMO 0.7";
+var version="DEMO 0.7.1";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -1444,11 +1444,11 @@ var shoot=[
 			}
 			if(options.graphics){
 				for(cp=0;cp<9;cp+=1){
-					append(particles,{x:player.x-6,y:player.y-10,xvelo:random(-2,2),yvelo:random(-20,-5),
+					append(particles,{x:player.x-12,y:player.y-18,xvelo:random(-2,2),yvelo:random(-20,-5),
 					size:6,op:random(200,255),opc:-25,exp:1,color:[random(240,255),random(180,230),random(30,90)]});
 				}
 				for(cp=0;cp<9;cp+=1){
-					append(particles,{x:player.x+6,y:player.y-10,xvelo:random(-2,2),yvelo:random(-20,-5),
+					append(particles,{x:player.x+12,y:player.y-18,xvelo:random(-2,2),yvelo:random(-20,-5),
 					size:6,op:random(200,255),opc:-25,exp:1,color:[random(240,255),random(180,230),random(30,90)]});
 				}
 			}
@@ -1684,7 +1684,7 @@ var shoot=[
 			}
 			if(options.graphics){
 				for(cp=0;cp<15;cp+=1){
-					append(particles,{x:player.x,y:player.y-15,xvelo:random(-6,6),yvelo:random(-12,-5),
+					append(particles,{x:player.x,y:player.y-45,xvelo:random(-6,6),yvelo:random(-12,-5),
 					size:6,op:random(200,255),opc:-16,exp:1,color:[255,random(40),random(40)]});
 				}
 			}
@@ -1729,8 +1729,10 @@ var shoot=[
 					if(!(enemies[b].papershards)){
 						enemies[b].papershards=new Array();
 					}
-					append(enemies[b].papershards,{x:random(-enemies[b].size,enemies[b].size),y:random(-enemies[b].size,enemies[b].size),rot:random(2*PI)});
-					projectiles[a].damage=10*(1+min(1.5,enemies[b].papershards.length/5));
+					if(enemies[b].papershards.length<50){
+						append(enemies[b].papershards,{x:random(-enemies[b].size,enemies[b].size),y:random(-enemies[b].size,enemies[b].size),rot:random(2*PI)});
+						projectiles[a].damage=10*(1+min(1.5,enemies[b].papershards.length/5));
+					}
 				},
 				x:player.x,
 				y:player.y,
@@ -1912,10 +1914,10 @@ var special=[
 	function(){
 		player.shootcd=5;
 		player.specialcd=15;
-		if(player.energy>=1){
+		if(player.energy>=0.5){
 			player.shootcd=5;
-			player.specialcd=60;
-			player.energy-=1;
+			player.specialcd=45;
+			player.energy-=0.5;
 			temp=0.1;
 			for(a=0;a<enemies.length;a+=1){
 				if(enemies[a].papershards){
@@ -1923,23 +1925,39 @@ var special=[
 				}
 			}
 			if(temp<=0.1){
-				player.energy+=1;
+				player.energy+=0.5;
 				player.specialcd=5;
 			}
 			else{
+				append(objects,{
+					dur:15,
+					draw:function(){
+						noFill();
+						stroke(200,200,200,objects[a].dur*2);
+						ellipseMode(CENTER);
+						for(b=0;b<7;b+=1){
+							strokeWeight(35-b*4);
+							ellipse(player.x,player.y,20+b*4,20+b*4);
+						}
+						noStroke();
+					},
+					run:function(){
+						objects[a].dur-=1;
+						if(objects[a].dur<=0){
+							objects.splice(a,1);
+							a-=1;
+						}
+					}
+				});
+				playertemp.paperguard=15;
 				sfx.splat.rate(random(0.9,1.1));
 				sfx.splat.volume(options.sfx*temp);
 				sfx.splat.play();
-				playertemp.paperbombenergy=0.5;
 				for(a=0;a<enemies.length;a+=1){
 					if(enemies[a].papershards){
 						dohit(enemies[a].papershards.length*35,a);
 						if(enemies[a].hp<=0){
 							player.ammo=min(100,player.ammo+enemies[a].papershards.length*2.25);
-							if(playertemp.paperbombenergy>0){
-								player.energy=min(player.menergy,player.energy+0.1);
-								playertemp.paperbombenergy-=0.1;
-							}
 						}
 						for(b=0;b<enemies[a].papershards.length*3;b+=1){
 							/*if(random(1)<0.5){
@@ -1957,7 +1975,12 @@ var special=[
 									fill(255,255,255);
 									translate(projectiles[a].x,projectiles[a].y);
 									rotate(projectiles[a].timer/4);
-									rect(-5,-5,10,10,2);
+									rect(-13,-5,7,7,2);
+									rect(-5,-13,7,7,2);
+									rect(-5,-5,7,7,2);
+									rect(-13,-13,7,7,2);
+									rect(-5,-20,7,7,2);
+									rect(-5,10,7,7,2);
 									resetMatrix();
 									if(options.graphics){
 										fill(255,255,255,20);
@@ -1967,24 +1990,38 @@ var special=[
 									}
 								},
 								run:function(){
+									if(projectiles[a].timer==0){
+										if(random(1)<0.3){
+											projectiles[a].dir=random(2*PI);
+										}
+										else{
+											projectiles[a].dir=dirgeneric(projectiles[a].x,projectiles[a].y,player.x,player.y)+random(PI-0.2,PI+0.2);
+										}
+									}
 									projectiles[a].timer+=1;
+									if(options.graphics){
+										append(particles,{x:projectiles[a].x,y:projectiles[a].y,xvelo:random(-1,1),yvelo:random(-1),
+										size:8,op:random(120,180),opc:-6,exp:1,color:[random(40,100),random(40,100),random(40,100)]});
+									}
 								},
 								onhit:function(b){
 									if(!(enemies[b].papershards)){
 										enemies[b].papershards=new Array();
 									}
-									append(enemies[b].papershards,{x:random(-enemies[b].size,enemies[b].size),y:random(-enemies[b].size,enemies[b].size),rot:random(2*PI)});
-									projectiles[a].damage=10*(1+min(1.5,enemies[b].papershards.length/5));
+									if(enemies[b].papershards.length<50){
+										append(enemies[b].papershards,{x:random(-enemies[b].size,enemies[b].size),y:random(-enemies[b].size,enemies[b].size),rot:random(2*PI)});
+										projectiles[a].damage=10*(1+min(1.5,enemies[b].papershards.length/5));
+									}
 								},
 								x:enemies[a].x,
 								y:enemies[a].y,
 								end:1,
 								pierce:0,
 								//dir:temp+random(-0.2,0.2),
-								dir:random(2*PI),
-								speed:15,
-								scans:3,
-								size:6,
+								dir:0,
+								speed:25,
+								scans:2,
+								size:20,
 								damage:10
 							});
 						}
@@ -2322,6 +2359,16 @@ var applyshipstats=[
 				if(enemies[a].papershards){
 					player.ammo=min(100,player.ammo+enemies[a].papershards.length*2.25);
 				}
+			},
+			passive:function(){
+				if(playertemp.paperguard>0){
+					playertemp.paperguard-=1;
+				}
+			},
+			dmgtakenps:function(){
+				if(playertemp.paperguard>0){
+					dmg.dmg=0;
+				}
 			}
 		};
 	},
@@ -2532,7 +2579,7 @@ var ships=[
 	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while absorbing damage taken.",misc:"Normal shots fragment on hit."},
 	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
 	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:8,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
-	{name:"Paper Plane",unlocked:1,sprite:"paperplane",damage:10,health:1,shield:2,energy:10,speed:10,special:"Violently rips paper out of all enemies, sending it flying with triple the quantity. Enemies killed by the inital burst refund some energy (up to half the cost).",misc:"Normal shots embed paper in foes, refunding 75% of ammo cost on kill while increasing damage taken by paper shots."},
+	{name:"Paper Plane",unlocked:1,sprite:"paperplane",damage:10,health:1,shield:2,energy:10,speed:10,special:"Violently rips paper out of all enemies, sending it flying with triple the quantity. The fragments are more likely to fly away from you. Additionally, you are briefly shielded from all damage if used successfully.",misc:"Normal shots embed paper in foes, increasing damage taken by paper shots. Killing enemies with paper fragments restores ammo."},
 ];
 var player={
 	hpl:0,
@@ -2883,6 +2930,18 @@ var setbgm=[
 			loop: false,
 			volume: options.music*1.2,
 			onend:function(){setbgm[choosebgm(2)]();}
+		});
+	},
+	function(){
+		bgm.stop();
+		bgmv=0.9;
+		bgmn="cryingsoul";
+		bgm = new Howl({
+			src: 'Data/Sound/bgm/Crying Soul.ogg',
+			autoplay: true,
+			loop: false,
+			volume: options.music*0.9,
+			onend:function(){setbgm[choosebgm(3)]();}
 		});
 	}
 ];
@@ -3585,11 +3644,12 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			textFont(0,25);
 			fill(255,255,255);
 			text(ships[viewmod].name,500,130,400,100);
-			textFont(0,22);
+			textFont(0,min(30,max(15,3000/ships[viewmod].misc.length)));
 			fill(220,220,220);
-			text(ships[viewmod].misc,500,210,400,120);
+			text(ships[viewmod].misc,500,190,400,120);
+			textFont(0,min(30,max(15,3000/ships[viewmod].special.length)));
 			fill(255,255,0);
-			text("Special:  "+ships[viewmod].special,500,320,400,140);
+			text("Special:  "+ships[viewmod].special,500,330,400,120);
 			fill(255,255,255);
 			textFont(0,20);
 			text("Damage",550,445,100,50);
