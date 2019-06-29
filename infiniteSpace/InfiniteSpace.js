@@ -3440,7 +3440,7 @@ var applymods=function(){
 		append(player.modfuncs.onkill,function(c){
 			append(objects,{
 				x:enemies[c].x,
-				y:enemies[c].y,
+				y:max(0,enemies[c].y),
 				souls:min(75,enemies[c].mhp/20),
 				timer:600,
 				draw:function(){
