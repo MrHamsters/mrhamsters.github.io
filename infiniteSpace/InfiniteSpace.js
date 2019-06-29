@@ -1459,7 +1459,7 @@ function(){
 			bgmt.play();
 		}
 	}
-	if(biome.timer<36){
+	if(biome.timer<360){
 		if(gametick%90==0){
 			if(random(1)<2){
 				append(enemies,{
@@ -1622,7 +1622,7 @@ function(){
 			}
 		}
 	}
-	else if(biome.timer==42){
+	else if(biome.timer==420){
 		append(enemies,{
 			name:"World Breaker",
 			hp:4000+min(8000,gametick/7.5),
