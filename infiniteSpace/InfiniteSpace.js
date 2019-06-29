@@ -1,4 +1,4 @@
-var version="DEMO 0.8";
+var version="DEMO 0.8b";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -224,7 +224,7 @@ var biomechance=[
 		return(true);
 	},
 	function(){
-		if(gametick>10800&random(1)<max(0.6,gametick/72000)){
+		if(gametick>10800&random(1)<min(0.6,gametick/72000)){
 			return(true);
 		}
 		return(false);
@@ -236,13 +236,13 @@ var biomechance=[
 		return(false);
 	},
 	function(){
-		if(gametick>3600&random(1)<max(0.55,gametick/50000)){
+		if(gametick>3600&random(1)<min(0.55,gametick/50000)){
 			return(true);
 		}
 		return(false);
 	},
 	function(){
-		if(gametick>7200&random(1)<max(0.6,gametick/75000)){
+		if(gametick>7200&random(1)<min(0.6,gametick/75000)){
 			return(true);
 		}
 		return(false);
@@ -623,8 +623,8 @@ function(){
 		if(!(stagetemp.biomestacks)){
 			stagetemp.biomestacks=0;
 		}
-		stagetemp.biomestacks+=1+min(0.5,gametick/72000);
-		if(random(1)<stagetemp.biomestacks/1000-0.03){
+		stagetemp.biomestacks+=1+min(1,gametick/36000);
+		if(random(1)<stagetemp.biomestacks/1000-0.01){
 			stagetemp.biomestacks-=60;
 			biome.id=selectbiome();
 			biome.timer=0;
@@ -983,7 +983,7 @@ function(){
 				sfx.might.rate(random(0.9,1.1));
 				sfx.might.volume(options.sfx*2.5);
 				sfx.might.play();
-				stagetemp.biomecd=1200;
+				stagetemp.biomecd=900;
 				biome.id=0;
 				bgmt.stop();
 				bgm.volume(options.music*bgmv);
@@ -2171,7 +2171,7 @@ function(){
 				sfx.might.rate(random(0.9,1.1));
 				sfx.might.volume(options.sfx*2.5);
 				sfx.might.play();
-				stagetemp.biomecd=1200;
+				stagetemp.biomecd=900;
 				biome.id=0;
 				bgmt.stop();
 				bgm.volume(options.music*bgmv);
@@ -3103,7 +3103,7 @@ var applyshipstats=[
 				}
 			},
 			onkill:function(a){
-				player.hp=min(player.mhp,player.hp+(enemies[a].mhp/30)*(1.5-player.hp/player.mhp));
+				player.hp=min(player.mhp,player.hp+(enemies[a].mhp/50)*(2-player.hp/player.mhp));
 				for(cp=0;cp<min(100,(enemies[a].mhp/30)*(1.5-player.hp/player.mhp)*2);cp+=1){
 					append(particles,{x:random(915,965),y:random(590,610),xvelo:random(-2,2),yvelo:random(-6,-3),
 					size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(50,100),random(200,255),random(50,100)]});
@@ -3421,7 +3421,7 @@ var applymods=function(){
 				playertemp.souleater=0;
 			}
 			else{
-				playertemp.souleater*=0.99982;
+				playertemp.souleater*=0.99975;
 				if(tick%round((200/playertemp.souleater))==0){
 					append(particles,{x:random(20,80),y:random(670,695),xvelo:random(1,5),yvelo:random(-5,-1),
 					size:random(8,11),op:random(50,120),opc:-3,exp:1,color:[random(70,120),0,random(70,120)]});
@@ -3441,7 +3441,7 @@ var applymods=function(){
 			append(objects,{
 				x:enemies[c].x,
 				y:enemies[c].y,
-				souls:min(100,enemies[c].mhp/20),
+				souls:min(75,enemies[c].mhp/20),
 				timer:600,
 				draw:function(){
 					fill(100+abs(tick%120-60),0,100+abs(tick%120-60),(objects[a].timer/600)*(objects[a].souls+25+abs(tick%50-25)*8));
@@ -3504,7 +3504,7 @@ var mods=[
 var ships=[
 	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while dragging them. Also reflects enemy projectiles. Dissipates if it hits a boss.",misc:"A well-rounded ship."},
 	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while absorbing damage taken.",misc:"Normal shots fragment on hit."},
-	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Briefly phase through enemies and projectiles after blocking with shield. Gain health on kill. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
+	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Briefly phase through enemies and projectiles after blocking with shield. Gain health on kill. Immune to water-based slows. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
 	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:8,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
 	{name:"Paper Plane",unlocked:1,sprite:"paperplane",damage:10,health:1,shield:2,energy:10,speed:10,special:"Violently rips paper out of all enemies, sending it flying with triple the quantity. The fragments are more likely to fly away from you. Additionally, you are briefly shielded from all damage if used successfully.",misc:"Normal shots embed paper in foes, increasing damage taken by paper shots. Killing enemies with paper fragments restores ammo."},
 ];
@@ -3869,7 +3869,7 @@ var setbgmt=[
 			src: 'Data/Sound/bgm/abyssal ruins.ogg',
 			autoplay: true,
 			loop: false,
-			volume: options.music*1.1,
+			volume: options.music*0.9,
 			onend:function(){setbgmt[2]();}
 		});
 	},
@@ -3893,7 +3893,7 @@ var setbgmt=[
 			src: 'Data/Sound/bgm/StrangeOccurrences.ogg',
 			autoplay: true,
 			loop: false,
-			volume: options.music*0.45,
+			volume: options.music*0.5,
 			onend:function(){setbgmt[4]();}
 		});
 	},
