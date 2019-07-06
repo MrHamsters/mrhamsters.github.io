@@ -210,7 +210,7 @@ var bgcolor=function(r,g,b){
 }
 var selectbiome=function(){
 	stagetemp.biomeprogress=0;
-	return(1);
+	//return(1);
 	for(a=0;a<100;a+=1){
 		temp=round(random(0.51,biomescripts.length-0.51));
 		if(biomechance[temp]()){
@@ -628,7 +628,7 @@ function(){
 	}
 	else if(gametick%60==0){
 		if(!(stagetemp.biomestacks)){
-			stagetemp.biomestacks=9999990;
+			stagetemp.biomestacks=0;
 		}
 		stagetemp.biomestacks+=1+min(1,gametick/18000);
 		if(random(1)<stagetemp.biomestacks/1000-0.01){
