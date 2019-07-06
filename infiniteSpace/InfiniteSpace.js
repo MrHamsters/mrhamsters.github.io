@@ -1,4 +1,4 @@
-var version="DEMO 0.8b";
+var version="DEMO 0.8.1";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -210,7 +210,7 @@ var bgcolor=function(r,g,b){
 }
 var selectbiome=function(){
 	stagetemp.biomeprogress=0;
-	//return(4);
+	return(1);
 	for(a=0;a<100;a+=1){
 		temp=round(random(0.51,biomescripts.length-0.51));
 		if(biomechance[temp]()){
@@ -224,7 +224,7 @@ var biomechance=[
 		return(true);
 	},
 	function(){
-		if(gametick>10800&random(1)<min(0.6,gametick/72000)){
+		if(gametick>18000&random(1)<min(0.7,gametick/90000)){
 			return(true);
 		}
 		return(false);
@@ -236,7 +236,7 @@ var biomechance=[
 		return(false);
 	},
 	function(){
-		if(gametick>3600&random(1)<min(0.55,gametick/50000)){
+		if(gametick>3600&random(1)<min(0.5,gametick/50000)){
 			return(true);
 		}
 		return(false);
@@ -250,13 +250,18 @@ var biomechance=[
 ];
 var enemyscripts={
 	lavapool:function(){
+		enemyscripts.slavapool(enemies[a].x,enemies[a].y);
+	},
+	slavapool:function(x,y){
 		append(objects,{
-			x:enemies[a].x,
-			y:enemies[a].y,
+			x:x,
+			y:y,
+			size:100,
+			velo:0.5,
 			draw:function(){
 				fill(130+abs(tick%120-60)*2,80+abs(tick%120-60)*2,abs(tick%120-60)*2,140+abs(tick%90-45));
 				ellipseMode(CENTER);
-				ellipse(objects[a].x,objects[a].y,100+abs(tick%50-25),100+abs((tick+25)%50-25));
+				ellipse(objects[a].x,objects[a].y,objects[a].size*0.45+abs(tick%24-12)*2,objects[a].size*0.45+abs((tick+12)%24-12)*2);
 			},
 			run:function(){
 				if(objects[a].hitcd>0){
@@ -264,17 +269,19 @@ var enemyscripts={
 				}
 				else{
 					if(!(playertemp.phasing>0)){
-						if(playerhitbox(objects[a].x,objects[a].y,45)){
-							objects[a].hitcd=13;
-							takedamage({dmg:3});
+						if(playerhitbox(objects[a].x,objects[a].y,objects[a].size*0.45)){
+							objects[a].hitcd=5;
+							takedamage({dmg:max(0.25,min(2,objects[a].velo-1))});
 						}
 					}
 				}
 				if(options.graphics){
-					append(particles,{x:objects[a].x+random(-50,50),y:objects[a].y+random(-50,50),xvelo:random(-9,9),yvelo:random(-6,12),
+					append(particles,{x:objects[a].x+random(-objects[a].size/2,objects[a].size/2),y:objects[a].y+random(-objects[a].size/2,objects[a].size/2),xvelo:random(-9,9),yvelo:random(-6,12),
 					size:random(7,10),op:random(160,200),opc:-36,exp:1,color:[random(200,255),random(170,220),random(30,55)]});
 				}
-				objects[a].y+=3;
+				objects[a].y+=objects[a].velo;
+				objects[a].velo=min(4,objects[a].velo+0.03);
+				objects[a].size=max(40,objects[a].size-0.4);
 				if(objects[a].y>770){
 					objects.splice(a,1);
 					a-=1;
@@ -621,9 +628,9 @@ function(){
 	}
 	else if(gametick%60==0){
 		if(!(stagetemp.biomestacks)){
-			stagetemp.biomestacks=0;
+			stagetemp.biomestacks=9999990;
 		}
-		stagetemp.biomestacks+=1+min(1,gametick/36000);
+		stagetemp.biomestacks+=1+min(1,gametick/18000);
 		if(random(1)<stagetemp.biomestacks/1000-0.01){
 			stagetemp.biomestacks-=60;
 			biome.id=selectbiome();
@@ -649,7 +656,7 @@ function(){
 		}
 	}
 	if(biome.timer<3600){
-		if(gametick%(round(35-min(12,max(0,gametick-7200)/1440)))==0){
+		if(gametick%(round(45-min(25,max(0,gametick-18000)/1440)))==0){
 			if(random(1)<0.85-min(0.1,gametick/72000)){
 				append(enemies,{
 					name:"lava meteor",
@@ -823,8 +830,8 @@ function(){
 	else if(biome.timer==4200){
 		append(enemies,{
 			name:"Blazing Sun",
-			hp:2000+min(4000,gametick/7.5),
-			mhp:2000+min(4000,gametick/7.5),
+			hp:3000+min(4000,max(0,gametick-18000)/7.5),
+			mhp:3000+min(4000,max(0,gametick-18000)/7.5),
 			size:40,
 			isBoss:true,
 			xvelo:random(-1.5,1.5),
@@ -872,6 +879,13 @@ function(){
 				noStroke();
 			},
 			run:function(){
+				if(enemies[a].hp+2500<enemies[a].mhp){
+					append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-4,-2),
+					size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[255,random(70,110),0]});
+					if(gametick%40==0){
+						enemyscripts.slavapool(random(100,900),-40);
+					}
+				}
 				enemies[a].ammo+=0.7+min(0.8,gametick/50000);
 				if(enemies[a].ammo>70){
 					append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
@@ -990,7 +1004,7 @@ function(){
 				bgm.play();
 			},
 			exp:0,
-			score:round(1000+min(3000,gametick/10))*2
+			score:round(1200+min(3000,max(0,gametick)/10))*2
 		});
 	}
 },
@@ -2185,9 +2199,14 @@ function(){
 ];
 var shoot=[
 	function(){
-		player.shootcd=7;
-		if(player.ammo>4){
-			player.ammo-=4;
+		if(playertemp.hawkblitz>0){
+			player.shootcd=3;
+		}
+		else{
+			player.shootcd=6;
+		}
+		if(player.ammo>3.6){
+			player.ammo-=3.6;
 			for(b=0;b<2;b+=1){
 				append(projectiles,{
 					target:1,
@@ -2210,7 +2229,7 @@ var shoot=[
 					speed:50,
 					scans:6,
 					size:9,
-					damage:14,
+					damage:15,
 					isSingleTarget:true,
 					basicAttack:true
 				});
@@ -2226,7 +2245,7 @@ var shoot=[
 				}
 			}
 			sfx.minigun.rate(random(0.9,1.1));
-			sfx.minigun.volume(options.sfx*0.4);
+			sfx.minigun.volume(options.sfx*0.32);
 			sfx.minigun.play();
 		}
 		else{
@@ -2547,6 +2566,18 @@ var special=[
 			player.shootcd=20;
 			player.specialcd=60;
 			player.energy-=1;
+			playertemp.hawkblitz=90;
+			append(objects,{
+				dur:90,
+				run:function(){
+					objects[a].dur-=1;
+					player.ammo=min(100,player.ammo+1);
+					if(objects[a].dur<=0){
+						objects.splice(a,1);
+						a-=1;
+					}
+				}
+			});
 			append(projectiles,{
 				target:1,
 				draw:function(){
@@ -2897,7 +2928,13 @@ var applyshipstats=[
 		player.speed=7;
 		player.ammor=18;
 		player.size=20;
-		player.shipfuncs={};
+		player.shipfuncs={
+			passive:function(){
+				if(playertemp.hawkblitz>0){
+					playertemp.hawkblitz-=1;
+				}
+			}
+		};
 	},
 	function(){
 		player.shipId=1;
@@ -3502,7 +3539,7 @@ var mods=[
 	{name:"Soul Eater",desc:"Makes your ship demonic. Your damage is now based on how many souls held.",pro:"Kill enemies and harvest their souls. Each soul increases damage by 1%.",con:"Your ship's base damage is halved. The more souls you have, the faster they are lost."},
 ];
 var ships=[
-	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Emits a screech which deals heavy damage to enemies caught in the AoE while dragging them. Also reflects enemy projectiles. Dissipates if it hits a boss.",misc:"A well-rounded ship."},
+	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Berserk for 2 seconds while emitting a screech which deals heavy damage to enemies caught in the AoE while dragging them. Also reflects enemy projectiles. Dissipates if it hits a boss.",misc:"A well-rounded ship."},
 	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while absorbing damage taken.",misc:"Normal shots fragment on hit."},
 	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Briefly phase through enemies and projectiles after blocking with shield. Gain health on kill. Immune to water-based slows. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
 	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:8,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
@@ -4693,13 +4730,13 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			textAlign(CENTER);
 			textFont(0,25);
 			fill(255,255,255);
-			text(ships[viewmod].name,500,130,400,100);
+			text(ships[viewmod].name,400,130,475,100);
 			textFont(0,min(30,max(15,3000/ships[viewmod].misc.length)));
 			fill(220,220,220);
-			text(ships[viewmod].misc,500,190,400,120);
+			text(ships[viewmod].misc,400,190,475,120);
 			textFont(0,min(30,max(15,3000/ships[viewmod].special.length)));
 			fill(255,255,0);
-			text("Special:  "+ships[viewmod].special,500,330,400,120);
+			text("Special:  "+ships[viewmod].special,400,320,475,130);
 			fill(255,255,255);
 			textFont(0,20);
 			text("Damage",550,445,100,50);
