@@ -1,4 +1,4 @@
-var version="DEMO 0.9";
+var version="DEMO 0.9b";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -1050,6 +1050,7 @@ function(){
 			run:function(){
 				if(playerhitbox(objects[a].x,objects[a].y,25)){
 					objects[a].y=999;
+					player.hpg=min(player.mhp-player.hp,15+player.mhp*0.05);
 					player.hp=min(player.mhp,player.hp+15+player.mhp*0.05);
 					player.energy=min(player.menergy,player.energy+2);
 					player.wither=max(0,player.wither-20);
@@ -3164,6 +3165,7 @@ var applyshipstats=[
 				}
 			},
 			onkill:function(a){
+				player.hpg=min(player.mhp-player.hp,(enemies[a].mhp/50)*(2-player.hp/player.mhp));
 				player.hp=min(player.mhp,player.hp+(enemies[a].mhp/50)*(2-player.hp/player.mhp));
 				for(cp=0;cp<min(100,(enemies[a].mhp/30)*(1.5-player.hp/player.mhp)*2);cp+=1){
 					append(particles,{x:random(915,965),y:random(590,610),xvelo:random(-2,2),yvelo:random(-6,-3),
@@ -3613,6 +3615,7 @@ var player={
 };
 var spawnplayer=function(){
 	player.hpl=0;
+	player.hpg=0;
 	player.shielding=0;
 	player.shieldboing=0;
 	player.x=500;
@@ -4148,6 +4151,10 @@ var takedamage=function(dmgs){
 					strokeWeight(25);
 					arc(player.x,player.y,80+player.size*3,25+player.size*4,-PI*0.7,-PI*0.3);
 					noStroke();
+					if(options.graphics){
+						fill(255,255,255,6);
+						rect(100,0,800,700);
+					}
 				},
 				run:function(){
 					objects[a].dur-=1;
@@ -4182,26 +4189,28 @@ var takedamage=function(dmgs){
 		}
 	}
 	if(dmg.blocked){
-		player.shieldboing+=dmg.dmg;
-		if(dmg.dmg>player.shield){
-			dmg.dmg-=player.shield;
-			player.shieldboing+=player.shield;
-			for(cp=0;cp<player.shield;cp+=1){
-				append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-3,3),yvelo:random(-3,3),
-				size:random(8,11),op:random(120,180),opc:-7,exp:1,color:[random(70,120),random(70,120),random(200,255)]});
+		if(dmg.dmg>0){
+			player.shieldboing+=dmg.dmg;
+			if(dmg.dmg>player.shield){
+				dmg.dmg-=player.shield;
+				player.shieldboing+=player.shield;
+				for(cp=0;cp<player.shield;cp+=1){
+					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-3,3),yvelo:random(-3,3),
+					size:random(8,11),op:random(120,180),opc:-7,exp:1,color:[random(70,120),random(70,120),random(200,255)]});
+				}
+				player.shield=0;
 			}
-			player.shield=0;
-		}
-		else{
-			sfx.block.rate(random(0.9,1.1));
-			sfx.block.volume(options.sfx);
-			sfx.block.play();
-			player.shield-=dmg.dmg;
-			for(cp=0;cp<dmg.dmg;cp+=1){
-				append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-3,3),yvelo:random(-3,3),
-				size:random(8,11),op:random(120,180),opc:-7,exp:1,color:[random(70,120),random(70,120),random(200,255)]});
+			else{
+				sfx.block.rate(random(0.9,1.1));
+				sfx.block.volume(options.sfx);
+				sfx.block.play();
+				player.shield-=dmg.dmg;
+				for(cp=0;cp<dmg.dmg;cp+=1){
+					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-3,3),yvelo:random(-3,3),
+					size:random(8,11),op:random(120,180),opc:-7,exp:1,color:[random(70,120),random(70,120),random(200,255)]});
+				}
+				dmg.dmg=0;
 			}
-			dmg.dmg=0;
 		}
 	}
 	if(!(dmg.pure)){
@@ -4603,6 +4612,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			if(player.hpl>0){
 				player.hpl=max(0,player.hpl*0.95-0.08);
 			}
+			if(player.hpg>0){
+				player.hpg=max(0,player.hpg*0.95-0.08);
+			}
 		}
 		player.ammo=min(100,player.ammo+player.ammor/60);
 		if(player.mods[9]){
@@ -4638,6 +4650,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				playertemp.parryaddiction=0;
 				if(playertemp.parryaddictioncd<=0){
 					playertemp.parryaddictioncd=30;
+					player.hpg=min(player.mhp-player.hp,6+player.mhp*0.03);
 					player.hp=min(player.mhp,player.hp+6+player.mhp*0.03);
 					for(cp=0;cp<30;cp+=1){
 						append(particles,{x:random(915,965),y:random(590,610),xvelo:random(-2,2),yvelo:random(-6,-3),
@@ -4659,6 +4672,10 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					strokeWeight(50-objects[a].dur*1.5);
 					ellipse(player.x,player.y,player.size*2+100-objects[a].dur*8,player.size*2+125-objects[a].dur*10);
 					noStroke();
+					if(options.graphics){
+						fill(0,0,255,objects[a].dur*0.5);
+						rect(100,0,800,700);
+					}
 				},
 				run:function(){
 					objects[a].dur-=1;
@@ -5107,6 +5124,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 						if(playerhitbox(objects[a].x,objects[a].y,15)){
 							objects[a].y=999;
 							if(player.mods[14]){
+								player.hpg=min(player.mhp-player.hp,7.5+player.mhp*0.025);
 								player.hp=min(player.mhp,player.hp+7.5+player.mhp*0.025);
 								for(cp=0;cp<30;cp+=1){
 									append(particles,{x:random(915,965),y:random(590,610),xvelo:random(-2,2),yvelo:random(-6,-3),
@@ -5146,6 +5164,10 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		fill(210+abs(tick%180-90)/2,abs(tick%180-90)/2,abs(tick%180-90)/2);
 		rect(915,600-(max(0,min(1,player.hp/player.mhp)))*500,50,(max(0,min(1,player.hp/player.mhp)))*500);
 		if(player.hp>0){
+			if(player.hpg>0){
+				fill(0,255,0);
+				rect(915,600-(max(0,(player.hp)/player.mhp))*500,50,(max(0,(player.hpg)/player.mhp))*500);
+			}
 			if(player.hpl>0){
 				fill(180,0,180);
 				rect(915,600-(max(0,(player.hp+player.hpl)/player.mhp))*500,50,(max(0,(player.hpl)/player.mhp))*500);
