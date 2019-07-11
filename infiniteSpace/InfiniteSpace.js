@@ -1,4 +1,4 @@
-var version="DEMO 0.9b";
+var version="DEMO 0.9.1";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -208,10 +208,17 @@ var bgcolor=function(r,g,b){
 		biome.color.b=min(b,biome.color.b+0.5);
 	}
 }
+var smashfx=function(x,y){
+	var smashptdir=random(2*PI);
+	for(c=-60;c<60;c+=1){
+		append(particles,{x:x+c*cos(smashptdir)*2+random(-15,15),y:y+c*sin(smashptdir)*2+random(-15,15),xvelo:random(-1,1),yvelo:random(-1),
+		size:12,op:random(500,650),opc:-18,exp:1,color:[random(100,200),random(20,30),random(20,30)]});
+	}
+}
 var forcebiome=0;
 var selectbiome=function(){
 	stagetemp.biomeprogress=0;
-	//return(4);
+	//return(3);
 	for(a=0;a<100;a+=1){
 		temp=round(random(0.51,biomescripts.length-0.51));
 		if(biomechance[temp]()){
@@ -308,8 +315,10 @@ var enemyscripts={
 					}
 				}
 				if(options.graphics){
-					append(particles,{x:objects[a].x+random(-objects[a].size/2,objects[a].size/2),y:objects[a].y+random(-objects[a].size/2,objects[a].size/2),xvelo:random(-6,6),yvelo:random(2),yacc:0.8,
-					size:random(7,10),op:random(160,200),opc:-24,exp:1,color:[random(50),random(50),random(200,255)]});
+					if(tick%3==0){
+						append(particles,{x:objects[a].x+random(-objects[a].size/2,objects[a].size/2),y:objects[a].y+random(-objects[a].size/2,objects[a].size/2),xvelo:random(-3,3),yvelo:0,yacc:0.6,
+						size:random(7,10),op:random(160,200),opc:-18,exp:1,color:[random(50),random(50),random(200,255)]});
+					}
 				}
 				objects[a].y+=1.25;
 				if(objects[a].y>950){
@@ -636,6 +645,7 @@ function(){
 			stagetemp.biomestacks-=60;
 			biome.id=selectbiome();
 			biome.timer=0;
+			biome.temp={};
 		}
 	}
 },
@@ -1155,7 +1165,100 @@ function(){
 			bgmt.play();
 		}
 	}
-	if(gametick%(round(35-min(12,max(0,gametick-7200)/1440))*2)==0){
+	if((stagetemp.biomeprogress-10>biome.temp.leviathan*30-min(22,gametick/1200)||!(biome.temp.leviathan))&stagetemp.biomeprogress<80&stagetemp.biomeprogress>10){
+		if(!(biome.temp.leviathan)){
+			biome.temp.leviathan=0;
+		}
+		biome.temp.leviathan+=1;
+		append(objects,{
+			x:round(random(1))*1500-300,
+			y:random(100,600),
+			dur:0,
+			dir:-1,
+			hitcd:0,
+			startup:function(){
+				if(objects[a].x<500){
+					objects[a].dir=1;
+				}
+			},
+			draw:function(){
+				fill(0,0,0,18-abs(objects[a].dur-180)/10);
+				for(b=0;b<5+options.graphics*10;b+=1){
+					ellipse(500-objects[a].dir*400,objects[a].y,b*27-options.graphics*18,b*45-options.graphics*30);
+				}
+				shape(sprites.leviathan,objects[a].x,objects[a].y,objects[a].dir*1400,1750);
+				fill(0,0,0);
+				if(objects[a].dir==-1){
+					rect(objects[a].x,objects[a].y-50,1000,100,60);
+					rect(objects[a].x+400,objects[a].y,80,150,40);
+				}
+				else{
+					rect(objects[a].x-1000,objects[a].y-50,1000,100,60);
+					rect(objects[a].x-480,objects[a].y,80,150,40);
+				}
+				fill(255,0,0);
+				ellipse(objects[a].x,objects[a].y-40,18,12);
+			},
+			run:function(){
+				objects[a].dur+=1;
+				if(objects[a].dur>180){
+					objects[a].x+=objects[a].dir*8;
+					if(objects[a].hitcd>0){
+						objects[a].hitcd-=1;
+					}
+					else{
+						if(!(playertemp.phasing>0)){
+							if(playerhitbox(objects[a].x,objects[a].y,40)){
+								if((objects[a].x<130||objects[a].x>830)&objects[a].dur>300){
+									objects[a].hitcd=999;
+									player.wither+=4;
+									takedamage({dmg:30});
+									sfx.finisher.rate(random(0.9,1.1));
+									sfx.finisher.volume(options.sfx*2.5);
+									sfx.finisher.play();
+									smashfx(player.x,player.y);
+								}
+								else{
+									objects[a].hitcd=6;
+									player.wither+=1.5;
+									takedamage({dmg:5});
+									append(objects,{
+										dur:6,
+										dir:objects[a].dir,
+										run:function(){
+											player.x+=objects[a].dir*8;
+											objects[a].dur-=1;
+											if(objects[a].dur<=0){
+												objects.splice(a,1);
+												a-=1;
+											}
+										}
+									});
+									append(objects,{
+										dur:15,
+										run:function(){
+											playertemp.slow=max(playertemp.slow,0.75);
+											objects[a].dur-=1;
+											if(objects[a].dur<=0){
+												objects.splice(a,1);
+												a-=1;
+											}
+										}
+									});
+								}
+							}
+						}
+					}
+				}
+				if(objects[a].dur>460){
+					player.score+=200;
+					objects.splice(a,1);
+					a-=1;
+				}
+			}
+		});
+	}
+	if(gametick%(round(38-min(12,max(0,gametick-7200)/1440))*2)==0){
 		if(random(1)<0.2&stagetemp.biomeprogress>=30&stagetemp.biomeprogress<85){
 			append(enemies,{
 				name:"abyssal demon",
@@ -2064,7 +2167,6 @@ function(){
 							sfx.finisher.rate(random(0.9,1.1));
 							sfx.finisher.volume(options.sfx*3);
 							sfx.finisher.play();
-							var smashptdir=random(2*PI);
 							if(projectiles[a].target){
 								projectiles[a].damage*=5;
 							}
@@ -2096,10 +2198,7 @@ function(){
 									}
 								});
 							}
-							for(c=-60;c<60;c+=1){
-								append(particles,{x:projectiles[a].x+c*cos(smashptdir)*2+random(-15,15),y:projectiles[a].y+c*sin(smashptdir)*2+random(-15,15),xvelo:random(-1,1),yvelo:random(-1),
-								size:12,op:random(500,650),opc:-18,exp:1,color:[random(100,200),random(20,30),random(20,30)]});
-							}
+							smashfx(projectiles[a].x,projectiles[a].y);
 						},
 						x:enemies[a].weapons.railgun.x,
 						y:enemies[a].weapons.railgun.y,
@@ -2951,7 +3050,7 @@ var applyshipstats=[
 		player.speed=7;
 		player.ammor=18;
 		player.size=20;
-		player.parrytimer=6;
+		player.parrytimer=8;
 		player.shipfuncs={
 			passive:function(){
 				if(playertemp.hawkblitz>0){
@@ -2974,7 +3073,7 @@ var applyshipstats=[
 		player.speed=6.2;
 		player.ammor=20;
 		player.size=20;
-		player.parrytimer=6;
+		player.parrytimer=8;
 		player.shipfuncs={
 			passive:function(){
 				if(playertemp.crystalstorm>0){
@@ -3056,6 +3155,7 @@ var applyshipstats=[
 		player.speed=8.2;
 		player.ammor=16;
 		player.size=22;
+		player.parrytimer=8;
 		playertemp.waterproof=true;
 		playertemp.phasing=0;
 		player.shipfuncs={
@@ -3193,7 +3293,7 @@ var applyshipstats=[
 		player.speed=2.7;
 		player.ammor=18;
 		player.size=32;
-		player.parrytimer=7;
+		player.parrytimer=9;
 		player.shipfuncs={
 			passive:function(){
 				if(playertemp.deathlaser>0){
@@ -3229,7 +3329,7 @@ var applyshipstats=[
 		player.speed=10;
 		player.ammor=12;
 		player.size=1;
-		player.parrytimer=6;
+		player.parrytimer=8;
 		player.shipfuncs={
 			onkill:function(a){
 				if(enemies[a].papershards){
@@ -3281,7 +3381,7 @@ var applymods=function(){
 		});
 	}
 	if(player.mods[2]){
-		player.parrytimer*=1.25;
+		player.parrytimer+=1;
 		player.shieldregen*=1.5;
 		player.shielddecay*=1.25;
 		player.menergy*=0.6;
@@ -3458,7 +3558,7 @@ var applymods=function(){
 		player.mshield*=1.6;
 		player.shield*=1.6;
 		player.speed*=0.85;
-		player.parrytimer*=0.8;
+		player.parrytimer-=1;
 	}
 	if(player.mods[17]){
 		player.speed*=1.35;
@@ -3565,7 +3665,7 @@ var stagetemp={};
 var mods=[
 	{name:"Reinforced Hull",desc:"Extra plating for survivability",pro:"Increases ship health by 50%",con:"Reduces speed by 15%"},
 	{name:"Reactors",desc:"Adds reactors to your ship",pro:"Passively generates energy",con:"Reduces maximum shield by 30%. Damage to your ship (after shields) has a 40% chance to be doubled."},
-	{name:"Innervated Shields",desc:"Rerouts some of your ship's batteries to its shield",pro:"Increases parry time by 25% and shield regeneration by 50%",con:"Reduces maximum energy by 40% and increases shield decay by 25%"},
+	{name:"Innervated Shields",desc:"Rerouts some of your ship's batteries to its shield",pro:"Increases parry time by 1 and shield regeneration by 50%",con:"Reduces maximum energy by 40% and increases shield decay by 25%"},
 	{name:"Shield Recharger",desc:"Activates while below 50% shield - recharge is doubled while not shielding",pro:"Rapidly recharges shield",con:"Uses energy"},
 	{name:"Mobile Shield",desc:"Allows your ship's thrusters to bypass its shield",pro:"Allows movement while shielding",con:"Also allows 5% of damage to bypass shield"},
 	{name:"Reactive Shield",desc:"Adds automatic collision detection to your ship",pro:"Your shield blocks hits even while not in use",con:"Constantly drains a small amount of energy, goes on cooldown after activating"},
@@ -3579,7 +3679,7 @@ var mods=[
 	{name:"Funky Jukebox",desc:"Messes up the background music",pro:"May be amusing",con:"May get annoying"},
 	{name:"Healing conversion",desc:"Converts energy from orbs into healing",pro:"Heal when collecting an energy orb",con:"Gain no energy from collecting energy orbs"},
 	{name:"Swift Decay",desc:"Causes wither to dissolve faster",pro:"Frequently cleanses some wither",con:"You take damage when this happens. This damage cannot be blocked by shielding"},
-	{name:"Heavy Shields",desc:"Adds extra shield batteries",pro:"Increases maximum shields by 60%",con:"Reduces speed by 15% and parry time by 20%"},
+	{name:"Heavy Shields",desc:"Adds extra shield batteries",pro:"Increases maximum shields by 60%",con:"Reduces speed by 15% and parry time by 1"},
 	{name:"Complex Thrusters",desc:"Modifies your ship's thrusters",pro:"Increases speed by 35%",con:"Briefly reduces speed when damage is taken"},
 	{name:"Soul Eater",desc:"Makes your ship demonic. Your damage is now based on how many souls held.",pro:"Kill enemies and harvest their souls. Each soul increases damage by 1%.",con:"Your ship's base damage is halved. The more souls you have, the faster they are lost."},
 	{name:"Parry Addiction",desc:"Makes your ship addicted to parrying.",pro:"Heal when parrying (0.5 second cooldown)",con:"Suffer withdrawal symptoms (wither) if you haven't parried in too long (8 seconds)"},
@@ -3854,6 +3954,7 @@ var loadassetscache=function(){
 			fairgravesvessel:loadShape('Data/Graphics/ships/fairgravesvessel.svg'),
 			cybersphere:loadShape('Data/Graphics/ships/cybersphere.svg'),
 			paperplane:loadShape('Data/Graphics/ships/paperairplane.svg'),
+			leviathan:loadShape('Data/Graphics/leviathan.svg'),
 		};
 		fill(0,0,0);
 		rect(400,320,300,100);
@@ -4371,6 +4472,12 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	playertemp.slow=0;
 	playertemp.speed=0;
 	for(a=0;a<objects.length;a+=1){
+		if(objects[a].startup){
+			if(!(objects[a].startedup)){
+				objects[a].startup();
+				objects[a].startedup=true;
+			}
+		}
 		if(objects[a]){
 			if(render){
 				if(objects[a].draw){
