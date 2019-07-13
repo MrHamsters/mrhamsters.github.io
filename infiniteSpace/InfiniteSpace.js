@@ -1,4 +1,4 @@
-var version="DEMO 0.9.1";
+var version="DEMO 0.9.2";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -633,7 +633,7 @@ function(){
 			});
 		}
 	}
-	if(stagetemp.biomecd>0){
+	if(stagetemp.biomecd>0&!(forcebiome)){
 		stagetemp.biomecd-=1;
 	}
 	else if(gametick%60==0){
@@ -3580,14 +3580,16 @@ var applymods=function(){
 	}
 	if(player.mods[18]){
 		append(player.modfuncs.passive,function(){
-			append(particles,{x:player.x,y:player.y,xvelo:random(-3,3),yvelo:random(-3,3),
-			size:random(8,11),op:random(50,120),opc:-3,exp:1,color:[random(70,120),0,random(70,120)]});
+			if(tick%4==0&options.graphics){
+				append(particles,{x:player.x,y:player.y,xvelo:random(-3,3),yvelo:random(-3,3),
+				size:random(8,11),op:random(50,120),opc:-3,exp:1,color:[random(70,120),0,random(70,120)]});
+			}
 			if(!(playertemp.souleater)){
 				playertemp.souleater=0;
 			}
 			else{
 				playertemp.souleater*=0.99975;
-				if(tick%round((200/playertemp.souleater))==0){
+				if(tick%round((200/playertemp.souleater))==0&options.graphics){
 					append(particles,{x:random(20,80),y:random(670,695),xvelo:random(1,5),yvelo:random(-5,-1),
 					size:random(8,11),op:random(50,120),opc:-3,exp:1,color:[random(70,120),0,random(70,120)]});
 				}
@@ -3609,9 +3611,9 @@ var applymods=function(){
 				souls:min(75,enemies[c].mhp/20),
 				timer:600,
 				draw:function(){
-					fill(100+abs(tick%120-60),0,100+abs(tick%120-60),(objects[a].timer/600)*(objects[a].souls+25+abs(tick%50-25)*8));
+					fill(100+abs(tick%120-60)*2,0,100+abs(tick%120-60)*2,(objects[a].timer/600)*(objects[a].souls+25+abs(tick%50-25)*8));
 					ellipseMode(CENTER);
-					ellipse(objects[a].x,objects[a].y,(1+objects[a].souls/25)*(20+abs(tick%50-25)/5),(1+objects[a].souls/25)*(20+abs((tick+25)%50-25)/5));
+					ellipse(objects[a].x,objects[a].y,(1.5+objects[a].souls/25)*(20+abs(tick%50-25)/5),(1.5+objects[a].souls/25)*(20+abs((tick+25)%50-25)/5));
 				},
 				run:function(){
 					if(playerhitbox(objects[a].x,objects[a].y,40)){
@@ -3651,11 +3653,103 @@ var applymods=function(){
 				playertemp.parryaddictioncd=0;
 			}
 			if(ingame){
-				playertemp.parryaddiction+=1;
+				playertemp.parryaddiction=min(1500,playertemp.parryaddiction+1);
 				playertemp.parryaddictioncd=max(0,playertemp.parryaddictioncd-1);
 			}
-			if(playertemp.parryaddiction>480){
-				player.wither+=0.05;
+			if(playertemp.parryaddiction>600){
+				player.wither+=(playertemp.parryaddiction-300)/12000;
+			}
+		});
+	}
+	if(player.mods[20]){
+		player.menergy-=2;
+		append(player.modfuncs.onkill,function(c){
+			if(player.ammo>=5+player.ammor/4){
+				player.ammo-=5+player.ammor/4;
+				sfx.shockwave.rate(random(0.9,1.1));
+				sfx.shockwave.volume(options.sfx*1.5);
+				sfx.shockwave.play();
+				append(objects,{
+					x:enemies[c].x,
+					y:max(0,enemies[c].y),
+					dur:0,
+					size:150+enemies[c].size*2,
+					dmg:80+enemies[c].mhp/2,
+					draw:function(){
+						ellipseMode(CENTER);
+						if(objects[a].dur<40){
+							fill(objects[a].dur*6,0,255-objects[a].dur*6);
+							ellipse(objects[a].x,objects[a].y,objects[a].size,objects[a].size);
+							fill(255,220,0);
+							ellipse(objects[a].x,objects[a].y,objects[a].size*(0.05+objects[a].dur/120),objects[a].size*(0.05+objects[a].dur/120));
+						}
+						else{
+							fill(255,220,0,1250-objects[a].dur*25);
+							ellipse(objects[a].x,objects[a].y,objects[a].size*(objects[a].dur-15)/25,objects[a].size*(objects[a].dur-15)/25);
+						}
+					},
+					run:function(){
+						if(objects[a].dur==40){
+							for(b=0;b<enemies.length;b+=1){
+								if(hitbox(objects[a].x,objects[a].y,enemies[b].x,enemies[b].y,enemies[b].size+objects[a].size/2)){
+									if(enemies[b].hp>0){
+										dohit(objects[a].dmg,b);
+										objects[a].hashit=true;
+									}
+								}
+							}
+							if(!(objects[a].hashit)){
+								player.ammo=min(100,player.ammo+5+player.ammor/4);
+							}
+						}
+						objects[a].dur+=1;
+						if(objects[a].dur>60){
+							objects.splice(a,1);
+							a-=1;
+						}
+					}
+				});
+			}
+		});
+	}
+	if(player.mods[21]){
+		append(player.modfuncs.passive,function(){
+			if(player.ammo<40){
+				if(player.energy>0.004){
+					player.energy-=0.004;
+					player.ammo+=0.5;
+				}
+			}
+		});
+	}
+	if(player.mods[22]){
+		append(player.modfuncs.passive,function(){
+			if(!(playertemp.emp)){
+				playertemp.emp=0;
+			}
+			if(player.shielding){
+				player.shield-=0.5;
+				playertemp.emp=min(120,playertemp.emp+1);
+			}
+			else if(playertemp.emp>0){
+				sfx.emp.rate(random(0.9,1.1));
+				sfx.emp.volume(playertemp.emp*0.1*options.sfx);
+				sfx.emp.play();
+				append(particles,{x:player.x,y:player.y,size:40+playertemp.emp*5,op:150,opc:-10,exp:1,color:[random(200,255),random(200,255),random(150,200)]});
+				for(b=0;b<enemies.length;b+=1){
+					if(hitbox(player.x,player.y,enemies[b].x,enemies[b].y,enemies[b].size+20+playertemp.emp*2.5)){
+						dohit(playertemp.emp*2,b);
+					}
+				}
+				for(b=0;b<projectiles.length;b+=1){
+					if(projectiles[b].target==0&!(projectiles[b].reflected)){
+						if(pow(projectiles[b].x-player.x,2)+pow(projectiles[b].y-player.y,2)<pow(20+playertemp.emp*2.5+projectiles[b].size,2)){
+							projectiles.splice(b,1);
+							b-=1;
+						}
+					}
+				}
+				playertemp.emp=0;
 			}
 		});
 	}
@@ -3677,12 +3771,15 @@ var mods=[
 	{name:"Heavy Impact",desc:"Makes things go boom",pro:"Increases damage dealt by 50%",con:"Your hits fling debris which can hit you"},
 	{name:"Additional Energy",desc:"Adds more batteries to store energy",pro:"Increases maximum energy by 50%",con:"Your ship becomes less structurally stable, reducing ship health by 35%"},
 	{name:"Funky Jukebox",desc:"Messes up the background music",pro:"May be amusing",con:"May get annoying"},
-	{name:"Healing conversion",desc:"Converts energy from orbs into healing",pro:"Heal when collecting an energy orb",con:"Gain no energy from collecting energy orbs"},
+	{name:"Healing conversion",desc:"Converts energy from orbs into healing",pro:"Heal when collecting an energy orb",con:"Gain no energy from collecting normal energy orbs"},
 	{name:"Swift Decay",desc:"Causes wither to dissolve faster",pro:"Frequently cleanses some wither",con:"You take damage when this happens. This damage cannot be blocked by shielding"},
 	{name:"Heavy Shields",desc:"Adds extra shield batteries",pro:"Increases maximum shields by 60%",con:"Reduces speed by 15% and parry time by 1"},
 	{name:"Complex Thrusters",desc:"Modifies your ship's thrusters",pro:"Increases speed by 35%",con:"Briefly reduces speed when damage is taken"},
 	{name:"Soul Eater",desc:"Makes your ship demonic. Your damage is now based on how many souls held.",pro:"Kill enemies and harvest their souls. Each soul increases damage by 1%.",con:"Your ship's base damage is halved. The more souls you have, the faster they are lost."},
-	{name:"Parry Addiction",desc:"Makes your ship addicted to parrying.",pro:"Heal when parrying (0.5 second cooldown)",con:"Suffer withdrawal symptoms (wither) if you haven't parried in too long (8 seconds)"},
+	{name:"Parry Addiction",desc:"Makes your ship addicted to parrying",pro:"Heal when parrying (0.5 second cooldown)",con:"Suffer withdrawal symptoms (wither) if you haven't parried in too long (10 seconds)"},
+	{name:"Shockwave Generator",desc:"Adds a shockwave generator to your ship",pro:"Creates a delayed explosion on defeated enemies",con:"This effect costs ammo (ammo is refunded if the explosion doesn't hit anything). Additionally, reduces maximum energy by 2"},
+	{name:"Stock Fabricator",desc:"Adds mass fabricators to your ship",pro:"Generates ammo when below 40%",con:"Uses energy"},
+	{name:"EMP",desc:"Adds an EMP device to your ship's shields",pro:"Stores a charge while shielding (up to 2 seconds). When released, damages nearby enemies while destroying enemy projectiles",con:"Uses shield"},
 ];
 var ships=[
 	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Berserk for 2 seconds while emitting a screech which deals heavy damage to enemies caught in the AoE while dragging them. Also reflects enemy projectiles. Dissipates if it hits a boss.",misc:"A well-rounded ship."},
@@ -3985,6 +4082,8 @@ var loadassetscache=function(){
 			bomb:new Howl({src: ['Data/Sound/sfx/bomb.wav'],autoplay:false,loop:false,volume:options.sfx}),
 			finisher:new Howl({src: ['Data/Sound/sfx/finisher.ogg'],autoplay:false,loop:false,volume:options.sfx*3}),
 			parry:new Howl({src: ['Data/Sound/sfx/parry.ogg'],autoplay:false,loop:false,volume:options.sfx}),
+			shockwave:new Howl({src: ['Data/Sound/sfx/shockwave.ogg'],autoplay:false,loop:false,volume:options.sfx}),
+			emp:new Howl({src: ['Data/Sound/sfx/emp.ogg'],autoplay:false,loop:false,volume:options.sfx}),
 		};
 		loadassetscache=0;
 		canstart=1;
@@ -4659,7 +4758,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	else{
 		playertemp.timesincedamagetaken+=1;
 		if(player.wither>0){
-			player.wither=min(player.mhp,max(0,player.wither-0.01));
+			player.wither=min(player.mhp,max(0,player.wither-(0.0075+player.mhp*0.0035)));
 		}
 		for(z=0;z<player.modfuncs.passive.length;z+=1){
 			player.modfuncs.passive[z]();
