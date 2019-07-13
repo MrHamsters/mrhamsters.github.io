@@ -3678,13 +3678,13 @@ var applymods=function(){
 					draw:function(){
 						ellipseMode(CENTER);
 						if(objects[a].dur<40){
-							fill(objects[a].dur*6,0,255-objects[a].dur*6);
+							fill(objects[a].dur*6,0,255-objects[a].dur*6,150);
 							ellipse(objects[a].x,objects[a].y,objects[a].size,objects[a].size);
 							fill(255,220,0);
 							ellipse(objects[a].x,objects[a].y,objects[a].size*(0.05+objects[a].dur/120),objects[a].size*(0.05+objects[a].dur/120));
 						}
 						else{
-							fill(255,220,0,1250-objects[a].dur*25);
+							fill(255,220,0,1250-objects[a].dur*25,200);
 							ellipse(objects[a].x,objects[a].y,objects[a].size*(objects[a].dur-15)/25,objects[a].size*(objects[a].dur-15)/25);
 						}
 					},
@@ -3728,22 +3728,30 @@ var applymods=function(){
 				playertemp.emp=0;
 			}
 			if(player.shielding){
-				player.shield-=0.5;
-				playertemp.emp=min(120,playertemp.emp+1);
+				if(playertemp.emp<120){
+					player.shield-=0.3;
+					playertemp.emp=min(120,playertemp.emp+1);
+				}
 			}
 			else if(playertemp.emp>0){
-				sfx.emp.rate(random(0.9,1.1));
-				sfx.emp.volume(playertemp.emp*0.1*options.sfx);
-				sfx.emp.play();
-				append(particles,{x:player.x,y:player.y,size:40+playertemp.emp*5,op:150,opc:-10,exp:1,color:[random(200,255),random(200,255),random(150,200)]});
+				if(playertemp.emp>30){
+					sfx.emp.rate(random(0.9,1.1));
+					sfx.emp.volume(10*options.sfx);
+					sfx.emp.play();
+				}
+				append(particles,{x:player.x,y:player.y,size:40+min(90,playertemp.emp)*6,op:150,opc:-12,exp:1,color:[random(200,255),random(200,255),random(150,200)]});
 				for(b=0;b<enemies.length;b+=1){
-					if(hitbox(player.x,player.y,enemies[b].x,enemies[b].y,enemies[b].size+20+playertemp.emp*2.5)){
-						dohit(playertemp.emp*2,b);
+					if(hitbox(player.x,player.y,enemies[b].x,enemies[b].y,enemies[b].size+20+min(90,playertemp.emp)*3)){
+						dohit(playertemp.emp,b);
+						if(!(enemies[b].stun)){
+							enemies[b].stun=0;
+						}
+						enemies[b].stun=max(enemies[b].stun,playertemp.emp*1.5);
 					}
 				}
 				for(b=0;b<projectiles.length;b+=1){
 					if(projectiles[b].target==0&!(projectiles[b].reflected)){
-						if(pow(projectiles[b].x-player.x,2)+pow(projectiles[b].y-player.y,2)<pow(20+playertemp.emp*2.5+projectiles[b].size,2)){
+						if(pow(projectiles[b].x-player.x,2)+pow(projectiles[b].y-player.y,2)<pow(20+min(90,playertemp.emp)*3+projectiles[b].size,2)){
 							projectiles.splice(b,1);
 							b-=1;
 						}
@@ -3779,7 +3787,7 @@ var mods=[
 	{name:"Parry Addiction",desc:"Makes your ship addicted to parrying",pro:"Heal when parrying (0.5 second cooldown)",con:"Suffer withdrawal symptoms (wither) if you haven't parried in too long (10 seconds)"},
 	{name:"Shockwave Generator",desc:"Adds a shockwave generator to your ship",pro:"Creates a delayed explosion on defeated enemies",con:"This effect costs ammo (ammo is refunded if the explosion doesn't hit anything). Additionally, reduces maximum energy by 2"},
 	{name:"Stock Fabricator",desc:"Adds mass fabricators to your ship",pro:"Generates ammo when below 40%",con:"Uses energy"},
-	{name:"EMP",desc:"Adds an EMP device to your ship's shields",pro:"Stores a charge while shielding (up to 2 seconds). When released, damages nearby enemies while destroying enemy projectiles",con:"Uses shield"},
+	{name:"EMP",desc:"Adds an EMP device to your ship's shields",pro:"Stores a charge while shielding (up to 2 seconds). When released, damages nearby enemies and briefly stuns them while destroying enemy projectiles",con:"Uses shield, stun doesn't work on bosses"},
 ];
 var ships=[
 	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Berserk for 2 seconds while emitting a screech which deals heavy damage to enemies caught in the AoE while dragging them. Also reflects enemy projectiles. Dissipates if it hits a boss.",misc:"A well-rounded ship."},
@@ -4686,8 +4694,13 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		if(render){
 			enemies[a].draw();
 		}
-		if(enemies[a].run){
-			enemies[a].run();
+		if(enemies[a].stun>0){
+			enemies[a].stun-=1;
+		}
+		else{
+			if(enemies[a].run){
+				enemies[a].run();
+			}
 		}
 		if(enemies[a].hp<=0){
 			for(z=0;z<player.modfuncs.onkill.length;z+=1){
@@ -5160,15 +5173,17 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				textFont(0,14);
 				fill(255,255,200);
 				text(mods[a].name,125+floor(a/6)*120,25+(a%6)*120,55,55);
-				if(pow(pow(player.x-150-floor(a/6)*120,2)+pow(player.y-50-(a%6)*120,2),0.5)<55){
-					viewmod=a;
-					if(input.shoot&!(shootlock)){
-						shootlock=1;
-						if(player.mods[a]){
-							player.mods[a]=0;
-						}
-						else{
-							player.mods[a]=1;
+				if(tick%3==0||input.shoot&!(shootlock)){
+					if(pow(pow(player.x-150-floor(a/6)*120,2)+pow(player.y-50-(a%6)*120,2),0.5)<55){
+						viewmod=a;
+						if(input.shoot&!(shootlock)){
+							shootlock=1;
+							if(player.mods[a]){
+								player.mods[a]=0;
+							}
+							else{
+								player.mods[a]=1;
+							}
 						}
 					}
 				}
