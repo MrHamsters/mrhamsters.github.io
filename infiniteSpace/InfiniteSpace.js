@@ -3746,7 +3746,9 @@ var applymods=function(){
 						if(!(enemies[b].stun)){
 							enemies[b].stun=0;
 						}
-						enemies[b].stun=max(enemies[b].stun,playertemp.emp*1.5);
+						if(!(enemies[b].isBoss)){
+							enemies[b].stun=max(enemies[b].stun,playertemp.emp*1.5);
+						}
 					}
 				}
 				for(b=0;b<projectiles.length;b+=1){
