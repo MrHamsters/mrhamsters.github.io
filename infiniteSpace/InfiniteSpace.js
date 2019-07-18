@@ -897,7 +897,7 @@ function(){
 						enemyscripts.slavapool(random(100,900),-40);
 					}
 				}
-				enemies[a].ammo+=0.7+min(0.8,gametick/50000);
+				enemies[a].ammo+=0.7+min(0.8,max(0,gametick-18000)/50000);
 				if(enemies[a].ammo>70){
 					append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size),xvelo:random(-2,2),yvelo:random(-2,2),
 					size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[255,random(100,150),random(30,55)]});
@@ -937,7 +937,7 @@ function(){
 								}
 							}});
 						}
-						if(gametick>40000){
+						if(gametick>57600){
 							for(b=-12;b<13;b+=1){
 								enemyproj({r:255,g:200,b:50,size:14,speed:0,damage:5,dir:2*PI/3+random(2*PI/3)+b*PI/4,source:a,misc:{timer:0,activate:random(3,110)},
 								run:function(){
@@ -1015,7 +1015,7 @@ function(){
 				bgm.play();
 			},
 			exp:0,
-			score:round(1200+min(3000,max(0,gametick)/10))*2
+			score:round(1200+min(3000,max(0,gametick-18000)/10))*2
 		});
 	}
 },
@@ -5208,7 +5208,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			else{
 				fill(80,80,80);
 			}
-			text("Game Controller (press A or B to select)",300,240);
+			text("XBox Controller (press A or B to select)",300,240);
 			if(controlmode==3){
 				fill(255,255,255);
 			}
@@ -5216,7 +5216,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				fill(80,80,80);
 			}
 			textFont(0,16);
-			text("Game Controller - Alternate (Left or Right Trigger to select)",270,270);
+			text("XBox Controller - Alternate (Left or Right Trigger to select)",270,270);
 			fill(255,255,255);
 			textFont(0,20);
 			if(controlmode==0){
