@@ -4274,7 +4274,7 @@ var loadassetscache=function(){
 	fill(255,150,0);
 	text("Loading game assets",300,200);
 	fill(0,0,0);
-	rect(400,350,300,100);
+	rect(350,350,300,150);
 	fill(255,150,0);
 	text("0/3",500,370);
 		loadassetscache=function(){
@@ -4284,7 +4284,7 @@ var loadassetscache=function(){
 		fill(255,150,0);
 		text("Loading game assets",300,200);
 		fill(0,0,0);
-		rect(400,320,300,100);
+		rect(350,320,300,150);
 		fill(255,150,0);
 		text("0/3",500,370);
 		bgmn="start";
@@ -4296,7 +4296,7 @@ var loadassetscache=function(){
 			volume: options.music*0.4,
 		});
 		fill(0,0,0);
-		rect(400,320,300,100);
+		rect(350,320,300,150);
 		fill(255,150,0);
 		text("1/3",500,370);
 		sprites={
@@ -4309,7 +4309,7 @@ var loadassetscache=function(){
 			leviathan:loadShape('Data/Graphics/leviathan.svg'),
 		};
 		fill(0,0,0);
-		rect(400,320,300,100);
+		rect(350,320,300,150);
 		fill(255,150,0);
 		text("2/3",500,370);
 		sfx={
@@ -5020,7 +5020,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	else{
 		playertemp.timesincedamagetaken+=1;
 		if(player.wither>0){
-			player.wither=min(player.mhp,max(0,player.wither-(0.0075+player.mhp*0.0035)));
+			player.wither=min(player.mhp,max(0,player.wither-(0.0075+player.mhp*0.000035)));
 		}
 		for(z=0;z<player.modfuncs.passive.length;z+=1){
 			player.modfuncs.passive[z]();
