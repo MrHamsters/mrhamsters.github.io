@@ -248,7 +248,7 @@ var biomechance=[
 		return(true);
 	},
 	function(){
-		if(!(options.custom.active&options.custom.disabledbiome[0])){
+		if(!(options.custom.active&options.custom.disabledbiomes[0])){
 			if(gametick>18000&random(1)<min(0.7,gametick/90000)){
 				return(true);
 			}
@@ -256,7 +256,7 @@ var biomechance=[
 		return(false);
 	},
 	function(){
-		if(!(options.custom.active&options.custom.disabledbiome[1])){
+		if(!(options.custom.active&options.custom.disabledbiomes[1])){
 			if(random(1)<1.101-min(0.7,gametick/36000)){
 				return(true);
 			}
@@ -264,7 +264,7 @@ var biomechance=[
 		return(false);
 	},
 	function(){
-		if(!(options.custom.active&options.custom.disabledbiome[2])){
+		if(!(options.custom.active&options.custom.disabledbiomes[2])){
 			if(gametick>3600&random(1)<min(0.5,gametick/50000)){
 				return(true);
 			}
@@ -272,7 +272,7 @@ var biomechance=[
 		return(false);
 	},
 	function(){
-		if(!(options.custom.active&options.custom.disabledbiome[3])){
+		if(!(options.custom.active&options.custom.disabledbiomes[3])){
 			if(gametick>7200&random(1)<min(0.6,gametick/75000)){
 				return(true);
 			}
