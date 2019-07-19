@@ -5708,7 +5708,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				fill(255,255,255);
 				text("Enabled biomes",360,15,200,55);
 				textFont(0,16);
-				text("Tip: do not disable all of them",460,50,100,300);
+				text("Tip: do not disable all of them",490,50,100,300);
 				strokeWeight(7);
 				textFont(0,17);
 				textAlign(CENTER);
