@@ -5725,7 +5725,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					fill(255-biomelist[a].rgb[0],255-biomelist[a].rgb[1],255-biomelist[a].rgb[2]);
 					text(biomelist[a].name,400,70+a*100,80,80);
 					if(input.shoot&!(shootlock)){
-						if(hitboxr(420,70+a*100,player.x,player.y,40,40)){
+						if(hitboxr(440,90+a*100,player.x,player.y,40,40)){
 							shootlock=1;
 							if(options.custom.disabledbiomes[a]){
 								options.custom.disabledbiomes[a]=0;
