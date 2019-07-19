@@ -2702,7 +2702,7 @@ var shoot=[
 					resetMatrix();
 				},
 				run:function(){
-					if(objects[a].dur%8==2){
+					if(objects[a].dur%6==2){
 						for(b=0;b<enemies.length;b+=1){
 							if(hitbox(player.x,player.y,enemies[b].x,enemies[b].y,125+enemies[b].size)){
 								if(pow(enemies[b].x-player.x,2)+pow(enemies[b].y-player.y,2)<pow(125+enemies[b].size,2)){
@@ -3085,7 +3085,7 @@ var special=[
 			append(objects,{
 				dur:2,
 				run:function(){
-					playertemp.slow=max(playertemp.slow,0.9);
+					playertemp.slow=max(playertemp.slow,0.7);
 					objects[a].dur-=1;
 					if(objects[a].dur<=0){
 						objects.splice(a,1);
@@ -3131,7 +3131,7 @@ var special=[
 				for(b=0;b<enemies.length;b+=1){
 					if(hitbox(player.x,player.y,enemies[b].x,enemies[b].y,220+enemies[b].size)){
 						if(pow(enemies[b].x-player.x,2)+pow(enemies[b].y-player.y,2)<pow(220+enemies[b].size,2)){
-							dohit(10,b);
+							dohit(20,b);
 						}
 					}
 				}
