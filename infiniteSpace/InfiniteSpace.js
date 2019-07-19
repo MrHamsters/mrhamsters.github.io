@@ -1,4 +1,4 @@
-var version="DEMO 0.9.3";
+var version="v1.0";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -93,7 +93,17 @@ var options={
 	graphics:1,
 	stars:1,
 	music:0.7,
-	sfx:0.7
+	sfx:0.7,
+	shipId:0,
+	shipMods:new Array(99),
+	misc:new Array(99),
+	custom:{
+		active:0,
+		starttime:0,
+		forcebiome:0,
+		disabledbiomes:new Array(99),
+		misc:new Array(99)
+	}
 };
 var enemies=new Array();
 var projectiles=new Array();
@@ -105,8 +115,14 @@ var dirgeneric=function(x1,y1,x2,y2){
 	if(x1-x2<0){
 		return(atan((y1-y2)/(x1-x2))+PI/2);
 	}
-	else{
+	else if(x1-x2>0){
 		return(atan((y1-y2)/(x1-x2))-PI/2);
+	}
+	if(y1>y2){
+		return(0);
+	}
+	else{
+		return(PI);
 	}
 }
 var getgamesecfd=function(){
@@ -2695,15 +2711,16 @@ var shoot=[
 						}
 					}
 					objects[a].dur-=1;
-					objects[a].dir+=objects[a].dirc;
+					objects[a].dir+=objects[a].dirc/2;
 					if(objects[a].dur<=0){
 						objects.splice(a,1);
 						a-=1;
 					}
 				}
 			});
-			if(playertemp.empoweredblade>0){
+			if(playertemp.empoweredblade>0&!(playertemp.empoweredbladecd>0)){
 				playertemp.empoweredblade-=1;
+				playertemp.empoweredbladecd=1;
 				append(projectiles,{
 					target:1,
 					draw:function(){
@@ -2719,8 +2736,8 @@ var shoot=[
 					end:1,
 					speed:15,
 					scans:1,
-					size:70,
-					damage:150,
+					size:80,
+					damage:250,
 					basicAttack:true
 				});
 				sfx.blades.volume(options.sfx*1);
@@ -3572,6 +3589,9 @@ var applyshipstats=[
 				if(playertemp.phasing>0){
 					playertemp.phasing-=1;
 				}
+				if(!(input.shoot)){
+					playertemp.empoweredbladecd=0;
+				}
 				if(!(playertemp.bladestorm)){
 					playertemp.bladestorm=0;
 				}
@@ -4009,6 +4029,12 @@ var applymods=function(){
 }
 var playertemp={};
 var stagetemp={};
+var biomelist=[
+	{name:"Scorched Skies",rgb:[220,170,0]},
+	{name:"Tranquil Forest",rgb:[100,255,100]},
+	{name:"Drowned Abyss",rgb:[0,0,150]},
+	{name:"Disputed Space",rgb:[255,0,0]},
+];
 var mods=[
 	{name:"Reinforced Hull",desc:"Extra plating for survivability",pro:"Increases ship health by 50%",con:"Reduces speed by 15%"},
 	{name:"Reactors",desc:"Adds reactors to your ship",pro:"Passively generates energy",con:"Reduces maximum shield by 30%. Damage to your ship (after shields) has a 40% chance to be doubled."},
@@ -4040,7 +4066,7 @@ var ships=[
 	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Briefly phase through enemies and projectiles after blocking with shield. Gain health on kill. Immune to water-based slows. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
 	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:8,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
 	{name:"Paper Plane",unlocked:1,sprite:"paperplane",damage:10,health:1,shield:2,energy:10,speed:10,special:"Violently rips paper out of all enemies, sending it flying with triple the quantity. The fragments are more likely to fly away from you. Additionally, you are briefly shielded from all damage if used successfully.",misc:"Normal shots embed paper in foes, increasing damage taken by paper shots. Killing enemies with paper fragments restores ammo."},
-	{name:"Blademaster",unlocked:1,sprite:"blademaster",damage:7,health:4,shield:5,energy:8,speed:7,special:"Rapidly strike a nearby enemy while dodging attacks and projectiles.",misc:"Normal shots are replaced by spinning, slicing nearby enemies. Parrying charges your next basic attack with a sword missile (can store up to 2 charges)."},
+	{name:"Blademaster",unlocked:1,sprite:"blademaster",damage:7,health:4,shield:5,energy:8,speed:7,special:"Rapidly strike nearby enemies while phasing through attacks and projectiles. Has a brief cooldown.",misc:"Normal shots are replaced by spinning, slicing nearby enemies. Parrying charges your next basic attack with a sword missile (can store up to 2 charges)."},
 ];
 var player={
 	hpl:0,
@@ -4057,7 +4083,7 @@ var player={
 	score:0,
 	deathtimer:0,
 	wither:0,
-	mods:new Array(99),
+	mods:options.shipMods,
 	modfuncs:{
 		passive:new Array(),
 		damagetaken:new Array(),
@@ -4084,20 +4110,12 @@ var spawnplayer=function(){
 	player.parrytimer=6;
 	playertemp={timesincedamagetaken:999};
 }
-applyshipstats[0]();
+applyshipstats[options.shipId]();
 var input={
 	shoot:0,
 	special:0
 };
 var particles=new Array();
-var dirgeneric=function(x1,y1,x2,y2){
-	if(x1-x2<0){
-		return(atan((y1-y2)/(x1-x2))+PI/2);
-	}
-	else{
-		return(atan((y1-y2)/(x1-x2))-PI/2);
-	}
-}
 var mapwasd=function(){
 	if(rawkeys.w){
 		if(rawkeys.a){
@@ -4267,6 +4285,29 @@ var canstart=0;
 var bgmn=0;
 var bgm;
 var sprites={astrohawk:loadShape('Data/Graphics/ships/astrohawk.svg')};
+var getoptions=function(){
+	if(loadStrings("infiniteSpace/options.txt")[1]==1){
+		return(JSON.parse(loadStrings("infiniteSpace/options.txt")[0]));
+	}
+	else{
+		return({
+			graphics:1,
+			stars:1,
+			music:0.7,
+			sfx:0.7,
+			shipId:0,
+			shipMods:new Array(99),
+			misc:new Array(99),
+			custom:{
+				active:0,
+				starttime:0,
+				forcebiome:0,
+				disabledbiomes:new Array(99),
+				misc:new Array(99)
+			}
+		});
+	}
+}
 var loadassetscache=function(){
 	textFont(0,60);
 	fill(0,0,0,100);
@@ -4342,8 +4383,14 @@ var loadassetscache=function(){
 			blades:new Howl({src: ['Data/Sound/sfx/blades.ogg'],autoplay:false,loop:false,volume:options.sfx}),
 			bladestorm:new Howl({src: ['Data/Sound/sfx/bladestorm.ogg'],autoplay:false,loop:false,volume:options.sfx}),
 		};
+		options=getoptions();
 		loadassetscache=0;
 		canstart=1;
+		player.mods=options.shipMods;
+		spawnplayer();
+		applyshipstats[options.shipId]();
+		applymods();
+		bgm.volume(options.music*bgmv);
 	}
 }
 var choosebgm=function(id){
@@ -5178,6 +5225,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					controlmode=3;
 				}
 			}
+			if(!(input.shoot)){
+				shootlock=0;
+			}
 			textFont(0,55);
 			fill(150,150,50+abs(tick%240-120));
 			text("Infinite Space",350,55);
@@ -5220,6 +5270,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			fill(255,255,255);
 			textFont(0,20);
 			if(controlmode==0){
+				player.staticspeed=50;
 				text("Mouse to move",300,340);
 				text("Left click to shoot",300,370);
 				text("Right click to shield",300,400);
@@ -5227,6 +5278,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				text("Esc to pause/unpause",300,460);
 			}
 			else if(controlmode==1){
+				player.staticspeed=13;
 				text("W,A,S,D to move",300,340);
 				text("V to shoot",300,370);
 				text("N or M to shield",300,400);
@@ -5234,6 +5286,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				text("Esc to pause/unpause",300,460);
 			}
 			else if(controlmode==2){
+				player.staticspeed=15;
 				text("Left stick to move",300,340);
 				text("B to shoot",300,370);
 				text("Left or Right Trigger to shield",300,400);
@@ -5241,6 +5294,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				text("START to pause/unpause",300,460);
 			}
 			else if(controlmode==3){
+				player.staticspeed=15;
 				text("Left stick to move",300,340);
 				text("Right Trigger to shoot",300,370);
 				text("A or B to shield",300,400);
@@ -5250,8 +5304,10 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			text("Shoot while in one of these circles to use it",270,500);
 			noFill();
 			strokeWeight(20+abs(tick%120-60)/6);
-			stroke(220,255,140+abs(tick%90-45));
 			ellipseMode(CENTER);
+			stroke(255,150,140+abs(tick%90-45));
+			ellipse(200,50,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
+			stroke(220,255,140+abs(tick%90-45));
 			ellipse(750,300,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
 			ellipse(200,300,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
 			ellipse(200,600,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
@@ -5262,19 +5318,31 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			text("Start",730,295);
 			text("Game",725,315);
 			text("Change",165,295);
+			text("Reset",175,42);
 			text("Ship",180,315);
+			text("Ship",180,65);
 			text("Ship",180,615);
 			text("Options",720,605);
 			textFont(0,14);
 			text("Customize",170,595);
 			if(pow(pow(player.x-750,2)+pow(player.y-300,2),0.5)<75&input.shoot){
+				gametick=0;
+				//Apply customs
+				if(options.custom.active){
+					if(options.custom.forcebiome){
+						forcebiome=1;
+					}
+					gametick=options.custom.starttime*72000;
+				}
+				else{
+					forcebiome=0;
+				}
 				setbgm[choosebgm(-1)]();
 				spawnplayer();
 				stagetemp={};
 				applyshipstats[player.shipId]();
 				applymods();
 				player.staticspeed=0;
-				gametick=0;
 				ingame=1;
 			}
 			if(pow(pow(player.x-200,2)+pow(player.y-300,2),0.5)<75&input.shoot){
@@ -5282,6 +5350,17 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				viewmod=player.shipId;
 				player.x=500;
 				player.y=500;
+			}
+			if(pow(pow(player.x-200,2)+pow(player.y-50,2),0.5)<75&input.shoot){
+				shootlock=1;
+				player.shipId=0;
+				player.mods=new Array();
+				options.shipId=0;
+				options.shipMods=new Array();
+				saveStrings("infiniteSpace/options.txt",[JSON.stringify(options),1]);
+				spawnplayer();
+				applyshipstats[player.shipId]();
+				applymods();
 			}
 			if(pow(pow(player.x-200,2)+pow(player.y-600,2),0.5)<75&input.shoot){
 				menumode=2;
@@ -5328,6 +5407,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 						if(input.shoot&!(shootlock)){
 							shootlock=1;
 							player.shipId=a;
+							options.shipId=a;
+							saveStrings("infiniteSpace/options.txt",[JSON.stringify(options),1]);
 							menumode=0;
 							spawnplayer();
 							applyshipstats[player.shipId]();
@@ -5340,10 +5421,10 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			textFont(0,25);
 			fill(255,255,255);
 			text(ships[viewmod].name,400,130,475,100);
-			textFont(0,min(30,max(15,3000/ships[viewmod].misc.length)));
+			textFont(0,min(30,max(18,2750/ships[viewmod].misc.length)));
 			fill(220,220,220);
 			text(ships[viewmod].misc,400,190,475,120);
-			textFont(0,min(30,max(15,3000/ships[viewmod].special.length)));
+			textFont(0,min(30,max(18,2750/ships[viewmod].special.length)));
 			fill(255,255,0);
 			text("Special:  "+ships[viewmod].special,400,320,475,130);
 			fill(255,255,255);
@@ -5402,6 +5483,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			textAlign(TOP,LEFT);
 			text("Confirm",735,55);
 			if(pow(pow(player.x-770,2)+pow(player.y-50,2),0.5)<75&input.shoot){
+				options.shipMods=player.mods;
+				saveStrings("infiniteSpace/options.txt",[JSON.stringify(options),1]);
 				menumode=0;
 				spawnplayer();
 				applyshipstats[player.shipId]();
@@ -5521,6 +5604,61 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					}
 				}
 			}
+			if(options.custom.active>0){
+				fill(0,255,0,150);
+			}
+			else{
+				noFill();
+			}
+			strokeWeight(20+abs(tick%120-60)/6);
+			stroke(220,255,140+abs(tick%90-45));
+			ellipse(150,340,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
+			noStroke();
+			textFont(0,15);
+			fill(255,255,255);
+			text("Custom",125,325,55,55);
+			text("game",125,345,55,55);
+			if(pow(pow(player.x-150,2)+pow(player.y-340,2),0.5)<75){
+				if(input.shoot&!(shootlock)){
+					shootlock=1;
+					if(options.custom.active){
+						options.custom.active=0;
+					}
+					else{
+						options.custom.active=1;
+						if(!(options.custom.starttime)){
+							options.custom.starttime=0;
+						}
+					}
+				}
+			}
+			if(options.custom.active){
+				if(options.custom.forcebiome>0){
+					fill(0,255,0,150);
+				}
+				else{
+					noFill();
+				}
+				strokeWeight(20+abs(tick%120-60)/6);
+				stroke(220,255,140+abs(tick%90-45));
+				ellipse(150,460,100+abs(tick%120-60)/6,100+abs(tick%120-60)/6);
+				noStroke();
+				textFont(0,15);
+				fill(255,255,255);
+				text("Biomes",125,445,55,55);
+				text("only",125,465,55,55);
+				if(pow(pow(player.x-150,2)+pow(player.y-460,2),0.5)<75){
+					if(input.shoot&!(shootlock)){
+						shootlock=1;
+						if(options.custom.forcebiome){
+							options.custom.forcebiome=0;
+						}
+						else{
+							options.custom.forcebiome=1;
+						}
+					}
+				}
+			}
 			noStroke();
 			
 			textFont(0,25);
@@ -5528,11 +5666,11 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			fill(255,255,255);
 			text("Music",720,175,100,55);
 			fill(0,0,0);
-			rect(650,230,200,40);
+			rect(650,230,200,40,10);
 			fill(0,200,0);
-			rect(650,230,options.music*200,40);
+			rect(650,230,options.music*200,40,10);
 			fill(250,250,90);
-			rect(635+options.music*200,210,30,80);
+			rect(635+options.music*200,210,30,80,8);
 			if(input.shoot){
 				if(hitboxr(750,250,player.x,player.y,110,40)){
 					if(!(options.music==max(0,min(1,round((player.x-650)/10)/20)))){
@@ -5545,11 +5683,11 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			fill(255,255,255);
 			text("SFX",720,375,100,55);
 			fill(0,0,0);
-			rect(650,430,200,40);
+			rect(650,430,200,40,10);
 			fill(0,200,0);
-			rect(650,430,options.sfx*200,40);
+			rect(650,430,options.sfx*200,40,10);
 			fill(250,450,90);
-			rect(635+options.sfx*200,410,30,80);
+			rect(635+options.sfx*200,410,30,80,8);
 			if(input.shoot){
 				if(hitboxr(750,450,player.x,player.y,110,40)){
 					if(!(options.sfx==max(0,min(1,round((player.x-650)/10)/20)))){
@@ -5558,11 +5696,62 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				}
 			}
 			
+			if(options.custom.active){
+				fill(255,255,255);
+				text("Enabled biomes",360,15,200,55);
+				strokeWeight(7);
+				textFont(0,17);
+				textAlign(CENTER);
+				for(a=0;a<biomelist.length;a+=1){
+					stroke(0,0,0);
+					if(options.custom.disabledbiomes[a]){
+						noFill();
+					}
+					else{
+						fill(biomelist[a].rgb[0],biomelist[a].rgb[1],biomelist[a].rgb[2],180);
+					}
+					rect(400,50+a*100,80,80,5);
+					noStroke();
+					fill(255-biomelist[a].rgb[0],255-biomelist[a].rgb[1],255-biomelist[a].rgb[2]);
+					text(biomelist[a].name,400,70+a*100,80,80);
+					if(input.shoot&!(shootlock)){
+						if(hitboxr(420,70+a*100,player.x,player.y,40,40)){
+							shootlock=1;
+							if(options.custom.disabledbiomes[a]){
+								options.custom.disabledbiomes[a]=0;
+							}
+							else{
+								options.custom.disabledbiomes[a]=1;
+							}
+						}
+					}
+				}
+				fill(255,255,255);
+				text("Start time:",600,565,150,55);
+				textFont(0,18);
+				text(round(options.custom.starttime*200)/10+" minutes",730,570,140,55);
+				fill(0,0,0);
+				rect(650,630,200,40,10);
+				fill(0,200,0);
+				rect(650,630,options.custom.starttime*200,40,10);
+				fill(250,450,90);
+				rect(635+options.custom.starttime*200,610,30,80,8);
+				if(input.shoot){
+					if(hitboxr(750,650,player.x,player.y,110,40)){
+						if(!(options.custom.starttime==max(0,min(1,round((player.x-650)/5)/40)))){
+							options.custom.starttime=max(0,min(1,round((player.x-650)/5)/40));
+						}
+					}
+				}
+				
+			}
+			
 			textAlign(TOP,LEFT);
 			textFont(0,25);
 			fill(255,255,200);
 			text("Back",740,55);
 			if(pow(pow(player.x-770,2)+pow(player.y-50,2),0.5)<75&input.shoot){
+				saveStrings("infiniteSpace/options.txt",[JSON.stringify(options),1]);
 				menumode=0;
 				player.x=500;
 				player.y=500;
@@ -5730,6 +5919,12 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		textFont(0,15);
 		fill(255,100,150);
 		text('FPS: '+fps.fps,920,680);
+		if(options.custom.active){
+			textFont(0,17);
+			fill(255,100,100,125);
+			text("CUSTOM",905,70);
+			text("CUSTOM",5,30);
+		}
 		textFont(0,18);
 		fill(180,200,255);
 		text('SCORE',910,25);
