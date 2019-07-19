@@ -248,26 +248,34 @@ var biomechance=[
 		return(true);
 	},
 	function(){
-		if(gametick>18000&random(1)<min(0.7,gametick/90000)){
-			return(true);
+		if(!(options.custom.active&options.custom.disabledbiome[0])){
+			if(gametick>18000&random(1)<min(0.7,gametick/90000)){
+				return(true);
+			}
 		}
 		return(false);
 	},
 	function(){
-		if(random(1)<1.101-min(0.7,gametick/36000)){
-			return(true);
+		if(!(options.custom.active&options.custom.disabledbiome[1])){
+			if(random(1)<1.101-min(0.7,gametick/36000)){
+				return(true);
+			}
 		}
 		return(false);
 	},
 	function(){
-		if(gametick>3600&random(1)<min(0.5,gametick/50000)){
-			return(true);
+		if(!(options.custom.active&options.custom.disabledbiome[2])){
+			if(gametick>3600&random(1)<min(0.5,gametick/50000)){
+				return(true);
+			}
 		}
 		return(false);
 	},
 	function(){
-		if(gametick>7200&random(1)<min(0.6,gametick/75000)){
-			return(true);
+		if(!(options.custom.active&options.custom.disabledbiome[3])){
+			if(gametick>7200&random(1)<min(0.6,gametick/75000)){
+				return(true);
+			}
 		}
 		return(false);
 	},
@@ -5699,6 +5707,8 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			if(options.custom.active){
 				fill(255,255,255);
 				text("Enabled biomes",360,15,200,55);
+				textFont(0,16);
+				text("Tip: do not disable all of them",460,50,100,300);
 				strokeWeight(7);
 				textFont(0,17);
 				textAlign(CENTER);
