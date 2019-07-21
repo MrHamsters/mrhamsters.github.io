@@ -1,4 +1,4 @@
-var version="v1.1";
+var version="v1.1.1";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -3906,12 +3906,16 @@ var applymods=function(){
 		player.hp/=1-player.tinker.health/50;
 	}
 	if(player.tinker.shield>0){
-		player.mshield*=1+player.tinker.shield/100;
-		player.shield*=1+player.tinker.shield/100;
+		player.mshield*=1+player.tinker.shield/130;
+		player.shield*=1+player.tinker.shield/130;
+		player.shieldregen*=1+player.tinker.shield/160;
+		player.shielddecay*=1+player.tinker.shield/220;
 	}
 	else if(player.tinker.health<0){
-		player.mshield/=1-player.tinker.shield/50;
-		player.shield/=1-player.tinker.shield/50;
+		player.mshield/=1-player.tinker.shield/65;
+		player.shield/=1-player.tinker.shield/65;
+		player.shieldregen/=1-player.tinker.shield/80;
+		player.shielddecay/=1-player.tinker.shield/110;
 	}
 	if(player.tinker.energy>0){
 		player.menergy*=1+player.tinker.energy/100;
@@ -5924,6 +5928,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 					bgmt.play();
 				}
 			}
+			if(!(input.shoot)){
+				shootlock=0;
+			}
 			noFill();
 			strokeWeight(20+abs(tick%120-60)/6);
 			stroke(220,255,140+abs(tick%90-45));
@@ -5983,24 +5990,29 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			}
 			text("Tinker",120,55);
 			if(pow(pow(player.x-150,2)+pow(player.y-50,2),0.5)<75&input.shoot){
+				viewmod=0;
+				shootlock=1;
 				viewmodtype=0;
 			}
 			text("Weapons",240,55);
 			if(pow(pow(player.x-275,2)+pow(player.y-50,2),0.5)<75&input.shoot){
+				viewmod=0;
+				shootlock=1;
 				viewmodtype="weapon";
 			}
 			text("Ship",381,55);
 			if(pow(pow(player.x-400,2)+pow(player.y-50,2),0.5)<75&input.shoot){
+				viewmod=0;
+				shootlock=1;
 				viewmodtype="ship";
 			}
 			text("Shield",497,55);
 			if(pow(pow(player.x-525,2)+pow(player.y-50,2),0.5)<75&input.shoot){
+				viewmod=0;
+				shootlock=1;
 				viewmodtype="shield";
 			}
 			textAlign(CENTER);
-			if(!(input.shoot)){
-				shootlock=0;
-			}
 			if(viewmodtype==0){
 				textFont(0,24);
 				fill(255,150,255);
