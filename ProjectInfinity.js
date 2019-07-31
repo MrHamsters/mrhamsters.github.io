@@ -1,4 +1,4 @@
-var version="0.8.5";
+var version="0.8.5b";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -146,6 +146,119 @@ var bgmn=0;
 var bgm;
 var sprites;
 var sfx;
+var adjustsfx=function(){
+	for(ad=0;ad<sfxlist.length;ad+=1){
+		if(sfx[sfxlist[ad].name]){
+			sfx[sfxlist[ad].name].volume(sfxlist[ad].vm*options.sfx);
+		}
+	}
+}
+var sfxlist=[
+	{name:"armor",vm:0.3},
+	{name:"armorp",vm:1},
+	{name:"hurtmin",vm:0.12},
+	{name:"hurt",vm:0.3},
+	{name:"hurtpow",vm:0.7},
+	{name:"hurtpow2",vm:1},
+	{name:"hurt2",vm:0.6},
+	{name:"death",vm:1},
+	{name:"crit",vm:0.2},
+	{name:"fissurec",vm:2},
+	{name:"fissure",vm:2.5},
+	{name:"swing",vm:0.65},
+	{name:"slice",vm:0.55},
+	{name:"bong",vm:0.7},
+	{name:"bow",vm:0.7},
+	{name:"arrow",vm:0.7},
+	{name:"arrowhit",vm:1},
+	{name:"shield",vm:1},
+	{name:"pop",vm:0.65},
+	{name:"water",vm:0.2},
+	{name:"decimatec",vm:0.7},
+	{name:"decimateh",vm:0.7},
+	{name:"decimatem",vm:0.7},
+	{name:"decimates",vm:0.7},
+	{name:"relicshield",vm:1},
+	{name:"shieldoverload",vm:1},
+	{name:"roar",vm:1},
+	{name:"block",vm:0.6},
+	{name:"fullblock",vm:0.15},
+	{name:"pswing",vm:0.7},
+	{name:"pslice",vm:0.7},
+	{name:"focus",vm:0.8},
+	{name:"sprint",vm:0.5},
+	{name:"mswordswing",vm:0.7},
+	{name:"mswordbeam",vm:0.7},
+	{name:"mswordhit",vm:0.7},
+	{name:"upgrade",vm:0.7},
+	{name:"enchant",vm:0.2},
+	{name:"obliteration",vm:0.3},
+	{name:"glacialwardcharge",vm:0.3},
+	{name:"glacialwardshatter",vm:0.3},
+	{name:"warp",vm:0.7},
+	{name:"rapiersw",vm:0.75},
+	{name:"voidbarrier",vm:0.6},
+	{name:"voidbarrierr",vm:0.6},
+	{name:"voidblast",vm:0.6},
+	{name:"voidboom",vm:0.6},
+	{name:"bomb",vm:0.6},
+	{name:"windslash",vm:1},
+	{name:"minigun",vm:0.2},
+	{name:"boomerang",vm:0.6},
+	{name:"boomerangcatch",vm:0.6},
+	{name:"SoH",vm:0.6},
+	{name:"SoHh",vm:0.6},
+	{name:"freezeboomers",vm:0.6},
+	{name:"poison",vm:0.03},
+	{name:"energystaff",vm:0.22},
+	{name:"energyh",vm:0.1},
+	{name:"dash",vm:1},
+	{name:"burn",vm:1},
+	{name:"bleed",vm:1},
+	{name:"poisoned",vm:1},
+	{name:"raining",vm:2},
+	{name:"plunge",vm:1.5},
+	{name:"eldritch",vm:0.7},
+	{name:"arcanereconstruction",vm:0.9},
+	{name:"prime",vm:1.3},
+	{name:"pdoor",vm:1.3},
+	{name:"slash",vm:1},
+	{name:"rapier",vm:0.6},
+	{name:"click",vm:0.8},
+	{name:"click2",vm:0.8},
+	{name:"click3",vm:0.8},
+	{name:"shrek",vm:1},
+	{name:"shrekdeath",vm:1},
+	{name:"dashbig",vm:1},
+	{name:"earthquake",vm:1},
+	{name:"jumpbig",vm:1},
+	{name:"judgment",vm:1},
+	{name:"judgmenthit",vm:0.2},
+	{name:"cripplingsw",vm:0.6},
+	{name:"cripplingst",vm:0.6},
+	{name:"energyls",vm:0.8},
+	{name:"energylf",vm:0.8},
+	{name:"woodenshell",vm:1},
+	{name:"shattershield",vm:1},
+	{name:"dragonRoar",vm:1.6},
+	{name:"aquabubble",vm:1.5},
+	{name:"aquabubbleburst",vm:2},
+	{name:"etherknife",vm:0.15},
+	{name:"etherknifeh",vm:0.3},
+	{name:"ethercut",vm:1},
+	{name:"incinerates",vm:1},
+	{name:"incineratel",vm:1},
+	{name:"incineratec",vm:2},
+	{name:"surge",vm:1.2},
+	{name:"surges",vm:0.8},
+	{name:"blizzards",vm:1.5},
+	{name:"blizzardl",vm:1.5},
+	{name:"infernalstab",vm:0.8},
+	{name:"challengearena",vm:1.3},
+	{name:"levelup",vm:1},
+	{name:"ksblock",vm:2.5},
+	{name:"ghastlydig",vm:0.6},
+];
 var loadassetscache=function(){
 	textFont(0,60);
 	fill(0,0,0,100);
@@ -327,11 +440,11 @@ var loadassetscache=function(){
 				energylf:new Howl({src: ['Data/Sound/sfx/energyLF.ogg'], autoplay: false,loop: true,volume: options.sfx*0.8,}),
 				woodenshell:new Howl({src: ['Data/Sound/sfx/woodenshell.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 				shattershield:new Howl({src: ['Data/Sound/sfx/shattershield.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
-				dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*2.2,}),
+				dragonRoar:new Howl({src: ['Data/Sound/sfx/dragonRoar.ogg'], autoplay: false,loop: false,volume: options.sfx*1.6,}),
 				aquabubble:new Howl({src: ['Data/Sound/sfx/aquabubble.ogg'], autoplay: false,loop: false,volume: options.sfx*1.5,}),
 				aquabubbleburst:new Howl({src: ['Data/Sound/sfx/aquabubbleburst.ogg'], autoplay: false,loop: false,volume: options.sfx*2,}),
 				etherknife:new Howl({src: ['Data/Sound/sfx/etherknife.ogg'], autoplay: false,loop: false,volume: options.sfx*0.15,}),
-				etherknifeh:new Howl({src: ['Data/Sound/sfx/etherknifehit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.45,}),
+				etherknifeh:new Howl({src: ['Data/Sound/sfx/etherknifehit.ogg'], autoplay: false,loop: false,volume: options.sfx*0.3,}),
 				ethercut:new Howl({src: ['Data/Sound/sfx/ethercut.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 				incinerates:new Howl({src: ['Data/Sound/sfx/incineratestart.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 				incineratel:new Howl({src: ['Data/Sound/sfx/incinerateloop.ogg'], autoplay: false,loop: true,volume: options.sfx*1,}),
@@ -3753,6 +3866,7 @@ var applyarcaneinstability=function(target,power,duration){
 	}
 	});
 }
+var needssfxu=false;
 var levelup=function(){
 	if(player.xp>=player.xpr&options.autosave){
 		temp= new Array(JSON.stringify(player),1);
@@ -12144,7 +12258,7 @@ var statpanel=function(){
 				fafgc[0]="magic";
 			}
 			if(playertemp.traits[87]>0){
-				if(playertemp.traits[217]>0){
+				if(playertemp.traits[218]>0){
 					fafgc[2]="Estimated Nullification: "+min(90,round((((1+playertemp.traits[218]/100)*(0.04*playertemp.traits[87]-0.02)*(plsre(1)))/(((1+playertemp.traits[218]/100)*(0.04*playertemp.traits[87]-0.02)*(plsre(1)))+nmelvsc(player.level)*30))*1000)/10)+"%";
 				}
 				else{
@@ -13676,7 +13790,10 @@ append(doaction,function(lv,hand){
 			traitpow=0;
 		}
 		if(playertemp.action.tick==1){
-				if(options.loadAudio){sfx.MoS.start.play();}
+			if(options.loadAudio){
+				sfx.MoS.start.volume(0.7*options.sfx);
+				sfx.MoS.start.play();
+			}
 		}
 		if(playertemp.action.tick==8){
 				append(objects,{
@@ -14406,12 +14523,7 @@ append(doaction,function(lv,hand){
 					}
 				}
 				if(hits>0&player.hp<(plshp(1))){
-					if(hits>=3){
-						heal(((plshp(1))-player.hp)*0.36,"direct");
-					}
-					else{
-						heal(((plshp(1))-player.hp)*0.12*hits,"direct");
-					}
+					heal(((plshp(1))-player.hp)*0.15*min(3,hits),"direct");
 				}
 			}
 			if(playertemp.action.tick>=90){
@@ -14468,12 +14580,16 @@ append(doaction,function(lv,hand){
 			if(render){shape(sprites.mordekaisermace,0,0,30,45);}
 			resetMatrix();
 			if(playertemp.action.tick==1){
-				
-						if(options.loadAudio){sfx.MoS.start.play();}
+				if(options.loadAudio){
+					sfx.MoS.start.volume(0.7*options.sfx);
+					sfx.MoS.start.play();
+				}
 			}
 			if(playertemp.action.tick==24){
-				
-						if(options.loadAudio){sfx.MoS.swing.play();}
+				if(options.loadAudio){
+					sfx.MoS.swing.volume(0.7*options.sfx);
+					sfx.MoS.swing.play();
+				}
 			}
 			if(playertemp.action.tick<=35){
 				playertemp.action.dir-=playertemp.action.tick/200;
@@ -14491,7 +14607,10 @@ append(doaction,function(lv,hand){
 								hits+=1;
 								damage("enemies",i,random((plsst(22)+plshp(2.4)),(plsst(24)+plshp(3))),random((plsin(22)+plshp(2.4)),(plsin(24)+plshp(3))),1,1,"melee","player",1.8,["impact","ironmanshield"]);
 								if(hits<2){
-									if(options.loadAudio){sfx.MoS.one.play();}
+									if(options.loadAudio){
+										sfx.MoS.one.volume(0.7*options.sfx);
+										sfx.MoS.one.play();
+									}
 								}
 							}
 						}
@@ -14512,8 +14631,10 @@ append(doaction,function(lv,hand){
 			if(render){shape(sprites.mordekaisermace,0,0,30,45);}
 			resetMatrix();
 			if(playertemp.action.tick==24){
-				
-						if(options.loadAudio){sfx.MoS.swing.play();}
+				if(options.loadAudio){
+					sfx.MoS.swing.volume(0.7*options.sfx);
+					sfx.MoS.swing.play();
+				}
 			}
 			if(playertemp.action.tick<=35){
 				playertemp.action.dir+=playertemp.action.tick/200;
@@ -14531,7 +14652,10 @@ append(doaction,function(lv,hand){
 								hits+=1;
 								damage("enemies",i,random((plsst(22)+plshp(2.4)),(plsst(24)+plshp(3))),random((plsin(22)+plshp(2.4)),(plsin(24)+plshp(3))),1,1,"melee","player",1.8,["impact","ironmanshield"]);
 								if(hits<2){
-									if(options.loadAudio){sfx.MoS.too.play();}
+									if(options.loadAudio){
+										sfx.MoS.too.volume(0.7*options.sfx);
+										sfx.MoS.too.play();
+									}
 								}
 							}
 						}
@@ -14548,7 +14672,10 @@ append(doaction,function(lv,hand){
 		}
 		else if(playertemp.combo[hand].num==3){
 			if(playertemp.action.tick==1){
-				if(options.loadAudio){sfx.MoS.swing.play();}
+				if(options.loadAudio){
+					sfx.MoS.swing.volume(0.7*options.sfx);
+					sfx.MoS.swing.play();
+				}
 			}
 			if(playertemp.action.tick<=29){
 				translate(400,350);
@@ -14573,7 +14700,10 @@ append(doaction,function(lv,hand){
 						}
 					}
 					if(hits>0){
-						if(options.loadAudio){sfx.MoS.three.play();}
+						if(options.loadAudio){
+							sfx.MoS.three.volume(0.7*options.sfx);
+							sfx.MoS.three.play();
+						}
 					}
 				}
 			}
@@ -16776,7 +16906,7 @@ append(doaction,function(lv,hand){
 				playertemp.action.y=cos(playertemp.action.indboltloc.dir)*playertemp.action.indboltloc.dist;
 				if(options.loadAudio){
 					sfx.surges.rate(random(0.85,1.15));
-					sfx.surges.volume(0.5);
+					sfx.surges.volume(0.5*options.sfx);
 					sfx.surges.play();
 				}
 				append(particles,new createparticle(mouseX+playertemp.action.x,mouseY+playertemp.action.y,0,0,0,0,'circle','',130,-12,255,0,150,150,255));
@@ -18820,11 +18950,11 @@ if(tick%30==0){
 				invselect=['',-1];
 				tooltipcache[0]=-1;
 				inventory=4;
+				needssfxu=false;
 				helpscreen={active:0,help:0};
 				if(options.disablespritecache){
 					inventorysprites={};
 				}
-				gettraits();
 			}
 		}
 		if(!(player.biomeID==1||playertemp.inBossFight)&!(mouselock)&mousePressed&cursorbox(400,600,605,685)){
@@ -20237,7 +20367,7 @@ if(tick%30==0){
 			if(mouseX>750&mouseX<950&mouseY<570&mouseY>530){
 				if(!(options.sfx==max(0,min(1,round((mouseX-750)/10)/20)))){
 					player.options.sfx=max(0,min(1,round((mouseX-750)/10)/20));
-					options.sfx=max(0,min(1,round((mouseX-750)/10)/20));
+					needssfxu=true;
 				}
 			}
 		}
@@ -20248,7 +20378,13 @@ if(tick%30==0){
 			if(!(mouselock)&mousePressed){
 				mouselock=1;
 				if(mouseButton==LEFT){
-					if(options.loadAudio){sfx.click.play();}
+					if(needssfxu){
+						options.sfx=player.options.sfx;
+						adjustsfx();
+					}
+					if(options.loadAudio){
+						sfx.click.play();
+					}
 					tooltipcache[0]=-1;
 					inventory=1;
 					inventype=1;
