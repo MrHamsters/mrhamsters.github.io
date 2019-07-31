@@ -18,7 +18,7 @@ wth
 wth
 [Fire Minigun] Fires fast projectiles which deal {s0.15}-{s0.175} physical and {i0.15}-{i0.175} magic impact-pierce damage and penetrate 20% of armor and resistance. Rate of fire increases as you shoot, up to 300% after 3 seconds. Each point in ranged mastery increases base rate of fire by 10%.
 
-[Throw Boomerang] Throws your boomerang which travels to its maximum distance and waits for a short duration, or until it hits an enemy, dealing {s0.35}-{s0.45} physical impact damage, and then flies back towards you at high speed, damaging all enemies in its path. If it does not hit any enemies while flying away, it becomes empowered, dealing {s1.85}-{s1.95} physical damage on its return. Catching it refunds most of the mana cost. Each point in Ranged Mastery increases damage by 7% and causes the boomerang to wait briefly at the end of its duration. [Normal stance] Boomerangs deal 20% more damage. [Phase stance] Boomerangs cost 2 more mana, gain Void property, and pierce enemies.
+[Throw Boomerang] Throws your boomerang which travels to its maximum distance and waits for a short duration, or until it hits an enemy, dealing {s0.35}-{s0.45} physical impact damage, and then flies back towards you at high speed, damaging all enemies in its path. If it does not hit any enemies while flying away, it becomes empowered, dealing {s1.85}-{s1.95} physical damage on its return. Catching it refunds most of the mana cost. Each point in Ranged Mastery increases damage by 7% and causes the boomerang to wait briefly at the end of its duration. [Normal stance] Boomerangs deal 35% more damage. [Phase stance] Boomerangs cost 2 more mana, gain Void property, and pierce enemies.
 
 
 
