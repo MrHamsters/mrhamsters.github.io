@@ -1,4 +1,4 @@
-var version="0.8.5b";
+var version="0.8.5c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -3142,14 +3142,27 @@ var renderequipslot=function(slot,x,y,interact){
 			if(cursorbox(x,x+50,y,y+50)){
 				equiptooltip(slot);
 				if(!(mouselock)&mousePressed&mouseButton==LEFT){
-						mouselock=1;
+					mouselock=1;
 					if(invselect[0]=='anvil'){
 						if(player.sp>=5&player.inventory[slot].level<player.level){
-						if(options.loadAudio){
-						sfx.upgrade.play();}
-							player.sp-=5;
-							player.inventory[slot].level+=1;
-									recalstats();
+							if(options.loadAudio){
+								sfx.upgrade.play();
+							}
+							if(keyPressed&keyCode==16){
+								if(player.sp>=(player.level-player.inventory[slot].level)*5){
+									player.sp-=(player.level-player.inventory[slot].level)*5;
+									player.inventory[slot].level=player.level;
+								}
+								else{
+									player.inventory[slot].level+=floor(player.sp/5);
+									player.sp=player.sp%5;
+								}
+							}
+							else{
+								player.sp-=5;
+								player.inventory[slot].level+=1;
+							}
+							recalstats();
 						}
 					}
 					else if(slot=="LH"||slot=="RH"){
@@ -3899,6 +3912,18 @@ var levelup=function(){
 		player.pp+=(player.level-player.lvpprew)*500;
 		player.record.pp.levels+=(player.level-player.lvpprew)*500;
 		player.lvpprew=player.level;
+		if(player.ppath==0){
+			player.passives[0]+=floor(player.pp/300);
+			player.pp=player.pp%300;
+		}
+		if(player.ppath==1){
+			player.passives[1]+=floor(player.pp/300);
+			player.pp=player.pp%300;
+		}
+		if(player.ppath==2){
+			player.passives[2]+=floor(player.pp/600);
+			player.pp=player.pp%600;
+		}
 		if(player.autoanvil&player.sp>=5){
 			if(player.inventory.LH){
 				if(player.sp>=5){
@@ -9607,7 +9632,7 @@ var convergingdialog={
 								player.activetraits.space=15;
 								gettraits();
 								playertemp.traitcd.e=traitcd[player.activetraits.e];
-								convergingdialog.introend();
+								convergingdialog.introppath();
 							}
 						},
 						{
@@ -9687,7 +9712,7 @@ var convergingdialog={
 								recalstats();
 								getstances();
 								getplayersprite();
-								convergingdialog.introend();
+								convergingdialog.introppath();
 							}
 						},
 						{
@@ -9767,7 +9792,59 @@ var convergingdialog={
 								recalstats();
 								getstances();
 								getplayersprite();
+								convergingdialog.introppath();
+							}
+						},
+					]
+				});
+			}
+		
+	},
+	introppath:function(){
+			dialog=function(){
+				sdialogb({
+					speaker:"Unknown Voice",
+					speech:"Lastly, what kind of stats are you aiming for?",
+					answers:[
+						{
+							answer:"Power (strength and intelligence)",
+							effect:function(){
+								player.ppath=0;
 								convergingdialog.introend();
+							}
+						},
+						{
+							answer:"Fortitude (health and denfenses)",
+							effect:function(){
+								player.ppath=1;
+								convergingdialog.introend();
+							}
+						},
+						{
+							answer:"Omnipotency (balanced)",
+							effect:function(){
+								player.ppath=2;
+								convergingdialog.introend();
+							}
+						},
+						{
+							answer:"I'll decide later",
+							effect:function(){
+								player.ppath=-1;
+								dialog=function(){
+									sdialogb({
+										speaker:"Unknown Voice",
+										speech:"That is fine; you can change your preferred passive path at any time. Just don't forget to spend your PP!",
+										answers:[
+											{
+												answer:"Alright",
+												effect:function(){
+													convergingdialog.introend();
+												}
+											},
+										]
+									});
+								}
 							}
 						},
 					]
@@ -12554,6 +12631,7 @@ var statpanel=function(){
 				}
 			}
 		}
+		
 		fill(110+abs(tick%80-40)/4,110+abs(tick%120-60)/6,110+abs(tick%200-100)/10);
 		rect(0,400,350,150);
 		if(player.pp>=10000){
@@ -12719,6 +12797,138 @@ var statpanel=function(){
 		}
 		tooltipdefc=0;
 		tooltipdefi=0;
+		if(player.ppath==0){
+			fill(abs(tick%180-90),255,abs(tick%180-90));
+			rect(40,525+abs(tick%120-60)/3,20,30,4);
+			triangle(30,550+abs(tick%120-60)/3,70,550+abs(tick%120-60)/3,50,565+abs(tick%120-60)/3);
+			if(cursorbox(35,64,535,575)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-50,
+					w:250,
+					h:150,
+					title:"Passive Path: Power",
+					tip:"Click to un-set this as your passive path. When un-set, your PP will no longer be automatically be spent on Power.",
+					colors:0
+				};
+				if(!(mouselock)&mousePressed){
+					mouselock=1;
+					if(options.loadAudio){sfx.click.play();}
+					player.ppath=-1;
+				}
+			}
+		}
+		else{
+			fill(255,0,0,90);
+			rect(40,535,20,30,4);
+			triangle(30,560,70,560,50,575);
+			if(cursorbox(35,64,535,575)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-50,
+					w:250,
+					h:150,
+					title:"Passive Path: Power",
+					tip:"Click to set this as your passive path. When set, your PP will automatically be spent on Power when levelling up.",
+					colors:0
+				};
+				if(!(mouselock)&mousePressed){
+					mouselock=1;
+					if(options.loadAudio){sfx.click.play();}
+					player.ppath=0;
+				}
+			}
+		}
+		if(player.ppath==1){
+			fill(abs(tick%180-90),255,abs(tick%180-90));
+			rect(140,525+abs(tick%120-60)/3,20,30,4);
+			triangle(130,550+abs(tick%120-60)/3,170,550+abs(tick%120-60)/3,150,565+abs(tick%120-60)/3);
+			if(cursorbox(135,164,535,575)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-50,
+					w:250,
+					h:150,
+					title:"Passive Path: Fortitude",
+					tip:"Click to un-set this as your passive path. When un-set, your PP will no longer be automatically be spent on Fortitude.",
+					colors:0
+				};
+				if(!(mouselock)&mousePressed){
+					mouselock=1;
+					if(options.loadAudio){sfx.click.play();}
+					player.ppath=-1;
+				}
+			}
+		}
+		else{
+			fill(255,0,0,90);
+			rect(140,535,20,30,4);
+			triangle(130,560,170,560,150,575);
+			if(cursorbox(135,164,535,575)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-50,
+					w:200,
+					h:150,
+					title:"Passive Path: Fortitude",
+					tip:"Click to set this as your passive path. When set, your PP will automatically be spent on Fortitude when levelling up.",
+					colors:0
+				};
+				if(!(mouselock)&mousePressed){
+					mouselock=1;
+					if(options.loadAudio){sfx.click.play();}
+					player.ppath=1;
+				}
+			}
+		}
+		if(player.ppath==2){
+			fill(abs(tick%180-90),255,abs(tick%180-90));
+			rect(240,525+abs(tick%120-60)/3,20,30,4);
+			triangle(230,550+abs(tick%120-60)/3,270,550+abs(tick%120-60)/3,250,565+abs(tick%120-60)/3);
+			if(cursorbox(235,264,535,575)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-50,
+					w:200,
+					h:150,
+					title:"Passive Path: Omnipotency",
+					tip:"Click to un-set this as your passive path. When un-set, your PP will no longer be automatically be spent on Omnipotency.",
+					colors:0
+				};
+				if(!(mouselock)&mousePressed){
+					mouselock=1;
+					if(options.loadAudio){sfx.click.play();}
+					player.ppath=-1;
+				}
+			}
+		}
+		else{
+			fill(255,0,0,90);
+			rect(240,535,20,30,4);
+			triangle(230,560,270,560,250,575);
+			if(cursorbox(235,264,535,575)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-50,
+					w:200,
+					h:150,
+					title:"Passive Path: Omnipotency",
+					tip:"Click to set this as your passive path. When set, your PP will automatically be spent on Omnipotency when levelling up.",
+					colors:0
+				};
+				if(!(mouselock)&mousePressed){
+					mouselock=1;
+					if(options.loadAudio){sfx.click.play();}
+					player.ppath=2;
+				}
+			}
+		}
 		textAlign(TOP,LEFT);
 }
 var propertycolors=[
@@ -18581,10 +18791,27 @@ if(tick%30==0){
 			}
 			textAlign(CENTER,CENTER);
 			fill(150,0,150);
+			stroke(255,255,100,70+abs(tick%80-40)*2);
+			strokeWeight(0,20);
 			rect(400,45,200,80,10);
+			noStroke();
 			fill(150,255,150);
+			textFont(0,20);
+			text('View / Equip',400,20,200,80);
 			textFont(0,40);
-			text('Traits',400,35,200,80);
+			text('Traits',400,50,200,80);
+			if(cursorbox(400,600,45,125)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-50,
+					w:200,
+					h:150,
+					title:"Traits",
+					tip:"Click to view and equip traits obtained from equipped items",
+					colors:0
+				};
+			}
 			fill(50,50,50);
 			rect(800,600,80,80,10);
 			noFill();
@@ -18898,7 +19125,7 @@ if(tick%30==0){
 				w:250,
 				h:250,
 				title:"Upgrade items",
-				tip:"Right click to toggle automatic anvil (will upgrade equipped items once every time you level). Left click to use the anvil. Click items with the anvil to upgrade them. Hold shift while clicking an unequipped item to upgrade it to your level. Upgrading costs 5 SP per level.",
+				tip:"Right click to toggle automatic anvil (will upgrade equipped items once every time you level up). Left click to use the anvil. Click items with the anvil to upgrade them. Hold shift while clicking to upgrade it to your level. Upgrading costs 5 SP per level.",
 				colors:0
 			};
 			if(!(mouselock)&mousePressed){
@@ -19588,6 +19815,19 @@ if(tick%30==0){
 				textAlign(TOP,LEFT);
 				text("Keystones: "+(player.keystones.areabase+player.keystones.bonus-player.keystones.allocated-keystonecache.edited)+" / "+(player.keystones.areabase+player.keystones.bonus),650,40);
 				if(keystonecache.mode==0){
+					noFill();
+					strokeWeight(0,25);
+					stroke(255,255,100,130+abs(tick%90-45)*2);
+					if(player.passives[0]>(player.passives[1]+player.passives[2]*2)*0.8){
+						ellipse(500,400,250,250);
+					}
+					if(player.passives[1]>(player.passives[0]+player.passives[2]*2)*0.8){
+						ellipse(740,400,250,250);
+					}
+					if(player.passives[2]*2>(player.passives[0]+player.passives[1])*0.8){
+						ellipse(980,400,250,250);
+					}
+					noStroke();
 					if(cursorbox(400,600,300,500)){
 						fill(120,120,120);
 						if(mousePressed&!(mouselock)){
@@ -20033,6 +20273,24 @@ if(tick%30==0){
 				if(options.loadAudio){sfx.click.play();}
 				player.activetraits.e=0;
 				gettraits();
+			}
+		}
+		if(mouseX<400){
+			if(!(mouselock)&mousePressed){
+				mouselock=1;
+				if(mouseButton==LEFT){
+					if(options.loadAudio){sfx.click.play();}
+					append(particles,new createparticle(max(275,mouseX),mouseY-30,0,0,0,0,'text','Equip an active trait by pressing Q, E, Shift, or Ctrl on it!',20,0,255,-1,255,255,0));
+				}
+			}
+		}
+		else if(mouseX<850){
+			if(!(mouselock)&mousePressed){
+				mouselock=1;
+				if(mouseButton==LEFT){
+					if(options.loadAudio){sfx.click.play();}
+					append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Traits here are always equipped!',20,0,255,-1.75,0,255,0));
+				}
 			}
 		}
 		fill(200,100,0);
