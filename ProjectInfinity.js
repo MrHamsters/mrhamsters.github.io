@@ -1,4 +1,4 @@
-var version="0.8.4d2";
+var version="0.8.5";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -374,7 +374,7 @@ var stateffectsg = new Array();
 var floordeco = new Array();
 var terraineffects = new Array();
 var inventory=0;
-var inventorysprites={};
+var inventorysprites={meta:1};
 var equipkey=loadStrings('Data/Text/equip key.txt');
 var statkey=loadStrings('Data/Text/global stat key.txt');
 var keystoner=loadStrings('Data/Text/keystones.txt');
@@ -1238,7 +1238,9 @@ window.onkeydown=function(e){
 				keystonecache=0;
 				inventory=0;
 				helpscreen={active:0,help:0};
-				inventorysprites={};
+				if(options.disablespritecache){
+					inventorysprites={};
+				}
 				traits={inactive:new Array(),active:new Array(),sprites:new Array(1000),tt:new Array(1000)};
 			}
 			else{
@@ -2814,7 +2816,9 @@ var defaultenemy=function(i,mindistance){
 	}
 }
 var getinventorysprites=function(){
-	inventorysprites={meta:1};
+	if(options.disablespritecache){
+		inventorysprites={meta:1};
+	}
 	for(i=0;i<player.inventory.bag.length;i+=1){
 		if(player.inventory.bag[i]){
 			if(!(inventorysprites[itemdata[player.inventory.bag[i].id*10+4]])){
@@ -3379,14 +3383,14 @@ var renderinventory=function(){
 					}
 				}
 				rect(650+30*n,125+30*x,25,25,2);
-				if(player.inventory.bag[15*x+n].lock){
-					noFill();
-					strokeWeight(4);
-					stroke(255,255,100,175+abs(tick%120-60));
-					rect(648+30*n,123+30*x,27,27,2);
-					noStroke();
-				}
 				if(player.inventory.bag[15*x+n]){
+					if(player.inventory.bag[15*x+n].lock){
+						noFill();
+						strokeWeight(4);
+						stroke(255,255,100,175+abs(tick%120-60));
+						rect(648+30*n,123+30*x,27,27,2);
+						noStroke();
+					}
 					if(player.inventory.bag[15*x+n].id==44){
 						ellipseMode(CENTER);
 						if(player.inventory.bag[15*x+n].suffix&player.inventory.bag[15*x+n].prefix){
@@ -5532,7 +5536,7 @@ var loadtraits=function(){
 	if(playertemp.traits[28]>0){
 		append(traitfuncs.damagetaken,function(){
 			if(willhit){
-				if(playertemp.timesincehittaken>600/(1+playertemp.traits[28]/5)){
+				if(playertemp.timesincehittaken>600/(1+playertemp.traits[28]/4)){
 					pdmg=0;
 					mdmg=0;
 					willdamage=0;
@@ -5550,14 +5554,15 @@ var loadtraits=function(){
 					for(gw=0;gw<enemies.length;gw+=1){
 						if(enemies[gw].x-playertemp.x<65&enemies[gw].y-playertemp.y<65&enemies[gw].x-playertemp.x>-65&enemies[gw].y-playertemp.y>-65){
 							if(pow(enemies[gw].x-playertemp.x,2)+pow(enemies[gw].y-playertemp.y,2)<pow(50+enemies[gw].size,2)){
-								enemies[gw].stun+=round(24*playertemp.traits[28]*(100-enemies[gw].tenacity)/100);
+								enemies[gw].stun+=round((30+12*playertemp.traits[28])*(100-enemies[gw].tenacity)/100);
 							}
 						}
 					}
 				}
 			}
 		});
-		append(traitfuncs.passives,function(){if(render){
+		append(traitfuncs.passives,function(){
+			if(render){
 				if(playertemp.timesincehittaken>60+600/(1+playertemp.traits[28]/5)){
 					ellipseMode(CENTER);
 					strokeWeight(10);
@@ -5576,7 +5581,8 @@ var loadtraits=function(){
 					stroke(170,170,255,(playertemp.timesincehittaken-600/(1+playertemp.traits[28]/5))*2.5);
 					ellipse(400,350,35,35);
 					noStroke();
-		}}
+				}
+			}
 		});
 	}
 	//Source damage===============
@@ -5654,31 +5660,27 @@ var loadtraits=function(){
 	append(traitfuncs.damagetaken,function(){
 		dmgstashfc=[pdmg,mdmg];
 		if(playertemp.traits[212]>0){
-			if((plsar(1))*armorE/10>mdmg*0.45&(plsre(1))*resE/10>pdmg*0.45){
-				armorsfx=1;
-				if((plsar(1))*armorE/10>mdmg*0.88&(plsre(1))*resE/10>pdmg*0.88){
-					armorsfx=2;
-				}
-			}
-			pdmg=max(pdmg/10,pdmg-(plsre(1))*resE/10);
-			mdmg=max(mdmg/10,mdmg-(plsar(1))*armorE/10);
+			pdmg=max(pdmg/10,pdmg*(1-plsre(1)*resE/(plsre(1)*resE+2*pdmg)));
+			mdmg=max(mdmg/10,mdmg*(1-plsar(1)*armorE/(plsar(1)*armorE+2*mdmg)));
 			if(playertemp.traits[87]>0){
-				pdmg=max(pdmg/10,pdmg-(playertemp.traits[87]*0.001-0.0005)*((plsre(1))*resE-dmgstashfc[0])/10);
-				mdmg=max(mdmg/10,mdmg-(playertemp.traits[87]*0.001-0.0005)*((plsar(1))*armorE-dmgstashfc[1])/10);
+				pdmg=max(pdmg/10,pdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsre(1)*resE/(plsre(1)*resE+2*pdmg)));
+				mdmg=max(mdmg/10,mdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsar(1)*armorE/(plsar(1)*armorE+2*mdmg)));
 			}
 		}
 		else{
-			if((plsar(1))*armorE/10>pdmg*0.45&(plsre(1))*resE/10>mdmg*0.45){
+			pdmg=max(pdmg/10,pdmg*(1-plsar(1)*armorE/(plsar(1)*armorE+2*pdmg)));
+			mdmg=max(mdmg/10,mdmg*(1-plsre(1)*resE/(plsre(1)*resE+2*mdmg)));
+			if(playertemp.traits[87]>0){
+				pdmg=max(pdmg/10,pdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsar(1)*armorE/((0.04*playertemp.traits[87]-0.02)*plsar(1)*armorE+2*pdmg)));
+				mdmg=max(mdmg/10,mdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsre(1)*resE/((0.04*playertemp.traits[87]-0.02)*plsre(1)*resE+2*mdmg)));
+			}
+		}
+		if(willhit){
+			if(dmgstashfc[0]>=pdmg*2&dmgstashfc[1]>=mdmg*2){
 				armorsfx=1;
-				if((plsar(1))*armorE/10>pdmg*0.88&(plsre(1))*resE/10>mdmg*0.88){
+				if(dmgstashfc[0]>=pdmg*9&dmgstashfc[1]>=mdmg*9){
 					armorsfx=2;
 				}
-			}
-			pdmg=max(pdmg/10,pdmg-(plsar(1))*armorE/10);
-			mdmg=max(mdmg/10,mdmg-(plsre(1))*resE/10);
-			if(playertemp.traits[87]>0){
-				pdmg=max(pdmg/10,pdmg-(playertemp.traits[87]*0.001-0.0005)*((plsar(1))*armorE-dmgstashfc[0])/10);
-				mdmg=max(mdmg/10,mdmg-(playertemp.traits[87]*0.001-0.0005)*((plsre(1))*resE-dmgstashfc[1])/10);
 			}
 		}
 	});
@@ -7689,8 +7691,8 @@ var recalstats=function(){
 	}
 	//Post normal bonuses
 	if(playertemp.traits[34]>0){
-		temp=min(player.maxhp*0.6,player.hpregen*20,player.str,player.intel,player.armor,player.res)*playertemp.traits[34]/10;
-		player.maxhp+=temp/0.6;
+		temp=min(player.maxhp*0.5,player.hpregen*15,player.str,player.intel,player.armor,player.res)*playertemp.traits[34]/10;
+		player.maxhp+=temp*2;
 		player.hpregen+=temp/20;
 		player.str+=temp;
 		player.intel+=temp;
@@ -8997,14 +8999,14 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				}
 			}
 		}
-		if(enemies[index].armor/10*armorE>pdmg*0.45&enemies[index].res/10*resE>mdmg*0.45){
+		if((enemies[index].armor*armorE/(enemies[index].armor*armorE+2*pdmg))>0.45&(enemies[index].res*resE/(enemies[index].res*resE+2*mdmg))>0.45){
 			armorsfx=1;
-			if(enemies[index].armor/10*armorE>pdmg*0.88&enemies[index].res/10*resE>mdmg*0.88){
+			if((enemies[index].armor*armorE/(enemies[index].armor*armorE+2*pdmg))>0.88&(enemies[index].res*resE/(enemies[index].res*resE+2*mdmg))>0.88){
 				armorsfx=2;
 			}
 		}
-		pdmg=max(pdmg/10,pdmg-enemies[index].armor/10*armorE);
-		mdmg=max(mdmg/10,mdmg-enemies[index].res/10*resE);
+		pdmg=max(pdmg/10,pdmg*(1-enemies[index].armor*armorE/(enemies[index].armor*armorE+2*pdmg)));
+		mdmg=max(mdmg/10,mdmg*(1-enemies[index].res*resE/(enemies[index].res*resE+2*mdmg)));
 		if(enemies[index].propertydmods){
 			if(atkprop){
 				for(rtdp=0;rtdp<damageproperties.length;rtdp+=1){
@@ -9184,6 +9186,7 @@ var loadArea=function(){
 var nmelvsc=function (nmelv){
 	return((0.9+nmelv/10)*(1+nmelv/100)*(0.45+(min(100,max(0,nmelv-20))+min(100,max(0,nmelv/2-50)))*0.018)*(1+min(2,max(0,nmelv-10)/300)));
 }
+var qtipc=false;
 var placegateway=function(i,mindistance){
 	gateways[i].x = playertemp.x+random(-biomedata[11],biomedata[11]);
 	gateways[i].y = playertemp.y+random(-biomedata[11],biomedata[11]);
@@ -9803,7 +9806,8 @@ var getBiomeScripts=function(){
 				playertemp.x=395;
 			}
 			//Fountain
-			if(render){ellipseMode(CENTER);
+			if(render){
+			ellipseMode(CENTER);
 			fill(135,135,155);
 			ellipse(400-playertemp.x,160-playertemp.y,80,80);
 			fill(0+abs(tick%240-120)/4,0+abs(tick%240-120)/4,255,130+0+abs(tick%150-75)/2);
@@ -9833,15 +9837,18 @@ var getBiomeScripts=function(){
 					player.hp+=plshp(0.01);
 					player.mp+=plsmp(0.01);
 				}
-				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&pow(playertemp.x,2)+pow(playertemp.y+190,2)<pow(62+player.size,2)){
-					getAtlas();
-					inventory=3;
-					if(!(player.intro.atlas)&player.enableintro){
-						openhelpscreen();
-						player.intro.atlas=1;
-					}
-					else{
-						helpscreen={active:0,help:0};
+				if(pow(playertemp.x,2)+pow(playertemp.y+190,2)<pow(62+player.size,2)){
+					qtipc="Press F to open the Atlas";
+					if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+						getAtlas();
+						inventory=3;
+						if(!(player.intro.atlas)&player.enableintro){
+							openhelpscreen();
+							player.intro.atlas=1;
+						}
+						else{
+							helpscreen={active:0,help:0};
+						}
 					}
 				}
 			}
@@ -9862,19 +9869,22 @@ var getBiomeScripts=function(){
 				playertemp.yvelo=0;
 			}
 			if(!(cinematic||dialoga)){
-				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<275&playertemp.x>125&playertemp.y<-275&playertemp.y>-425){
-					getinventorysprites();
-				tooltipcache[0]=-1;
-					inventory=1;
-					fusionselect=0;
-					enchantmode=0;
-					inventype=2;
-					if(!(player.intro.enchanter)&player.enableintro){
-						openhelpscreen();
-						player.intro.enchanter=1;
-					}
-					else{
-						helpscreen={active:0,help:0};
+				if(playertemp.x<275&playertemp.x>125&playertemp.y<-275&playertemp.y>-425){
+					qtipc="Press F to use the Enchanter";
+					if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+						getinventorysprites();
+						tooltipcache[0]=-1;
+						inventory=1;
+						fusionselect=0;
+						enchantmode=0;
+						inventype=2;
+						if(!(player.intro.enchanter)&player.enableintro){
+							openhelpscreen();
+							player.intro.enchanter=1;
+						}
+						else{
+							helpscreen={active:0,help:0};
+						}
 					}
 				}
 			}
@@ -9902,17 +9912,20 @@ var getBiomeScripts=function(){
 				playertemp.yvelo=0;
 			}
 			if(!(cinematic||dialoga)){
-				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<50&playertemp.x>-50&playertemp.y<-340&playertemp.y>-420){
-					getinventorysprites();
-				tooltipcache[0]=-1;
-					inventory=1;
-					inventype=4;
-					if(!(player.intro.artisans)&player.enableintro){
-						openhelpscreen();
-						player.intro.artisans=1;
-					}
-					else{
-						helpscreen={active:0,help:0};
+				if(playertemp.x<50&playertemp.x>-50&playertemp.y<-340&playertemp.y>-420){
+					qtipc="Press F to use the Artisan's Bench";
+					if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+						getinventorysprites();
+						tooltipcache[0]=-1;
+						inventory=1;
+						inventype=4;
+						if(!(player.intro.artisans)&player.enableintro){
+							openhelpscreen();
+							player.intro.artisans=1;
+						}
+						else{
+							helpscreen={active:0,help:0};
+						}
 					}
 				}
 			}
@@ -9924,70 +9937,206 @@ var getBiomeScripts=function(){
 				playertemp.yvelo=0;
 			}
 			if(!(cinematic||dialoga)){
-				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<-280&playertemp.x>-340&playertemp.y<-140&playertemp.y>-220){
-					if(!(player.record.keystonemerchant)){
-						player.record.keystonemerchant=0;
-					}
-					cinematic[0]=="dialog";
-					dialoga=1;
-					if(player.record.keystonemerchant<8){
-						if(player.record.keystonemerchant<2+floor(player.level/25)){
-							dialog=function(){
-								sdialogb({
-									speaker:"Keystone Merchant",
-									speech:"Hello, "+player.name+"! Would you like to buy a keystone? They're quite rare. This one will cost "+(round(100*pow(1.7,player.record.keystonemerchant)))+" SP.",
-									answers:[
-										{
-											answer:"Yes",
-											effect:function(){
-												if(player.sp>=round(100*pow(1.7,player.record.keystonemerchant))){
-													player.sp-=round(100*pow(1.7,player.record.keystonemerchant));
-													player.record.keystonemerchant+=1;
-													player.keystones.bonus+=1;
-													dialog=function(){
-														sdialogb({
-															speaker:"Keystone Merchant",
-															speech:"Thank you, come again!",
-															answers:[
-																{
-																	answer:"(Leave)",
-																	effect:function(){
-																			dialog=0;
-																			cinematic[0]=0;
-																			dialoga=0;
+				if(playertemp.x<-280&playertemp.x>-340&playertemp.y<-140&playertemp.y>-220){
+					qtipc="Press F talk";
+					if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+						if(!(player.record.keystonemerchant)){
+							player.record.keystonemerchant=0;
+						}
+						cinematic[0]=="dialog";
+						dialoga=1;
+						if(player.record.keystonemerchant<8){
+							if(player.record.keystonemerchant<2+floor(player.level/25)){
+								dialog=function(){
+									sdialogb({
+										speaker:"Keystone Merchant",
+										speech:"Hello, "+player.name+"! Would you like to buy a keystone? They're quite rare. This one will cost "+(round(100*pow(1.7,player.record.keystonemerchant)))+" SP.",
+										answers:[
+											{
+												answer:"Yes",
+												effect:function(){
+													if(player.sp>=round(100*pow(1.7,player.record.keystonemerchant))){
+														player.sp-=round(100*pow(1.7,player.record.keystonemerchant));
+														player.record.keystonemerchant+=1;
+														player.keystones.bonus+=1;
+														dialog=function(){
+															sdialogb({
+																speaker:"Keystone Merchant",
+																speech:"Thank you, come again!",
+																answers:[
+																	{
+																		answer:"(Leave)",
+																		effect:function(){
+																				dialog=0;
+																				cinematic[0]=0;
+																				dialoga=0;
+																		}
 																	}
-																}
-															],
-														});
+																],
+															});
+														}
+													}
+													else{
+														dialog=function(){
+															sdialogb({
+																speaker:"Keystone Merchant",
+																speech:"It would appear as though you have insufficient cash. Keystones aren't free, you know!",
+																answers:[
+																	{
+																		answer:"(Leave)",
+																		effect:function(){
+																				dialog=0;
+																				cinematic[0]=0;
+																				dialoga=0;
+																		}
+																	}
+																],
+															});
+														}
 													}
 												}
-												else{
-													dialog=function(){
-														sdialogb({
-															speaker:"Keystone Merchant",
-															speech:"It would appear as though you have insufficient cash. Keystones aren't free, you know!",
-															answers:[
-																{
-																	answer:"(Leave)",
-																	effect:function(){
-																			dialog=0;
-																			cinematic[0]=0;
-																			dialoga=0;
-																	}
-																}
-															],
-														});
-													}
+											},
+											{
+												answer:"No",
+												effect:function(){
+														dialog=0;
+														cinematic[0]=0;
+														dialoga=0;
 												}
 											}
-										},
-										{
-											answer:"No",
-											effect:function(){
+										],
+									});
+								}
+							}
+							else{
+								dialog=function(){
+									sdialogb({
+										speaker:"Keystone Merchant",
+										speech:"Hello, "+player.name+"! How are those keystones working out for you? Unfortunately, it would seem as though you bought all that I had. I apologize for any inconveniences this may cause you. Check again later; my supplier may have delivered more by then.",
+										answers:[
+											{
+												answer:"(Leave)",
+												effect:function(){
 													dialog=0;
 													cinematic[0]=0;
 													dialoga=0;
+												}
 											}
+										],
+									});
+								}
+							}
+						}
+						else if(player.record.quests.resetmerchant){
+							dialog=function(){
+								sdialogb({
+									speaker:"Reset Merchant",
+									speech:"Hello, "+player.name+"! Interested in a reset? It's 300 reactant for a passive reset and 200 for a keystone reset.",
+									answers:[
+										{
+											answer:"Reset passives",
+												effect:function(){
+													if(player.reactant>=300){
+														player.reactant-=300;
+														player.pp+=player.passives[0]*300;
+														player.passives[0]=0;
+														player.pp+=player.passives[1]*300;
+														player.passives[1]=0;
+														player.pp+=player.passives[2]*600;
+														player.passives[2]=0;
+														recalstats();
+														dialog=function(){
+															sdialogb({
+																speaker:"Reset Merchant",
+																speech:"All done! Come back any time!",
+																answers:[
+																	{
+																		answer:"(Leave)",
+																		effect:function(){
+																				dialog=0;
+																				cinematic[0]=0;
+																				dialoga=0;
+																		}
+																	}
+																],
+															});
+														}
+													}
+													else{
+														dialog=function(){
+															sdialogb({
+																speaker:"Reset Merchant",
+																speech:"It would appear as though you have insufficient cash. Resets aren't free, you know!",
+																answers:[
+																	{
+																		answer:"(Leave)",
+																		effect:function(){
+																				dialog=0;
+																				cinematic[0]=0;
+																				dialoga=0;
+																		}
+																	}
+																],
+															});
+														}
+													}
+												}
+										},
+										{
+											answer:"Reset keystones",
+												effect:function(){
+													if(player.reactant>=200){
+														player.reactant-=200;
+														player.keystones.keystones=new Array();
+														player.keystones.allocated=0;
+														for(upd=0;upd<999;upd+=1){
+															player.keystones.keystones[upd]=0;
+														}
+														applykeystones();
+														dialog=function(){
+															sdialogb({
+																speaker:"Reset Merchant",
+																speech:"All done! Come back any time!",
+																answers:[
+																	{
+																		answer:"(Leave)",
+																		effect:function(){
+																				dialog=0;
+																				cinematic[0]=0;
+																				dialoga=0;
+																		}
+																	}
+																],
+															});
+														}
+													}
+													else{
+														dialog=function(){
+															sdialogb({
+																speaker:"Reset Merchant",
+																speech:"It would appear as though you have insufficient reactant. Resets aren't free, you know!",
+																answers:[
+																	{
+																		answer:"(Leave)",
+																		effect:function(){
+																				dialog=0;
+																				cinematic[0]=0;
+																				dialoga=0;
+																		}
+																	}
+																],
+															});
+														}
+													}
+												}
+										},
+										{
+											answer:"Not now",
+												effect:function(){
+													dialog=0;
+													cinematic[0]=0;
+													dialoga=0;
+												}
 										}
 									],
 								});
@@ -9997,11 +10146,12 @@ var getBiomeScripts=function(){
 							dialog=function(){
 								sdialogb({
 									speaker:"Keystone Merchant",
-									speech:"Hello, "+player.name+"! How are those keystones working out for you? Unfortunately, it would seem as though you bought all that I had. I apologize for any inconveniences this may cause you. Check again later; my supplier may have delivered more by then.",
+									speech:"Hello, "+player.name+"! How are those keystones working out for you? Unfortunately, it would seem as though you bought all that I had. On top of that, my supplier has informed me that was the last of his stock! I guess I ought to sell something else now. Resets, perhaps?",
 									answers:[
 										{
 											answer:"(Leave)",
 											effect:function(){
+												player.record.quests.resetmerchant=1;
 												dialog=0;
 												cinematic[0]=0;
 												dialoga=0;
@@ -10010,140 +10160,6 @@ var getBiomeScripts=function(){
 									],
 								});
 							}
-						}
-					}
-					else if(player.record.quests.resetmerchant){
-						dialog=function(){
-							sdialogb({
-								speaker:"Reset Merchant",
-								speech:"Hello, "+player.name+"! Interested in a reset? It's 300 reactant for a passive reset and 200 for a keystone reset.",
-								answers:[
-									{
-										answer:"Reset passives",
-											effect:function(){
-												if(player.reactant>=300){
-													player.reactant-=300;
-													player.pp+=player.passives[0]*300;
-													player.passives[0]=0;
-													player.pp+=player.passives[1]*300;
-													player.passives[1]=0;
-													player.pp+=player.passives[2]*600;
-													player.passives[2]=0;
-													recalstats();
-													dialog=function(){
-														sdialogb({
-															speaker:"Reset Merchant",
-															speech:"All done! Come back any time!",
-															answers:[
-																{
-																	answer:"(Leave)",
-																	effect:function(){
-																			dialog=0;
-																			cinematic[0]=0;
-																			dialoga=0;
-																	}
-																}
-															],
-														});
-													}
-												}
-												else{
-													dialog=function(){
-														sdialogb({
-															speaker:"Reset Merchant",
-															speech:"It would appear as though you have insufficient cash. Resets aren't free, you know!",
-															answers:[
-																{
-																	answer:"(Leave)",
-																	effect:function(){
-																			dialog=0;
-																			cinematic[0]=0;
-																			dialoga=0;
-																	}
-																}
-															],
-														});
-													}
-												}
-											}
-									},
-									{
-										answer:"Reset keystones",
-											effect:function(){
-												if(player.reactant>=200){
-													player.reactant-=200;
-													player.keystones.keystones=new Array();
-													player.keystones.allocated=0;
-													for(upd=0;upd<999;upd+=1){
-														player.keystones.keystones[upd]=0;
-													}
-													applykeystones();
-													dialog=function(){
-														sdialogb({
-															speaker:"Reset Merchant",
-															speech:"All done! Come back any time!",
-															answers:[
-																{
-																	answer:"(Leave)",
-																	effect:function(){
-																			dialog=0;
-																			cinematic[0]=0;
-																			dialoga=0;
-																	}
-																}
-															],
-														});
-													}
-												}
-												else{
-													dialog=function(){
-														sdialogb({
-															speaker:"Reset Merchant",
-															speech:"It would appear as though you have insufficient reactant. Resets aren't free, you know!",
-															answers:[
-																{
-																	answer:"(Leave)",
-																	effect:function(){
-																			dialog=0;
-																			cinematic[0]=0;
-																			dialoga=0;
-																	}
-																}
-															],
-														});
-													}
-												}
-											}
-									},
-									{
-										answer:"Not now",
-											effect:function(){
-												dialog=0;
-												cinematic[0]=0;
-												dialoga=0;
-											}
-									}
-								],
-							});
-						}
-					}
-					else{
-						dialog=function(){
-							sdialogb({
-								speaker:"Keystone Merchant",
-								speech:"Hello, "+player.name+"! How are those keystones working out for you? Unfortunately, it would seem as though you bought all that I had. On top of that, my supplier has informed me that was the last of his stock! I guess I ought to sell something else now. Resets, perhaps?",
-								answers:[
-									{
-										answer:"(Leave)",
-										effect:function(){
-											player.record.quests.resetmerchant=1;
-											dialog=0;
-											cinematic[0]=0;
-											dialoga=0;
-										}
-									}
-								],
-							});
 						}
 					}
 				}
@@ -10173,69 +10189,72 @@ var getBiomeScripts=function(){
 				}
 			}
 			if(!(cinematic||dialoga)){
-				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)&playertemp.x<-175&playertemp.x>-225&playertemp.y<-325&playertemp.y>-375){
-					if(player.record.quests.infuser<1||!(player.record.quests.infuser)){
-						cinematic[0]=="dialog";
-						dialoga=1;
-						dialog=function(){
-							sdialogb({
-								speaker:"Tattered Note",
-								speech:"The Infuser is missing a crucial component and cannot be used. However, it can easily be fixed with a Shard of Nature. These can be found in the jungle. Once fixed, the Infuser can be used to gain powerful bonuses by spending keystones gained by completing areas.",
-								answers:[
-									{
-										answer:"(Leave)",
-										effect:function(){
-												dialog=0;
-												cinematic[0]=0;
-												dialoga=0;
-										}
-									}
-								],
-							});
-						}
-					}
-					else if(player.record.quests.infuser<2){
-						cinematic[0]=="dialog";
-						dialoga=1;
-						dialog=function(){
-							sdialogb({
-								speaker:"Tattered Note",
-								speech:"The Infuser is missing a crucial component and cannot be used. However, it can easily be fixed with a Shard of Nature. These can be found in the jungle. Once fixed, the Infuser can be used to gain powerful bonuses by spending keystones gained by completing areas.",
-								answers:[
-									{
-										answer:"(Insert Shard of Nature)",
-										effect:function(){
-												if(options.loadAudio){sfx.upgrade.play();}
-												player.record.quests.infuser=2;
-												dialog=0;
-												cinematic[0]=0;
-												dialoga=0;
-												savegame();
-												keystoneselec=[0,0];
-												getkeystonetrees();
-												tooltipcache[0]=-1;
-												inventory=1;
-												inventype=3;
-												if(!(player.intro.infuser)&player.enableintro){
-													openhelpscreen();
-													player.intro.infuser=1;
-												}
-												else{
-													helpscreen={active:0,help:0};
-												}
+				if(playertemp.x<-175&playertemp.x>-225&playertemp.y<-325&playertemp.y>-375){
+					qtipc="Press F to use the Infuser";
+					if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+						if(player.record.quests.infuser<1||!(player.record.quests.infuser)){
+							cinematic[0]=="dialog";
+							dialoga=1;
+							dialog=function(){
+								sdialogb({
+									speaker:"Tattered Note",
+									speech:"The Infuser is missing a crucial component and cannot be used. However, it can easily be fixed with a Shard of Nature. These can be found in the jungle. Once fixed, the Infuser can be used to gain powerful bonuses by spending keystones gained by completing areas.",
+									answers:[
+										{
+											answer:"(Leave)",
+											effect:function(){
+													dialog=0;
+													cinematic[0]=0;
+													dialoga=0;
 											}
 										}
 									],
 								});
 							}
-					}
-					else{
-						keystoneselec=[0,0];
-						getkeystonetrees();
-						tooltipcache[0]=-1;
-						inventory=1;
-						inventype=3;
-						helpscreen={active:0,help:0};
+						}
+						else if(player.record.quests.infuser<2){
+							cinematic[0]=="dialog";
+							dialoga=1;
+							dialog=function(){
+								sdialogb({
+									speaker:"Tattered Note",
+									speech:"The Infuser is missing a crucial component and cannot be used. However, it can easily be fixed with a Shard of Nature. These can be found in the jungle. Once fixed, the Infuser can be used to gain powerful bonuses by spending keystones gained by completing areas.",
+									answers:[
+										{
+											answer:"(Insert Shard of Nature)",
+											effect:function(){
+													if(options.loadAudio){sfx.upgrade.play();}
+													player.record.quests.infuser=2;
+													dialog=0;
+													cinematic[0]=0;
+													dialoga=0;
+													savegame();
+													keystoneselec=[0,0];
+													getkeystonetrees();
+													tooltipcache[0]=-1;
+													inventory=1;
+													inventype=3;
+													if(!(player.intro.infuser)&player.enableintro){
+														openhelpscreen();
+														player.intro.infuser=1;
+													}
+													else{
+														helpscreen={active:0,help:0};
+													}
+												}
+											}
+										],
+									});
+								}
+						}
+						else{
+							keystoneselec=[0,0];
+							getkeystonetrees();
+							tooltipcache[0]=-1;
+							inventory=1;
+							inventype=3;
+							helpscreen={active:0,help:0};
+						}
 					}
 				}
 			}
@@ -10308,6 +10327,7 @@ var getBiomeScripts=function(){
 		}
 		if(terraineffects[n].active){
 			if(pow(playertemp.x-terraineffects[n].x,2)+pow(playertemp.y-terraineffects[n].y,2)<pow(50+player.size,2)){
+				qtipc="Press F to use the Restoration Shrine";
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 						terraineffects[n].active=0;
 						append(particles,new createparticle(terraineffects[n].x,terraineffects[n].y,0,0,0,0,'circle','',25,2,100,-2,0,255,0,1));
@@ -10394,6 +10414,7 @@ var getBiomeScripts=function(){
 		}
 		if(terraineffects[n].active&!(challengearena.active)){
 			if(pow(playertemp.x-terraineffects[n].x,2)+pow(playertemp.y-terraineffects[n].y,2)<pow(50+player.size,2)){
+				qtipc="Press F to begin the Challenge Arena";
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 					for(rae=0;rae<enemies.length;rae+=1){
 						enemies[rae].x+=9999;
@@ -10502,6 +10523,7 @@ var getBiomeScripts=function(){
 				append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,2,100,-2,80,80,0,1));
 			}
 			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
+				qtipc="Press F to enter";
 				if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 					portallock=1;
 					if(player.record.quests.shardofpurity==1){
@@ -10565,6 +10587,7 @@ var getBiomeScripts=function(){
 				append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,150,30,0,1));
 			}
 			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
+				qtipc="Press F to enter";
 				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 					clearobjects();
 					terrain=new Array(0);
@@ -10731,6 +10754,7 @@ var getBiomeScripts=function(){
 										append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,0,90,0,1));
 									}
 									if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
+										qtipc="Press F to exit";
 										if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
 											portallock=1;
 											playertemp.inBossFight=0;
@@ -11515,15 +11539,34 @@ var grabstatforct=function(rawtext,cvar){
 		stemp[0]*=stemp[3];
 	}
 }
+var specialtextc=function(rawtext,cvar){
+	gttc+=1;
+	while(!(rawtext.substr(gttc,1)=="}")){
+		stemp[0]+=rawtext.substr(gttc,1);
+		gttc+=1;
+	}
+	return(specialtextcs[Number(stemp[0])]());
+}
+var specialtextcs=[
+	function(){
+		return(100-max(0,(1-playertemp.traits[5]*0.005)/(1+(plsmp(1)*playertemp.traits[5])/2500))*100);
+	},
+	function(){
+		return(10/(1+playertemp.traits[28]/4));
+	},
+];
 var converttext=function(rawtext,cvar){
 	cctext="";
-	if(options.scaling){
+	//if(options.scaling){
 		for(gttc=0;gttc<rawtext.length;gttc+=1){
 			if(rawtext.substr(gttc,1)=="{"){
 				gttc+=1;
 				stemp=["",0];
 				while(!(rawtext.substr(gttc,1)=="}")){
 					stemp[0]="";
+					if(rawtext.substr(gttc,1)=="S"){
+						stemp[1]=specialtextc(rawtext,cvar);
+					}
 					if(rawtext.substr(gttc,1)=="h"){
 						grabstatforct(rawtext,cvar);
 						stemp[1]+=stemp[0]*(plshp(1));
@@ -11585,7 +11628,7 @@ var converttext=function(rawtext,cvar){
 				cctext+=rawtext.substr(gttc,1);
 			}
 		}
-	}
+	/*}
 	else{
 		for(gttc=0;gttc<rawtext.length;gttc+=1){
 			if(rawtext.substr(gttc,1)=="{"){
@@ -11658,7 +11701,7 @@ var converttext=function(rawtext,cvar){
 				cctext+=rawtext.substr(gttc,1);
 			}
 		}
-	}
+	}*/
 	return(cctext);
 }
 var dowalk=function(rate){
@@ -12043,12 +12086,12 @@ var statpanel=function(){
 			};
 		}
 		if(cursorbox(20,300,305,330)){
-			fafgc=["",0];
+			fafgc=["",0,""];
 			if(playertemp.traits[217]>0){
-				fafgc[1]=round((1+playertemp.traits[217]/100)*(plsar(1)))/10;
+				fafgc[1]=round((((1+playertemp.traits[217]/100)*(plsar(1)))/(((1+playertemp.traits[217]/100)*(plsar(1)))+nmelvsc(player.level)*30))*1000)/10;
 			}
 			else{
-				fafgc[1]=round((plsar(1)))/10;
+				fafgc[1]=round((((plsar(1)))/(((plsar(1)))+nmelvsc(player.level)*30))*1000)/10;
 			}
 			if(playertemp.traits[212]>0){
 				fafgc[0]="magic";
@@ -12056,20 +12099,30 @@ var statpanel=function(){
 			else{
 				fafgc[0]="physical";
 			}
+			if(playertemp.traits[87]>0){
+				if(playertemp.traits[217]>0){
+					fafgc[2]="Estimated Nullification: "+min(90,round((((1+playertemp.traits[217]/100)*(0.04*playertemp.traits[87]-0.02)*(plsar(1)))/(((1+playertemp.traits[217]/100)*(0.04*playertemp.traits[87]-0.02)*(plsar(1)))+nmelvsc(player.level)*30))*1000)/10)+"%";
+				}
+				else{
+					fafgc[2]="Estimated Nullification: "+min(90,round((((0.04*playertemp.traits[87]-0.02)*(plsar(1)))/(((0.04*playertemp.traits[87]-0.02)*(plsar(1)))+nmelvsc(player.level)*30))*1000)/10)+"%";
+				}
+			}
 			tooltipdraw={
 				type:1,
 				x:mouseX,
 				y:mouseY-100,
 				w:400,
-				h:250,
+				h:300,
 				title:"Armor  (base: "+(player.baseStats.armor+player.keystonestats.armor)+")",
-				tip:["Reduces all "+fafgc[0]+" damage taken by "+fafgc[1]+",",
-				"capping at 90% reduction.",
-				"",
+				tip:["Reduces all "+fafgc[0]+" damage taken.",
+				"Estimated reduction: "+min(90,fafgc[1])+"% (vs "+round(nmelvsc(player.level)*15)+" damage).",
+				"(caps at 90% reduction.)",
+				"Formula: armor/(armor+damage*2)",
+				fafgc[2],
 				"Armor determined by:",
 				"Base: "+(round((player.baseStats.armor+player.keystonestats.armor)*(0.9+player.level/10)*10)/10),
 				"Equipment: "+round(playertemp.equipstatdata.armor),
-				"Non-tempcorary multiplier: "+(round((player.armor/((player.baseStats.armor+player.keystonestats.armor)*(0.9+player.level/10)+playertemp.equipstatdata.armor))*100))+"%",
+				"Non-temporary multiplier: "+(round((player.armor/((player.baseStats.armor+player.keystonestats.armor)*(0.9+player.level/10)+playertemp.equipstatdata.armor))*100))+"%",
 				"Temporary modifier: "+round(100*playertemp.armor)+"%",
 				"Temporary direct increase: "+round(playertemp.armorfb)
 				],
@@ -12077,12 +12130,12 @@ var statpanel=function(){
 			};
 		}
 		if(cursorbox(20,300,335,360)){
-			fafgc=["",0];
+			fafgc=["",0,""];
 			if(playertemp.traits[218]>0){
-				fafgc[1]=round((1+playertemp.traits[218]/100)*(plsre(1)))/10;
+				fafgc[1]=round((((1+playertemp.traits[218]/100)*(plsre(1)))/(((1+playertemp.traits[218]/100)*(plsre(1)))+nmelvsc(player.level)*30))*1000)/10;
 			}
 			else{
-				fafgc[1]=round((plsre(1)))/10;
+				fafgc[1]=round((((plsre(1)))/(((plsre(1)))+nmelvsc(player.level)*30))*1000)/10;
 			}
 			if(playertemp.traits[212]>0){
 				fafgc[0]="physical";
@@ -12090,22 +12143,32 @@ var statpanel=function(){
 			else{
 				fafgc[0]="magic";
 			}
+			if(playertemp.traits[87]>0){
+				if(playertemp.traits[217]>0){
+					fafgc[2]="Estimated Nullification: "+min(90,round((((1+playertemp.traits[218]/100)*(0.04*playertemp.traits[87]-0.02)*(plsre(1)))/(((1+playertemp.traits[218]/100)*(0.04*playertemp.traits[87]-0.02)*(plsre(1)))+nmelvsc(player.level)*30))*1000)/10)+"%";
+				}
+				else{
+					fafgc[2]="Estimated Nullification: "+min(90,round((((0.04*playertemp.traits[87]-0.02)*(plsre(1)))/(((0.04*playertemp.traits[87]-0.02)*(plsre(1)))+nmelvsc(player.level)*30))*1000)/10)+"%";
+				}
+			}
 			tooltipdraw={
 				type:1,
 				x:mouseX,
 				y:mouseY-100,
 				w:400,
-				h:250,
+				h:300,
 				title:"Resistance  (base: "+(player.baseStats.res+player.keystonestats.res)+")",
-				tip:["Reduces all "+fafgc[0]+" damage taken by "+fafgc[1]+",",
-				"capping at 90% reduction.",
-				"",
+				tip:["Reduces all "+fafgc[0]+" damage taken.",
+				"Estimated reduction: "+min(90,fafgc[1])+"% (vs "+round(nmelvsc(player.level)*15)+" damage).",
+				"(caps at 90% reduction.)",
+				"Formula: resistance/(resistance+damage*2)",
+				fafgc[2],
 				"Resistance determined by:",
 				"Base: "+(round((player.baseStats.res+player.keystonestats.res)*(0.9+player.level/10)*10)/10),
 				"Equipment: "+round(playertemp.equipstatdata.res),
 				"Non-temporary multiplier: "+(round((player.res/((player.baseStats.res+player.keystonestats.res)*(0.9+player.level/10)+playertemp.equipstatdata.res))*100))+"%",
 				"Temporary modifier: "+round(100*playertemp.res)+"%",
-				"Tempcorary direct increase: "+round(playertemp.resfb)
+				"Temporary direct increase: "+round(playertemp.resfb)
 				],
 				colors:0
 			};
@@ -12826,6 +12889,7 @@ append(nmem,function(i){
 append(nmem,function(i){
 	enemies[i].action.turnlock=1;
 	if(enemies[i].action.proc<1){
+		nmesa.pointatplayer(i);
 		enemies[i].action.timeout=enemydata[enemies[i].sprite*30+12+enemies[i].action.num][3][7];
 		enemies[i].action.proc=1;
 	}
@@ -15407,8 +15471,8 @@ append(doaction,function(lv,hand){
 });
 //Siphon of Harvesting
 append(doaction,function(lv,hand){
-	if(player.hp>(player.level+9)*player.rcostm[1]*playertemp.rcostm[1]){
-		player.hp-=(player.level+9)*player.rcostm[1]*playertemp.rcostm[1];
+	if(player.hp>plshp(0.06)){
+		player.hp-=plshp(0.06);
 	playertemp.action={
 		name:'siphon of harvesting',
 		tick:0,
@@ -15437,25 +15501,25 @@ append(doaction,function(lv,hand){
 			noStroke();
 			if(playertemp.action.tick==18){
 				hits=0;
-			for(i=0;i<enemies.length;i+=1){
-				if(!(enemies[i].invinci>0)){
-					if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(90+enemies[i].size,2)){
-						damage("enemies",i,0,random(26*(plsin(1)),29*(plsin(1))),1,1,"ranged","player",1.2,["void","ironmanshield"]);
-						hits+=1;
+				for(i=0;i<enemies.length;i+=1){
+					if(!(enemies[i].invinci>0)){
+						if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(90+enemies[i].size,2)){
+							damage("enemies",i,0,random(plsin(26)+plshp(2.4),plsin(29)+plshp(2.6)),1,1,"ranged","player",1.2,["void","ironmanshield"]);
+							hits+=1;
+						}
+					}
+				}
+				if(hits>0){
+					if(options.loadAudio){
+						sfx.SoHh.play();
+					}
+					playertemp.ironman+=(hits+2)*((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])*(0.1);
+					playertemp.ironmandur=240;
+					if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
+						playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
 					}
 				}
 			}
-			if(hits>0){
-			if(options.loadAudio){sfx.SoHh.play();}
-				playertemp.ironman+=hits*((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])*(0.11+0.04*playertemp.traits[74]);
-				playertemp.ironmandur=240;
-				if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
-					playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
-				}
-			}
-		
-			
-		}
 		}
 		if(playertemp.action.tick>=20){
 			playertemp.action.speedm=1;
@@ -15492,7 +15556,7 @@ append(doaction,function(lv,hand){
 			level:lv,
 			speedm:0.2,
 			properties:["impact"],
-			dmgmult:1.2,
+			dmgmult:1.35,
 			pierce:0,
 			pts:0
 		};
@@ -16615,7 +16679,7 @@ append(doaction,function(lv,hand){
 							objects[n].empowered=1;
 							objects[n].ds=2;
 							objects[n].sound=sfx.glacialwardshatter;
-							objects[n].soundefx={rate:random(0.9,1.1),volume:random(0.1,0.12)};
+							objects[n].soundefx={rate:random(0.85,1.17),volume:random(0.12)};
 						}
 					},
 					onhit:function(i){
@@ -16878,6 +16942,7 @@ while(drawcount>=17&cdraw<=drawcap){
 	}
 tick += 1;
 	tooltipdraw=0;
+	qtipc=false;
 //====================In Game=============================================================================================================================
 //========================================================================================================================================================
 if(loaded==1){
@@ -17366,6 +17431,14 @@ if(tick%30==0){
 				}
 				if(render){
 					if(!(enemies[i].stealth>0)){
+						if(enemies[i].stun>0){
+							strokeWeight(10);
+							fill(0,0,0,min(40,enemies[i].stun));
+							stroke(175+abs((tick+10)%20-10)*8,175+abs(tick%20-10)*8,0,enemies[i].stun);
+							ellipseMode(CENTER);
+							ellipse(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350,15+enemies[i].size*4,15+enemies[i].size*4);
+							noStroke();
+						}
 						translate(enemies[i].x-playertemp.x+400,enemies[i].y-playertemp.y+350);
 						ellipseMode(CENTER);
 						if(enemies[i].prefixcolor){
@@ -17526,6 +17599,14 @@ if(tick%30==0){
 									}
 									if(objects[n].sound){
 										if(options.loadAudio){
+										if(objects[n].soundefx){
+											if(objects[n].soundefx.rate){
+												objects[n].sound.rate(objects[n].soundefx.rate);
+											}
+											if(objects[n].soundefx.volume){
+												objects[n].sound.volume(options.sfx*objects[n].soundefx.volume);
+											}
+										}
 											objects[n].sound.play();
 										}
 									}
@@ -17655,21 +17736,24 @@ if(tick%30==0){
 					}
 					//Enter GTW
 					if(!(cinematic||dialoga)){
-						if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)&gateways[i].x-playertemp.x>-(60)&
+						if(gateways[i].x-playertemp.x>-(60)&
 						gateways[i].x-playertemp.x<(60)&
 						gateways[i].y-playertemp.y>-(60)&
 						gateways[i].y-playertemp.y<(60)){
-							portallock=1;
-							playertemp.lastarea=player.biomeID;
-							player.biomeID=gateways[i].dest;
-							playertemp.x=0;
-							playertemp.y=0;
-							loadArea();
-							skip=1;
-							if(options.autosave){
-								temp= new Array(JSON.stringify(player),1);
-								saveStrings("player "+player.name+".txt",temp);
-								append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
+							qtipc="Press F to enter";
+							if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+								portallock=1;
+								playertemp.lastarea=player.biomeID;
+								player.biomeID=gateways[i].dest;
+								playertemp.x=0;
+								playertemp.y=0;
+								loadArea();
+								skip=1;
+								if(options.autosave){
+									temp= new Array(JSON.stringify(player),1);
+									saveStrings("player "+player.name+".txt",temp);
+									append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
+								}
 							}
 						}
 					}
@@ -18723,7 +18807,9 @@ if(tick%30==0){
 				else{
 					helpscreen={active:0,help:0};
 				}
-				inventorysprites={};
+				if(options.disablespritecache){
+					inventorysprites={};
+				}
 				gettraits();
 			}
 		}
@@ -18735,7 +18821,9 @@ if(tick%30==0){
 				tooltipcache[0]=-1;
 				inventory=4;
 				helpscreen={active:0,help:0};
-				inventorysprites={};
+				if(options.disablespritecache){
+					inventorysprites={};
+				}
 				gettraits();
 			}
 		}
@@ -20119,6 +20207,41 @@ if(tick%30==0){
 			}
 		}
 		
+		textFont(0,25);
+		fill(255,255,255);
+		text("Music",800,275,100,55);
+		fill(0,0,0);
+		rect(750,330,200,40,10);
+		fill(0,200,0);
+		rect(750,330,options.music*200,40,10);
+		fill(250,250,90);
+		rect(735+options.music*200,310,30,80,8);
+		if(mousePressed){
+			if(mouseX>750&mouseX<950&mouseY<370&mouseY>330){
+				if(!(options.music==max(0,min(1,round((mouseX-750)/10)/20)))){
+					player.options.music=max(0,min(1,round((mouseX-750)/10)/20));
+					options.music=max(0,min(1,round((mouseX-750)/10)/20));
+					bgm.volume(options.music);
+				}
+			}
+		}
+		fill(255,255,255);
+		text("SFX",800,475,100,55);
+		fill(0,0,0);
+		rect(750,530,200,40,10);
+		fill(0,200,0);
+		rect(750,530,options.sfx*200,40,10);
+		fill(250,250,90);
+		rect(735+options.sfx*200,510,30,80,8);
+		if(mousePressed){
+			if(mouseX>750&mouseX<950&mouseY<570&mouseY>530){
+				if(!(options.sfx==max(0,min(1,round((mouseX-750)/10)/20)))){
+					player.options.sfx=max(0,min(1,round((mouseX-750)/10)/20));
+					options.sfx=max(0,min(1,round((mouseX-750)/10)/20));
+				}
+			}
+		}
+		
 		fill(200,100,0);
 		if(cursorbox(925,1075,5,65)){
 			fill(255,175,50);
@@ -20429,6 +20552,21 @@ text(dmgind[y].text,400+dmgind[y].x-playertemp.x,350+dmgind[y].y-playertemp.y);}
 				dmgind[y].size*=0.83;
 			}
 			dmgind[y].t+=1;
+}
+if(qtipc){
+	if(tick%3==0){
+		append(particles,new createparticle(0,110+random(100),random(5,10),random(-1,1),0,0,
+		'circle','',random(5,7),random(-0.2,0.2),random(160,220),random(-6,-5),255,255,150));
+	}
+	fill(255,255,150,80);
+	strokeWeight(15);
+	stroke(255,255,150);
+	rect(-25,110,250,100,20);
+	noStroke();
+	fill(0,0,0);
+	textFont(0,20);
+	textMode(CENTER);
+	text(qtipc,20,100,150,100);
 }
 if(tooltipdraw){
 		if(tooltipdraw.x-tooltipdraw.w/2<0){
@@ -20767,6 +20905,9 @@ var updateplayerdat=function(){
 	}
 	if(!(player.options.scaling)){
 		player.options.scaling=0;
+	}
+	if(!(player.options.disablespritecache)){
+		player.options.disablespritecache=0;
 	}
 	if(player.keystonepassives){
 		player.keystonepassives=0;
