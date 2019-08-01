@@ -17470,6 +17470,7 @@ append(doaction,function(lv,hand){
 append(doaction,function(lv,hand){
 	playertemp.traitcd[hand]=1;
 	if(playertemp.mordekaiserWactive<=0){
+		playertemp.traitcd[hand]=60;
 		playertemp.mordekaiserWactive=playertemp.mordekaiserW+plsin(0.3)+plshp(0.15);
 		playertemp.mordekaiserWtimer=60;
 		playertemp.mordekaiserW=0;
