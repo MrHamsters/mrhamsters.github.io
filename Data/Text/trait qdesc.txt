@@ -222,3 +222,6 @@ Piercing hits gain armor and resistance penetration
 Impact hits stun
 Charges additional physical pierce damage (based on armor) on hits
 Resist stuns more easily
+Chance to dodge hits
+Mordekaiser's passive
+Mordekaiser's W

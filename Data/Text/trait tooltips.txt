@@ -225,7 +225,7 @@ Specter's Cowl
 Timeless
 [Passive] Reduces health damage taken by {ox31c4}%, but also all healing recieved by 15%. (Applies after ALL forms of damage reduction and absorbtion effects.)
 Essence Vampire
-[Passive] Converts {ox46c4}% of direct healing from leech effects into damage shields. Shields last 5 seconds.
+[Passive] Converts {ox46c4}% of direct healing from leech effects into damage shields which last 5 seconds.
 Ant
 [Passive] Reduces your size to 1 (1/6th of normal).
 Mending Guard
@@ -448,6 +448,10 @@ Tenacity
 [Passive] Increases your stun resistance generation rate by {ox0c10}%.
 Evasion
 [Passive] Grants a {ox0c1}% chance to dodge hits.
+Darkness Rise
+[Passive] After landing 3 times with Obliterate (Nightfall), gain an aura which increases your movement speed by 10% and deals {i0.4} (plus {i0.15+h0.05}, up to 15% of the enemy's maximum health) magic void damage per second to nearby enemies (50% resistance penetration, generates 50% more shield for Indestructible Revenant). Aura lasts for 4 seconds, refreshed upon landing Obliterate again.
+Indestructible Revenant
+[Passive] Stores 10% of damage dealt and 50% of damage taken (after all absorbtion effects) as a potential shield, up to {i3+h1.5} (decays when out of combat). [Active] Activates the stored shield, plus {i0.3+h0.15}, allowing it to absorb incoming damage. After 1 second, it begins to decay at an accelerating rate, but re-casting Indestructible Revenant will consume the remaining shield, healing you for 40% of its value. 5 second cooldown after the shield becomes inactive. Can be used mid-action.
 
 
 

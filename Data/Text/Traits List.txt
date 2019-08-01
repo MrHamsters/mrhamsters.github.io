@@ -223,3 +223,5 @@ Heavy Impact
 Shattering Steel
 Tenacity
 Evasion
+Darkness Rise
+Indestructible Revenant
