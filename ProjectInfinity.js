@@ -1,4 +1,4 @@
-var version="0.8.5c";
+var version="0.8.5d";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -258,6 +258,15 @@ var sfxlist=[
 	{name:"levelup",vm:1},
 	{name:"ksblock",vm:2.5},
 	{name:"ghastlydig",vm:0.6},
+	{name:"darkness",vm:4},
+	{name:"darknesse",vm:4},
+	{name:"indestructible",vm:3.5},
+	{name:"indestructibleh",vm:3.5},
+	{name:"obliteratem",vm:3},
+	{name:"obliterates",vm:3},
+	{name:"obliterate1",vm:3},
+	{name:"obliterate2",vm:3},
+	{name:"obliterate3",vm:3},
 ];
 var loadassetscache=function(){
 	textFont(0,60);
@@ -306,6 +315,7 @@ var loadassetscache=function(){
 			demonpike:loadShape('Data/Graphics/attack/demonpike.svg'),
 			garensword:loadShape('Data/Graphics/attack/garen sword.svg'),
 			mordekaisermace:loadShape('Data/Graphics/attack/mordekaiser mace.svg'),
+			nightfall:loadShape('Data/Graphics/attack/nightfall.svg'),
 			hp:loadShape('Data/Graphics/miscellaneous/hp.svg'),
 			hpregen:loadShape('Data/Graphics/miscellaneous/hpregen.svg'),
 			str:loadShape('Data/Graphics/miscellaneous/str.svg'),
@@ -458,6 +468,15 @@ var loadassetscache=function(){
 				levelup:new Howl({src: ['Data/Sound/sfx/levelup.ogg'], autoplay: false,loop: false,volume: options.sfx*1,}),
 				ksblock:new Howl({src: ['Data/Sound/sfx/passiveblock.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
 				ghastlydig:new Howl({src: ['Data/Sound/sfx/ghastlydig.ogg'], autoplay: false,loop: false,volume: options.sfx*0.6,}),
+				darkness:new Howl({src: ['Data/Sound/sfx/darkness.ogg'], autoplay: false,loop: true,volume: options.sfx*4,}),
+				darknesse:new Howl({src: ['Data/Sound/sfx/darknesse.ogg'], autoplay: false,loop: false,volume: options.sfx*4,}),
+				indestructible:new Howl({src: ['Data/Sound/sfx/indestructible.ogg'], autoplay: false,loop: false,volume: options.sfx*3.5,}),
+				indestructibleh:new Howl({src: ['Data/Sound/sfx/indestructibleh.ogg'], autoplay: false,loop: false,volume: options.sfx*3.5,}),
+				obliteratem:new Howl({src: ['Data/Sound/sfx/obliteratem.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+				obliterates:new Howl({src: ['Data/Sound/sfx/obliterates.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+				obliterate1:new Howl({src: ['Data/Sound/sfx/obliterate1.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+				obliterate2:new Howl({src: ['Data/Sound/sfx/obliterate2.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
+				obliterate3:new Howl({src: ['Data/Sound/sfx/obliterate3.ogg'], autoplay: false,loop: false,volume: options.sfx*3,}),
 		};
 		}
 		loadassetscache=0;
@@ -5010,6 +5029,11 @@ var loadkeystoneps=function(){
 			mdmg*=1-playertemp.keystonepassives[27]*0.025;
 		});
 	}
+	if(playertemp.traits[226]>0){
+		append(traitfuncs.damagetakenpa,function(){
+			playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)/2,plsin(2)+plshp(1.5));
+		});
+	}
 	if(playertemp.keystonepassives[10]>0){
 		append(keystonefuncs.passives,function(){
 			if(!(playertemp.spiritrage)){
@@ -6486,7 +6510,21 @@ var loadtraits=function(){
 						if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
 							playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
 						}
+					}
 				}
+			}
+		});
+	}
+	if(playertemp.traits[226]>0){
+		append(traitfuncs.damagedealtpostmit,function(){
+			playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)*0.1,plsin(2)+plshp(1.5));
+			if(willhit){
+				if(findprop("darknessrise")){
+					if(hits<=1){
+						playertemp.darknessrise=min(4,playertemp.darknessrise+1);
+						playertemp.darknessrisedur=240;
+					}
+					playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)*0.05,plsin(2)+plshp(1.5));
 				}
 			}
 		});
@@ -6907,6 +6945,33 @@ var loadtraits=function(){
 			}
 		});
 	}
+	if(playertemp.traits[226]>0){
+		append(traitfuncs.damagetakenpm,function(){
+			if(playertemp.mordekaiserWactive>0){
+				if(willhit){
+					if(pdmg+mdmg>0){
+						append(particles,new createparticle(720,170,-0.2,0,0,0.03,'text',"-"+round(min(pdmg+mdmg,playertemp.mordekaiserWactive)),22,0,255,-2,170,170,170));
+					}
+				}
+				if(pdmg>playertemp.mordekaiserWactive){
+					pdmg-=playertemp.mordekaiserWactive;
+					playertemp.mordekaiserWactive=0;
+				}
+				else{
+					playertemp.mordekaiserWactive-=pdmg;
+					pdmg=0;
+				}
+				if(mdmg>playertemp.mordekaiserWactive){
+					mdmg-=playertemp.mordekaiserWactive;
+					playertemp.mordekaiserWactive=0;
+				}
+				else{
+					playertemp.mordekaiserWactive-=mdmg;
+					mdmg=0;
+				}
+			}
+		});
+	}
 	//=========HEALTH EXTENTIONS=============
 	if(playertemp.traits[12]>0){
 		append(traitfuncs.healthextensions,function(){
@@ -6966,6 +7031,83 @@ var loadtraits=function(){
 		});
 	}
 	//Passives================================
+	if(playertemp.traits[226]>0){
+		append(traitfuncs.overlay,function(){
+			fill(0,0,0,80);
+			rect(730,100,60,200);
+			if(playertemp.mordekaiserWactive){
+				fill(150,150+abs((tick+30)%60-30)*2,150+abs(tick%60-30)*3,230);
+				rect(730,300,30,-(playertemp.mordekaiserWactive/(plsin(2.2)+plshp(1.65))*200));
+			}
+			if(playertemp.mordekaiserW){
+				fill(110,110+abs(tick%60-30),110+abs(tick%60-30)*3,220);
+				rect(760,300,30,-(playertemp.mordekaiserW/(plsin(2)+plshp(1.5))*200));
+			}
+		});
+		append(traitfuncs.passives,function(){
+			if(!(playertemp.mordekaiserW)){
+				playertemp.mordekaiserW=0;
+			}
+			if(!(playertemp.mordekaiserWactive)){
+				playertemp.mordekaiserWactive=0;
+			}
+			if(!(playertemp.darknessrise)){
+				playertemp.darknessrise=0;
+			}
+			if(!(playertemp.darknessrisedur)){
+				playertemp.darknessrisedur=0;
+			}
+			if(playertemp.timesincedamagetaken>240&playertemp.timesincedamagedealt>240){
+				playertemp.mordekaiserW=max(0,playertemp.mordekaiserW-(plsin(0.1)+plshp(0.075))/60);
+			}
+			if(playertemp.mordekaiserWactive>0&playertemp.mordekaiserWtimer<=0){
+				playertemp.mordekaiserWactive=max(0,playertemp.mordekaiserWactive-(plsin(0.1)+plshp(0.075))*(-playertemp.mordekaiserWtimer/100)/60);
+				if(playertemp.mordekaiserWactive<=0){
+					sfx.indestructible.stop();
+					reducecd(227,-300);
+				}
+			}
+			if(playertemp.mordekaiserWtimer>-300){
+				playertemp.mordekaiserWtimer-=1;
+			}
+			playertemp.darknessrisedur=max(0,playertemp.darknessrisedur-1);
+			if(playertemp.darknessriseactive){
+				if(playertemp.darknessrisedur<=0){
+					playertemp.darknessriseactive=false;
+					sfx.darkness.stop();
+					playertemp.speed-=0.1;
+					sfx.darknesse.play();
+					playertemp.darknessrise=0;
+				}
+				else{
+					if(render){
+						fill(40,20,70,50);
+						ellipseMode(CENTER);
+						ellipse(400,350,155,155);
+						fill(120,120,120,200);
+						translate(400,350);
+						for(dr=0;dr<10;dr+=1){
+							rotate(tick/10/(3+dr));
+							ellipse(15+dr*5,0,7,7);
+						}
+						resetMatrix();
+					}
+					for(i=0;i<enemies.length;i+=1){
+						if(enemies[i].x-playertemp.x<80&enemies[i].y-playertemp.y<80&enemies[i].x-playertemp.x>-80&enemies[i].y-playertemp.y>-80){
+							if(pow(enemies[i].x-playertemp.x,2)+pow(enemies[i].y-playertemp.y,2)<pow(80+enemies[i].size,2)){
+								damage("enemies",i,0,(min(enemies[i].mhp*0.15,plsin(0.15)+plshp(0.05))+plsin(0.4))/3,0.012,0.006,"DoT","player",0,["void","darknessrise"]);
+							}
+						}
+					}
+				}
+			}
+			else if(playertemp.darknessrise>=3){
+				playertemp.darknessriseactive=true;
+				sfx.darkness.play();
+				playertemp.speed+=0.1;
+			}
+		});
+	}
 	if(playertemp.traits[103]>0){
 		append(traitfuncs.passives,function(){
 			if(playertemp.traits[12]>=10){
@@ -17185,6 +17327,163 @@ append(doaction,function(lv,hand){
 		}
 	}
 });
+//Obliterate
+append(doaction,function(lv,hand){
+	playertemp.action={
+		name:'obliterate',
+		tick:0,
+		dir:0,
+		diro:0,
+		level:lv,
+		speedm:0,
+		swdir:round(random(1))*2-1
+	};
+	if(mouseY<350){
+		playertemp.action.dir=-atan((mouseX-400)/(mouseY-350));
+		playertemp.action.diro=-atan((mouseX-400)/(mouseY-350));
+	}
+	else{
+		playertemp.action.dir=PI-atan((mouseX-400)/(mouseY-350));
+		playertemp.action.diro=PI-atan((mouseX-400)/(mouseY-350));
+	}
+	if(playertemp.action.swdir==1){
+		playertemp.action.dir-=1;
+	}
+	else{
+		playertemp.action.dir+=1;
+	}
+	playertemp.action.run=function(){
+		if(playertemp.traits[42]>0){
+			traitpow=playertemp.traits[42];
+		}
+		else{
+			traitpow=0;
+		}
+		if(playertemp.action.tick<=24){
+			playertemp.action.dir+=playertemp.action.swdir/23;
+		}
+		if(playertemp.action.tick==1){
+			if(options.loadAudio){
+				sfx.obliterates.play();
+			}
+		}
+		if(playertemp.action.tick>1){
+			if(playertemp.action.tick<=8){
+				if(render){
+					translate(400,350);
+					rotate(playertemp.action.dir);
+					shape(sprites.nightfall,0,0,60-playertemp.action.tick,5*(-playertemp.action.tick));
+					resetMatrix();
+				}
+			}
+			else if(playertemp.action.tick<=24){
+				if(render){
+					translate(400,350);
+					rotate(playertemp.action.dir);
+					shape(sprites.nightfall,0,0,60-playertemp.action.tick,105*((playertemp.action.tick-8)/16)-40);
+					resetMatrix();
+				}
+			}
+			else if(playertemp.action.tick<=40){
+				if(render){
+					translate(400,350);
+					rotate(playertemp.action.dir);
+					shape(sprites.nightfall,0,0,36,65);
+					resetMatrix();
+					ellipseMode(CENTER);
+					fill(50,140,200,500-playertemp.action.tick*10);
+					ellipse(400+sin(playertemp.action.diro)*40,350-cos(playertemp.action.diro)*40,(playertemp.action.tick-13)*7,(playertemp.action.tick-13)*7);
+				}
+				if(playertemp.action.tick==25){
+					hits=0;
+					for(i=0;i<enemies.length;i+=1){
+						if(pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*40,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*40,2)<pow(85+enemies[i].size,2)){
+							hits+=1;
+						}
+					}
+					if(hits<2){
+						hits=0;
+						for(i=0;i<enemies.length;i+=1){
+							if(pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*40,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*40,2)<pow(85+enemies[i].size,2)){
+								hits+=1;
+								damage("enemies",i,0,random(plsin(42)*1.4,plsin(46)*1.4),1,1,"melee","player",2.8,["void","impact","darknessrise"]);
+							}
+						}
+					}
+					else{
+						hits=0;
+						for(i=0;i<enemies.length;i+=1){
+							if(pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*40,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*40,2)<pow(85+enemies[i].size,2)){
+								hits+=1;
+								damage("enemies",i,0,random(plsin(42),plsin(46)),1,1,"melee","player",2,["void","impact","darknessrise"]);
+							}
+						}
+					}
+					if(options.loadAudio){
+						if(hits>0){
+							if(playertemp.darknessrise==1){
+								sfx.obliterate1.rate(random(0.9,1.12));
+								sfx.obliterate1.play();
+							}
+							else if(playertemp.darknessrise==2){
+								sfx.obliterate2.rate(random(0.9,1.12));
+								sfx.obliterate2.play();
+							}
+							else if(playertemp.darknessrise==3){
+								sfx.obliterate3.rate(random(0.9,1.12));
+								sfx.obliterate3.play();
+							}
+							else{
+								if(random(1)<0.33){
+								sfx.obliterate1.rate(random(0.9,1.12));
+								sfx.obliterate1.play();
+								}
+								else if(random(1)<0.66){
+								sfx.obliterate2.rate(random(0.9,1.12));
+								sfx.obliterate2.play();
+								}
+								else{
+								sfx.obliterate3.rate(random(0.9,1.12));
+								sfx.obliterate3.play();
+								}
+							}
+						}
+						else{
+							sfx.obliteratem.play();
+						}
+					}
+				}
+			}
+		}
+		if(playertemp.action.tick>=55*(1-traitpow*0.07)){
+			playertemp.action.speedm=1;
+		}
+		if(playertemp.action.tick>=55){
+			stopaction();
+		}
+	}
+});
+//Indestructible Revenant
+append(doaction,function(lv,hand){
+	playertemp.traitcd[hand]=1;
+	if(playertemp.mordekaiserWactive<=0){
+		playertemp.mordekaiserWactive=playertemp.mordekaiserW+plsin(0.3)+plshp(0.15);
+		playertemp.mordekaiserWtimer=60;
+		playertemp.mordekaiserW=0;
+		if(options.loadAudio){
+			sfx.indestructible.play();
+		}
+	}
+	else if(playertemp.mordekaiserWtimer<=0){
+		heal(playertemp.mordekaiserWactive*0.4,"direct");
+		playertemp.mordekaiserWactive=0;
+		playertemp.traitcd[hand]=300;
+		if(options.loadAudio){
+			sfx.indestructibleh.play();
+			sfx.indestructible.stop();
+		}
+	}
+});
 
 var dirtoplayerfromobject=function(n){
 	if(objects[n].x-playertemp.x<0){
@@ -21223,8 +21522,9 @@ var loadplayer=function(){
 	console.log(JSON.stringify(player).substring(0,200000));
 	console.log(JSON.stringify(player).substring(200000,400000));
 	if(options.loadAudio){
-	bgm.stop();
+		bgm.stop();
 	}
+	adjustsfx();
 	getplayersprite();
 	loadArea();
 	loaded=1;
