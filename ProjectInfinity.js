@@ -7060,9 +7060,10 @@ var loadtraits=function(){
 			if(playertemp.timesincedamagetaken>240&playertemp.timesincedamagedealt>240){
 				playertemp.mordekaiserW=max(0,playertemp.mordekaiserW-(plsin(0.1)+plshp(0.075))/60);
 			}
-			if(playertemp.mordekaiserWactive>0&playertemp.mordekaiserWtimer<=0){
+			if(playertemp.mordekaiserWactivated&playertemp.mordekaiserWtimer<=0){
 				playertemp.mordekaiserWactive=max(0,playertemp.mordekaiserWactive-(plsin(0.1)+plshp(0.075))*(-playertemp.mordekaiserWtimer/100)/60);
 				if(playertemp.mordekaiserWactive<=0){
+					playertemp.mordekaiserWactivated=false;
 					sfx.indestructible.stop();
 					reducecd(227,-300);
 				}
@@ -17474,6 +17475,7 @@ append(doaction,function(lv,hand){
 		playertemp.mordekaiserWactive=playertemp.mordekaiserW+plsin(0.3)+plshp(0.15);
 		playertemp.mordekaiserWtimer=60;
 		playertemp.mordekaiserW=0;
+		playertemp.mordekaiserWactivated=true;
 		if(options.loadAudio){
 			sfx.indestructible.play();
 		}
@@ -17482,6 +17484,7 @@ append(doaction,function(lv,hand){
 		heal(playertemp.mordekaiserWactive*0.4,"direct");
 		playertemp.mordekaiserWactive=0;
 		playertemp.traitcd[hand]=300;
+		playertemp.mordekaiserWactivated=false;
 		if(options.loadAudio){
 			sfx.indestructibleh.play();
 			sfx.indestructible.stop();
