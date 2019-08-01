@@ -17455,7 +17455,10 @@ append(doaction,function(lv,hand){
 				}
 			}
 		}
-		if(playertemp.action.tick>=55*(1-traitpow*0.07)){
+		if(playertemp.action.tick>=25*(1-traitpow*0.1)){
+			playertemp.action.speedm=0.6;
+		}
+		if(playertemp.action.tick>=40*(1-traitpow*0.1)){
 			playertemp.action.speedm=1;
 		}
 		if(playertemp.action.tick>=55){
