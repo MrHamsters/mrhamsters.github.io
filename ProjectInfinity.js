@@ -7081,7 +7081,7 @@ var loadtraits=function(){
 				}
 				else{
 					if(render){
-						fill(40,20,70,50);
+						fill(40,20,70,70+abs(tick%20-10)*5);
 						ellipseMode(CENTER);
 						ellipse(400,350,155,155);
 						fill(120,120,120,200);
