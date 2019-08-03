@@ -1,4 +1,4 @@
-var version="0.8.5d";
+var version="0.8.5e";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -146,6 +146,7 @@ var bgmn=0;
 var bgm;
 var sprites;
 var sfx;
+var txtfont=createFont("serif",15);
 var adjustsfx=function(){
 	for(ad=0;ad<sfxlist.length;ad+=1){
 		if(sfx[sfxlist[ad].name]){
@@ -269,7 +270,7 @@ var sfxlist=[
 	{name:"obliterate3",vm:1.3},
 ];
 var loadassetscache=function(){
-	textFont(0,60);
+	textFont(txtfont,60);
 	fill(0,0,0,100);
 	rect(0,0,1133,700);
 	fill(255,150,0);
@@ -279,7 +280,7 @@ var loadassetscache=function(){
 	fill(255,150,0);
 	text("0/3",500,370);
 		loadassetscache=function(){
-		textFont(0,60);
+		textFont(txtfont,60);
 		fill(0,0,0,100);
 		rect(0,0,1133,700);
 		fill(255,150,0);
@@ -1010,7 +1011,7 @@ var getkeystonetrees=function(){
 }
 var showkeystonetree=function(ctree){
 	fill(100,200,100);
-	textFont(0,40);
+	textFont(txtfont,40);
 	text("I",400,115);
 	text("II",400,215);
 	text("III",400,315);
@@ -1104,7 +1105,7 @@ var showkeystonetree=function(ctree){
 	}
 	rect(380,650,100,40,15);
 	fill(255,0,255);
-	textFont(0,25);
+	textFont(txtfont,25);
 	text("Back",400,677);
 	if(keystonecache.edited>0){
 		if(cursorbox(975,1100,650,690)){
@@ -1147,7 +1148,7 @@ var showkeystonetree=function(ctree){
 		}
 		rect(975,650,125,40,15);
 		fill(255,0,255);
-		textFont(0,25);
+		textFont(txtfont,25);
 		text("Confirm",995,677);
 	}
 }
@@ -1501,12 +1502,12 @@ var openhelpscreen=function(introkey){
 				rect(105,5,600,350,40);
 				textAlign(LEFT,TOP);
 				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,150);
-				textFont(0,19);
+				textFont(txtfont,19);
 				text("Press H to close this help screen",420,40,500,50);
 				fill(255,220,100,200);
-				textFont(0,22);
+				textFont(txtfont,22);
 				text("Portals",370,70,500,50);
-				textFont(0,18);
+				textFont(txtfont,18);
 				text("-Press F or the UP arrow key while near the portal to enter it",140,120,500,50);
 				text("-Portals are colored based on their level relative to yours",140,150,500,50);
 				text("-Blue portals are very low level",140,180,500,50);
@@ -1523,12 +1524,12 @@ var openhelpscreen=function(introkey){
 				rect(105,5,600,250,40);
 				textAlign(LEFT,TOP);
 				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,150);
-				textFont(0,19);
+				textFont(txtfont,19);
 				text("Press H to close this help screen",420,40,500,50);
 				fill(255,220,100,200);
-				textFont(0,22);
+				textFont(txtfont,22);
 				text("Restoration Shrines",310,70,500,50);
-				textFont(0,18);
+				textFont(txtfont,18);
 				text("-Press F or the UP arrow key while near the restoration shrine to use it",140,105,500,50);
 				text("-These can only be used once (the pool in them changes color if it can still be used)",140,150,500,50);
 				text("-Fully restores your health and mana",140,195,500,50);
@@ -1542,12 +1543,12 @@ var openhelpscreen=function(introkey){
 				rect(105,5,600,400,40);
 				textAlign(LEFT,TOP);
 				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,150);
-				textFont(0,19);
+				textFont(txtfont,19);
 				text("Press H to close this help screen",420,40,500,50);
 				fill(255,220,100,200);
-				textFont(0,22);
+				textFont(txtfont,22);
 				text("Challenge Arenas",330,70,500,50);
-				textFont(0,18);
+				textFont(txtfont,18);
 				text("-Press F or the UP arrow key while near the challenge arena to activate it",140,120,500,50);
 				text("-These can only be used once (disappears on use)",140,160,500,50);
 				text("-Starts challenge arena",140,180,500,50);
@@ -1566,12 +1567,12 @@ var openhelpscreen=function(introkey){
 				rect(105,5,600,590,40);
 				textAlign(LEFT,TOP);
 				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,150);
-				textFont(0,19);
+				textFont(txtfont,19);
 				text("Press H to close this help screen",420,40,500,50);
 				fill(255,220,100,200);
-				textFont(0,22);
+				textFont(txtfont,22);
 				text("Enchanter Notice",330,70,500,50);
-				textFont(0,18);
+				textFont(txtfont,18);
 				textAlign(CENTER);
 				text("It seems you have some SP and reactant to spend on enchantments. Visit the Enchanter to browse enchantments!",140,120,550,300);
 				ellipseMode(CENTER);
@@ -1596,7 +1597,7 @@ var openhelpscreen=function(introkey){
 					rect(5,5,1123,790,40);
 					textAlign(CENTER,CENTER);
 					fill(255,255,255);
-					textFont(0,30);
+					textFont(txtfont,30);
 					text("Inventory Help",1133/2-150,0,300,40);
 					noFill();
 					strokeWeight(12);
@@ -1607,7 +1608,7 @@ var openhelpscreen=function(introkey){
 					rect(495,320,60,60,5);
 					rect(495,395,60,60,5);
 					rect(570,320,60,60,5);
-					textFont(0,20);
+					textFont(txtfont,20);
 					fill(60,110,60,200);
 					text("Right click an equipped item to unequip it.",420,420,200,150);
 					
@@ -1615,21 +1616,21 @@ var openhelpscreen=function(introkey){
 					stroke(0,255,0,200);
 					rect(420,245,60,60,5);
 					rect(570,245,60,60,5);
-					textFont(0,20);
+					textFont(txtfont,20);
 					fill(120,255,120,200);
 					text("Left click a weapon to swap left and right hands.",420,290,200,150);
 					
 					noFill();
 					stroke(0,0,200,200);
 					rect(375,140,100,100,5);
-					textFont(0,18);
+					textFont(txtfont,18);
 					fill(120,120,255,200);
 					text("Left click to enter upgrading mode (right click to exit). Then, left click items to upgrade them. Holding shift when clicking upgrades them as much as possible. Right click the Upgrade items button to enable automatic upgrading (upgrades your equipped items on level-up).",150,100,200,200);
 					
 					noFill();
 					stroke(255,100,0,200);
 					rect(5,400,340,140,5);
-					textFont(0,18);
+					textFont(txtfont,18);
 					fill(255,150,50,200);
 					text("These are your damage property defenses.",50,420,200,100);
 					
@@ -1637,20 +1638,20 @@ var openhelpscreen=function(introkey){
 					stroke(200,0,200,200);
 					rect(20,560,260,80,5);
 					fill(255,120,255,200);
-					textFont(0,18);
+					textFont(txtfont,18);
 					text("Spend PP for powerful stat bonuses here. PP is gained by levelling up and killing enemies.",285,500,400,240);
 					
 					noFill();
 					stroke(200,200,200,200);
 					rect(390,35,220,100,10);
 					fill(255,255,255,200);
-					textFont(0,20);
+					textFont(txtfont,20);
 					text("View traits gained from your equipment here.",400,45,200,80);
 					noFill();
 					stroke(170,140,0,200);
 					rect(645,120,450,450,10);
 					fill(255,220,100,200);
-					textFont(0,16);
+					textFont(txtfont,16);
 					textAlign(LEFT,TOP);
 					text("Hover over an item to see its stats.",660,130,500,50);
 					text("Hold shift while hovering to see item description.",680,155,500,50);
@@ -1662,7 +1663,7 @@ var openhelpscreen=function(introkey){
 					text("Left click another inventory slot to move the item.",680,360,500,50);
 					text("Right click an item to equip it.",660,410,500,50);
 					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
-					textFont(0,19);
+					textFont(txtfont,19);
 					text("Press H to toggle this help screen",820,30,500,50);
 					noStroke();
 				}
@@ -1673,14 +1674,14 @@ var openhelpscreen=function(introkey){
 					rect(5,5,1123,790,40);
 					textAlign(CENTER,CENTER);
 					fill(255,255,255);
-					textFont(0,30);
+					textFont(txtfont,30);
 					text("Enchanter Help",100,0,933,50);
-					textFont(0,22);
+					textFont(txtfont,22);
 					fill(255,255,255,200);
 					text("Select an item in your inventory to browse available enchantments. Enchantments are unlocked as you level up, and some enchantments are restricted to a specific equipment slot (i.e. weapon, helmet, etc.). Once you purchase an enchantment for SP, it is unlocked permanently. However, you will then need to pay reactant each time you place the enchantment on an item.",33,100,1100,600);
 					textAlign(LEFT,TOP);
 					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
-					textFont(0,19);
+					textFont(txtfont,19);
 					text("Press H to toggle this help screen",820,30,500,50);
 					noStroke();
 				}
@@ -1691,14 +1692,14 @@ var openhelpscreen=function(introkey){
 					rect(5,5,1123,790,40);
 					textAlign(CENTER,CENTER);
 					fill(255,255,255);
-					textFont(0,30);
+					textFont(txtfont,30);
 					text("Infuser Help",100,0,933,50);
-					textFont(0,22);
+					textFont(txtfont,22);
 					fill(255,255,255,200);
 					text("Click one of the 3 passive branches to view its contained keystones. Click on keystones and click 'Confirm' to purchase them and recieve their bonuses. You must allocate at least 3 keystone levels in a tier to unlock the next tier.",400,100,500,550);
 					textAlign(LEFT,TOP);
 					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
-					textFont(0,19);
+					textFont(txtfont,19);
 					text("Press H to toggle this help screen",820,30,500,50);
 					noStroke();
 				}
@@ -1709,16 +1710,16 @@ var openhelpscreen=function(introkey){
 					rect(5,5,1123,790,40);
 					textAlign(CENTER,CENTER);
 					fill(255,255,255);
-					textFont(0,30);
+					textFont(txtfont,30);
 					text("Artisan Bench Help",100,0,933,50);
 					
-					textFont(0,22);
+					textFont(txtfont,22);
 					fill(255,255,255,200);
 					text("Select an item in your inventory to modify its stat rolls.",33,100,1100,600);
 					
 					textAlign(LEFT,TOP);
 					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
-					textFont(0,19);
+					textFont(txtfont,19);
 					text("Press H to toggle this help screen",820,30,500,50);
 					noStroke();
 				}
@@ -1730,24 +1731,24 @@ var openhelpscreen=function(introkey){
 				rect(5,5,1123,790,40);
 				textAlign(CENTER,CENTER);
 				fill(255,255,255);
-				textFont(0,30);
+				textFont(txtfont,30);
 				text("Traits Help",100,0,933,50);
 				
-				textFont(0,20);
+				textFont(txtfont,20);
 				fill(200,200,255,200);
 				text("Active traits appear here. These can be used in game for various effects, but must be equipped. To equip one, hover over it and press a corresponding key (Space, Shift, Q, or E). Equipped active traits appear beneath your weapon stances in game with their remaining cooldowns.",50,100,250,400);
 				
-				textFont(0,22);
+				textFont(txtfont,22);
 				fill(200,255,0,200);
 				text("Passive traits appear here. These are always equipped. Hover over them to see what bonuses they are granting you.",390,100,510,400);
 				
-				textFont(0,20);
+				textFont(txtfont,20);
 				fill(255,255,255,200);
 				text("Equipped active traits appear here. These can be unequipped by clicking on them.",950,100,170,400);
 			
 				textAlign(LEFT,TOP);
 				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
-				textFont(0,19);
+				textFont(txtfont,19);
 				text("Press H to toggle this help screen",820,30,500,50);
 				noStroke();
 			}
@@ -1760,7 +1761,7 @@ var openhelpscreen=function(introkey){
 					rect(5,5,1123,790,40);
 					textAlign(CENTER,CENTER);
 					fill(255,255,255);
-					textFont(0,30);
+					textFont(txtfont,30);
 					text("Atlas Help",100,0,933,50);
 					
 					translate(200,350);
@@ -1769,7 +1770,7 @@ var openhelpscreen=function(introkey){
 					triangle(-25,abs(tick%60-30)-50,25,abs(tick%60-30)-50,0,abs(tick%60-30)-30);
 					resetMatrix();
 					
-					textFont(0,22);
+					textFont(txtfont,22);
 					fill(255,255,255,200);
 					text("Click here to travel to the Plains.",33,150,600,150);
 					
@@ -1777,7 +1778,7 @@ var openhelpscreen=function(introkey){
 					
 					textAlign(LEFT,TOP);
 					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
-					textFont(0,19);
+					textFont(txtfont,19);
 					text("Press H to toggle this help screen",820,30,500,50);
 					noStroke();
 				}
@@ -1788,16 +1789,16 @@ var openhelpscreen=function(introkey){
 					rect(5,5,1123,790,40);
 					textAlign(CENTER,CENTER);
 					fill(255,255,255);
-					textFont(0,30);
+					textFont(txtfont,30);
 					text("Atlas Help",100,0,933,50);
 					
-					textFont(0,22);
+					textFont(txtfont,22);
 					fill(255,255,255,200);
 					text("This is a map of all the chartable areas you have discovered so far. Once you have killed enough enemies in normal areas, it will become unlocked. You may click on these to travel to the area. Completed areas appear blue (these no longer grant PP - although specific enemies may continue to). Completing an area also grants 1 keystone to use at the Infuser.",33,100,1100,600);
 					
 					textAlign(LEFT,TOP);
 					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
-					textFont(0,19);
+					textFont(txtfont,19);
 					text("Press H to toggle this help screen",820,30,500,50);
 					noStroke();
 				}
@@ -1809,12 +1810,12 @@ var openhelpscreen=function(introkey){
 				rect(105,5,600,590,40);
 				textAlign(LEFT,TOP);
 				fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
-				textFont(0,19);
+				textFont(txtfont,19);
 				text("Press H to toggle this help screen",420,40,500,50);
 				fill(255,220,100,200);
-				textFont(0,22);
+				textFont(txtfont,22);
 				text("Controls",370,70,500,50);
-				textFont(0,18);
+				textFont(txtfont,18);
 				text("-W,A,S,D to move",140,120,500,50);
 				text("-Left click to use the weapon in your left hand.",140,150,500,50);
 				text("-Right click to use the weapon in your right hand.",140,180,500,50);
@@ -3168,8 +3169,8 @@ var renderequipslot=function(slot,x,y,interact){
 								sfx.upgrade.play();
 							}
 							if(keyPressed&keyCode==16){
-								if(player.sp>=(player.level-player.inventory[slot].level)*5){
-									player.sp-=(player.level-player.inventory[slot].level)*5;
+								if(player.sp>=min(500,(player.level-player.inventory[slot].level)*5)){
+									player.sp-=min(500,(player.level-player.inventory[slot].level)*5);
 									player.inventory[slot].level=player.level;
 								}
 								else{
@@ -5018,7 +5019,7 @@ var loadkeystoneps=function(){
 				fill(abs(tick%180-90)*255/90,abs(tick%136-68)*255/68,abs(tick%334-167)*255/167);
 				rect(825,295,playertemp.elementalward/player.maxhp*150,10);
 				fill(abs((tick+90)%180-90)*255/90,abs((tick+68)%136-68)*255/68,abs((tick+167)%334-167)*255/167);
-				textFont(0,15);
+				textFont(txtfont,15);
 				text(round(playertemp.elementalward),850,292);
 			}
 		});
@@ -5201,7 +5202,7 @@ var loadkeystoneps=function(){
 				}
 				rect(825,245,playertemp.omnishell/playertemp.omnishellm*300,30);
 				fill(100,0,100);
-				textFont(0,15);
+				textFont(txtfont,15);
 				text(round(playertemp.omnishell),1075,252);
 				}
 		});
@@ -7025,7 +7026,7 @@ var loadtraits=function(){
 					fill(60+abs(tick%200-100)/2,60+abs(tick%200-100)/2,255);
 					rect(825,245,playertemp.energyshield/playertemp.energyshieldmax*300,5+playertemp.traits[12]/5);fill(170,170,255);
 					fill(0,0,200,200);
-					textFont(0,13);
+					textFont(txtfont,13);
 					text(round(playertemp.energyshield),950,245);
 				}
 		});
@@ -7335,7 +7336,7 @@ var loadtraits=function(){
 					noStroke();
 					arc(740,46,40,25,PI,2*PI);
 					fill(0,55,255);
-					textFont(0,16);
+					textFont(txtfont,16);
 					textMode(CENTER,CENTER);
 					text(round(100*(playertemp.reciprocation/player.maxhp))+"%",726,32,40,25);
 				}
@@ -7711,7 +7712,7 @@ var loadtraits=function(){
 							rect(825,275,playertemp.guard/((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb)*300,7);
 						}
 						fill(170,170,255);
-						textFont(0,13);
+						textFont(txtfont,13);
 						text(round(playertemp.guard),950,283);
 					}
 				}
@@ -9510,13 +9511,13 @@ var sdialogb=function(info){
 	rect(120,70,560,560,40);
 	textAlign(CENTER);
 	fill(255,235,220);
-	textFont(0,25);
+	textFont(txtfont,25);
 	text(info.speaker,130,80,540,50);
 	fill(220,220,240);
-	textFont(0,20);
+	textFont(txtfont,20);
 	text(info.speech,130,150,540,250);
 	textAlign(LEFT,CENTER);
-	textFont(0,19);
+	textFont(txtfont,19);
 	for(s=0;s<info.answers.length;s+=1){
 		if(cursorbox(130,670,355+50*s,395+50*s)){
 			fill(130,180,130);
@@ -10775,7 +10776,7 @@ var getBiomeScripts=function(){
 						terraineffects[n].x+=9999;
 						append(terraineffects,{name:'challenge arena line',bid:player.biomeID,tick:0,run:function(){
 							fill(255,0,0,200);
-							textFont(0,25);
+							textFont(txtfont,25);
 							textAlign(TOP,LEFT);
 							text("Tier: "+floor(challengearena.souls/100),12,25);
 							noFill();
@@ -10837,7 +10838,7 @@ var getBiomeScripts=function(){
 		append(stateffectsg,{name:'wastelands portal',x:random(-1300,1300),y:random(-1300,1300),tick:0,run:function(){
 			if(render){
 			fill(200,255,255);
-			textFont(0,16);
+			textFont(txtfont,16);
 			textAlign(CENTER);
 			text("Wastelands (LV 77)",350+stateffectsg[n].x-playertemp.x,285+stateffectsg[n].y-playertemp.y,100,50);
 			textAlign(TOP,LEFT);
@@ -10901,7 +10902,7 @@ var getBiomeScripts=function(){
 		append(stateffectsg,{name:'shrek arena',x:random(-1300,1300),y:random(-1300,1300),tick:0,run:function(){
 			if(render){
 			fill(200,255,255);
-			textFont(0,14);
+			textFont(txtfont,14);
 			textAlign(CENTER);
 			text("Swamp Clearing - No humans allowed!",300+stateffectsg[n].x-playertemp.x,285+stateffectsg[n].y-playertemp.y,200,50);
 			textAlign(TOP,LEFT);
@@ -12189,15 +12190,15 @@ var statpanel=function(){
 		rect(0,305,350,30);
 		rect(0,365,350,30);
 		fill(200,200,100);
-		textFont(0,26);
+		textFont(txtfont,26);
 		text('PP: '+floor(player.pp/100),50,650);
 		fill(50,50,0);
-		textFont(0,25);
+		textFont(txtfont,25);
 		text('Your Stats',115,50);
 		shape(sprites.stattrait,245,110,90,135);
 		shape(sprites.statkeystone,300,110,90,135);
 		fill(200,255,255);
-		textFont(0,15);
+		textFont(txtfont,15);
 		text('Level: '+player.level,20,100);
 		text('Health: '+round(player.hp)+' / '+round((plshp(1))),20,130);
 		text('Mana: '+round(player.mp)+' / '+round((plsmp(1))),20,160);
@@ -12782,7 +12783,7 @@ var statpanel=function(){
 			fill(abs(tick%120-60)*255/60,abs(tick%90-45)*255/45,abs(tick%60-30)*255/30);
 			ellipse(240,665,40,40);
 			fill(abs((tick+60)%120-60)*255/60,abs((tick+45)%90-45)*255/45,abs((tick+30)%60-30)*255/30);
-			textFont(0,30);
+			textFont(txtfont,30);
 			textAlign(CENTER);
 			text("!",220,655,40,40);
 			if(cursorbox(220,260,645,685)){
@@ -12874,7 +12875,7 @@ var statpanel=function(){
 			ellipseMode(CENTER);
 			ellipse(25+(rtdp%8)*42,425+floor(rtdp/8)*42,40,40);
 			stemp=0;
-			textFont(0,18);
+			textFont(txtfont,18);
 			if(tooltipdefi){
 				fill(0,0,0,100);
 				ellipseMode(CENTER);
@@ -17365,6 +17366,7 @@ append(doaction,function(lv,hand){
 		}
 		if(playertemp.action.tick==1){
 			if(options.loadAudio){
+				sfx.obliterates.rate(random(0.9,1.12));
 				sfx.obliterates.play();
 			}
 		}
@@ -17436,20 +17438,21 @@ append(doaction,function(lv,hand){
 							}
 							else{
 								if(random(1)<0.33){
-								sfx.obliterate1.rate(random(0.9,1.12));
-								sfx.obliterate1.play();
+									sfx.obliterate1.rate(random(0.9,1.12));
+									sfx.obliterate1.play();
 								}
 								else if(random(1)<0.66){
-								sfx.obliterate2.rate(random(0.9,1.12));
-								sfx.obliterate2.play();
+									sfx.obliterate2.rate(random(0.9,1.12));
+									sfx.obliterate2.play();
 								}
 								else{
-								sfx.obliterate3.rate(random(0.9,1.12));
-								sfx.obliterate3.play();
+									sfx.obliterate3.rate(random(0.9,1.12));
+									sfx.obliterate3.play();
 								}
 							}
 						}
 						else{
+							sfx.obliteratem.rate(random(0.9,1.12));
 							sfx.obliteratem.play();
 						}
 					}
@@ -18373,7 +18376,7 @@ if(tick%30==0){
 					}
 					ellipse(0,0,45,60);
 					fill(200,255,255);
-					textFont(0,16);
+					textFont(txtfont,16);
 					textAlign(CENTER);
 					text(gateways[i].destname,0,-26);}
 					if(tick%4==0&player.level-10<gateways[i].destlv&player.level+10>gateways[i].destlv){
@@ -18554,7 +18557,7 @@ if(tick%30==0){
 	textAlign(LEFT,TOP);
 	if(!(playertemp.maxhp==1&playertemp.maxhpfb==0)){
 		shape(sprites.hp,850,30,90,135);
-		textFont(0,16);
+		textFont(txtfont,16);
 		if(playertemp.maxhp<1){
 			fill(255,0,0);
 			text(round((playertemp.maxhp-1)*100)+"%",830,50);
@@ -18566,7 +18569,7 @@ if(tick%30==0){
 		if(playertemp.maxhp<1.000001&playertemp.maxhp>0.999999){
 			playertemp.maxhp=1;
 		}
-		textFont(0,13);
+		textFont(txtfont,13);
 		if(playertemp.maxhpfb<0){
 			fill(200,0,0);
 			text(round(playertemp.maxhpfb),830,2);
@@ -18581,7 +18584,7 @@ if(tick%30==0){
 	}
 	if(!(playertemp.hpregen==1&playertemp.hpregenfb==0)){
 		shape(sprites.hpregen,850,105,90,135);
-		textFont(0,16);
+		textFont(txtfont,16);
 		if(playertemp.hpregen<1){
 			fill(255,0,0);
 			text(round((playertemp.hpregen-1)*100)+"%",830,125);
@@ -18593,7 +18596,7 @@ if(tick%30==0){
 		if(playertemp.hpregen<1.000001&playertemp.hpregen>0.999999){
 			playertemp.hpregen=1;
 		}
-		textFont(0,13);
+		textFont(txtfont,13);
 		if(playertemp.hpregenfb<0){
 			fill(200,0,0);
 			text(round(playertemp.hpregenfb*10)/10,830,70);
@@ -18608,7 +18611,7 @@ if(tick%30==0){
 	}
 	if(!(playertemp.maxmp==1&playertemp.maxmpfb==0)){
 		shape(sprites.mp,920,30,90,135);
-		textFont(0,16);
+		textFont(txtfont,16);
 		if(playertemp.maxmp<1){
 			fill(255,0,0);
 			text(round((playertemp.maxmp-1)*100)+"%",900,50);
@@ -18620,7 +18623,7 @@ if(tick%30==0){
 		if(playertemp.maxmp<1.000001&playertemp.maxmp>0.999999){
 			playertemp.maxmp=1;
 		}
-		textFont(0,13);
+		textFont(txtfont,13);
 		if(playertemp.maxmpfb<0){
 			fill(200,0,0);
 			text(round(playertemp.maxmpfb),900,2);
@@ -18635,7 +18638,7 @@ if(tick%30==0){
 	}
 	if(!(playertemp.mpregen==1&playertemp.mpregenfb==0)){
 		shape(sprites.mpregen,920,105,90,135);
-		textFont(0,16);
+		textFont(txtfont,16);
 		if(playertemp.mpregen<1){
 			fill(255,0,0);
 			text(round((playertemp.mpregen-1)*100)+"%",900,125);
@@ -18647,7 +18650,7 @@ if(tick%30==0){
 		if(playertemp.mpregen<1.000001&playertemp.mpregen>0.999999){
 			playertemp.mpregen=1;
 		}
-		textFont(0,13);
+		textFont(txtfont,13);
 		if(playertemp.mpregenfb<0){
 			fill(200,0,0);
 			text(round(playertemp.mpregenfb*10)/10,900,70);
@@ -18662,7 +18665,7 @@ if(tick%30==0){
 	}
 	if(!(playertemp.str==1&playertemp.strfb==0)){
 		shape(sprites.str,1000,30,90,135);
-		textFont(0,16);
+		textFont(txtfont,16);
 		if(playertemp.str<1){
 			fill(255,0,0);
 			text(round((playertemp.str-1)*100)+"%",980,50);
@@ -18674,7 +18677,7 @@ if(tick%30==0){
 		if(playertemp.str<1.000001&playertemp.str>0.999999){
 			playertemp.str=1;
 		}
-		textFont(0,13);
+		textFont(txtfont,13);
 		if(playertemp.strfb<0){
 			fill(200,0,0);
 			text(round(playertemp.strfb),980,2);
@@ -18689,7 +18692,7 @@ if(tick%30==0){
 	}
 	if(!(playertemp.intel==1&playertemp.intelfb==0)){
 		shape(sprites.intel,1000,105,90,135);
-		textFont(0,16);
+		textFont(txtfont,16);
 		if(playertemp.intel<1){
 			fill(255,0,0);
 			text(round((playertemp.intel-1)*100)+"%",980,125);
@@ -18701,7 +18704,7 @@ if(tick%30==0){
 		if(playertemp.intel<1.000001&playertemp.intel>0.999999){
 			playertemp.intel=1;
 		}
-		textFont(0,13);
+		textFont(txtfont,13);
 		if(playertemp.intelfb<0){
 			fill(200,0,0);
 			text(round(playertemp.intelfb),980,70);
@@ -18716,7 +18719,7 @@ if(tick%30==0){
 	}
 	if(!(playertemp.armor==1&playertemp.armorfb==0)){
 		shape(sprites.armor,1100,30,90,135);
-		textFont(0,16);
+		textFont(txtfont,16);
 		if(playertemp.armor<1){
 			fill(255,0,0);
 			text(round((playertemp.armor-1)*100)+"%",1080,50);
@@ -18728,7 +18731,7 @@ if(tick%30==0){
 		if(playertemp.armor<1.000001&playertemp.armor>0.999999){
 			playertemp.armor=1;
 		}
-		textFont(0,13);
+		textFont(txtfont,13);
 		if(playertemp.armorfb<0){
 			fill(200,0,0);
 			text(round(playertemp.armorfb),1080,2);
@@ -18743,7 +18746,7 @@ if(tick%30==0){
 	}
 	if(!(playertemp.res==1&playertemp.resfb==0)){
 		shape(sprites.res,1100,105,90,135);
-		textFont(0,16);
+		textFont(txtfont,16);
 		if(playertemp.res<1){
 			fill(255,0,0);
 			text(round((playertemp.res-1)*100)+"%",1080,125);
@@ -18755,7 +18758,7 @@ if(tick%30==0){
 		if(playertemp.res<1.000001&playertemp.res>0.999999){
 			playertemp.res=1;
 		}
-		textFont(0,13);
+		textFont(txtfont,13);
 		if(playertemp.resfb<0){
 			fill(200,0,0);
 			text(round(playertemp.resfb),1080,70);
@@ -18768,26 +18771,26 @@ if(tick%30==0){
 			playertemp.resfb=0;
 		}
 	}
-	textFont(0,21);
+	textFont(txtfont,21);
 	fill(150,255,200);
 	text(player.name,825,140);
-	textFont(0,21);
+	textFont(txtfont,21);
 	fill(0,150,255);
 	text('Level: '+player.level,825,175);
-	textFont(0,19);
+	textFont(txtfont,19);
 	fill(100,0,0);
 	text('Health: '+round(player.hp)+' / '+round((plshp(1))),825,220);
 	fill(0,0,100);
 	text('Mana: '+round(player.mp)+' / '+round((plsmp(1))),825,310);
-	textFont(0,15);
+	textFont(txtfont,15);
 	fill(0,100,0);
 	text('XP: '+round(player.xp*10)/10+"%",825,390);
 	if(round(player.xpb*10)/10>0){
-		textFont(0,12);
+		textFont(txtfont,12);
 		fill(150,150,0);
 		text("+"+(round(player.xpb*10)/10)+"%",925,391);
 	}
-	textFont(0,15);
+	textFont(txtfont,15);
 	fill(0,0,0);
 	rect(825,245,300,30);
 	fill(255-(min(1,player.hp/((plshp(1)))))*100,0,0);
@@ -18885,7 +18888,7 @@ if(tick%30==0){
 	fill(0,80,0);
 	rect(825,410,player.xp/player.xpr*300,15);
 	fill(0,0,0);
-	textFont(0,15);
+	textFont(txtfont,15);
 	text(biomedata[0],900,675);
 	fill(80,80,12);
 	if(stancecache.LH.sprite){
@@ -18902,7 +18905,7 @@ if(tick%30==0){
 		ellipse(850,600,75,75);
 		shape(playertemp.activetraitsprites.space,850,607,180,270);
 		fill(0,0,255);
-		textFont(0,15);
+		textFont(txtfont,15);
 		text("SPACE",825,572);
 		if(traitcd[player.activetraits.space]>=30){
 			fill(0,0,0,130+playertemp.traitcd.space/traitcd[player.activetraits.space]*125);
@@ -18916,7 +18919,7 @@ if(tick%30==0){
 		ellipse(930,600,75,75);
 		shape(playertemp.activetraitsprites.shift,930,607,180,270);
 		fill(0,0,255);
-		textFont(0,15);
+		textFont(txtfont,15);
 		text("SHIFT",910,572);
 		if(traitcd[player.activetraits.shift]>=30){
 			fill(0,0,0,130+playertemp.traitcd.shift/traitcd[player.activetraits.shift]*125);
@@ -18930,7 +18933,7 @@ if(tick%30==0){
 		ellipse(1010,600,75,75);
 		shape(playertemp.activetraitsprites.q,1010,607,180,270);
 		fill(0,0,255);
-		textFont(0,30);
+		textFont(txtfont,30);
 		text("Q",995,558);
 		if(traitcd[player.activetraits.q]>=30){
 			fill(0,0,0,130+playertemp.traitcd.q/traitcd[player.activetraits.q]*125);
@@ -18944,7 +18947,7 @@ if(tick%30==0){
 		ellipse(1090,600,75,75);
 		shape(playertemp.activetraitsprites.e,1090,607,180,270);
 		fill(0,0,255);
-		textFont(0,30);
+		textFont(txtfont,30);
 		text("E",1080,558);
 		if(traitcd[player.activetraits.e]>=30){
 			fill(0,0,0,130+playertemp.traitcd.e/traitcd[player.activetraits.e]*125);
@@ -18962,7 +18965,7 @@ if(tick%30==0){
 		line(775,690,1045,430);
 		noStroke();
 	}*/
-	textFont(0,15);
+	textFont(txtfont,15);
 	fill(255,100,150);
 	text('FPS: '+fps.fps,825,675);
 	for(tfo=0;tfo<traitfuncs.overlay.length;tfo+=1){
@@ -19046,9 +19049,9 @@ if(tick%30==0){
 			rect(250,60,300,30,20);
 			fill(255,200,0);
 			textAlign(CENTER);
-			textFont(0,18);
+			textFont(txtfont,18);
 			text(stemp[3]+" (LV "+enemies[stemp[2]].lv+")",200,30,400,40);
-			textFont(0,15);
+			textFont(txtfont,15);
 			fill(0,255,255);
 			text(round(max(0,enemies[stemp[2]].hp))+" / "+round(enemies[stemp[2]].mhp),250,70,300,30);
 			if(!(playertemp.inBossFight)){
@@ -19070,13 +19073,13 @@ if(tick%30==0){
 			//Normal inventory=========
 			if(inventype==1){
 			fill(100,200,200);
-			textFont(0,26);
+			textFont(txtfont,26);
 			text('SP: '+player.sp,1000,650);
 			fill(200,170,50);
-			textFont(0,17);
+			textFont(txtfont,17);
 			text('Reactant: '+player.reactant,1000,620);
 			fill(200,200,100);
-			textFont(0,30);
+			textFont(txtfont,30);
 			text('Inventory',725,50);
 			statpanel();
 			textAlign(CENTER,CENTER);
@@ -19087,11 +19090,11 @@ if(tick%30==0){
 				fill(110,110,160);
 			}
 			rect(375,150,100,85,5);
-			textFont(0,17);
+			textFont(txtfont,17);
 			fill(0,0,0);
 			text('Upgrade items',381,143,90,75);
 			if(player.autoanvil){
-				textFont(0,14);
+				textFont(txtfont,14);
 				fill(0,50,0);
 				text('Auto Enabled',378,175,90,75);
 			}
@@ -19102,9 +19105,9 @@ if(tick%30==0){
 			rect(400,45,200,80,10);
 			noStroke();
 			fill(150,255,150);
-			textFont(0,20);
+			textFont(txtfont,20);
 			text('View / Equip',400,20,200,80);
-			textFont(0,40);
+			textFont(txtfont,40);
 			text('Traits',400,50,200,80);
 			if(cursorbox(400,600,45,125)){
 				tooltipdraw={
@@ -19142,7 +19145,7 @@ if(tick%30==0){
 			if(!(player.biomeID==1||playertemp.inBossFight)){
 			rect(400,605,200,80,10);
 			fill(150,255,150);
-			textFont(0,40);
+			textFont(txtfont,40);
 			text('Nexus',400,595,200,80);
 			if(player.record.atlas[player.biomeID]==2){
 				if(player.record.biocomp[player.biomeID]){
@@ -19189,7 +19192,7 @@ if(tick%30==0){
 				textAlign(CENTER,CENTER);
 				fill(255,0,0);
 				rect(1000,75,100,40,3);
-				textFont(0,18);
+				textFont(txtfont,18);
 				fill(0,0,0);
 				text('SELL ALL',1003,65,90,50);
 				if(cursorbox(1000,1100,75,115)){
@@ -19214,7 +19217,7 @@ if(tick%30==0){
 				textAlign(CENTER,CENTER);
 				fill(200,100,100);
 				rect(880,75,100,40,3);
-				textFont(0,18);
+				textFont(txtfont,18);
 				fill(0,0,0);
 				text('SELL RUNELESS',883,65,90,50);
 				if(cursorbox(880,980,75,115)){
@@ -19250,7 +19253,7 @@ if(tick%30==0){
 				textAlign(CENTER,CENTER);
 				fill(255,0,0);
 				rect(880,75,220,40,3);
-				textFont(0,18);
+				textFont(txtfont,18);
 				fill(0,0,0);
 				text('CONFIRM',938,65,90,50);
 				if(cursorbox(880,1100,75,115)){
@@ -19291,7 +19294,7 @@ if(tick%30==0){
 				textAlign(CENTER,CENTER);
 				fill(200,100,150);
 				rect(880,75,220,40,3);
-				textFont(0,18);
+				textFont(txtfont,18);
 				fill(0,0,0);
 				text('Quick Sell',938,65,90,50);
 				if(cursorbox(880,1100,75,115)){
@@ -19331,11 +19334,11 @@ if(tick%30==0){
 									if(!(player.inventory.bag[15*x+n].id==44)){
 										if(keyPressed&keyCode==16){
 											if(player.level-player.inventory.bag[15*x+n].level>0){
-												if(player.sp>=(player.level-player.inventory.bag[15*x+n].level)*5){
+												if(player.sp>=min(500,(player.level-player.inventory.bag[15*x+n].level)*5)){
 													if(options.loadAudio){
 														sfx.upgrade.play();
 													}
-													player.sp-=(player.level-player.inventory.bag[15*x+n].level)*5;
+													player.sp-=min(500,(player.level-player.inventory.bag[15*x+n].level)*5);
 													player.inventory.bag[15*x+n].level=player.level;
 												}
 												else{
@@ -19431,7 +19434,7 @@ if(tick%30==0){
 				w:250,
 				h:250,
 				title:"Upgrade items",
-				tip:"Right click to toggle automatic anvil (will upgrade equipped items once every time you level up). Left click to use the anvil. Click items with the anvil to upgrade them. Hold shift while clicking to upgrade it to your level. Upgrading costs 5 SP per level.",
+				tip:"Right click to toggle automatic anvil (will upgrade equipped items once every time you level up). Left click to use the anvil. Click items with the anvil to upgrade them. Hold shift while clicking to upgrade it to your level (discount when upgrading more than 100 levels). Upgrading costs 5 SP per level.",
 				colors:0
 			};
 			if(!(mouselock)&mousePressed){
@@ -19524,17 +19527,17 @@ if(tick%30==0){
 			fill(150,130,150);
 			rect(0,0,350,700);
 			fill(100,200,200);
-			textFont(0,26);
+			textFont(txtfont,26);
 			text('SP: '+player.sp,1000,650);
 			fill(200,170,50);
-			textFont(0,17);
+			textFont(txtfont,17);
 			text('Reactant: '+player.reactant,1000,620);
 			fill(150,80,150);
-			textFont(0,35);
+			textFont(txtfont,35);
 			text('Enchanter',500,20);
 			if(!(player.inventory.bag[invselect[1]])){
 				fill(abs(tick%240-120),0,abs(tick%240-120));
-				textFont(0,17);
+				textFont(txtfont,17);
 				text('Select an item from your inventory to browse enchantments',650,85);
 			}
 			fill(100,0,130);
@@ -19613,10 +19616,10 @@ if(tick%30==0){
 						temp3+=" ";
 						temp3+=suffixdata[(player.inventory.bag[invselect[1]].suffix-1)*5];
 					}
-					textFont(0,26-temp3.length/4);
+					textFont(txtfont,26-temp3.length/4);
 					fill(0,0,0);
 					text(temp3,40,250);
-					textFont(0,19);
+					textFont(txtfont,19);
 					text("Health: "+round(10*(getitemstat(0,invselect[1])))/10,40,285);
 					text("Mana: "+round(10*(getitemstat(1,invselect[1])))/10,40,335);
 					text("Health Regen: "+round(100*(getitemstat(2,invselect[1])))/100,40,310);
@@ -19655,7 +19658,7 @@ if(tick%30==0){
 					}
 					rect(825,5,150,60,30);
 					fill(0,0,100);
-					textFont(0,28);
+					textFont(txtfont,28);
 					text("Back",866,14,100,50);
 					if(enchantmode==0){
 						fill(0,75,0);
@@ -19672,7 +19675,7 @@ if(tick%30==0){
 						}
 						rect(575,225,300,100,30);
 						fill(255,255,255);
-						textFont(0,28);
+						textFont(txtfont,28);
 						text("Browse Prefixes",625,260,250,50);
 						fill(0,0,75);
 						if(cursorbox(575,875,425,525)){
@@ -19688,7 +19691,7 @@ if(tick%30==0){
 						}
 						rect(575,425,300,100,30);
 						fill(255,255,255);
-						textFont(0,28);
+						textFont(txtfont,28);
 						text("Browse Suffixes",625,460,250,50);
 					}
 					else if(enchantmode==1){
@@ -19704,7 +19707,7 @@ if(tick%30==0){
 							}
 							rect(400+floor(reo/25)*100,70+(reo%25)*25,95,20,4);
 							fill(0,0,0);
-							textFont(0,min(17,5+(50/enchantercache.enchants[reo].name.length)));
+							textFont(txtfont,min(17,5+(50/enchantercache.enchants[reo].name.length)));
 							text(enchantercache.enchants[reo].name,400+floor(reo/25)*100,75+(reo%25)*25,95,20);
 							if(cursorbox(400+floor(reo/25)*100,495+floor(reo/25)*100,70+(reo%25)*25,90+(reo%25)*25)){
 								stemp=new Array();
@@ -19872,7 +19875,7 @@ if(tick%30==0){
 							}
 							rect(400+floor(reo/25)*100,70+(reo%25)*25,95,20,4);
 							fill(0,0,0);
-							textFont(0,min(17,5+(50/enchantercache.enchants[reo].name.length)));
+							textFont(txtfont,min(17,5+(50/enchantercache.enchants[reo].name.length)));
 							text(enchantercache.enchants[reo].name,400+floor(reo/25)*100,75+(reo%25)*25,95,20);
 							if(cursorbox(400+floor(reo/25)*100,495+floor(reo/25)*100,70+(reo%25)*25,90+(reo%25)*25)){
 								stemp=new Array();
@@ -20043,9 +20046,9 @@ if(tick%30==0){
 						}
 						rect(540,525,300,100,30);
 						fill(255,255,255);
-						textFont(0,33);
+						textFont(txtfont,33);
 						text("Enchant",625,560,250,50);
-						textFont(0,27);
+						textFont(txtfont,27);
 						fill(0,0,0);
 						textAlign(CENTER);
 						if(player.inventory.bag[invselect[1]].prefix){
@@ -20076,9 +20079,9 @@ if(tick%30==0){
 						}
 						rect(540,525,300,100,30);
 						fill(255,255,255);
-						textFont(0,33);
+						textFont(txtfont,33);
 						text("Enchant",625,560,250,50);
-						textFont(0,27);
+						textFont(txtfont,27);
 						fill(0,0,0);
 						textAlign(CENTER);
 						if(player.inventory.bag[invselect[1]].suffix){
@@ -20117,7 +20120,7 @@ if(tick%30==0){
 				else{
 					fill(0,0,155);
 				}
-				textFont(0,25);
+				textFont(txtfont,25);
 				textAlign(TOP,LEFT);
 				text("Keystones: "+(player.keystones.areabase+player.keystones.bonus-player.keystones.allocated-keystonecache.edited)+" / "+(player.keystones.areabase+player.keystones.bonus),650,40);
 				if(keystonecache.mode==0){
@@ -20189,10 +20192,10 @@ if(tick%30==0){
 			fill(170,140,100);
 			rect(0,0,420,700);
 			fill(100,200,200);
-			textFont(0,26);
+			textFont(txtfont,26);
 			text('SP: '+player.sp,1000,650);
 			fill(150,80,150);
-			textFont(0,35);
+			textFont(txtfont,35);
 			text("Artisan's Bench",500,30);
 			fill(140,140,150);
 			rect(65,55,180,180,8);
@@ -20256,10 +20259,10 @@ if(tick%30==0){
 									temp3+=" ";
 									temp3+=suffixdata[(player.inventory.bag[invselect[1]].suffix-1)*5];
 								}
-					textFont(0,26-temp3.length/4);
+					textFont(txtfont,26-temp3.length/4);
 					fill(0,0,0);
 					text(temp3,40,250);
-					textFont(0,19);
+					textFont(txtfont,19);
 					textAlign(TOP,LEFT);
 					
 			if(player.inventory.bag[invselect[1]].id==44){
@@ -20285,7 +20288,7 @@ if(tick%30==0){
 				else{
 					text("Free Points: 0",275,80);
 				}
-					textFont(0,15);
+					textFont(txtfont,15);
 				textAlign(CENTER,CENTER);
 				stemp=0;
 				if(player.inventory.bag[invselect[1]].tinker){
@@ -20294,7 +20297,7 @@ if(tick%30==0){
 				fill(200,200,100);
 				rect(275,120,120,50,4);
 				fill(0,0,0);
-				textFont(0,25);
+				textFont(txtfont,25);
 				text('Tinker',275,120,120,50);
 					if(cursorbox(275,395,120,170)){
 						tooltipdraw={
@@ -20360,7 +20363,7 @@ if(tick%30==0){
 						artisanpbox("intel",200);
 						artisanpbox("armor",240);
 						artisanpbox("res",280);
-					textFont(0,19);
+					textFont(txtfont,19);
 					fill(0,0,0);
 					text("Health: "+round(1000*(player.inventory.bag[invselect[1]].rolls.hp))/10+"%",150,320);
 					text("Health Regen: "+round(1000*(player.inventory.bag[invselect[1]].rolls.hpregen))/10+"%",150,360);
@@ -20397,12 +20400,12 @@ if(tick%30==0){
 		fill(140,70,70);
 		rect(400,0,733,700);
 		fill(0,0,140);
-		textFont(0,30);
+		textFont(txtfont,30);
 		text('Available Active Traits',55,10);
 		fill(0,140,140);
 		text('Equipped Traits',650,10);
 		fill(0,0,0);
-		textFont(0,25);
+		textFont(txtfont,25);
 		text('SPACE',1000,75);
 		text('SHIFT',1000,225);
 		text('Q',1000,375);
@@ -20617,14 +20620,14 @@ if(tick%30==0){
 		}
 		rect(925,5,150,60,30);
 		fill(0,0,100);
-		textFont(0,28);
+		textFont(txtfont,28);
 		text("Back",966,14,100,50);
 	}
 	else if(inventory==3){
 		fill(20,0,20);
 		rect(0,0,1133,700);
 		fill(140,100,80);
-		textFont(0,30);
+		textFont(txtfont,30);
 		text("The  World  Atlas",400,10);
 		ellipseMode(CENTER);
 		for(i=0;i<atlasbiomes.length;i+=1){
@@ -20689,9 +20692,9 @@ if(tick%30==0){
 		fill(70,140,110);
 		rect(0,0,1133,700);
 		fill(255,180,0);
-		textFont(0,40);
+		textFont(txtfont,40);
 		text('Options',500,25);
-		textFont(0,30);
+		textFont(txtfont,30);
 		textAlign(CENTER);
 		
 		if(options.dmgindicators){
@@ -20901,7 +20904,7 @@ if(tick%30==0){
 			}
 		}
 		
-		textFont(0,25);
+		textFont(txtfont,25);
 		fill(255,255,255);
 		text("Music",800,275,100,55);
 		fill(0,0,0);
@@ -20960,7 +20963,7 @@ if(tick%30==0){
 		}
 		rect(925,5,150,60,30);
 		fill(0,0,100);
-		textFont(0,28);
+		textFont(txtfont,28);
 		text("Back",945,20,100,50);
 	}
 	}
@@ -21148,7 +21151,7 @@ else{
 		noStroke();
 		menuscreentemp[4]=min(200,menuscreentemp[4]+1);
 		textAlign(CENTER);
-		textFont(0,30);
+		textFont(txtfont,30);
 		fill(200,200,255,(menuscreentemp[4]-30)*4);
 		// (everything except audio and some sprites)
 		text("Game Developer",200,20,733,100);
@@ -21156,7 +21159,7 @@ else{
 		text("Sprite Helpers",200,170,733,100);
 		fill(200,200,255,(menuscreentemp[4]-90)*4);
 		text("Beta Testers",200,350,733,100);
-		textFont(0,25);
+		textFont(txtfont,25);
 		fill(200,200,255,(menuscreentemp[4]-120)*4);
 		text("In memory of",100,535,933,100);
 		fill(255,255,255,(menuscreentemp[4]-40)*4);
@@ -21171,14 +21174,14 @@ else{
 			image(mrjj,740,545,100,130);
 			noTint();
 		}
-		textFont(0,30);
-		textFont(0,30);
-		textFont(0,27);
+		textFont(txtfont,30);
+		textFont(txtfont,30);
+		textFont(txtfont,27);
 		textAlign(TOP,LEFT);
 		fill(255,255,255,(menuscreentemp[4]-70)*4);
 		//Sprite helpers
 		text("TBD",500,240);
-		textFont(0,25);
+		textFont(txtfont,25);
 		fill(255,255,255,(menuscreentemp[4]-100)*4);
 		//Beta testers
 		text("Bryceton Welch",150,415);
@@ -21213,7 +21216,7 @@ for(i=0;i<particles.length;i+=1){if(render||!(loaded)){
 			}
 		}
 		else if(particles[i].type=='text'){
-			textFont(0,particles[i].size);
+			textFont(txtfont,particles[i].size);
 			if(particles[i].relative){
 				text(particles[i].name,400+particles[i].x-playertemp.x,350+particles[i].y-playertemp.y);
 			}
@@ -21237,7 +21240,7 @@ for(y=0;y<dmgind.length;y+=1){
 textAlign(CENTER,CENTER);
 for(y=0;y<dmgind.length;y+=1){if(render){
 		fill(dmgind[y].r,dmgind[y].g,dmgind[y].b,dmgind[y].size*200-400);
-			textFont(0,dmgind[y].size*6);
+			textFont(txtfont,dmgind[y].size*6);
 text(dmgind[y].text,400+dmgind[y].x-playertemp.x,350+dmgind[y].y-playertemp.y);}
 			/*if(dmgind[y].t<=1){
 				dmgind[y].size*=1.5;
@@ -21264,7 +21267,7 @@ if(qtipc){
 	rect(-25,110,250,100,20);
 	noStroke();
 	fill(0,0,0);
-	textFont(0,20);
+	textFont(txtfont,20);
 	textMode(CENTER);
 	text(qtipc,20,100,150,100);
 }
@@ -21284,11 +21287,11 @@ if(tooltipdraw){
 		rectMode(CENTER);
 		fill(0,0,50,175);
 		rect(tooltipdraw.x,tooltipdraw.y,tooltipdraw.w,tooltipdraw.h);
-		textFont(0,16);
+		textFont(txtfont,16);
 		fill(255,225,190);
 		textAlign(LEFT,TOP);
 		text(tooltipdraw.title,13+tooltipdraw.x-tooltipdraw.w/2,7+tooltipdraw.y-tooltipdraw.h/2);
-		textFont(0,14);
+		textFont(txtfont,14);
 		fill(255,255,255);
 		if(tooltipdraw.type==0){
 		textAlign(CENTER,CENTER);
