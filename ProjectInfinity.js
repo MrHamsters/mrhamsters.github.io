@@ -5030,11 +5030,6 @@ var loadkeystoneps=function(){
 			mdmg*=1-playertemp.keystonepassives[27]*0.025;
 		});
 	}
-	if(playertemp.traits[226]>0){
-		append(traitfuncs.damagetakenpa,function(){
-			playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)/2,plsin(2)+plshp(1.5));
-		});
-	}
 	if(playertemp.keystonepassives[10]>0){
 		append(keystonefuncs.passives,function(){
 			if(!(playertemp.spiritrage)){
@@ -5901,6 +5896,12 @@ var loadtraits=function(){
 		append(traitfuncs.damagetakenpa,function(){
 			pdmg*=1-(0.31+playertemp.traits[113]*0.04);
 			mdmg*=1-(0.31+playertemp.traits[113]*0.04);
+		});
+	}
+	if(playertemp.traits[227]>0){
+		append(traitfuncs.damagetakenpa,function(){
+			console.log(pdmg+mdmg);
+			playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)/2,plsin(2)+plshp(1.5));
 		});
 	}
 	if(playertemp.traits[69]>0){
@@ -11888,6 +11889,9 @@ var specialtextcs=[
 	},
 	function(){
 		return(10/(1+playertemp.traits[28]/4));
+	},
+	function(){
+		return(3/(1+playertemp.traits[15]/10));
 	},
 ];
 var converttext=function(rawtext,cvar){
