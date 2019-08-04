@@ -27,7 +27,7 @@ Shield Overload
 Roar
 [Active] Shout furiously, regaining 15% of your missing mana, stunning nearby enemies for up to 3 seconds while increasing your strength by {ox10c10}%, mana regeneration by 30%, and haste by 15%, all decaying over 10 seconds. 20 second cooldown. Can be used mid-action.
 Dash
-[Active] Dash swiftly in the direction you are currently facing, briefly increasing dodge chance to 100%. Dash speed is reduced by action speed modifier at 25% effectiveness. Your normal movement speed is reduced by 100% during dash. 0.75 second cooldown. Can be used mid-action. Requires a dash charge to use. Dash charges are shown next to your stat changes, and regenerate at a base rate of 1 per 3 seconds, up to {ox0c1} charges. Charge generation rate is increased by 10% per trait level (currently {ox0c10}%).
+[Active] Dash swiftly in the direction you are currently facing, briefly increasing dodge chance to 100%. Dash speed is reduced by action speed modifier at 25% effectiveness. Your normal movement speed is reduced by 100% during dash. 0.75 second cooldown. Can be used mid-action. Requires a dash charge to use. Dash charges are shown next to your stat changes, and regenerate at a rate of 1 per {S2} seconds, up to {ox0c1} charges.
 Stamina
 [Passive] Increases mana regeneration rate by {ox0c5}% while moving.
 Focus
@@ -451,7 +451,7 @@ Evasion
 Darkness Rise
 [Passive] After landing 3 times with Obliterate (Nightfall), gain an aura which increases your movement speed by 10% and deals {i0.4} (plus {i0.15+h0.05}, up to 15% of the enemy's maximum health) magic void damage per second to nearby enemies (50% resistance penetration, generates 50% more shield for Indestructible Revenant). Aura lasts for 4 seconds, refreshed upon landing Obliterate again.
 Indestructible Revenant
-[Passive] Stores 10% of damage dealt and 50% of damage taken (after all absorbtion effects) as a potential shield, up to {i3+h1.5} (decays when out of combat). [Active] Activates the stored shield, plus {i0.3+h0.15}, allowing it to absorb incoming damage. After 1 second, it begins to decay at an accelerating rate, but re-casting Indestructible Revenant will consume the remaining shield, healing you for 40% of its value. 5 second cooldown after the shield becomes inactive. Can be used mid-action.
+[Passive] Stores 10% of damage dealt and 50% of damage taken (after all absorbtion effects) as a potential shield, up to {i3+h1.5} (decays when out of combat). [Active] Activates the stored shield, plus {i0.3+h0.15}, allowing it to absorb incoming damage (prevents damage from being taken). After 1 second, it begins to decay at an accelerating rate, but re-casting Indestructible Revenant will consume the remaining shield, healing you for 40% of its value. 5 second cooldown after the shield becomes inactive. Can be used mid-action.
 
 
 
