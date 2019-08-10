@@ -12149,6 +12149,10 @@ var converttext=function(rawtext,cvar){
 						grabstatforct(rawtext,cvar);
 						stemp[1]+=stemp[0]*(plsmp(1));
 					}
+					if(rawtext.substr(gttc,1)=="n"){
+						grabstatforct(rawtext,cvar);
+						stemp[1]+=stemp[0]*(plsmr(1));
+					}
 					if(rawtext.substr(gttc,1)=="o"){
 						stemp[0]=1;
 						grabstatforct(rawtext,cvar);
