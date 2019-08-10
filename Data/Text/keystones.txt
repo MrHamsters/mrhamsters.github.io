@@ -533,7 +533,7 @@ Store up to 10 spirit charges from kills (+2) or when out of combat (+1 per seco
 0
 10
 Blood Rage
-Heal for {ox0c0.75}% of damage dealt. {ox0c3}% of direct leeching effects is converted to a strength and intelligence buff at 15% efficiency which lasts for 5 seconds.
+Heal for {ox0c0.4}% of damage dealt. {ox0c3}% of direct leeching effects is converted to a strength and intelligence buff at 25% efficiency which lasts for 5 seconds.
 0/0/0/0/0/0/0/0/0/0/0
 0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0
 29/1

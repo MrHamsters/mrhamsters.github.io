@@ -84,7 +84,7 @@ Burns nearby enemies
 Reduces damage taken (massively reduces true damage taken) but you have 1 maximum health
 Increases action and cooldown recovery speed
 Active skill (temporarily doubles your haste)
-Increases the damage reduction cap for armor and resistance
+Armor and resistance apply twice
 Take almost no true damage, but take more damage from other sources
 Standing still recovers mana
 Not sure how this is here (unimplemented trait)
