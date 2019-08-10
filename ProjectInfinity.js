@@ -1,9 +1,13 @@
-var version="0.8.5e";
+var version="0.9";
 void setup(){
   size(1133,700);
   strokeWeight(10);
   frameRate(60); 
 }
+//ALWAYS MULTIPLE OF 5
+var riftstart=140;
+//================
+var biomemax=19;
 var ms=0;
 var mslast=0;
 var tick=-1;
@@ -507,6 +511,7 @@ var stateffectsg = new Array();
 var floordeco = new Array();
 var terraineffects = new Array();
 var inventory=0;
+var inventype=0;
 var inventorysprites={meta:1};
 var equipkey=loadStrings('Data/Text/equip key.txt');
 var statkey=loadStrings('Data/Text/global stat key.txt');
@@ -1716,6 +1721,26 @@ var openhelpscreen=function(introkey){
 					textFont(txtfont,22);
 					fill(255,255,255,200);
 					text("Select an item in your inventory to modify its stat rolls.",33,100,1100,600);
+					
+					textAlign(LEFT,TOP);
+					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
+					textFont(txtfont,19);
+					text("Press H to toggle this help screen",820,30,500,50);
+					noStroke();
+				}
+			}
+			else if(inventype==5){
+				helpscreen.help=function(){
+					fill(0,0,50,160);
+					rect(5,5,1123,790,40);
+					textAlign(CENTER,CENTER);
+					fill(255,255,255);
+					textFont(txtfont,30);
+					text("Space-time Manipulator Help",100,0,933,50);
+					
+					textFont(txtfont,22);
+					fill(255,255,255,200);
+					text("Click on a rift to enter it. The rift on the left is free while the one on the right costs reactant. If a different level is desired, type it in (highest selectable rift level is 5 more than the highest level rift you have cleared. Also note that rift levels are rounded to the nearest multiple of 5).",33,100,1100,600);
 					
 					textAlign(LEFT,TOP);
 					fill(120+abs(tick%120-60)*1.5,120+abs(tick%120-60)*1.5,255,200);
@@ -3424,7 +3449,6 @@ var getloot=function(f){
 			append(particles,new createparticle(350,200,0,-0.2,0,0,'text','Area complete!',30,0,255,-1,190,240,0));
 		}
 	}
-	
 	else{
 		player.record.biomes[player.biomeID]+=enemies[f].soulv;
 	}
@@ -3438,6 +3462,13 @@ var getloot=function(f){
 	
 	if(stemp>0){
 		append(particles,new createparticle(275+random(150),300,0,-1,0,0,'text','+ '+round(stemp/10)/10+' PP',30,0,255,-2,130,130,0));
+	}
+	if(player.inrift){
+		player.riftsouls+=enemies[f].soulv;
+		if(player.riftsouls>400&player.riftlv<biomedata[9]){
+			append(particles,new createparticle(250,300,0,-0.7,0,0,'text','Rift Complete!',30,0,255,-1.5,190,240,0));
+			player.riftlv=biomedata[9];
+		}
 	}
 	if(playertemp.traits[68]>0){
 		lootstock=enemydata[enemies[f].sprite*30+21]*(1+playertemp.traits[68]/100);
@@ -5124,10 +5155,10 @@ var loadkeystoneps=function(){
 		append(keystonefuncs.damagedealtpostmit,function(){
 			if(enemies[index].hp>0){
 				if(willhit){
-					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.keystonepassives[29]*0.0075),"leech");
+					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.keystonepassives[29]*0.004),"leech");
 				}
 				else{
-					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.keystonepassives[29]*0.0075),"LoT");
+					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.keystonepassives[29]*0.004),"LoT");
 				}
 			}
 		});
@@ -5814,24 +5845,23 @@ var loadtraits=function(){
 			}
 		});
 	}
-	//Direct flat reductions====
 	//armor/res
 	append(traitfuncs.damagetaken,function(){
 		dmgstashfc=[pdmg,mdmg];
 		if(playertemp.traits[212]>0){
-			pdmg=max(pdmg/10,pdmg*(1-plsre(1)*resE/(plsre(1)*resE+2*pdmg)));
-			mdmg=max(mdmg/10,mdmg*(1-plsar(1)*armorE/(plsar(1)*armorE+2*mdmg)));
+			pdmg=max(pdmg/10,pdmg*(1-plsre(1)*resE/(plsre(1)*resE+3*pdmg)));
+			mdmg=max(mdmg/10,mdmg*(1-plsar(1)*armorE/(plsar(1)*armorE+3*mdmg)));
 			if(playertemp.traits[87]>0){
-				pdmg=max(pdmg/10,pdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsre(1)*resE/(plsre(1)*resE+2*pdmg)));
-				mdmg=max(mdmg/10,mdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsar(1)*armorE/(plsar(1)*armorE+2*mdmg)));
+				pdmg=max(pdmg/10,pdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsre(1)*resE/(plsre(1)*resE+3*pdmg)));
+				mdmg=max(mdmg/10,mdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsar(1)*armorE/(plsar(1)*armorE+3*mdmg)));
 			}
 		}
 		else{
-			pdmg=max(pdmg/10,pdmg*(1-plsar(1)*armorE/(plsar(1)*armorE+2*pdmg)));
-			mdmg=max(mdmg/10,mdmg*(1-plsre(1)*resE/(plsre(1)*resE+2*mdmg)));
+			pdmg=max(pdmg/10,pdmg*(1-plsar(1)*armorE/(plsar(1)*armorE+3*pdmg)));
+			mdmg=max(mdmg/10,mdmg*(1-plsre(1)*resE/(plsre(1)*resE+3*mdmg)));
 			if(playertemp.traits[87]>0){
-				pdmg=max(pdmg/10,pdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsar(1)*armorE/((0.04*playertemp.traits[87]-0.02)*plsar(1)*armorE+2*pdmg)));
-				mdmg=max(mdmg/10,mdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsre(1)*resE/((0.04*playertemp.traits[87]-0.02)*plsre(1)*resE+2*mdmg)));
+				pdmg=max(pdmg/10,pdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsar(1)*armorE/((0.04*playertemp.traits[87]-0.02)*plsar(1)*armorE+3*pdmg)));
+				mdmg=max(mdmg/10,mdmg*(1-(0.04*playertemp.traits[87]-0.02)*plsre(1)*resE/((0.04*playertemp.traits[87]-0.02)*plsre(1)*resE+3*mdmg)));
 			}
 		}
 		if(willhit){
@@ -5843,6 +5873,7 @@ var loadtraits=function(){
 			}
 		}
 	});
+	//Direct flat reductions====
 	if(playertemp.traits[37]>0){
 		append(traitfuncs.damagetaken,function(){
 			if(willhit){
@@ -5900,8 +5931,7 @@ var loadtraits=function(){
 	}
 	if(playertemp.traits[227]>0){
 		append(traitfuncs.damagetakenpa,function(){
-			console.log(pdmg+mdmg);
-			playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)/2,plsin(2)+plshp(1.5));
+			playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)*0.4,plsin(2)+plshp(1.5));
 		});
 	}
 	if(playertemp.traits[69]>0){
@@ -6133,8 +6163,8 @@ var loadtraits=function(){
 		});
 		append(traitfuncs.damagetaken,function(){
 			if(player.hp<plshp(0.4)){
-				pdmg*=1-playertemp.traits[7]/100;
-				mdmg*=1-playertemp.traits[7]/100;
+				pdmg/=1+playertemp.traits[7]/50;
+				mdmg/=1+playertemp.traits[7]/50;
 			}
 		});
 	}
@@ -6432,10 +6462,10 @@ var loadtraits=function(){
 		append(traitfuncs.damagedealtpostmit,function(){
 			if(enemies[index].hp>0){
 				if(willhit){
-					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.traits[9]*0.01),"leech");
+					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.traits[9]*0.006),"leech");
 				}
 				else{
-					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.traits[9]*0.01),"LoT");
+					heal(min(enemies[index].hp,(pdmg+mdmg))*(playertemp.traits[9]*0.006),"LoT");
 				}
 			}
 		});
@@ -6480,10 +6510,10 @@ var loadtraits=function(){
 			if(willhit){
 				if(findprop("impact")){
 					if(enemies[index].isBoss){
-						enemies[index].stun+=round(playertemp.traits[222]*25*60*((pdmg+mdmg)/enemies[index].mhp)*(100-enemies[index].tenacity)/100);
+						enemies[index].stun+=round(playertemp.traits[222]*50*120*((pdmg+mdmg)/enemies[index].mhp)*(100-enemies[index].tenacity)/100);
 					}
 					else{
-						enemies[index].stun+=round(playertemp.traits[222]*60*((pdmg+mdmg)/enemies[index].mhp)*(100-enemies[index].tenacity)/100);
+						enemies[index].stun+=round(playertemp.traits[222]*120*((pdmg+mdmg)/enemies[index].mhp)*(100-enemies[index].tenacity)/100);
 					}
 				}
 			}
@@ -6500,14 +6530,14 @@ var loadtraits=function(){
 						else{
 							stemp=0.5;
 						}
-						playertemp.ironman+=mdmg/4*stemp;
+						playertemp.ironman+=stemp*mdmg/6;
 						playertemp.ironmandur=240;
 						if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
 							playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
 						}
 					}
 					else if(playertemp.action.name=="siphon of harvesting"){
-						playertemp.ironman+=mdmg/4;
+						playertemp.ironman+=mdmg/6;
 						playertemp.ironmandur=240;
 						if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
 							playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
@@ -6519,14 +6549,14 @@ var loadtraits=function(){
 	}
 	if(playertemp.traits[226]>0){
 		append(traitfuncs.damagedealtpostmit,function(){
-			playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)*0.1,plsin(2)+plshp(1.5));
+			playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)*0.05,plsin(2)+plshp(1.5));
 			if(willhit){
 				if(findprop("darknessrise")){
 					if(hits<=1){
 						playertemp.darknessrise=min(4,playertemp.darknessrise+1);
 						playertemp.darknessrisedur=240;
 					}
-					playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)*0.05,plsin(2)+plshp(1.5));
+					playertemp.mordekaiserW=min(playertemp.mordekaiserW+(pdmg+mdmg)*0.025,plsin(2)+plshp(1.5));
 				}
 			}
 		});
@@ -7005,8 +7035,8 @@ var loadtraits=function(){
 			if(!(playertemp.energyshield)){
 				playertemp.energyshield=0;
 			}
-			playertemp.energyshieldmax=((plshp(0.004))+(plsre(0.05))+plsin(0.03))*playertemp.traits[12];
-			playertemp.energyshieldrec=((plshr(0.004))+(plsre(0.0004))+plsst(0.002))*playertemp.traits[12]/60;
+			playertemp.energyshieldmax=((plshp(0.008))+(plsre(0.04))+plsin(0.03))*playertemp.traits[12];
+			playertemp.energyshieldrec=((plshr(0.008))+(plsre(0.00025))+plsst(0.002))*playertemp.traits[12]/60;
 			stemp=1;
 			if(playertemp.shieldoverload>0){
 				playertemp.shieldoverload-=1;
@@ -7039,7 +7069,7 @@ var loadtraits=function(){
 			rect(730,100,60,200);
 			if(playertemp.mordekaiserWactive){
 				fill(150,150+abs((tick+30)%60-30)*2,150+abs(tick%60-30)*3,230);
-				rect(730,300,30,-(playertemp.mordekaiserWactive/(plsin(2.2)+plshp(1.65))*200));
+				rect(730,300,30,-(playertemp.mordekaiserWactive/(plsin(2.1)+plshp(1.575))*200));
 			}
 			if(playertemp.mordekaiserW){
 				fill(110,110+abs(tick%60-30),110+abs(tick%60-30)*3,220);
@@ -7168,11 +7198,11 @@ var loadtraits=function(){
 	}
 	if(playertemp.traits[27]>0){
 		append(traitfuncs.passives,function(){
-		if(playertemp.timesincedamagetaken>=240){
+		if(playertemp.timesincedamagetaken>=180){
 			if(tick%10==0){
 				append(particles,new createparticle(random(385,415),random(335,365),0,0,0,0,'circle','',10,-0.3,255,-15,100,190,0));
 			}
-			heal((plshp(1))/1000,"HoT");
+			heal((plshp(0.1))/60,"HoT");
 		}
 		});
 	}
@@ -8945,9 +8975,9 @@ var heal=function(healp,healtype){
 		else{
 			if(playertemp.keystonepassives[29]>0){
 				if(healtype=="leech"){
-					playertemp.strfb+=healp*0.0045*playertemp.keystonepassives[29];
-					playertemp.intelfb+=healp*0.0045*playertemp.keystonepassives[29];
-					append(stateffects,{name:'blood rage',tick:0,bst:healp*0.0045*playertemp.keystonepassives[29],run:function(){
+					playertemp.strfb+=healp*0.0075*playertemp.keystonepassives[29];
+					playertemp.intelfb+=healp*0.0075*playertemp.keystonepassives[29];
+					append(stateffects,{name:'blood rage',tick:0,bst:healp*0.0075*playertemp.keystonepassives[29],run:function(){
 						if(stateffects[n].tick>=300){
 							playertemp.strfb-=stateffects[n].bst;
 							playertemp.intelfb-=stateffects[n].bst;
@@ -8960,8 +8990,8 @@ var heal=function(healp,healtype){
 			}
 			if(playertemp.traits[114]>0){
 				if(healtype=="leech"){
-					shield(healp*(0.46+playertemp.traits[114]*0.04),300);
-					healp*=1-(0.46+playertemp.traits[114]*0.04);
+					shield(healp*(0.27+playertemp.traits[114]*0.03),300);
+					healp*=1-(0.27+playertemp.traits[114]*0.03);
 				}
 			}
 			player.hp+=healp;
@@ -9235,10 +9265,20 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 			if(indicatedmg){
 			//&options.dmgindicators){
 				if(pdmg>0){
-					append(particles,new createparticle(765,235,0,-1.5,0,0,'text',"-"+round(pdmg),55,-1,255,-3.5,255,150,0));
+					if(armorE>0){
+						append(particles,new createparticle(765,235,0,-1.5,0,0,'text',"-"+round(pdmg),55,-1,255,-3.5,255,150,0));
+					}
+					else{
+						append(particles,new createparticle(765,235,0,-1.5,0,0,'text',"-"+round(pdmg),55,-1,255,-3.5,255,255,255));
+					}
 				}
 				if(mdmg>0){
-					append(particles,new createparticle(765,245,0,1.5,0,0,'text',"-"+round(mdmg),55,-1,255,-3.5,255,0,150));
+					if(resE>0){
+						append(particles,new createparticle(765,245,0,1.5,0,0,'text',"-"+round(mdmg),55,-1,255,-3.5,255,0,150));
+					}
+					else{
+						append(particles,new createparticle(765,245,0,1.5,0,0,'text',"-"+round(mdmg),55,-1,255,-3.5,255,255,255));
+					}
 				}
 				if(shdmg>0){
 					append(particles,new createparticle(780,240,-2,0,0,0.05,'text',"-"+round(shdmg),22,0,255,-4,200,200,230));
@@ -9283,14 +9323,14 @@ var damage=function(targetgroup,indexs,pdmgs,mdmgs,armorEs,resEs,attacktypes,att
 				}
 			}
 		}
-		if((enemies[index].armor*armorE/(enemies[index].armor*armorE+2*pdmg))>0.45&(enemies[index].res*resE/(enemies[index].res*resE+2*mdmg))>0.45){
+		if((enemies[index].armor*armorE/(enemies[index].armor*armorE+3*pdmg))>0.45&(enemies[index].res*resE/(enemies[index].res*resE+3*mdmg))>0.45){
 			armorsfx=1;
-			if((enemies[index].armor*armorE/(enemies[index].armor*armorE+2*pdmg))>0.88&(enemies[index].res*resE/(enemies[index].res*resE+2*mdmg))>0.88){
+			if((enemies[index].armor*armorE/(enemies[index].armor*armorE+3*pdmg))>0.88&(enemies[index].res*resE/(enemies[index].res*resE+3*mdmg))>0.88){
 				armorsfx=2;
 			}
 		}
-		pdmg=max(pdmg/10,pdmg*(1-enemies[index].armor*armorE/(enemies[index].armor*armorE+2*pdmg)));
-		mdmg=max(mdmg/10,mdmg*(1-enemies[index].res*resE/(enemies[index].res*resE+2*mdmg)));
+		pdmg=max(pdmg/10,pdmg*(1-enemies[index].armor*armorE/(enemies[index].armor*armorE+3*pdmg)));
+		mdmg=max(mdmg/10,mdmg*(1-enemies[index].res*resE/(enemies[index].res*resE+3*mdmg)));
 		if(enemies[index].propertydmods){
 			if(atkprop){
 				for(rtdp=0;rtdp<damageproperties.length;rtdp+=1){
@@ -9396,6 +9436,12 @@ var getindsize=function(val){
 }
 //////////////////////////////LOAD//////////////////////////////////////=======================================
 var loadArea=function(){
+	if(player.inrift){
+		if(player.riftlvc%25==0){
+			player.inrift=0;
+			player.biomeID=1;
+		}
+	}
 	clearobjects();
 	if(options.loadAudio){sfx.raining.stop();}
 	areatemp={
@@ -9403,6 +9449,9 @@ var loadArea=function(){
 	};
 	mslast=millis();
 	getBiomeData(player.biomeID);
+	if(player.inrift){
+		biomedata[9]=player.riftlvc;
+	}
 	getEnemyData();
 		terraininforaw=loadStrings("Data/Text/terrainInfo.txt");
 		terraininfo=new Array(biomedata[1].length*5);
@@ -9439,11 +9488,13 @@ var loadArea=function(){
 			defaultenemy(i,450);
 		}
 		gateways=new Array();
-		if(!(biomedata[5]=="")){
-			gateways=new Array(biomedata[5].length);
-			for(i=0;i<gateways.length;i+=1){
-				gateways[i]=new creategateway(0,0,0,biomedata[5][i][0],biomedata[5][i][2],biomeinforaw[(biomedata[5][i][0]-1)*20],biomeinforaw[(biomedata[5][i][0]-1)*20+9]);
-				placegateway(i,biomedata[11]/2);
+		if(!(player.inrift)){
+			if(!(biomedata[5]=="")){
+				gateways=new Array(biomedata[5].length);
+				for(i=0;i<gateways.length;i+=1){
+					gateways[i]=new creategateway(0,0,0,biomedata[5][i][0],biomedata[5][i][2],biomeinforaw[(biomedata[5][i][0]-1)*20],biomeinforaw[(biomedata[5][i][0]-1)*20+9]);
+					placegateway(i,biomedata[11]/2);
+				}
 			}
 		}
 		bg=loadImage('Data/Graphics/background/'+player.biomeID+'.png');
@@ -9468,7 +9519,8 @@ var loadArea=function(){
 	}
 }
 var nmelvsc=function (nmelv){
-	return((0.9+nmelv/10)*(1+nmelv/100)*(0.45+(min(100,max(0,nmelv-20))+min(100,max(0,nmelv/2-50)))*0.018)*(1+min(2,max(0,nmelv-10)/300)));
+	//return((0.9+nmelv/10)*(1+nmelv/100)*(0.45+(min(100,max(0,nmelv-20))+min(100,max(0,nmelv/2-50)))*0.018)*(1+min(2,max(0,nmelv-10)/300)));
+	return((0.9+nmelv/10)*(1+nmelv/100)*(0.45+(min(100,max(0,nmelv-20))+min(100,max(0,nmelv/2-50)))*0.018)*(1+min(2,max(0,nmelv-10)/600)));
 }
 var qtipc=false;
 var placegateway=function(i,mindistance){
@@ -9966,7 +10018,7 @@ var convergingdialog={
 							}
 						},
 						{
-							answer:"Omnipotency (balanced)",
+							answer:"Omnipotency (balanced - recommended if you are new to the game)",
 							effect:function(){
 								player.ppath=2;
 								convergingdialog.introend();
@@ -10043,6 +10095,499 @@ var convergingdialog={
 		}
 	}
 };
+var enterrift=function(lv){
+	playertemp.x=0;
+	playertemp.y=0;
+	player.inrift=1;
+	player.riftlvc=lv;
+	player.riftsouls=0;
+	if(lv%25==0){
+		biomedata[9]=lv;
+		player.biomeID=2;
+		setarena();
+		placeboss[round(random(-0.49,placeboss.length-0.51))](lv);
+	}
+	else{
+		player.biomeID=round(random(1.51,biomemax+0.49));
+		loadArea();
+	}
+}
+var setarena=function(){
+	clearobjects();
+	terrain=new Array(0);
+	waters=new Array(0);
+	enemies=new Array(0);
+	gateways=new Array(0);
+	biomescripts=new Array();
+	killquests=new Array();
+	playertemp.x=0;
+	playertemp.y=0;
+	playertemp.inBossFight=1;
+}
+var placeboss=[
+//0: Shrek
+	function(blv){
+		player.biomeID=13;
+		biomedata[2]=[30,50,0];
+		bg=loadImage('Data/Graphics/background/13.png');
+		if(options.loadAudio){
+			sfx.shrek.play();
+			bgm.stop();
+		}
+		tick=0;
+		bgmn="boss.mp3";
+		append(stateffects,{name:'delayed boss music',tick:0,run:function(){
+			if(stateffects[n].tick>180){
+				if(playertemp.inBossFight){
+				bgm=new Howl({
+				src: 'Data/Sound/music/boss.mp3',
+				autoplay: true,
+				loop: true,
+				volume: options.music,
+				});
+				}
+				stateffects.splice(n,1);
+				n-=1;
+			}
+		}});
+		append(enemies,{
+			lv:blv,
+			x:0,
+			y:-250,
+			size:22,
+			name:"Shrek",
+			mhp:12000*nmelvsc(blv),
+			hp:12000*nmelvsc(blv),
+			aspdm:1,
+			boost:1,
+			ai:3,
+			exists:1,
+			de:1,
+			dmgmin:1,
+			dmgmax:1,
+			speed:2.3,
+			str:80*nmelvsc(blv),
+			intel:55*nmelvsc(blv),
+			armor:40*nmelvsc(blv),
+			res:40*nmelvsc(blv),
+			dir:0,
+			turnstyle:1,
+			tenacity:92,
+			stun:0,
+			propertydmods:setcustomprop("pierce:0.95/slash:0.95/impact:1.05/arcane:1.05"),
+			action:{
+				id:1,
+				tick:0
+			},
+			haste:1,
+			legtick:0,
+			larmtick:0,
+			clubd:0,
+			clubs:100,
+			height:0,
+			cds:{charge:180,earthquake:600},
+			xp:400,
+			ppv:0,
+			ppd:0,
+			soulv:2000,
+			spdmod:1,
+			enraged:0,
+			enragec:0,
+			disablehpbar:1,
+			tstatus:new Array(),
+			isBoss:1,
+			persistent:1,
+			imgtype:3,
+			reactant:0,
+			spritec:{
+				main:loadShape("Data/Graphics/bosses/shrek/body.svg"),
+				arm:loadShape("Data/Graphics/bosses/shrek/arm.svg"),
+				leg:loadShape("Data/Graphics/bosses/shrek/leg.svg"),
+				club:loadShape("Data/Graphics/bosses/shrek/club.svg")
+			},
+			draw:function(i){
+				if(enemies[i].action.id==3){
+					if(enemies[i].action.active&!(enemies[i].action.proc)){
+						if(enemies[i].y<-375||enemies[i].y>275||enemies[i].x<-375||enemies[i].x>375){
+							enemies[i].action.proc=1;
+							damage('player',0,random(enemies[i].str*10,enemies[i].str*11),0,1,1,"melee",i,0);
+						}
+					}
+				}
+				if(enemies[i].y<-375){
+					enemies[i].y=-375;
+				}
+				if(enemies[i].y>275){
+					enemies[i].y=275;
+				}
+				if(enemies[i].x<-375){
+					enemies[i].x=-375;
+				}
+				if(enemies[i].x>375){
+					enemies[i].x=375;
+				}
+				bosshpbar=i;
+				if(enemies[i].enraged&tick%8==0){
+					append(particles,new createparticle(enemies[i].x+random(-20,20),enemies[i].y+random(-20,20),0,0,0,0,'circle','',15,-0.2,255,-15,255,0,0,1));
+				}
+				translate(10*(1+enemies[i].height/100),0);
+				shape(enemies[i].spritec.leg,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(180*abs((enemies[i].legtick)%40-20)/20-90));
+				shape(enemies[i].spritec.leg,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90-180*abs((enemies[i].legtick+20)%40-20)/20));
+				translate(-20*(1+enemies[i].height/100),0);
+				shape(enemies[i].spritec.leg,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(180*abs((enemies[i].legtick+20)%40-20)/20-90));
+				shape(enemies[i].spritec.leg,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90-180*abs((enemies[i].legtick)%40-20)/20));
+				translate(-15*(1+enemies[i].height/100),0);
+				rotate(PI);
+				if(!(90-180*abs((enemies[i].larmtick)%60-30)/30==0)){
+					shape(enemies[i].spritec.arm,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90-180*abs((enemies[i].larmtick)%60-30)/30));
+				}
+				rotate(PI);
+				translate(25*(1+enemies[i].height/100),0);
+				shape(enemies[i].spritec.main,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90));
+				shape(enemies[i].spritec.arm,25,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(20));
+				translate(31*(1+enemies[i].height/100),-8*(1+enemies[i].height/100));
+				rotate(enemies[i].clubd);
+				shape(enemies[i].spritec.club,0,0,60*(1+enemies[i].height/100)*enemies[i].clubs/100,(1+enemies[i].height/100)*(90*enemies[i].clubs/100));
+			},
+			loot:0,
+			vision:1000,
+			ondeath:function(i){
+				//Defeat boss
+				bosshpbar=-1;
+				if(options.loadAudio){sfx.shrekdeath.play();}
+				if(!(player.record.quests.shrek)){
+					player.record.quests.shrek=1;
+					player.pp+=10000;
+					player.record.pp.bosses+=10000;
+					cinematic[0]="dialog";
+					dialoga=1;
+					mouselock=1;
+					dialog=function(){
+						sdialogb({
+							speaker:"",
+							speech:"You feel you have gained wisdom from this battle (+100 PP). You also notice a small hammer on the ground and pick it up (you can now lower stat rolls on equipment to free up points at the Artisan's Bench).",
+							answers:[
+								{
+									answer:"(Leave)",
+									effect:function(){
+											dialog=0;
+											cinematic[0]=0;
+											dialoga=0;
+									}
+								}
+							],
+						});
+					}
+				}
+				if(player.inrift){
+					player.riftlv=max(player.riftlv,biomedata[9]);
+				}
+				append(stateffectsg,{name:'arena exit',x:0,y:100,tick:0,run:function(){
+					if(render){
+						fill(0,100,0,150);
+						ellipseMode(CENTER);
+						ellipse(400+stateffectsg[n].x-playertemp.x,350+stateffectsg[n].y-playertemp.y,45,60);
+					}
+					if(tick%45==0&stateffectsg[n].x-playertemp.x<400){
+						append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,0,90,0,1));
+					}
+					if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
+						qtipc="Press F to exit";
+						if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+							portallock=1;
+							playertemp.inBossFight=0;
+							if(player.inrift){
+								enterrift(biomedata[9]+5);
+								if(options.autosave){
+									temp= new Array(JSON.stringify(player),1);
+									saveStrings("player "+player.name+".txt",temp);
+									append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
+								}
+							}
+							else{
+								playertemp.lastarea=-1;
+								loadArea();
+							}
+						}
+					}
+					if(!(player.biomeID==13)||playertemp.inBossFight==0){
+						stateffectsg.splice(n,1);
+						n-=1;
+					}
+				}});
+				enemies.splice(i,1);
+				i-=1;
+			},
+			ondespawn:function(i){
+				enemies.splice(i,1);
+				i-=1;
+			},
+			aim:function(i){
+				enemies[i].enragec+=2;
+				if(enemies[i].enraged>0){
+					enemies[i].enragec+=1;
+				}
+				while(enemies[i].enragec>=2){
+					enemies[i].enragec-=2;
+					if(enemies[i].cds.charge>0){
+						enemies[i].cds.charge-=1;
+					}
+					if(enemies[i].cds.earthquake>0){
+						enemies[i].cds.earthquake-=1;
+					}
+					//Move
+					if(enemies[i].action.id==1){
+						if(!(enemies[i].enraged)&enemies[i].hp/enemies[i].mhp<0.3){
+							enemies[i].enraged=1;
+							enemies[i].str*=1.5;
+							enemies[i].speed*=1.25;
+						}
+						nmesa.pointatplayer(i);
+						nmesa.displace(i,1);
+						enemies[i].legtick+=1;
+						enemies[i].larmtick+=1;
+						enemies[i].clubd=5*PI/4;
+						enemies[i].clubs=100;
+						enemies[i].height=0;
+						if(enemies[i].cds.earthquake<=0){
+							enemies[i].action.tick=0;
+							enemies[i].action.id=4;
+							enemies[i].cds.earthquake=1200;
+							if(options.loadAudio){sfx.jumpbig.play();}
+						}
+						else if(enemies[i].cds.charge<=0){
+							if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(200,2)){
+								enemies[i].action.tick=0;
+								enemies[i].action.active=0;
+								enemies[i].action.proc=0;
+								enemies[i].action.id=3;
+								enemies[i].cds.charge=420;
+								if(options.loadAudio){sfx.dashbig.play();}
+							}
+						}
+						else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(40,2)){
+							enemies[i].action.tick=0;
+							enemies[i].action.id=2;
+						}
+					}
+					//Swing
+					else if(enemies[i].action.id==2){
+						if(enemies[i].action.tick<10){
+							if(enemies[i].larmtick<30){
+								enemies[i].larmtick=max(10,enemies[i].larmtick%60-1);
+							}
+							else{
+								enemies[i].larmtick=min(50,enemies[i].larmtick%60+1);
+							}
+						}
+						else{
+							if(!((enemies[i].larmtick)%60==30)){
+								if((enemies[i].larmtick)%60>30){
+									enemies[i].larmtick=max(38,enemies[i].larmtick%60-1);
+								}
+								else{
+									enemies[i].larmtick=min(22,enemies[i].larmtick%60+1);
+								}
+							}
+							if(enemies[i].action.tick<20){
+								enemies[i].clubd-=0.5;
+								enemies[i].clubs-=4;
+							}
+							else if(enemies[i].action.tick==20){
+								if(options.loadAudio){
+									sfx.bomb.play();}
+								append(particles,new createparticle(enemies[i].x+sin(enemies[i].dir)*40,enemies[i].y-cos(enemies[i].dir)*40,0,0,0,0,'circle','',120,-2,255,-13,180,140,0,1));
+								append(objects,{
+									type:'AoE',
+									target:'player',
+									size:60,
+									duration:0,
+									rangetype:"melee",
+									source:i,
+									x:enemies[i].x+sin(enemies[i].dir)*40,
+									y:enemies[i].y-cos(enemies[i].dir)*40,
+									pdmgmin:enemies[i].str*13,
+									pdmgmax:enemies[i].str*15,
+									hitc:0,
+									mdmgmin:0,
+									mdmgmax:0,
+									armorE:1,
+									resE:1,
+									procc:2,
+									hits:new Array(999),
+								});
+							}
+							else if(enemies[i].action.tick>40){
+								enemies[i].clubd+=0.075;
+								enemies[i].clubs+=2/3;
+							}
+							if(enemies[i].action.tick>100){
+								enemies[i].action.tick=0;
+								enemies[i].action.id=1;
+							}
+						}
+					}
+					//Charge
+					else if(enemies[i].action.id==3){
+						enemies[i].legtick+=2;
+						if(enemies[i].action.tick<10){
+							if(enemies[i].larmtick>30){
+								enemies[i].larmtick=max(30,enemies[i].larmtick%60-1);
+							}
+							else{
+								enemies[i].larmtick=min(30,enemies[i].larmtick%60+1);
+							}
+						}
+						else{
+							nmesa.displace(i,5);
+							if(enemies[i].action.active){
+								playertemp.x=enemies[i].x+sin(enemies[i].dir)*25;
+								playertemp.y=enemies[i].y-cos(enemies[i].dir)*25;
+							}
+							else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(30+player.size,2)){
+								enemies[i].action.active=1;
+								enemies[i].cds.earthquake-=420;
+								damage('player',0,random(enemies[i].str*6,enemies[i].str*7),0,1,1,"melee",i,0);
+							}
+							if(enemies[i].action.tick>40){
+								enemies[i].action.tick=0;
+								enemies[i].action.id=1;
+							}
+						}
+					}
+					//Earthquake
+					else if(enemies[i].action.id==4){
+						if(enemies[i].action.tick<30){
+							if(enemies[i].larmtick<30){
+								enemies[i].larmtick=max(0,enemies[i].larmtick%60-1);
+							}
+							else{
+								enemies[i].larmtick=min(60,enemies[i].larmtick%60+1);
+							}
+							enemies[i].height+=2;
+						}
+						else if(enemies[i].action.tick<50){
+							enemies[i].clubd-=0.25;
+							enemies[i].clubs-=2;
+							enemies[i].height-=3;
+						}
+						else if(enemies[i].action.tick<200){
+							if(enemies[i].action.tick==50){
+								if(options.loadAudio){sfx.bomb.play();}
+								append(particles,new createparticle(enemies[i].x,enemies[i].y,0,0,0,0,'circle','',120,-2,255,-13,180,140,0,1));
+								append(objects,{
+									type:'AoE',
+									target:'player',
+									size:60,
+									duration:0,
+									rangetype:"melee",
+									source:i,
+									x:enemies[i].x,
+									y:enemies[i].y,
+									pdmgmin:enemies[i].str*18,
+									pdmgmax:enemies[i].str*20,
+									hitc:0,
+									mdmgmin:0,
+									mdmgmax:0,
+									armorE:1,
+									resE:1,
+									procc:2,
+									properties:["earth"],
+									hits:new Array(999),
+									endfunc:function(){
+										if(objects[n].hitc>0){
+											playertemp.speed-=0.6;
+											append(stateffects,{name:'cripple',tick:0,run:function(){
+												if(stateffects[n].tick>=120){
+													playertemp.speed+=0.6;
+													stateffects.splice(n,1);
+													n-=1;
+												}
+											}
+											});
+										}
+									}
+								});
+							}
+							if(enemies[i].action.tick==70){
+								if(options.loadAudio){sfx.earthquake.play();}
+							}
+							if((enemies[i].action.tick+10)%30==0){
+								append(stateffectsg,{name:'Shrek earthquake',source:i,x:enemies[i].x,y:enemies[i].y,size:(enemies[i].action.tick-35)*9,dmg:random(enemies[i].str*17,enemies[i].str*18),tick:0,run:function(){
+									if(render){
+										noFill();
+										strokeWeight(80);
+										if(stateffectsg[n].tick>=45){
+											stroke(170,120,0,255-(stateffectsg[n].tick-45)*17);
+										}
+										else{
+											stroke(255,0,0,stateffectsg[n].tick*3);
+										}
+										ellipse(stateffectsg[n].x-playertemp.x+400,stateffectsg[n].y-playertemp.y+350,stateffectsg[n].size,stateffectsg[n].size);
+										noStroke();
+									}
+									if(stateffectsg[n].tick==45){
+										if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(stateffectsg[n].size/2+40+player.size,2)){
+											if(!(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(stateffectsg[n].size/2-40-player.size,2))){
+												damage('player',0,stateffectsg[n].dmg,0,1,1,"melee",stateffectsg[n].source,0,["earth"]);
+												playertemp.speed-=0.6;
+												append(stateffects,{name:'cripple',tick:0,run:function(){
+													if(stateffects[n].tick>=120){
+														playertemp.speed+=0.6;
+														stateffects.splice(n,1);
+														n-=1;
+													}
+												}
+												});
+											}
+										}
+									}
+									if(stateffectsg[n].tick>=60){
+										stateffectsg.splice(n,1);
+										n-=1;
+									}
+								}});
+							}
+						}
+						else if(enemies[i].action.tick<240){
+							enemies[i].clubd+=0.125;
+							enemies[i].clubs+=1;
+						}
+						else{
+							enemies[i].action.tick=0;
+							enemies[i].action.id=1;
+						}
+					}
+					enemies[i].action.tick+=1;
+				}
+			}
+		});
+		append(biomescripts,function(){
+			if(areatemp.raining<=0){
+				if(options.loadAudio){sfx.raining.play();}
+			}
+			areatemp.raining=666;
+			//Walls
+			if(render){fill(0,50,0);
+			rect(-1200-playertemp.x,-450-playertemp.y,2400,400);
+			rect(-1200-playertemp.x,650-playertemp.y,2400,400);
+			rect(-800-playertemp.x,-550-playertemp.y,800,2400);
+			rect(800-playertemp.x,-550-playertemp.y,800,2400);}
+			if(playertemp.y<-395){
+				playertemp.y=-395;
+			}
+			if(playertemp.y>295){
+				playertemp.y=295;
+			}
+			if(playertemp.x<-395){
+				playertemp.x=-395;
+			}
+			if(playertemp.x>395){
+				playertemp.x=395;
+			}
+		});
+	},
+];
 //biome funcs
 var getBiomeScripts=function(){
 	biomescripts=new Array();
@@ -10501,22 +11046,23 @@ var getBiomeScripts=function(){
 				}
 			}
 			//Infuser
-			if(render){ellipseMode(CENTER);
-			fill(80,120,70);
-			triangle(190-playertemp.x,-30-playertemp.y,210-playertemp.x,-30-playertemp.y,200-playertemp.x,-10-playertemp.y);
-			if(player.record.quests.infuser>=2){
-				triangle(190-playertemp.x,30-playertemp.y,210-playertemp.x,30-playertemp.y,200-playertemp.x,10-playertemp.y);
-			}
-			triangle(170-playertemp.x,10-playertemp.y,170-playertemp.x,-10-playertemp.y,190-playertemp.x,-playertemp.y);
-			triangle(230-playertemp.x,10-playertemp.y,230-playertemp.x,-10-playertemp.y,210-playertemp.x,-playertemp.y);
-			fill(60,60,60,max(40,pow(pow(playertemp.x+200,2)+pow(playertemp.y+350,2),0.5)*6));
-			strokeWeight(8);
-			stroke(255-pow(pow(playertemp.x+200,2)+pow(playertemp.y+350,2),0.5)*3,255-pow(pow(playertemp.x+200,2)+pow(playertemp.y+350,2),0.5)*3,255-pow(pow(playertemp.x+200,2)+pow(playertemp.y+350,2),0.5)*3);
-			ellipse(200-playertemp.x,-playertemp.y,60,60);
-			/*strokeWeight(3);
-			stroke(60,60,60,150);
-			line(220-playertemp.x,-playertemp.y*/
-			noStroke();
+			if(render){
+				ellipseMode(CENTER);
+				fill(80,120,70);
+				triangle(190-playertemp.x,-30-playertemp.y,210-playertemp.x,-30-playertemp.y,200-playertemp.x,-10-playertemp.y);
+				if(player.record.quests.infuser>=2){
+					triangle(190-playertemp.x,30-playertemp.y,210-playertemp.x,30-playertemp.y,200-playertemp.x,10-playertemp.y);
+				}
+				triangle(170-playertemp.x,10-playertemp.y,170-playertemp.x,-10-playertemp.y,190-playertemp.x,-playertemp.y);
+				triangle(230-playertemp.x,10-playertemp.y,230-playertemp.x,-10-playertemp.y,210-playertemp.x,-playertemp.y);
+				fill(60,60,60,max(40,pow(pow(playertemp.x+200,2)+pow(playertemp.y+350,2),0.5)*6));
+				strokeWeight(8);
+				stroke(255-pow(pow(playertemp.x+200,2)+pow(playertemp.y+350,2),0.5)*3,255-pow(pow(playertemp.x+200,2)+pow(playertemp.y+350,2),0.5)*3,255-pow(pow(playertemp.x+200,2)+pow(playertemp.y+350,2),0.5)*3);
+				ellipse(200-playertemp.x,-playertemp.y,60,60);
+				/*strokeWeight(3);
+				stroke(60,60,60,150);
+				line(220-playertemp.x,-playertemp.y*/
+				noStroke();
 			}
 			if(player.record.quests.infuser==1){
 				if(tick%3==0){
@@ -10589,6 +11135,69 @@ var getBiomeScripts=function(){
 							tooltipcache[0]=-1;
 							inventory=1;
 							inventype=3;
+							helpscreen={active:0,help:0};
+						}
+					}
+				}
+			}
+			//Space-time manipulator
+			if(render){
+				ellipseMode(CENTER);
+				translate(400-playertemp.x,520-playertemp.y);
+				noFill();
+				stroke(255,255,255);
+				strokeWeight(10);
+				ellipse(0,0,100,100);
+				noStroke();
+				fill(100+abs(tick%50-25)*2,100+abs(tick%50-25)*2,100+abs(tick%50-25)*2);
+				rotate(tick/100);
+				for(dn=0;dn<4;dn+=1){
+					rect(0,-10,120,20);
+					triangle(60,-20,60,20,80,0);
+					rotate(PI/2);
+				}
+				noFill();
+				stroke(abs(tick%100-50)*255/50,abs(tick%124-62)*255/62,abs(tick%142-71)*255/71);
+				strokeWeight(1+abs(tick%120-60)/4);
+				ellipse(0,0,abs(tick%120-60)*2,abs(tick%120-60)*2);
+				resetMatrix();
+				noStroke();
+			}
+			if(playertemp.x<35&playertemp.x>-35&playertemp.y<205&playertemp.y>150){
+				playertemp.x-=playertemp.xvelo;
+				playertemp.y-=playertemp.yvelo;
+				playertemp.xvelo=0;
+				playertemp.yvelo=0;
+			}
+			if(!(cinematic||dialoga)){
+				if(playertemp.x<70&playertemp.x>-70&playertemp.y<240&playertemp.y>100){
+					qtipc="Press F to use the Space-time Manipulator";
+					if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+						if(player.level<riftstart){
+							cinematic[0]=="dialog";
+							dialoga=1;
+							dialog=function(){
+								sdialogb({
+									speaker:"Space-time Manipulator",
+									speech:"This device is capable of creating rifts within space-time, allowing you to visit areas (even secret ones and places you haven't found) at different difficulties. However, you aren't strong enough to utilize it yet (LV "+player.level+"/"+riftstart+")",
+									answers:[
+										{
+											answer:"(Leave)",
+											effect:function(){
+													dialog=0;
+													cinematic[0]=0;
+													dialoga=0;
+											}
+										}
+									],
+								});
+							}
+						}
+						else{
+							player.riftlv=max(riftstart,player.riftlv);
+							inventory=1;
+							textinput="";
+							inventype=5;
 							helpscreen={active:0,help:0};
 						}
 					}
@@ -10836,551 +11445,106 @@ var getBiomeScripts=function(){
 	}
 	//Olux swamplands
 	if(player.biomeID==13){
-		append(stateffectsg,{name:'wastelands portal',x:random(-1300,1300),y:random(-1300,1300),tick:0,run:function(){
-			if(render){
-			fill(200,255,255);
-			textFont(txtfont,16);
-			textAlign(CENTER);
-			text("Wastelands (LV 77)",350+stateffectsg[n].x-playertemp.x,285+stateffectsg[n].y-playertemp.y,100,50);
-			textAlign(TOP,LEFT);
-			fill(80,80,0,150);
-			ellipseMode(CENTER);
-			ellipse(400+stateffectsg[n].x-playertemp.x,350+stateffectsg[n].y-playertemp.y,45,60);
-			}
-			if(stateffectsg[n].x-playertemp.x<-1400||stateffectsg[n].x-playertemp.x>1400||stateffectsg[n].y-playertemp.y<-1400||stateffectsg[n].y-playertemp.y>1400){
-				stateffectsg[n].x=random(-1200,1200)+playertemp.x;
-				stateffectsg[n].y=random(-1200,1200)+playertemp.y;
-				while(stateffectsg[n].x-playertemp.x<400&stateffectsg[n].x-playertemp.x>-400&stateffectsg[n].y-playertemp.y<350&stateffectsg[n].y-playertemp.y>-350){
+		if(!(player.inrift)){
+			append(stateffectsg,{name:'wastelands portal',x:random(-1300,1300),y:random(-1300,1300),tick:0,run:function(){
+				if(render){
+				fill(200,255,255);
+				textFont(txtfont,16);
+				textAlign(CENTER);
+				text("Wastelands (LV 77)",350+stateffectsg[n].x-playertemp.x,285+stateffectsg[n].y-playertemp.y,100,50);
+				textAlign(TOP,LEFT);
+				fill(80,80,0,150);
+				ellipseMode(CENTER);
+				ellipse(400+stateffectsg[n].x-playertemp.x,350+stateffectsg[n].y-playertemp.y,45,60);
+				}
+				if(stateffectsg[n].x-playertemp.x<-1400||stateffectsg[n].x-playertemp.x>1400||stateffectsg[n].y-playertemp.y<-1400||stateffectsg[n].y-playertemp.y>1400){
 					stateffectsg[n].x=random(-1200,1200)+playertemp.x;
 					stateffectsg[n].y=random(-1200,1200)+playertemp.y;
-				}
-			}
-			if(tick%30==0&stateffectsg[n].x-playertemp.x<400){
-				append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,2,100,-2,80,80,0,1));
-			}
-			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
-				qtipc="Press F to enter";
-				if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
-					portallock=1;
-					if(player.record.quests.shardofpurity==1){
-						playertemp.lastarea=player.biomeID;
-						player.biomeID=16;
-						playertemp.x=0;
-						playertemp.y=0;
-						loadArea();
-						if(options.autosave){
-							temp= new Array(JSON.stringify(player),1);
-							saveStrings("player "+player.name+".txt",temp);
-							append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
-						}
+					while(stateffectsg[n].x-playertemp.x<400&stateffectsg[n].x-playertemp.x>-400&stateffectsg[n].y-playertemp.y<350&stateffectsg[n].y-playertemp.y>-350){
+						stateffectsg[n].x=random(-1200,1200)+playertemp.x;
+						stateffectsg[n].y=random(-1200,1200)+playertemp.y;
 					}
-					else{
-						cinematic[0]=="dialog";
-						dialoga=1;
-						dialog=function(){
-							sdialogb({
-								speaker:"",
-								speech:"A vile force prevents you from entering! Perhaps there is an item that will allow you to...",
-								answers:[{
-									answer:"(Turn back)",
-									effect:function(){
-											dialog=0;
-											cinematic[0]=0;
-											dialoga=0;
+				}
+				if(tick%30==0&stateffectsg[n].x-playertemp.x<400){
+					append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,2,100,-2,80,80,0,1));
+				}
+				if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
+					qtipc="Press F to enter";
+					if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+						portallock=1;
+						if(player.record.quests.shardofpurity==1){
+							playertemp.lastarea=player.biomeID;
+							player.biomeID=16;
+							playertemp.x=0;
+							playertemp.y=0;
+							loadArea();
+							if(options.autosave){
+								temp= new Array(JSON.stringify(player),1);
+								saveStrings("player "+player.name+".txt",temp);
+								append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
+							}
+						}
+						else{
+							cinematic[0]=="dialog";
+							dialoga=1;
+							dialog=function(){
+								sdialogb({
+									speaker:"",
+									speech:"A vile force prevents you from entering! Perhaps there is an item that will allow you to...",
+									answers:[{
+										answer:"(Turn back)",
+										effect:function(){
+												dialog=0;
+												cinematic[0]=0;
+												dialoga=0;
+											}
 										}
-									}
-								],
-							});
+									],
+								});
+							}
 						}
 					}
 				}
-			}
-			if(!(player.biomeID==13)||playertemp.inBossFight==1){
-				stateffectsg.splice(n,1);
-				n-=1;
-			}
-		}});
-		append(stateffectsg,{name:'shrek arena',x:random(-1300,1300),y:random(-1300,1300),tick:0,run:function(){
-			if(render){
-			fill(200,255,255);
-			textFont(txtfont,14);
-			textAlign(CENTER);
-			text("Swamp Clearing - No humans allowed!",300+stateffectsg[n].x-playertemp.x,285+stateffectsg[n].y-playertemp.y,200,50);
-			textAlign(TOP,LEFT);
-			fill(0,100,0,150);
-			ellipseMode(CENTER);
-			ellipse(400+stateffectsg[n].x-playertemp.x,350+stateffectsg[n].y-playertemp.y,45,60);
-			}
-			if(stateffectsg[n].x-playertemp.x<-1400||stateffectsg[n].x-playertemp.x>1400||stateffectsg[n].y-playertemp.y<-1400||stateffectsg[n].y-playertemp.y>1400){
-				stateffectsg[n].x=random(-1200,1200)+playertemp.x;
-				stateffectsg[n].y=random(-1200,1200)+playertemp.y;
-				while(stateffectsg[n].x-playertemp.x<400&stateffectsg[n].x-playertemp.x>-400&stateffectsg[n].y-playertemp.y<350&stateffectsg[n].y-playertemp.y>-350){
+				if(!(player.biomeID==13)||playertemp.inBossFight==1){
+					stateffectsg.splice(n,1);
+					n-=1;
+				}
+			}});
+			append(stateffectsg,{name:'shrek arena',x:random(-1300,1300),y:random(-1300,1300),tick:0,run:function(){
+				if(render){
+				fill(200,255,255);
+				textFont(txtfont,14);
+				textAlign(CENTER);
+				text("Swamp Clearing - No humans allowed!",300+stateffectsg[n].x-playertemp.x,285+stateffectsg[n].y-playertemp.y,200,50);
+				textAlign(TOP,LEFT);
+				fill(0,100,0,150);
+				ellipseMode(CENTER);
+				ellipse(400+stateffectsg[n].x-playertemp.x,350+stateffectsg[n].y-playertemp.y,45,60);
+				}
+				if(stateffectsg[n].x-playertemp.x<-1400||stateffectsg[n].x-playertemp.x>1400||stateffectsg[n].y-playertemp.y<-1400||stateffectsg[n].y-playertemp.y>1400){
 					stateffectsg[n].x=random(-1200,1200)+playertemp.x;
 					stateffectsg[n].y=random(-1200,1200)+playertemp.y;
+					while(stateffectsg[n].x-playertemp.x<400&stateffectsg[n].x-playertemp.x>-400&stateffectsg[n].y-playertemp.y<350&stateffectsg[n].y-playertemp.y>-350){
+						stateffectsg[n].x=random(-1200,1200)+playertemp.x;
+						stateffectsg[n].y=random(-1200,1200)+playertemp.y;
+					}
 				}
-			}
-			if(tick%45==0&stateffectsg[n].x-playertemp.x<400){
-				append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,150,30,0,1));
-			}
-			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
-				qtipc="Press F to enter";
-				if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
-					clearobjects();
-					terrain=new Array(0);
-					waters=new Array(0);
-					enemies=new Array(0);
-					gateways=new Array(0);
-					playertemp.x=0;
-					playertemp.y=0;
-					playertemp.inBossFight=1;
-					biomedata[2]=[30,50,0];
-					if(options.loadAudio){sfx.shrek.play();bgm.stop();}
-					tick=0;
-					bgmn="boss.mp3";
-					append(stateffects,{name:'delayed boss music',tick:0,run:function(){
-						if(stateffects[n].tick>180){
-							if(playertemp.inBossFight){
-							bgm=new Howl({
-							src: 'Data/Sound/music/boss.mp3',
-							autoplay: true,
-							loop: true,
-							volume: options.music,
-							});
-							}
-							stateffects.splice(n,1);
-							n-=1;
-						}
-					}});
-						append(enemies,{
-							lv:47,
-							x:0,
-							y:-250,
-							size:22,
-							name:"Shrek",
-							mhp:12000*nmelvsc(47),
-							hp:12000*nmelvsc(47),
-							aspdm:1,
-							boost:1,
-							ai:3,
-							exists:1,
-							de:1,
-							dmgmin:1,
-							dmgmax:1,
-							speed:2.3,
-							str:80*nmelvsc(47),
-							intel:55*nmelvsc(47),
-							armor:40*nmelvsc(47),
-							res:40*nmelvsc(47),
-							dir:0,
-							turnstyle:1,
-							tenacity:92,
-							stun:0,
-							propertydmods:setcustomprop("pierce:0.95/slash:0.95/impact:1.05/arcane:1.05"),
-							action:{
-								id:1,
-								tick:0
-							},
-							haste:1,
-							legtick:0,
-							larmtick:0,
-							clubd:0,
-							clubs:100,
-							height:0,
-							cds:{charge:180,earthquake:600},
-							xp:150,
-							ppv:0,
-							ppd:0,
-							soulv:2000,
-							spdmod:1,
-							enraged:0,
-							enragec:0,
-							disablehpbar:1,
-							tstatus:new Array(),
-							isBoss:1,
-							persistent:1,
-							imgtype:3,
-							reactant:0,
-							spritec:{
-								main:loadShape("Data/Graphics/bosses/shrek/body.svg"),
-								arm:loadShape("Data/Graphics/bosses/shrek/arm.svg"),
-								leg:loadShape("Data/Graphics/bosses/shrek/leg.svg"),
-								club:loadShape("Data/Graphics/bosses/shrek/club.svg")
-							},
-							draw:function(i){
-								if(enemies[i].action.id==3){
-									if(enemies[i].action.active&!(enemies[i].action.proc)){
-										if(enemies[i].y<-375||enemies[i].y>275||enemies[i].x<-375||enemies[i].x>375){
-											enemies[i].action.proc=1;
-											damage('player',0,random(enemies[i].str*10,enemies[i].str*11),0,1,1,"melee",i,0);
-										}
-									}
-								}
-								if(enemies[i].y<-375){
-									enemies[i].y=-375;
-								}
-								if(enemies[i].y>275){
-									enemies[i].y=275;
-								}
-								if(enemies[i].x<-375){
-									enemies[i].x=-375;
-								}
-								if(enemies[i].x>375){
-									enemies[i].x=375;
-								}
-								bosshpbar=i;
-								if(enemies[i].enraged&tick%8==0){
-									append(particles,new createparticle(enemies[i].x+random(-20,20),enemies[i].y+random(-20,20),0,0,0,0,'circle','',15,-0.2,255,-15,255,0,0,1));
-								}
-									translate(10*(1+enemies[i].height/100),0);
-									shape(enemies[i].spritec.leg,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(180*abs((enemies[i].legtick)%40-20)/20-90));
-									shape(enemies[i].spritec.leg,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90-180*abs((enemies[i].legtick+20)%40-20)/20));
-									translate(-20*(1+enemies[i].height/100),0);
-									shape(enemies[i].spritec.leg,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(180*abs((enemies[i].legtick+20)%40-20)/20-90));
-									shape(enemies[i].spritec.leg,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90-180*abs((enemies[i].legtick)%40-20)/20));
-									translate(-15*(1+enemies[i].height/100),0);
-									rotate(PI);
-									if(!(90-180*abs((enemies[i].larmtick)%60-30)/30==0)){
-										shape(enemies[i].spritec.arm,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90-180*abs((enemies[i].larmtick)%60-30)/30));
-									}
-									rotate(PI);
-									translate(25*(1+enemies[i].height/100),0);
-									shape(enemies[i].spritec.main,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90));
-									shape(enemies[i].spritec.arm,25,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(20));
-									translate(31*(1+enemies[i].height/100),-8*(1+enemies[i].height/100));
-									rotate(enemies[i].clubd);
-									shape(enemies[i].spritec.club,0,0,60*(1+enemies[i].height/100)*enemies[i].clubs/100,(1+enemies[i].height/100)*(90*enemies[i].clubs/100));
-							},
-							loot:0,
-							vision:1000,
-							ondeath:function(i){
-								//Defeat boss
-								bosshpbar=-1;
-								if(options.loadAudio){sfx.shrekdeath.play();}
-								if(!(player.record.quests.shrek)){
-									player.record.quests.shrek=1;
-									player.pp+=10000;
-									player.record.pp.bosses+=10000;
-									cinematic[0]="dialog";
-									dialoga=1;
-									mouselock=1;
-									dialog=function(){
-										sdialogb({
-											speaker:"",
-											speech:"You feel you have gained wisdom from this battle (+100 PP). You also notice a small hammer on the ground and pick it up (you can now lower stat rolls on equipment to free up points at the Artisan's Bench).",
-											answers:[
-												{
-													answer:"(Leave)",
-													effect:function(){
-															dialog=0;
-															cinematic[0]=0;
-															dialoga=0;
-													}
-												}
-											],
-										});
-									}
-								}
-								append(stateffectsg,{name:'shrek arena',x:0,y:100,tick:0,run:function(){
-									if(render){
-										fill(0,100,0,150);
-										ellipseMode(CENTER);
-										ellipse(400+stateffectsg[n].x-playertemp.x,350+stateffectsg[n].y-playertemp.y,45,60);
-									}
-									if(tick%45==0&stateffectsg[n].x-playertemp.x<400){
-										append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,0,90,0,1));
-									}
-									if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
-										qtipc="Press F to exit";
-										if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
-											portallock=1;
-											playertemp.inBossFight=0;
-											playertemp.lastarea=-1;
-											loadArea();
-										}
-									}
-									if(!(player.biomeID==13)||playertemp.inBossFight==0){
-										stateffectsg.splice(n,1);
-										n-=1;
-									}
-								}});
-								enemies.splice(i,1);
-								i-=1;
-							},
-							ondespawn:function(i){
-								enemies.splice(i,1);
-								i-=1;
-							},
-							aim:function(i){
-								enemies[i].enragec+=2;
-								if(enemies[i].enraged>0){
-									enemies[i].enragec+=1;
-								}
-								while(enemies[i].enragec>=2){
-									enemies[i].enragec-=2;
-									if(enemies[i].cds.charge>0){
-										enemies[i].cds.charge-=1;
-									}
-									if(enemies[i].cds.earthquake>0){
-										enemies[i].cds.earthquake-=1;
-									}
-									//Move
-									if(enemies[i].action.id==1){
-										if(!(enemies[i].enraged)&enemies[i].hp/enemies[i].mhp<0.3){
-											enemies[i].enraged=1;
-											enemies[i].str*=1.5;
-											enemies[i].speed*=1.25;
-										}
-										nmesa.pointatplayer(i);
-										nmesa.displace(i,1);
-										enemies[i].legtick+=1;
-										enemies[i].larmtick+=1;
-										enemies[i].clubd=5*PI/4;
-										enemies[i].clubs=100;
-										enemies[i].height=0;
-										if(enemies[i].cds.earthquake<=0){
-											enemies[i].action.tick=0;
-											enemies[i].action.id=4;
-											enemies[i].cds.earthquake=1200;
-											if(options.loadAudio){sfx.jumpbig.play();}
-										}
-										else if(enemies[i].cds.charge<=0){
-											if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(200,2)){
-												enemies[i].action.tick=0;
-												enemies[i].action.active=0;
-												enemies[i].action.proc=0;
-												enemies[i].action.id=3;
-												enemies[i].cds.charge=420;
-												if(options.loadAudio){sfx.dashbig.play();}
-											}
-										}
-										else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(40,2)){
-											enemies[i].action.tick=0;
-											enemies[i].action.id=2;
-										}
-									}
-									//Swing
-									else if(enemies[i].action.id==2){
-										if(enemies[i].action.tick<10){
-											if(enemies[i].larmtick<30){
-												enemies[i].larmtick=max(10,enemies[i].larmtick%60-1);
-											}
-											else{
-												enemies[i].larmtick=min(50,enemies[i].larmtick%60+1);
-											}
-										}
-										else{
-											if(!((enemies[i].larmtick)%60==30)){
-												if((enemies[i].larmtick)%60>30){
-													enemies[i].larmtick=max(38,enemies[i].larmtick%60-1);
-												}
-												else{
-													enemies[i].larmtick=min(22,enemies[i].larmtick%60+1);
-												}
-											}
-											if(enemies[i].action.tick<20){
-												enemies[i].clubd-=0.5;
-												enemies[i].clubs-=4;
-											}
-											else if(enemies[i].action.tick==20){
-												if(options.loadAudio){
-													sfx.bomb.play();}
-												append(particles,new createparticle(enemies[i].x+sin(enemies[i].dir)*40,enemies[i].y-cos(enemies[i].dir)*40,0,0,0,0,'circle','',120,-2,255,-13,180,140,0,1));
-												append(objects,{
-													type:'AoE',
-													target:'player',
-													size:60,
-													duration:0,
-													rangetype:"melee",
-													source:i,
-													x:enemies[i].x+sin(enemies[i].dir)*40,
-													y:enemies[i].y-cos(enemies[i].dir)*40,
-													pdmgmin:enemies[i].str*13,
-													pdmgmax:enemies[i].str*15,
-													hitc:0,
-													mdmgmin:0,
-													mdmgmax:0,
-													armorE:1,
-													resE:1,
-													procc:2,
-													hits:new Array(999),
-												});
-											}
-											else if(enemies[i].action.tick>40){
-												enemies[i].clubd+=0.075;
-												enemies[i].clubs+=2/3;
-											}
-											if(enemies[i].action.tick>100){
-												enemies[i].action.tick=0;
-												enemies[i].action.id=1;
-											}
-										}
-									}
-									//Charge
-									else if(enemies[i].action.id==3){
-										enemies[i].legtick+=2;
-										if(enemies[i].action.tick<10){
-											if(enemies[i].larmtick>30){
-												enemies[i].larmtick=max(30,enemies[i].larmtick%60-1);
-											}
-											else{
-												enemies[i].larmtick=min(30,enemies[i].larmtick%60+1);
-											}
-										}
-										else{
-											nmesa.displace(i,5);
-											if(enemies[i].action.active){
-												playertemp.x=enemies[i].x+sin(enemies[i].dir)*25;
-												playertemp.y=enemies[i].y-cos(enemies[i].dir)*25;
-											}
-											else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(30+player.size,2)){
-												enemies[i].action.active=1;
-												enemies[i].cds.earthquake-=420;
-												damage('player',0,random(enemies[i].str*6,enemies[i].str*7),0,1,1,"melee",i,0);
-											}
-											if(enemies[i].action.tick>40){
-												enemies[i].action.tick=0;
-												enemies[i].action.id=1;
-											}
-										}
-									}
-									//Earthquake
-									else if(enemies[i].action.id==4){
-										if(enemies[i].action.tick<30){
-											if(enemies[i].larmtick<30){
-												enemies[i].larmtick=max(0,enemies[i].larmtick%60-1);
-											}
-											else{
-												enemies[i].larmtick=min(60,enemies[i].larmtick%60+1);
-											}
-											enemies[i].height+=2;
-										}
-										else if(enemies[i].action.tick<50){
-											enemies[i].clubd-=0.25;
-											enemies[i].clubs-=2;
-											enemies[i].height-=3;
-										}
-										else if(enemies[i].action.tick<200){
-											if(enemies[i].action.tick==50){
-												if(options.loadAudio){sfx.bomb.play();}
-												append(particles,new createparticle(enemies[i].x,enemies[i].y,0,0,0,0,'circle','',120,-2,255,-13,180,140,0,1));
-												append(objects,{
-													type:'AoE',
-													target:'player',
-													size:60,
-													duration:0,
-													rangetype:"melee",
-													source:i,
-													x:enemies[i].x,
-													y:enemies[i].y,
-													pdmgmin:enemies[i].str*18,
-													pdmgmax:enemies[i].str*20,
-													hitc:0,
-													mdmgmin:0,
-													mdmgmax:0,
-													armorE:1,
-													resE:1,
-													procc:2,
-													properties:["earth"],
-													hits:new Array(999),
-													endfunc:function(){
-														if(objects[n].hitc>0){
-															playertemp.speed-=0.6;
-															append(stateffects,{name:'cripple',tick:0,run:function(){
-																if(stateffects[n].tick>=120){
-																	playertemp.speed+=0.6;
-																	stateffects.splice(n,1);
-																	n-=1;
-																}
-															}
-															});
-														}
-													}
-												});
-											}
-											if(enemies[i].action.tick==70){
-												if(options.loadAudio){sfx.earthquake.play();}
-											}
-											if((enemies[i].action.tick+10)%30==0){
-												append(stateffectsg,{name:'Shrek earthquake',source:i,x:enemies[i].x,y:enemies[i].y,size:(enemies[i].action.tick-35)*9,dmg:random(enemies[i].str*17,enemies[i].str*18),tick:0,run:function(){
-													if(render){
-														noFill();
-														strokeWeight(80);
-														if(stateffectsg[n].tick>=45){
-															stroke(170,120,0,255-(stateffectsg[n].tick-45)*17);
-														}
-														else{
-															stroke(255,0,0,stateffectsg[n].tick*3);
-														}
-														ellipse(stateffectsg[n].x-playertemp.x+400,stateffectsg[n].y-playertemp.y+350,stateffectsg[n].size,stateffectsg[n].size);
-														noStroke();
-													}
-													if(stateffectsg[n].tick==45){
-														if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(stateffectsg[n].size/2+40+player.size,2)){
-															if(!(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(stateffectsg[n].size/2-40-player.size,2))){
-																damage('player',0,stateffectsg[n].dmg,0,1,1,"melee",stateffectsg[n].source,0,["earth"]);
-																playertemp.speed-=0.6;
-																append(stateffects,{name:'cripple',tick:0,run:function(){
-																	if(stateffects[n].tick>=120){
-																		playertemp.speed+=0.6;
-																		stateffects.splice(n,1);
-																		n-=1;
-																	}
-																}
-																});
-															}
-														}
-													}
-													if(stateffectsg[n].tick>=60){
-														stateffectsg.splice(n,1);
-														n-=1;
-													}
-												}});
-											}
-										}
-										else if(enemies[i].action.tick<240){
-											enemies[i].clubd+=0.125;
-											enemies[i].clubs+=1;
-										}
-										else{
-											enemies[i].action.tick=0;
-											enemies[i].action.id=1;
-										}
-									}
-									enemies[i].action.tick+=1;
-								}
-							}
-						});
-					append(biomescripts,function(){
-						if(areatemp.raining<=0){
-							if(options.loadAudio){sfx.raining.play();}
-						}
-						areatemp.raining=666;
-						//Walls
-						if(render){fill(0,50,0);
-						rect(-1200-playertemp.x,-450-playertemp.y,2400,400);
-						rect(-1200-playertemp.x,650-playertemp.y,2400,400);
-						rect(-800-playertemp.x,-550-playertemp.y,800,2400);
-						rect(800-playertemp.x,-550-playertemp.y,800,2400);}
-						if(playertemp.y<-395){
-							playertemp.y=-395;
-						}
-						if(playertemp.y>295){
-							playertemp.y=295;
-						}
-						if(playertemp.x<-395){
-							playertemp.x=-395;
-						}
-						if(playertemp.x>395){
-							playertemp.x=395;
-						}
-					});
-				}	
-			}
-			if(!(player.biomeID==13)||playertemp.inBossFight==1){
-				stateffectsg.splice(n,1);
-				n-=1;
-			}
-		}});
+				if(tick%45==0&stateffectsg[n].x-playertemp.x<400){
+					append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,150,30,0,1));
+				}
+				if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
+					qtipc="Press F to enter";
+					if(keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+						setarena();
+						placeboss[0](47);
+					}
+				}
+				if(!(player.biomeID==13)||playertemp.inBossFight==1){
+					stateffectsg.splice(n,1);
+					n-=1;
+				}
+			}});
+		}
 	}
 	//Shard of Purity
 	if(player.biomeID==15){
@@ -11635,8 +11799,8 @@ var getBiomeScripts=function(){
 													y:enemies[i].y,
 													pdmgmin:0,
 													pdmgmax:0,
-													mdmgmin:enemies[i].intel*4,
-													mdmgmax:enemies[i].intel*4.3,
+													mdmgmin:enemies[i].intel*3.2,
+													mdmgmax:enemies[i].intel*3.3,
 													mdmgloss:enemies[i].intel*0.012,
 													armorE:1,
 													resE:1,
@@ -11822,7 +11986,50 @@ var getBiomeScripts=function(){
 			}
 		}
 	}
-	
+	//Rift portal
+	if(player.inrift){
+		append(stateffectsg,{name:'rift portal',lv:biomedata[9],x:random(-1200,1200),y:random(-1200,1200),tick:0,run:function(){
+			if(render){
+				fill(200,255,255);
+				textFont(txtfont,16);
+				textAlign(CENTER);
+				text("Rift Portal",350+stateffectsg[n].x-playertemp.x,285+stateffectsg[n].y-playertemp.y,100,50);
+				textAlign(TOP,LEFT);
+				fill(110+abs(tick%90-45)*2,110+abs(tick%90-45)*2,140,150);
+				ellipseMode(CENTER);
+				ellipse(400+stateffectsg[n].x-playertemp.x,350+stateffectsg[n].y-playertemp.y,45,60);
+			}
+			if(stateffectsg[n].x-playertemp.x<-1300||stateffectsg[n].x-playertemp.x>1300||stateffectsg[n].y-playertemp.y<-1300||stateffectsg[n].y-playertemp.y>1300){
+				stateffectsg[n].x=random(-1200,1200)+playertemp.x;
+				stateffectsg[n].y=random(-1200,1200)+playertemp.y;
+				while(stateffectsg[n].x-playertemp.x<400&stateffectsg[n].x-playertemp.x>-400&stateffectsg[n].y-playertemp.y<350&stateffectsg[n].y-playertemp.y>-350){
+					stateffectsg[n].x=random(-1200,1200)+playertemp.x;
+					stateffectsg[n].y=random(-1200,1200)+playertemp.y;
+				}
+			}
+			if(tick%20==0&stateffectsg[n].x-playertemp.x<400){
+				append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3.5,100,-4,255,255,255,1));
+			}
+			if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
+				qtipc="Press F to proceed";
+				if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+					portallock=1;
+					enterrift(biomedata[9]+5);
+					if(options.autosave){
+						temp= new Array(JSON.stringify(player),1);
+						saveStrings("player "+player.name+".txt",temp);
+						append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
+					}
+				}
+			}
+			if(stateffectsg[n]){
+				if(!(stateffectsg[n].lv==biomedata[9])){
+					stateffectsg.splice(n,1);
+					n-=1;
+				}
+			}
+		}});
+	}
 }
 var checkderelictbuild=function(target){
 	for(cdb=0;cdb<areatemp.derelictbuildings.length;cdb+=1){
@@ -11892,6 +12099,9 @@ var specialtextcs=[
 	},
 	function(){
 		return(3/(1+playertemp.traits[15]/10));
+	},
+	function(){
+		return(100-100/(1+playertemp.traits[7]/50));
 	},
 ];
 var converttext=function(rawtext,cvar){
@@ -12120,11 +12330,11 @@ var nmeonhit=function(effect,chance,power,duration){
 				showdots[0]=1;
 				showdots[3]=1;
 				if(areatemp.raining>0){
-					damage("player",0,dots[n].pow/3,dots[n].pow/3,0,0,"DoT",dots[n].source,0,["fire","burn","ignite"]);
+					damage("player",0,0.75*dots[n].pow/3,0.75*dots[n].pow/3,0,0,"DoT",dots[n].source,0,["fire","burn","ignite"]);
 					dots[n].dur-=1;
 				}
 				else{
-					damage("player",0,dots[n].pow/2,dots[n].pow/2,0,0,"DoT",dots[n].source,0,["fire","burn","ignite"]);
+					damage("player",0,0.75*dots[n].pow/2,0.75*dots[n].pow/2,0,0,"DoT",dots[n].source,0,["fire","burn","ignite"]);
 				}
 				if(dots[n].dur<=0||inwater){
 					dots.splice(n,1);
@@ -12140,7 +12350,7 @@ var nmeonhit=function(effect,chance,power,duration){
 			append(dots,{source:i,name:'bleed',pow:power,dur:duration,run:function(){
 				showdots[1]=1;
 				showdots[4]=1;
-				damage("player",0,dots[n].pow,0,0.018,0.018,"DoT",dots[n].source,0,["bleed"]);
+				damage("player",0,0.75*dots[n].pow,0,0.018,0.018,"DoT",dots[n].source,0,["bleed"]);
 				if(dots[n].dur<=0){
 					dots.splice(n,1);
 					n-=1;
@@ -12155,7 +12365,7 @@ var nmeonhit=function(effect,chance,power,duration){
 			append(dots,{source:i,name:'poison',pow:power,dur:duration,run:function(){
 				showdots[2]=1;
 				showdots[5]=1;
-				damage("player",0,0,dots[n].pow,0.018,0.018,"DoT",dots[n].source,0,["poison"]);
+				damage("player",0,0,0.75*dots[n].pow,0.018,0.018,"DoT",dots[n].source,0,["poison"]);
 				if(dots[n].dur<=0){
 					dots.splice(n,1);
 					n-=1;
@@ -12427,10 +12637,10 @@ var statpanel=function(){
 		if(cursorbox(20,300,305,330)){
 			fafgc=["",0,""];
 			if(playertemp.traits[217]>0){
-				fafgc[1]=round((((1+playertemp.traits[217]/100)*(plsar(1)))/(((1+playertemp.traits[217]/100)*(plsar(1)))+nmelvsc(player.level)*30))*1000)/10;
+				fafgc[1]=round((((1+playertemp.traits[217]/100)*(plsar(1)))/(((1+playertemp.traits[217]/100)*(plsar(1)))+nmelvsc(player.level)*39))*1000)/10;
 			}
 			else{
-				fafgc[1]=round((((plsar(1)))/(((plsar(1)))+nmelvsc(player.level)*30))*1000)/10;
+				fafgc[1]=round((((plsar(1)))/(((plsar(1)))+nmelvsc(player.level)*39))*1000)/10;
 			}
 			if(playertemp.traits[212]>0){
 				fafgc[0]="magic";
@@ -12440,10 +12650,10 @@ var statpanel=function(){
 			}
 			if(playertemp.traits[87]>0){
 				if(playertemp.traits[217]>0){
-					fafgc[2]="Estimated Nullification: "+min(90,round((((1+playertemp.traits[217]/100)*(0.04*playertemp.traits[87]-0.02)*(plsar(1)))/(((1+playertemp.traits[217]/100)*(0.04*playertemp.traits[87]-0.02)*(plsar(1)))+nmelvsc(player.level)*30))*1000)/10)+"%";
+					fafgc[2]="Estimated Nullification: "+min(90,round((((1+playertemp.traits[217]/100)*(0.04*playertemp.traits[87]-0.02)*(plsar(1)))/(((1+playertemp.traits[217]/100)*(0.04*playertemp.traits[87]-0.02)*(plsar(1)))+nmelvsc(player.level)*39))*1000)/10)+"%";
 				}
 				else{
-					fafgc[2]="Estimated Nullification: "+min(90,round((((0.04*playertemp.traits[87]-0.02)*(plsar(1)))/(((0.04*playertemp.traits[87]-0.02)*(plsar(1)))+nmelvsc(player.level)*30))*1000)/10)+"%";
+					fafgc[2]="Estimated Nullification: "+min(90,round((((0.04*playertemp.traits[87]-0.02)*(plsar(1)))/(((0.04*playertemp.traits[87]-0.02)*(plsar(1)))+nmelvsc(player.level)*39))*1000)/10)+"%";
 				}
 			}
 			tooltipdraw={
@@ -12454,7 +12664,7 @@ var statpanel=function(){
 				h:300,
 				title:"Armor  (base: "+(player.baseStats.armor+player.keystonestats.armor)+")",
 				tip:["Reduces all "+fafgc[0]+" damage taken.",
-				"Estimated reduction: "+min(90,fafgc[1])+"% (vs "+round(nmelvsc(player.level)*15)+" damage).",
+				"Estimated reduction: "+min(90,fafgc[1])+"% (vs "+round(nmelvsc(player.level)*13)+" damage).",
 				"(caps at 90% reduction.)",
 				"Formula: armor/(armor+damage*2)",
 				fafgc[2],
@@ -12471,10 +12681,10 @@ var statpanel=function(){
 		if(cursorbox(20,300,335,360)){
 			fafgc=["",0,""];
 			if(playertemp.traits[218]>0){
-				fafgc[1]=round((((1+playertemp.traits[218]/100)*(plsre(1)))/(((1+playertemp.traits[218]/100)*(plsre(1)))+nmelvsc(player.level)*30))*1000)/10;
+				fafgc[1]=round((((1+playertemp.traits[218]/100)*(plsre(1)))/(((1+playertemp.traits[218]/100)*(plsre(1)))+nmelvsc(player.level)*39))*1000)/10;
 			}
 			else{
-				fafgc[1]=round((((plsre(1)))/(((plsre(1)))+nmelvsc(player.level)*30))*1000)/10;
+				fafgc[1]=round((((plsre(1)))/(((plsre(1)))+nmelvsc(player.level)*39))*1000)/10;
 			}
 			if(playertemp.traits[212]>0){
 				fafgc[0]="physical";
@@ -12484,10 +12694,10 @@ var statpanel=function(){
 			}
 			if(playertemp.traits[87]>0){
 				if(playertemp.traits[218]>0){
-					fafgc[2]="Estimated Nullification: "+min(90,round((((1+playertemp.traits[218]/100)*(0.04*playertemp.traits[87]-0.02)*(plsre(1)))/(((1+playertemp.traits[218]/100)*(0.04*playertemp.traits[87]-0.02)*(plsre(1)))+nmelvsc(player.level)*30))*1000)/10)+"%";
+					fafgc[2]="Estimated Nullification: "+min(90,round((((1+playertemp.traits[218]/100)*(0.04*playertemp.traits[87]-0.02)*(plsre(1)))/(((1+playertemp.traits[218]/100)*(0.04*playertemp.traits[87]-0.02)*(plsre(1)))+nmelvsc(player.level)*39))*1000)/10)+"%";
 				}
 				else{
-					fafgc[2]="Estimated Nullification: "+min(90,round((((0.04*playertemp.traits[87]-0.02)*(plsre(1)))/(((0.04*playertemp.traits[87]-0.02)*(plsre(1)))+nmelvsc(player.level)*30))*1000)/10)+"%";
+					fafgc[2]="Estimated Nullification: "+min(90,round((((0.04*playertemp.traits[87]-0.02)*(plsre(1)))/(((0.04*playertemp.traits[87]-0.02)*(plsre(1)))+nmelvsc(player.level)*39))*1000)/10)+"%";
 				}
 			}
 			tooltipdraw={
@@ -12498,7 +12708,7 @@ var statpanel=function(){
 				h:300,
 				title:"Resistance  (base: "+(player.baseStats.res+player.keystonestats.res)+")",
 				tip:["Reduces all "+fafgc[0]+" damage taken.",
-				"Estimated reduction: "+min(90,fafgc[1])+"% (vs "+round(nmelvsc(player.level)*15)+" damage).",
+				"Estimated reduction: "+min(90,fafgc[1])+"% (vs "+round(nmelvsc(player.level)*13)+" damage).",
 				"(caps at 90% reduction.)",
 				"Formula: resistance/(resistance+damage*2)",
 				fafgc[2],
@@ -12512,7 +12722,7 @@ var statpanel=function(){
 				colors:0
 			};
 		}
-		if(cursorbox(20,300,360,380)){
+		if(cursorbox(20,300,360,385)){
 			tooltipdraw={
 				type:0,
 				x:mouseX,
@@ -14154,108 +14364,109 @@ append(doaction,function(lv,hand){
 			}
 		}
 		if(playertemp.action.tick==8){
-				append(objects,{
-					type:'projectile',
-					sprite:sprites.shieldBash,
-					target:'enemy',
-					size:35,
-					speed:10,
-					pierce:999,
-					duration:35,
-					stun:60,
-					sound:sfx.bong,
-					dir:playertemp.action.dir,
-					x:playertemp.x,
-					y:playertemp.y,
-					shieldval:((plsar(0.01))+(plshp(0.025)+(plsre(0.005)))*(1+traitpow/20)),
-					gmrec:(1+traitpow/20)/2,
-					pdmgmin:(plsst(10)+plsar(4))/0.92,
-					pdmgmax:(plsst(13)+plsar(5))/0.92,
-					mdmgmin:(plsin(10)+plsre(4))/0.92,
-					mdmgmax:(plsin(13)+plsre(5))/0.92,
-					armorE:1,
-					resE:1,
-					procc:1.2,
-					properties:["impact"],
-					hits:new Array(999),
-					onhit:function(i){
-						objects[n].pdmgmin*=0.92;
-						objects[n].pdmgmax*=0.92;
-						objects[n].mdmgmin*=0.92;
-						objects[n].mdmgmax*=0.92;
-					},
-					run:function(){
-						objects[n].speed-=0.35;
-					},
-					specialdraw:function(){
-						if(options.light){
-							fill(150+abs(tick%25-12.5)*4,150+abs(tick%25-12.5)*4,255,2);
-							ellipseMode(CENTER);
-							for(cal=0;cal<80;cal+=1){
-								ellipse(0,0,cal,cal);
+			append(objects,{
+				type:'projectile',
+				sprite:sprites.shieldBash,
+				target:'enemy',
+				size:35,
+				speed:10,
+				pierce:999,
+				duration:35,
+				stun:60,
+				sound:sfx.bong,
+				dir:playertemp.action.dir,
+				x:playertemp.x,
+				y:playertemp.y,
+				shieldval:((plsar(0.08))+(plshp(0.24)+(plsre(0.04)))*(1+traitpow/20)),
+				gmrec:(1+traitpow/20)/2,
+				pdmgmin:(plsst(10)+plsar(4))/0.92,
+				pdmgmax:(plsst(13)+plsar(5))/0.92,
+				mdmgmin:(plsin(10)+plsre(4))/0.92,
+				mdmgmax:(plsin(13)+plsre(5))/0.92,
+				armorE:1,
+				resE:1,
+				procc:1.2,
+				properties:["impact"],
+				hits:new Array(999),
+				onhit:function(i){
+					objects[n].pdmgmin*=0.92;
+					objects[n].pdmgmax*=0.92;
+					objects[n].mdmgmin*=0.92;
+					objects[n].mdmgmax*=0.92;
+				},
+				run:function(){
+					objects[n].speed-=0.35;
+				},
+				specialdraw:function(){
+					if(options.light){
+						fill(150+abs(tick%25-12.5)*4,150+abs(tick%25-12.5)*4,255,2);
+						ellipseMode(CENTER);
+						for(cal=0;cal<80;cal+=1){
+							ellipse(0,0,cal,cal);
+						}
+					}
+				},
+				endfunc:function(){
+					append(objects,{
+						type:'projectile',
+						sprite:sprites.shieldBash,
+						target:'enemy',
+						size:35,
+						speed:0,
+						pierce:999,
+						duration:999,
+						stun:60,
+						sound:sfx.bong,
+						dir:dirtoplayerfromobject(n),
+						x:objects[n].x,
+						y:objects[n].y,
+						shieldval:objects[n].shieldval,
+						gmrec:objects[n].gmrec,
+						caught:0,
+						pdmgmin:(plsst(10)+plsar(4))/0.92,
+						pdmgmax:(plsst(13)+plsar(5))/0.92,
+						mdmgmin:(plsin(10)+plsre(4))/0.92,
+						mdmgmax:(plsin(13)+plsre(5))/0.92,
+						armorE:1,
+						resE:1,
+						procc:1.2,
+						properties:["impact"],
+						hits:new Array(999),
+						onhit:function(i){
+							objects[n].pdmgmin*=0.92;
+							objects[n].pdmgmax*=0.92;
+							objects[n].mdmgmin*=0.92;
+							objects[n].mdmgmax*=0.92;
+						},
+						run:function(){
+							objects[n].dir=dirtoplayerfromobject(n);
+							objects[n].speed+=0.4;
+							if(!(objects[n].caught)){
+							if(pow(playertemp.x-objects[n].x,2)+pow(playertemp.y-objects[n].y,2)<pow(10+player.size+objects[n].speed*2,2)){
+								objects[n].caught=1;
+								objects[n].duration=1;
+								if(options.loadAudio){sfx.shield.play();}
+								playertemp.guard=min((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb)*objects[n].gmrec);
+								for(crtds=1;crtds<13;crtds+=1){
+									shield(objects[n].shieldval/12,180*crtds/12);
+								}
+								buff(2,300,20);
+							}
+							}
+						},
+						specialdraw:function(){
+							if(options.light){
+								fill(150+abs(tick%25-12.5)*4,150+abs(tick%25-12.5)*4,255,2);
+								ellipseMode(CENTER);
+								for(cal=0;cal<80;cal+=1){
+									ellipse(0,0,cal,cal);
+								}
 							}
 						}
-					},
-						endfunc:function(){
-							append(objects,{
-								type:'projectile',
-								sprite:sprites.shieldBash,
-								target:'enemy',
-								size:35,
-								speed:0,
-								pierce:999,
-								duration:999,
-								stun:60,
-								sound:sfx.bong,
-								dir:dirtoplayerfromobject(n),
-								x:objects[n].x,
-								y:objects[n].y,
-								shieldval:objects[n].shieldval,
-								gmrec:objects[n].gmrec,
-								caught:0,
-								pdmgmin:(plsst(10)+plsar(4))/0.92,
-								pdmgmax:(plsst(13)+plsar(5))/0.92,
-								mdmgmin:(plsin(10)+plsre(4))/0.92,
-								mdmgmax:(plsin(13)+plsre(5))/0.92,
-								armorE:1,
-								resE:1,
-								procc:1.2,
-								properties:["impact"],
-								hits:new Array(999),
-								onhit:function(i){
-									objects[n].pdmgmin*=0.92;
-									objects[n].pdmgmax*=0.92;
-									objects[n].mdmgmin*=0.92;
-									objects[n].mdmgmax*=0.92;
-								},
-								run:function(){
-									objects[n].dir=dirtoplayerfromobject(n);
-									objects[n].speed+=0.4;
-									if(!(objects[n].caught)){
-									if(pow(playertemp.x-objects[n].x,2)+pow(playertemp.y-objects[n].y,2)<pow(10+player.size+objects[n].speed*2,2)){
-										objects[n].caught=1;
-										objects[n].duration=1;
-										if(options.loadAudio){sfx.shield.play();}
-										playertemp.guard=min((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb,playertemp.guard+((plshp(1))*(playertemp.traits[91]/100)+playertemp.guardmb)*objects[n].gmrec);
-										for(crtds=1;crtds<13;crtds+=1){
-											shield(objects[n].shieldval,180*crtds/12);
-										}
-									}
-									}
-								},
-								specialdraw:function(){
-									if(options.light){
-										fill(150+abs(tick%25-12.5)*4,150+abs(tick%25-12.5)*4,255,2);
-										ellipseMode(CENTER);
-										for(cal=0;cal<80;cal+=1){
-											ellipse(0,0,cal,cal);
-										}
-									}
-								}
-							});
-							
-						}
-				});
+					});
+					
+				}
+			});
 		}
 		if(playertemp.action.tick>=20){
 				stopaction();
@@ -16001,10 +16212,10 @@ append(doaction,function(lv,hand){
 					if(options.loadAudio){
 						sfx.SoHh.play();
 					}
-					playertemp.ironman+=(hits+2)*((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])*(0.1);
+					playertemp.ironman+=(hits+2)*((plsin(1))*2+(plshp(1)))*(0.2+0.1*playertemp.traits[73])*(0.1);
 					playertemp.ironmandur=240;
-					if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73])){
-						playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.2*playertemp.traits[73]);	
+					if(playertemp.ironman>((plsin(1))*2+(plshp(1)))*(0.2+0.1*playertemp.traits[73])){
+						playertemp.ironman=((plsin(1))*2+(plshp(1)))*(0.2+0.1*playertemp.traits[73]);	
 					}
 				}
 			}
@@ -17479,7 +17690,7 @@ append(doaction,function(lv,hand){
 	playertemp.traitcd[hand]=1;
 	if(playertemp.mordekaiserWactive<=0){
 		playertemp.traitcd[hand]=60;
-		playertemp.mordekaiserWactive=playertemp.mordekaiserW+plsin(0.3)+plshp(0.15);
+		playertemp.mordekaiserWactive=playertemp.mordekaiserW+plsin(0.1)+plshp(0.075);
 		playertemp.mordekaiserWtimer=60;
 		playertemp.mordekaiserW=0;
 		playertemp.mordekaiserWactivated=true;
@@ -18422,13 +18633,17 @@ if(tick%30==0){
 	//==============Terrain-type effects (i.e. biome scripts)====
 	if(!(cinematic||dialoga)){
 		for(n=0;n<terraineffects.length;n+=1){
-			terraineffects[n].tick+=1;
-			terraineffects[n].run();
+			if(terraineffects[n]){
+				terraineffects[n].tick+=1;
+				terraineffects[n].run();
+			}
 		}
 		//==============Grounded stat effects====
 		for(n=0;n<stateffectsg.length;n+=1){
-			stateffectsg[n].tick+=1;
-			stateffectsg[n].run();
+			if(stateffectsg[n]){
+				stateffectsg[n].tick+=1;
+				stateffectsg[n].run();
+			}
 		}
 	}
 	//===================PASSIVE EFFECTS===============================================================
@@ -18893,7 +19108,12 @@ if(tick%30==0){
 	rect(825,410,player.xp/player.xpr*300,15);
 	fill(0,0,0);
 	textFont(txtfont,15);
-	text(biomedata[0],900,675);
+	if(player.inrift){
+		text("Space-time rift (LV"+biomedata[9]+")",900,675);
+	}
+	else{
+		text(biomedata[0],900,675);
+	}
 	fill(80,80,12);
 	if(stancecache.LH.sprite){
 		rect(840,450,100,100,10);
@@ -18997,6 +19217,7 @@ if(tick%30==0){
 							player.xp=0;
 						}
 						player.biomeID=1;
+						player.inrift=0;
 						playertemp.x=0;
 						playertemp.y=0;
 						playertemp.xvelo=0;
@@ -19151,16 +19372,26 @@ if(tick%30==0){
 			fill(150,255,150);
 			textFont(txtfont,40);
 			text('Nexus',400,595,200,80);
-			if(player.record.atlas[player.biomeID]==2){
-				if(player.record.biocomp[player.biomeID]){
-					fill(0,0,255);
+			if(player.inrift){
+				if(player.riftlv>=biomedata[9]){
+					fill(0,150,255);
 				}
 				else{
-					fill(100,255,100);
+					fill(255,0,0);
 				}
 			}
 			else{
-				fill(255,0,0);
+				if(player.record.atlas[player.biomeID]==2){
+					if(player.record.biocomp[player.biomeID]){
+						fill(0,0,255);
+					}
+					else{
+						fill(100,255,100);
+					}
+				}
+				else{
+					fill(255,0,0);
+				}
 			}
 			ellipse(640,645,40,40);
 			if(cursorbox(620,660,630,670)){
@@ -19174,6 +19405,17 @@ if(tick%30==0){
 					tip:"",
 					colors:0
 				};
+				if(player.inrift){
+					if(player.riftlv>=biomedata[9]){
+						tooltipdraw.tip="This rift level has been unlocked.";
+					}
+					else{
+						tooltipdraw.title="WARNING";
+						tooltipdraw.tip="This rift level has not been unlocked.";
+						tooltipdraw.colors=[[255,0,0],0];
+					}
+				}
+				else{
 					if(player.record.atlas[player.biomeID]==2){
 						if(player.record.biocomp[player.biomeID]){
 							tooltipdraw.tip="This area has been completed.";
@@ -19188,6 +19430,7 @@ if(tick%30==0){
 						tooltipdraw.colors=[[255,0,0],0];
 					}
 				}
+			}
 			}
 			if(!(cursorbox(780,1200,0,215))){
 				invquicksell=0;
@@ -19502,6 +19745,7 @@ if(tick%30==0){
 			if(mouseButton==LEFT){
 				if(playertemp.timesincedamagetaken>=60){
 					player.biomeID=1;
+					player.inrift=0;
 					playertemp.x=0;
 					playertemp.y=0;
 					loadArea();
@@ -20382,6 +20626,105 @@ if(tick%30==0){
 				}
 				}
 			}
+			//Space-time Manipulator
+			else if(inventype==5){
+				fill(0,0,abs(tick%120-60));
+				rect(0,0,1133,700);
+				fill(255,255,0);
+				textFont(txtfont,35);
+				text("Space-time Manipulator",350,30);
+				ellipseMode(CENTER);
+				fill(150,150,255);
+				stroke(255,255,150,100+abs(tick%120-60));
+				strokeWeight(2+abs(tick%150-75)/3);
+				ellipse(250,350,150,300);
+				fill(255,150,200);
+				ellipse(850,350,150,300);
+				noStroke();
+				textAlign(CENTER);
+				fill(0,0,0);
+				textFont(txtfont,25);
+				if(cursorbox(175,325,200,500)){
+					text("Last cleared: LV"+player.riftlv+". No entry fee.",175,275,150,300);
+					if(mousePressed){
+						enterrift(player.riftlv);
+						inventory=0;
+						helpscreen={active:0,help:0};
+						if(options.loadAudio){
+							if(player.hp<(plshp(1))){
+								player.hp=(plshp(1));
+							}
+							if(player.mp<(plsmp(1))){
+								player.mp=(plsmp(1));
+							}
+							sfx.warp.play();
+							for(n=0;n<25;n+=1){
+								append(particles,new createparticle(random(385,415),random(335,365),random(-1,1),random(-1,1),0,0,'circle','',10,-0.2,255,-4,random(120,255),150,255));
+							}
+						}
+					}
+				}
+				if(cursorbox(775,925,200,500)){
+					if(player.reactant>=30){
+						text("Next rift: LV"+(player.riftlv+5)+". Costs 30 reactant.",775,275,150,300);
+						if(mousePressed){
+							player.reactant-=30;
+							enterrift(player.riftlv+5);
+							inventory=0;
+							helpscreen={active:0,help:0};
+							if(options.loadAudio){
+								if(player.hp<(plshp(1))){
+									player.hp=(plshp(1));
+								}
+								if(player.mp<(plsmp(1))){
+									player.mp=(plsmp(1));
+								}
+								sfx.warp.play();
+								for(n=0;n<25;n+=1){
+									append(particles,new createparticle(random(385,415),random(335,365),random(-1,1),random(-1,1),0,0,'circle','',10,-0.2,255,-4,random(120,255),150,255));
+								}
+							}
+						}
+					}
+					else{
+						text("Next rift: LV"+(player.riftlv+5)+". You need "+(30-player.reactant)+" more reactant.",775,275,150,300);
+					}
+				}
+				fill(255,255,255);
+				textFont(txtfont,27);
+				if(textinput==""){
+					text("Previous rift - type a number",200,600,200,100);
+				}
+				else{
+					text("Previous rift - LV"+textinput,200,600,200,100);
+				}
+				fill(0,255,0);
+				rect(550,595,150,50,5);
+				fill(255,0,255);
+				textFont(txtfont,34);
+				text("Enter",570,607,100,50);
+				if(cursorbox(570,670,607,657)){
+					if(mousePressed){
+						textinput=max(5,min(player.riftlv,round(Number(textinput)/5)*5));
+						enterrift(textinput);
+						inventory=0;
+						helpscreen={active:0,help:0};
+						if(options.loadAudio){
+							if(player.hp<(plshp(1))){
+								player.hp=(plshp(1));
+							}
+							if(player.mp<(plsmp(1))){
+								player.mp=(plsmp(1));
+							}
+							sfx.warp.play();
+							for(n=0;n<25;n+=1){
+								append(particles,new createparticle(random(385,415),random(335,365),random(-1,1),random(-1,1),0,0,'circle','',10,-0.2,255,-4,random(120,255),150,255));
+							}
+						}
+					}
+				}
+				
+			}
 		//=======
 		if(invselect[0]=='anvil'){
 			shape(sprites.anvil,mouseX,mouseY,45,67.5);
@@ -20671,7 +21014,7 @@ if(tick%30==0){
 						player.biomeID=atlasbiomes[i][0];
 						toloadarea=1;
 						inventory=0;
-				helpscreen={active:0,help:0};
+						helpscreen={active:0,help:0};
 						if(options.loadAudio){
 							if(player.hp<(plshp(1))){
 								player.hp=(plshp(1));
@@ -21544,6 +21887,9 @@ var loadplayer=function(){
 	loaded=1;
 }
 var updateplayerdat=function(){
+	if(!(player.riftsouls)){
+		player.riftsouls=0;
+	}
 	if(!(player.xpb)){
 		player.xpb=0;
 	}
@@ -21713,6 +22059,16 @@ void keyPressed(){
 		}
 		else if(ascii[key.code]){
 			if(textinput.length<20){
+				textinput+=ascii[key.code];
+			}
+		}
+	}
+	else if(inventory&inventype==5){
+		if(key.code==8||key.code==127){
+			textinput=textinput.substring(0,textinput.length-1);
+		}
+		else if(ascii[key.code]){
+			if(key.code>47&key.code<58&textinput.length<20){
 				textinput+=ascii[key.code];
 			}
 		}
