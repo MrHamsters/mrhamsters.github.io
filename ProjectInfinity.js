@@ -1,4 +1,4 @@
-var version="0.9";
+var version="0.9.1";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -272,6 +272,8 @@ var sfxlist=[
 	{name:"obliterate1",vm:1.3},
 	{name:"obliterate2",vm:1.3},
 	{name:"obliterate3",vm:1.3},
+	{name:"beastdeath",vm:0.45},
+	{name:"vinetrap",vm:2.5},
 ];
 var loadassetscache=function(){
 	textFont(txtfont,60);
@@ -482,6 +484,8 @@ var loadassetscache=function(){
 				obliterate1:new Howl({src: ['Data/Sound/sfx/obliterate1.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
 				obliterate2:new Howl({src: ['Data/Sound/sfx/obliterate2.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
 				obliterate3:new Howl({src: ['Data/Sound/sfx/obliterate3.ogg'], autoplay: false,loop: false,volume: options.sfx*1.3,}),
+				beastdeath:new Howl({src: ['Data/Sound/sfx/thatbeastdeath.ogg'], autoplay: false,loop: false,volume: options.sfx*0.45,}),
+				vinetrap:new Howl({src: ['Data/Sound/sfx/vines.ogg'], autoplay: false,loop: false,volume: options.sfx*2.5,}),
 		};
 		}
 		loadassetscache=0;
@@ -1382,22 +1386,17 @@ window.onkeydown=function(e){
 				traits={inactive:new Array(),active:new Array(),sprites:new Array(1000),tt:new Array(1000)};
 			}
 			else{
-				if(playertemp.inBossFight){
-					append(particles,new createparticle(300,300,0,-2,0,0,'text','Inventory cannot be viewed during boss battle!',25,0,255,-4,255,0,0));
+				tooltipcache[0]=-1;
+				inventory=1;
+				inventype=1;
+				invquicksell=0;
+				getinventorysprites();
+				if(player.enableintro&!(player.intro.inventory)){
+					openhelpscreen();
+					player.intro.inventory=1;
 				}
 				else{
-					tooltipcache[0]=-1;
-					inventory=1;
-					inventype=1;
-					invquicksell=0;
-					getinventorysprites();
-					if(player.enableintro&!(player.intro.inventory)){
-						openhelpscreen();
-						player.intro.inventory=1;
-					}
-					else{
-						helpscreen={active:0,help:0};
-					}
+					helpscreen={active:0,help:0};
 				}
 			}
 		}
@@ -3218,13 +3217,18 @@ var renderequipslot=function(slot,x,y,interact){
 				}
 				if(!(mouselock)&mousePressed&mouseButton==RIGHT){
 					mouselock=1;
-					if(findemptyslot()>-1){
-						if(options.loadAudio){sfx.click3.play();}
-						swapitems(slot,'','bag',findemptyslot());
-						loadtraits();
-						recalstats();
-						getstances();
-						getplayersprite();
+					if(playertemp.inBossFight){
+						append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','You cannot unequip items in boss arenas!',20,0,255,-3,255,0,0));
+					}
+					else{
+						if(findemptyslot()>-1){
+							if(options.loadAudio){sfx.click3.play();}
+							swapitems(slot,'','bag',findemptyslot());
+							loadtraits();
+							recalstats();
+							getstances();
+							getplayersprite();
+						}
 					}
 				}
 			}
@@ -3785,6 +3789,26 @@ var applykeystones=function(){
 				}
 			}
 		}
+	}
+	if(player.passiveboost){
+		player.passivemults.power.hp+=player.passiveboost;
+		player.passivemults.power.hpregen+=player.passiveboost;
+		player.passivemults.power.str+=player.passiveboost;
+		player.passivemults.power.intel+=player.passiveboost;
+		player.passivemults.power.armor+=player.passiveboost;
+		player.passivemults.power.res+=player.passiveboost;
+		player.passivemults.fortitude.hp+=player.passiveboost;
+		player.passivemults.fortitude.hpregen+=player.passiveboost;
+		player.passivemults.fortitude.str+=player.passiveboost;
+		player.passivemults.fortitude.intel+=player.passiveboost;
+		player.passivemults.fortitude.armor+=player.passiveboost;
+		player.passivemults.fortitude.res+=player.passiveboost;
+		player.passivemults.omnipotency.hp+=2*player.passiveboost;
+		player.passivemults.omnipotency.hpregen+=2*player.passiveboost;
+		player.passivemults.omnipotency.str+=2*player.passiveboost;
+		player.passivemults.omnipotency.intel+=2*player.passiveboost;
+		player.passivemults.omnipotency.armor+=2*player.passiveboost;
+		player.passivemults.omnipotency.res+=2*player.passiveboost;
 	}
 	recalstats();
 	loadkeystoneps();
@@ -10095,6 +10119,19 @@ var convergingdialog={
 		}
 	}
 };
+var bossthings={
+	thatbeast:{
+		hascow:function(n){
+			for(fc=0;fc<stateffectsg[n].cow.length;fc+=1){
+				if(bol==stateffectsg[n].cow[fc]){
+					stateffectsg[n].cow[fc]=-1;
+					return(true);
+				}
+			}
+			return(false);
+		}
+	},
+};
 var enterrift=function(lv){
 	playertemp.x=0;
 	playertemp.y=0;
@@ -10106,6 +10143,7 @@ var enterrift=function(lv){
 		player.biomeID=2;
 		setarena();
 		placeboss[round(random(-0.49,placeboss.length-0.51))](lv);
+		//placeboss[1](lv);
 	}
 	else{
 		player.biomeID=round(random(1.51,biomemax+0.49));
@@ -10210,7 +10248,7 @@ var placeboss=[
 					if(enemies[i].action.active&!(enemies[i].action.proc)){
 						if(enemies[i].y<-375||enemies[i].y>275||enemies[i].x<-375||enemies[i].x>375){
 							enemies[i].action.proc=1;
-							damage('player',0,random(enemies[i].str*10,enemies[i].str*11),0,1,1,"melee",i,0);
+							damage('player',0,random(enemies[i].str*10,enemies[i].str*11),0,1,1,"melee",i,0,["impact"]);
 						}
 					}
 				}
@@ -10414,6 +10452,7 @@ var placeboss=[
 									armorE:1,
 									resE:1,
 									procc:2,
+									properties:["impact"],
 									hits:new Array(999),
 								});
 							}
@@ -10446,10 +10485,15 @@ var placeboss=[
 							}
 							else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(30+player.size,2)){
 								enemies[i].action.active=1;
+								enemies[i].ptenacity=enemies[i].tenacity;
+								enemies[i].tenacity=100;
 								enemies[i].cds.earthquake-=420;
-								damage('player',0,random(enemies[i].str*6,enemies[i].str*7),0,1,1,"melee",i,0);
+								damage('player',0,random(enemies[i].str*6,enemies[i].str*7),0,1,1,"melee",i,0,["impact"]);
 							}
 							if(enemies[i].action.tick>40){
+								if(enemies[i].action.active){
+									enemies[i].tenacity=enemies[i].ptenacity;
+								}
 								enemies[i].action.tick=0;
 								enemies[i].action.id=1;
 							}
@@ -10569,6 +10613,531 @@ var placeboss=[
 			areatemp.raining=666;
 			//Walls
 			if(render){fill(0,50,0);
+			rect(-1200-playertemp.x,-450-playertemp.y,2400,400);
+			rect(-1200-playertemp.x,650-playertemp.y,2400,400);
+			rect(-800-playertemp.x,-550-playertemp.y,800,2400);
+			rect(800-playertemp.x,-550-playertemp.y,800,2400);}
+			if(playertemp.y<-395){
+				playertemp.y=-395;
+			}
+			if(playertemp.y>295){
+				playertemp.y=295;
+			}
+			if(playertemp.x<-395){
+				playertemp.x=-395;
+			}
+			if(playertemp.x>395){
+				playertemp.x=395;
+			}
+		});
+	},
+//1: The Bushes of Love
+	function(blv){
+		player.biomeID=13;
+		biomedata[2]=[255,225,0];
+		playertemp.y=150;
+		bg=loadImage('Data/Graphics/background/3.png');
+		if(options.loadAudio){
+			bgm.stop();
+		}
+		tick=0;
+		bgmn="bushesOfLove.ogg";
+		append(stateffects,{name:'delayed boss music',tick:0,run:function(){
+			if(stateffects[n].tick>10){
+				if(playertemp.inBossFight){
+				bgm=new Howl({
+				src: 'Data/Sound/music/bushesOfLove.ogg',
+				autoplay: true,
+				loop: true,
+				volume: options.music,
+				});
+				}
+				stateffects.splice(n,1);
+				n-=1;
+			}
+		}});
+		append(stateffectsg,{name:'the bushes of love and also scrap piles',cow:new Array(),beast:round(random(-0.49,18.49)),triggered:0,tick:0,gen:1,run:function(){
+			if(stateffectsg[n].gen){
+				var gbigc;
+				for(bigc=0;bigc<4;bigc+=1){
+					gbigc=round(random(-0.49,18.49));
+					if(!(gbigc==stateffectsg[n].beast)){
+						append(stateffectsg[n].cow,gbigc);
+					}
+				}
+				stateffectsg[n].gen=0;
+			}
+			if(stateffectsg[n].triggered){
+				biomedata[2][1]-=0.3;
+				
+			}
+			for(bol=0;bol<18;bol+=1){
+				if(render){
+					translate((bol%6)*140+50-playertemp.x,(floor(bol/6))*140-playertemp.y);
+					for(dri=0;dri<6;dri+=1){
+						for(dr=0;dr<5;dr+=1){
+							if(bol%2==0){
+								if(stateffectsg[n].triggered){
+									fill(0,120,0,255-stateffectsg[n].tick);
+								}
+								else{
+									fill(0,120,0);
+								}
+							}
+							else{
+								if((dri+dr)%3==0){
+									if(stateffectsg[n].triggered){
+										fill(50,50,0,255-stateffectsg[n].tick);
+									}
+									else{
+										fill(50,50,0);
+									}
+								}
+								else if((dri+dr)%3==1){
+									if(stateffectsg[n].triggered){
+										fill(50,50,70,255-stateffectsg[n].tick);
+									}
+									else{
+										fill(50,50,70);
+									}
+								}
+								else{
+									if(stateffectsg[n].triggered){
+										fill(50,50,40,255-stateffectsg[n].tick);
+									}
+									else{
+										fill(50,50,40);
+									}
+								}
+							}
+							ellipse(dri*10-30+(dr%2)*4,dr*10-25,15,15);
+						}
+					}
+					resetMatrix();
+				}
+				if((bol%6)*140+50-400>playertemp.x-50&(bol%6)*140+50-400<playertemp.x+50&(floor(bol/6))*140-350>playertemp.y-50&(floor(bol/6))*140-350<playertemp.y+50){
+					if(!(stateffectsg[n].triggered)&(bol==stateffectsg[n].beast)){
+						stateffectsg[n].tick=0;
+						stateffectsg[n].triggered=1;
+						append(enemies,{
+							lv:blv,
+							x:(bol%6)*140+50-400,
+							y:(floor(bol/6))*140-350,
+							size:22,
+							name:"Chicken-headed-duck-woman-thing",
+							mhp:10500*nmelvsc(blv),
+							hp:10500*nmelvsc(blv),
+							aspdm:1,
+							boost:1,
+							ai:3,
+							exists:1,
+							de:1,
+							dmgmin:1,
+							dmgmax:1,
+							speed:3,
+							str:70*nmelvsc(blv),
+							intel:85*nmelvsc(blv),
+							armor:30*nmelvsc(blv),
+							res:50*nmelvsc(blv),
+							dir:0,
+							turnstyle:1,
+							tenacity:92,
+							stun:0,
+							propertydmods:setcustomprop("earth:0.9/fire:1.1/void:1.05"),
+							action:{
+								id:0,
+								tick:0,
+								stock:0
+							},
+							haste:1,
+							height:-100,
+							cds:{vinetrap:0,fly:300},
+							xp:400,
+							ppv:0,
+							ppd:0,
+							soulv:1900,
+							wingtick:9,
+							spdmod:1,
+							disablehpbar:1,
+							tstatus:new Array(),
+							isBoss:1,
+							persistent:1,
+							imgtype:3,
+							reactant:0,
+							seeds:20,
+							spritec:{
+								main:loadShape("Data/Graphics/bosses/thatbeast/body.svg"),
+								wing:loadShape("Data/Graphics/bosses/thatbeast/wing.svg"),
+							},
+							draw:function(i){
+								if(enemies[i].y<-375){
+									enemies[i].y=-375;
+								}
+								if(enemies[i].y>275){
+									enemies[i].y=275;
+								}
+								if(enemies[i].x<-375){
+									enemies[i].x=-375;
+								}
+								if(enemies[i].x>375){
+									enemies[i].x=375;
+								}
+								bosshpbar=i;
+								shape(enemies[i].spritec.main,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90));
+								translate(-10*(1+enemies[i].height/100),0);
+								rotate(abs(enemies[i].wingtick%18-9)/6);
+								shape(enemies[i].spritec.wing,0,0,60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90));
+								rotate(-abs(enemies[i].wingtick%18-9)/6);
+								translate(20*(1+(enemies[i].height+6)/100),0);
+								rotate(-abs(enemies[i].wingtick%18-9)/6);
+								shape(enemies[i].spritec.wing,0,0,-60*(1+enemies[i].height/100),(1+enemies[i].height/100)*(90));
+							},
+							loot:0,
+							vision:1000,
+							ondeath:function(i){
+								//Defeat boss
+								bosshpbar=-1;
+								if(options.loadAudio){
+									sfx.beastdeath.play();
+								}
+								if(!(player.record.quests.thatbeast)){
+									player.record.quests.thatbeast=1;
+									if(!(player.passiveboost)){
+										player.passiveboost=0;
+									}
+									player.passiveboost+=0.25;
+									applykeystones();
+									cinematic[0]="dialog";
+									dialoga=1;
+									mouselock=1;
+									dialog=function(){
+										sdialogb({
+											speaker:"",
+											speech:"You feel empowered by this victory! Recieved +0.25% to all passive stat boosts (+0.5% for omnipotenncy).",
+											answers:[
+												{
+													answer:"(Leave)",
+													effect:function(){
+														dialog=0;
+														cinematic[0]=0;
+														dialoga=0;
+													}
+												}
+											],
+										});
+									}
+								}
+								if(player.inrift){
+									player.riftlv=max(player.riftlv,biomedata[9]);
+								}
+								append(stateffectsg,{name:'arena exit',x:0,y:100,tick:0,run:function(){
+									if(render){
+										fill(0,200,0,150);
+										ellipseMode(CENTER);
+										ellipse(400+stateffectsg[n].x-playertemp.x,350+stateffectsg[n].y-playertemp.y,45,60);
+									}
+									if(tick%45==0&stateffectsg[n].x-playertemp.x<400){
+										append(particles,new createparticle(stateffectsg[n].x,stateffectsg[n].y,0,0,0,0,'circle','',25,3,75,-2.5,0,160,0,1));
+									}
+									if(pow(playertemp.x-stateffectsg[n].x,2)+pow(playertemp.y-stateffectsg[n].y,2)<pow(30+player.size,2)){
+										qtipc="Press F to exit";
+										if(!(portallock)&keyPressed&(keyCode==UP||key.code==70||key.code==102)){
+											portallock=1;
+											playertemp.inBossFight=0;
+											if(player.inrift){
+												enterrift(biomedata[9]+5);
+												if(options.autosave){
+													temp= new Array(JSON.stringify(player),1);
+													saveStrings("player "+player.name+".txt",temp);
+													append(particles,new createparticle(300,150,0,0,0,0,'text','GAME SAVED',30,0,255,-3,150,255,0));
+												}
+											}
+											else{
+												playertemp.lastarea=-1;
+												loadArea();
+											}
+										}
+									}
+									if(!(player.biomeID==13)||playertemp.inBossFight==0){
+										stateffectsg.splice(n,1);
+										n-=1;
+									}
+								}});
+								enemies.splice(i,1);
+								i-=1;
+							},
+							ondespawn:function(i){
+								enemies.splice(i,1);
+								i-=1;
+							},
+							aim:function(i){
+								if(enemies[i].cds.vinetrap>0){
+									enemies[i].cds.vinetrap-=1;
+								}
+								else{
+									if(enemies[i].seeds>0){
+										enemies[i].seeds-=1;
+										enemies[i].cds.vinetrap=3;
+									}
+									else{
+										enemies[i].cds.vinetrap=15+(45*(enemies[i].hp/enemies[i].mhp));
+									}
+									append(stateffects,{name:'vine seed',pow:enemies[i].intel*8,target:{x:random(-400,400),y:random(-400,300)},source:i,x:enemies[i].x,y:enemies[i].y,tick:0,run:function(){
+										if(render){
+											fill(0,140+abs(tick%20-10)*5,0,(0.1+min(0.9,stateffects[n].tick/30))*(100+abs(tick%30-15)*5));
+											ellipseMode(CENTER);
+											ellipse(400+stateffects[n].x-playertemp.x,350+stateffects[n].y-playertemp.y,100,100);
+										}
+										stateffects[n].x+=(stateffects[n].target.x-stateffects[n].x)/10;
+										stateffects[n].y+=(stateffects[n].target.y-stateffects[n].y)/10;
+										if(stateffects[n].x<stateffects[n].target.x+7&stateffects[n].x>stateffects[n].target.x-7&stateffects[n].y<stateffects[n].target.y+7&stateffects[n].y>stateffects[n].target.y-7){
+											append(stateffects,{name:'vine trap',vfx:[{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)},{x:random(-20,20),y:random(-20,20)}],pow:stateffects[n].pow,source:stateffects[n].source,x:stateffects[n].x,y:stateffects[n].y,tick:0,run:function(){
+												if(render){
+													if(stateffects[n].x-playertemp.x<400){
+														fill(20+abs(tick%16-8)*15,140+abs(tick%20-10)*5,0,3000-stateffects[n].tick*5);
+														ellipseMode(CENTER);
+														for(dvfx=0;dvfx<stateffects[n].vfx.length;dvfx+=1){
+															ellipse(400+stateffects[n].x-playertemp.x+stateffects[n].vfx[dvfx].x,350+stateffects[n].y-playertemp.y+stateffects[n].vfx[dvfx].y,15,15);
+														}
+													}
+												}
+												if(pow(playertemp.x-stateffects[n].x,2)+pow(playertemp.y-stateffects[n].y,2)<pow(50+player.size,2)){
+													stateffects[n].tick=999;
+													damage('player',0,0,random(stateffects[n].pow*0.95,stateffects[n].pow*1.05),1,1,"ranged",stateffects[n].source,0,["nature"]);
+													showdots[5]=1;
+													nmestatusfx.poison(stateffects[n].pow/180,180,stateffects[n].source);
+													playertemp.speed-=0.3;
+													append(stateffects,{name:'cripple',tick:0,run:function(){
+														if(stateffects[n].tick>=90){
+															playertemp.speed+=0.3;
+															stateffects.splice(n,1);
+															n-=1;
+														}
+													}
+													});
+													if(options.loadAudio){
+														sfx.vinetrap.play();
+													}
+												}
+												if(stateffects[n].tick>600||!(playertemp.inBossFight)){
+													stateffects.splice(n,1);
+													n-=1;
+												}
+											}});
+											stateffects.splice(n,1);
+													n-=1;
+												}
+									}});
+								}
+								if(enemies[i].cds.fly>0){
+									enemies[i].cds.fly-=1;
+								}
+								//Spawn
+								if(enemies[i].action.id==0){
+									nmesa.pointatplayer(i);
+									enemies[i].wingtick=9+enemies[i].action.tick%3;
+									if(enemies[i].cds.height<0){
+										enemies[i].action.height+=1;
+									}
+									else{
+										enemies[i].action.tick=0;
+										enemies[i].action.stock=0;
+										enemies[i].action.id=1;
+									}
+								}
+								//Move
+								else if(enemies[i].action.id==1){
+									nmesa.pointatplayer(i);
+									nmesa.displace(i,1);
+									enemies[i].height=0;
+									enemies[i].wingtick=9+enemies[i].action.tick%3;
+									if(enemies[i].cds.fly<=0){
+										enemies[i].action.active=0;
+										enemies[i].action.tick=0;
+										enemies[i].action.id=3;
+										enemies[i].cds.fly=560;
+										if(options.loadAudio){
+											sfx.jumpbig.play();
+										}
+									}
+									else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(35,2)){
+										enemies[i].action.tick=0;
+										enemies[i].action.stock=0;
+										enemies[i].action.id=2;
+									}
+								}
+								//Slash
+								else if(enemies[i].action.id==2){
+									enemies[i].action.stock+=1+min(180,enemies[i].action.tick)/100;
+									if(enemies[i].action.stock>12){
+										enemies[i].action.stock-=12;
+										if(options.loadAudio){
+											sfx.rapier.rate(random(1,1.2));
+											sfx.rapier.volume(options.sfx*0.3);
+											sfx.rapier.play();
+										}
+										for(cp=0;cp<10;cp+=1){
+											append(particles,new createparticle(enemies[i].x+sin(enemies[i].dir)*35+random(-(40+min(80,enemies[i].action.tick*0.7))/2,(40+min(80,enemies[i].action.tick*0.7))/2),enemies[i].y-cos(enemies[i].dir)*35+random(-(40+min(80,enemies[i].action.tick*0.7))/2,(40+min(80,enemies[i].action.tick*0.7))/2),0,0,0,0,'circle','',15,-0.6,255,-13,random(255),0,0,1));
+										}
+										append(objects,{
+											type:'AoE',
+											target:'player',
+											size:40+min(80,enemies[i].action.tick*0.7)/2,
+											duration:0,
+											rangetype:"melee",
+											source:i,
+											x:enemies[i].x+sin(enemies[i].dir)*35,
+											y:enemies[i].y-cos(enemies[i].dir)*35,
+											pdmgmin:enemies[i].str*9,
+											pdmgmax:enemies[i].str*11,
+											hitc:0,
+											mdmgmin:0,
+											mdmgmax:0,
+											armorE:1,
+											resE:1,
+											procc:1.2,
+											properties:["slash"],
+											hits:new Array(999),
+										});
+									}
+									if(enemies[i].action.tick>300||pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)>pow(40+min(55,enemies[i].action.tick*0.7),2)){
+										enemies[i].action.tick=0;
+										enemies[i].action.id=1;
+									}
+								}
+								//Fly
+								else if(enemies[i].action.id==3){
+									enemies[i].wingtick+=1;
+									if(enemies[i].action.tick<50){
+										enemies[i].height+=2;
+									}
+									else if(enemies[i].action.tick<230){
+										nmesa.displace(i,2);
+										if(enemies[i].action.active){
+											playertemp.x=enemies[i].x+sin(enemies[i].dir)*25;
+											playertemp.y=enemies[i].y-cos(enemies[i].dir)*25;
+											if(enemies[i].action.tick%45==0){
+												enemies[i].dir=random(2*PI);
+												damage('player',0,random(enemies[i].str*7,enemies[i].str*8),0,1,1,"melee",i,0,["pierce"]);
+											}
+										}
+										else if(pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)<pow(20+player.size,2)){
+											enemies[i].action.active=1;
+											enemies[i].ptenacity=enemies[i].tenacity;
+											enemies[i].tenacity=100;
+										}
+										else{
+											if(enemies[i].action.tick%45==0){
+												nmesa.pointatplayer(i);
+											}
+										}
+									}
+									else if(enemies[i].action.tick<280){
+										enemies[i].height-=2;
+									}
+									else{
+										if(enemies[i].action.active){
+											enemies[i].tenacity=enemies[i].ptenacity;
+										}
+										enemies[i].action.tick=0;
+										enemies[i].action.id=1;
+									}
+								}
+								enemies[i].action.tick+=1;
+							}
+						});
+					}
+					else if(bossthings.thatbeast.hascow(n)){
+						append(enemies,{
+							lv:blv,
+							x:(bol%6)*140+50-400,
+							y:(floor(bol/6))*140-350,
+							size:20,
+							name:"Big Cow",
+							mhp:500*nmelvsc(blv),
+							hp:500*nmelvsc(blv),
+							aspdm:1,
+							boost:1,
+							ai:3,
+							exists:1,
+							de:1,
+							dmgmin:1,
+							dmgmax:1,
+							speed:3.2,
+							str:70*nmelvsc(blv),
+							intel:85*nmelvsc(blv),
+							armor:30*nmelvsc(blv),
+							res:50*nmelvsc(blv),
+							dir:0,
+							turnstyle:1,
+							tenacity:50,
+							stun:0,
+							propertydmods:setcustomprop("nature:0.85/bleed:1.3/slash:1.1"),
+							haste:1,
+							walkt:0,
+							xp:15,
+							ppv:0,
+							ppd:0,
+							soulv:12,
+							spdmod:1,
+							tstatus:new Array(),
+							imgtype:3,
+							reactant:0,
+							draw:function(i){
+								if(enemies[i].y<-410){
+									enemies[i].y=9999;
+								}
+								if(enemies[i].y>310){
+									enemies[i].y=9999;
+								}
+								if(enemies[i].x<-410){
+									enemies[i].x=9999;
+								}
+								if(enemies[i].x>410){
+									enemies[i].x=9999;
+								}
+								fill(50,40,0);
+								rect(-13,-20,8,-abs(enemies[i].walkt%20-10)*1.5);
+								rect(-13,20,8,abs(enemies[i].walkt%20-10)*1.5);
+								rect(5,-20,8,-abs((enemies[i].walkt+10)%20-10)*1.5);
+								rect(5,20,8,abs((enemies[i].walkt+10)%20-10)*1.5);
+								rect(-15,-25,30,50,5);
+								rect(-10,-35,20,30,5);
+								fill(200,200,200);
+								ellipse(-10,-7,6,7);
+								ellipse(7,11,6,5);
+								fill(0,0,0);
+								rect(-10,-40,4,5,5);
+								rect(6,-40,4,5,5);
+							},
+							loot:0,
+							vision:1000,
+							ondeath:function(i){
+								enemies.splice(i,1);
+								i-=1;
+							},
+							ondespawn:function(i){
+								enemies.splice(i,1);
+								i-=1;
+							},
+							aim:function(i){
+								enemies[i].walkt+=1;
+								nmesa.pointatplayer(i);
+								enemies[i].dir+=PI;
+								nmesa.displace(i,1);
+							}
+						});
+					}
+				}
+			}
+			if(stateffectsg[n].triggered&stateffectsg[n].tick>255){
+				stateffectsg.splice(n,1);
+				n-=1;
+			}
+		}});
+		append(biomescripts,function(){
+			//Walls
+			if(render){fill(30,50,0);
 			rect(-1200-playertemp.x,-450-playertemp.y,2400,400);
 			rect(-1200-playertemp.x,650-playertemp.y,2400,400);
 			rect(-800-playertemp.x,-550-playertemp.y,800,2400);
@@ -12322,15 +12891,13 @@ var traitfuncs={
 	onhit:new Array(),
 	whenhit:new Array()
 };
-
-var nmeonhit=function(effect,chance,power,duration){
-	if(chance>=random(0,100)){
-		if(effect==1){
-				if(options.loadAudio&showdots[3]==0){
-					sfx.burn.play();
-					showdots[3]=1;
-				}
-			append(dots,{source:i,name:'burn',pow:power,dur:duration,run:function(){
+var nmestatusfx={
+	burn:function(power,duration,source){
+			if(options.loadAudio&showdots[3]==0){
+				sfx.burn.play();
+				showdots[3]=1;
+			}
+			append(dots,{source:source,name:'burn',pow:power,dur:duration,run:function(){
 				showdots[0]=1;
 				showdots[3]=1;
 				if(areatemp.raining>0){
@@ -12345,13 +12912,13 @@ var nmeonhit=function(effect,chance,power,duration){
 					n-=1;
 				}
 			}});
-		}
-		if(effect==2){
-				if(options.loadAudio&showdots[4]==0){
-					sfx.bleed.play();
-					showdots[4]=1;
-				}
-			append(dots,{source:i,name:'bleed',pow:power,dur:duration,run:function(){
+	},
+	bleed:function(power,duration,source){
+			if(options.loadAudio&showdots[4]==0){
+				sfx.bleed.play();
+				showdots[4]=1;
+			}
+			append(dots,{source:source,name:'bleed',pow:power,dur:duration,run:function(){
 				showdots[1]=1;
 				showdots[4]=1;
 				damage("player",0,0.75*dots[n].pow,0,0.018,0.018,"DoT",dots[n].source,0,["bleed"]);
@@ -12360,21 +12927,35 @@ var nmeonhit=function(effect,chance,power,duration){
 					n-=1;
 				}
 			}});
+	},
+	poison:function(power,duration,source){
+		if(options.loadAudio){
+			if(showdots[5]==0){
+				sfx.poisoned.play();
+				showdots[5]=1;
+			}
+		}
+		append(dots,{source:source,name:'poison',pow:power,dur:duration,run:function(){
+			showdots[2]=1;
+			showdots[5]=1;
+			damage("player",0,0,0.75*dots[n].pow,0.018,0.018,"DoT",dots[n].source,0,["poison"]);
+			if(dots[n].dur<=0){
+				dots.splice(n,1);
+				n-=1;
+			}
+		}});
+	},
+};
+var nmeonhit=function(effect,chance,power,duration){
+	if(chance>=random(0,100)){
+		if(effect==1){
+			nmestatusfx.burn(power,duration,i);
+		}
+		if(effect==2){
+			nmestatusfx.bleed(power,duration,i);
 		}
 		if(effect==3){
-				if(options.loadAudio&showdots[5]==0){
-					sfx.poisoned.play();
-					showdots[5]=1;
-				}
-			append(dots,{source:i,name:'poison',pow:power,dur:duration,run:function(){
-				showdots[2]=1;
-				showdots[5]=1;
-				damage("player",0,0,0.75*dots[n].pow,0.018,0.018,"DoT",dots[n].source,0,["poison"]);
-				if(dots[n].dur<=0){
-					dots.splice(n,1);
-					n-=1;
-				}
-			}});
+			nmestatusfx.poison(power,duration,i);
 		}
 	}
 }
@@ -15691,6 +16272,7 @@ append(doaction,function(lv,hand){
 				}
 				if(options.loadAudio){
 					sfx.rapier.rate(random(0.9,1.1));
+					sfx.rapier.volume(options.sfx*0.5);
 					sfx.rapier.play();
 				}
 			}
@@ -15792,6 +16374,7 @@ append(doaction,function(lv,hand){
 			if(playertemp.action.tick==0){
 				if(options.loadAudio){
 					sfx.rapier.rate(random(0.9,1.1));
+					sfx.rapier.volume(options.sfx*0.5);
 					sfx.rapier.play();
 				}
 				append(stateffects,{name:'rapier dash',dir:playertemp.action.dir,tick:0,run:function(){
@@ -16841,9 +17424,11 @@ append(doaction,function(lv,hand){
 				objects[n].sound=0;
 			}
 			if(!(enemies[i].overloadimmunity)){
-				enemies[i].overloadimmunity=1;
-				enemies[i].tenacity-=(100-enemies[i].tenacity)/10;
-				enemies[i].stun+=round((60+player.mp*0.009)*(100-enemies[i].tenacity)/100);
+				if(enemies[i].tenacity<100){
+					enemies[i].overloadimmunity=1;
+					enemies[i].tenacity-=(100-enemies[i].tenacity)/10;
+					enemies[i].stun+=round((60+player.mp*0.009)*(100-enemies[i].tenacity)/100);
+				}
 			}
 		}
 	});
@@ -19312,43 +19897,45 @@ if(tick%30==0){
 			text('Inventory',725,50);
 			statpanel();
 			textAlign(CENTER,CENTER);
-			if(player.autoanvil){
-				fill(110,255,160);
-			}
-			else{
-				fill(110,110,160);
-			}
-			rect(375,150,100,85,5);
-			textFont(txtfont,17);
-			fill(0,0,0);
-			text('Upgrade items',381,143,90,75);
-			if(player.autoanvil){
-				textFont(txtfont,14);
-				fill(0,50,0);
-				text('Auto Enabled',378,175,90,75);
-			}
-			textAlign(CENTER,CENTER);
-			fill(150,0,150);
-			stroke(255,255,100,70+abs(tick%80-40)*2);
-			strokeWeight(0,20);
-			rect(400,45,200,80,10);
-			noStroke();
-			fill(150,255,150);
-			textFont(txtfont,20);
-			text('View / Equip',400,20,200,80);
-			textFont(txtfont,40);
-			text('Traits',400,50,200,80);
-			if(cursorbox(400,600,45,125)){
-				tooltipdraw={
-					type:0,
-					x:mouseX,
-					y:mouseY-50,
-					w:200,
-					h:150,
-					title:"Traits",
-					tip:"Click to view and equip traits obtained from equipped items",
-					colors:0
-				};
+			if(!(playertemp.inBossFight)){
+				if(player.autoanvil){
+					fill(110,255,160);
+				}
+				else{
+					fill(110,110,160);
+				}
+				rect(375,150,100,85,5);
+				textFont(txtfont,17);
+				fill(0,0,0);
+				text('Upgrade items',381,143,90,75);
+				if(player.autoanvil){
+					textFont(txtfont,14);
+					fill(0,50,0);
+					text('Auto Enabled',378,175,90,75);
+				}
+				textAlign(CENTER,CENTER);
+				fill(150,0,150);
+				stroke(255,255,100,70+abs(tick%80-40)*2);
+				strokeWeight(0,20);
+				rect(400,45,200,80,10);
+				noStroke();
+				fill(150,255,150);
+				textFont(txtfont,20);
+				text('View / Equip',400,20,200,80);
+				textFont(txtfont,40);
+				text('Traits',400,50,200,80);
+				if(cursorbox(400,600,45,125)){
+					tooltipdraw={
+						type:0,
+						x:mouseX,
+						y:mouseY-50,
+						w:200,
+						h:150,
+						title:"Traits",
+						tip:"Click to view and equip traits obtained from equipped items",
+						colors:0
+					};
+				}
 			}
 			fill(50,50,50);
 			rect(800,600,80,80,10);
@@ -19365,13 +19952,13 @@ if(tick%30==0){
 				rotate(PI/4);
 			}
 			resetMatrix();
+			if(!(player.biomeID==1||playertemp.inBossFight)){
 			if(playertemp.timesincedamagetaken>=60){
 				fill(150+abs(tick%180-90)/3,150+abs(tick%180-90)/3,255);
 			}
 			else{
 				fill(255,150,150);
 			}
-			if(!(player.biomeID==1||playertemp.inBossFight)){
 			rect(400,605,200,80,10);
 			fill(150,255,150);
 			textFont(txtfont,40);
@@ -19632,43 +20219,48 @@ if(tick%30==0){
 						}
 						else{
 							if(player.inventory.bag[15*x+n]){
-								if(player.inventory.bag[15*x+n].level<=player.level){
-									if(options.loadAudio){sfx.click3.play();}
-									if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='weapon'){
-										if(!(player.inventory.LH)){
-											swapitems('bag',15*x+n,'LH','');
-											getstances();
-										}
-										else if(!(player.inventory.RH)){
-											swapitems('bag',15*x+n,'RH','');
-											getstances();
-										}
-										else{
-											swapitems('bag',15*x+n,'LH','');
-											getstances();
-										}
-									}
-									if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='chest'){
-										swapitems('bag',15*x+n,'chest','');
-									}
-									if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='helmet'){
-										swapitems('bag',15*x+n,'helmet','');
-									}
-									if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='pants'){
-										swapitems('bag',15*x+n,'pants','');
-									}
-									if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='gloves'){
-										swapitems('bag',15*x+n,'gloves','');
-									}
-									if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='shoes'){
-										swapitems('bag',15*x+n,'shoes','');
-									}
-									loadtraits();
-									recalstats();
-									getplayersprite();
+								if(playertemp.inBossFight){
+									append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','You cannot equip items in boss arenas!',20,0,255,-3,255,0,0));
 								}
 								else{
-									append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Your level is too low to equip this!',20,0,255,-3,255,0,0));
+									if(player.inventory.bag[15*x+n].level<=player.level){
+										if(options.loadAudio){sfx.click3.play();}
+										if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='weapon'){
+											if(!(player.inventory.LH)){
+												swapitems('bag',15*x+n,'LH','');
+												getstances();
+											}
+											else if(!(player.inventory.RH)){
+												swapitems('bag',15*x+n,'RH','');
+												getstances();
+											}
+											else{
+												swapitems('bag',15*x+n,'LH','');
+												getstances();
+											}
+										}
+										if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='chest'){
+											swapitems('bag',15*x+n,'chest','');
+										}
+										if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='helmet'){
+											swapitems('bag',15*x+n,'helmet','');
+										}
+										if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='pants'){
+											swapitems('bag',15*x+n,'pants','');
+										}
+										if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='gloves'){
+											swapitems('bag',15*x+n,'gloves','');
+										}
+										if(itemdata[player.inventory.bag[15*x+n].id*10+1]=='shoes'){
+											swapitems('bag',15*x+n,'shoes','');
+										}
+										loadtraits();
+										recalstats();
+										getplayersprite();
+									}
+									else{
+										append(particles,new createparticle(mouseX,mouseY-30,0,0,0,0,'text','Your level is too low to equip this!',20,0,255,-3,255,0,0));
+									}
 								}
 							}
 							invselect=['',-1];
@@ -19677,57 +20269,59 @@ if(tick%30==0){
 				}
 			}
 		}
-		if(cursorbox(375,475,150,235)){
-			tooltipdraw={
-				type:0,
-				x:mouseX,
-				y:mouseY-100,
-				w:250,
-				h:250,
-				title:"Upgrade items",
-				tip:"Right click to toggle automatic anvil (will upgrade equipped items once every time you level up). Left click to use the anvil. Click items with the anvil to upgrade them. Hold shift while clicking to upgrade it to your level (discount when upgrading more than 100 levels). Upgrading costs 5 SP per level.",
-				colors:0
-			};
-			if(!(mouselock)&mousePressed){
-				mouselock=1;
-				if(mouseButton==LEFT){
-					if(options.loadAudio){sfx.click.play();}
-					if(invselect[0]=='anvil'){
-						invselect=['',-1];
+		if(!(playertemp.inBossFight)){
+			if(cursorbox(375,475,150,235)){
+				tooltipdraw={
+					type:0,
+					x:mouseX,
+					y:mouseY-100,
+					w:250,
+					h:250,
+					title:"Upgrade items",
+					tip:"Right click to toggle automatic anvil (will upgrade equipped items once every time you level up). Left click to use the anvil. Click items with the anvil to upgrade them. Hold shift while clicking to upgrade it to your level (discount when upgrading more than 100 levels). Upgrading costs 5 SP per level.",
+					colors:0
+				};
+				if(!(mouselock)&mousePressed){
+					mouselock=1;
+					if(mouseButton==LEFT){
+						if(options.loadAudio){sfx.click.play();}
+						if(invselect[0]=='anvil'){
+							invselect=['',-1];
+						}
+						else{
+							invselect=['anvil',-1];
+						}
 					}
-					else{
-						invselect=['anvil',-1];
-					}
-				}
-				if(mouseButton==RIGHT){
-					if(options.loadAudio){sfx.click.play();}
-					if(player.autoanvil){
-						player.autoanvil=0;
-					}
-					else{
-						player.autoanvil=1;
+					if(mouseButton==RIGHT){
+						if(options.loadAudio){sfx.click.play();}
+						if(player.autoanvil){
+							player.autoanvil=0;
+						}
+						else{
+							player.autoanvil=1;
+						}
 					}
 				}
 			}
-		}	
-		if(!(mouselock)&mousePressed&cursorbox(400,600,45,125)){
-			mouselock=1;
-			if(mouseButton==LEFT){
-				if(options.loadAudio){sfx.click.play();}
-				invselect=['',-1];
-				tooltipcache[0]=-1;
-				inventory=2;
-				if(!(player.intro.traits)&player.enableintro){
-					openhelpscreen();
-					player.intro.traits=1;
+			if(!(mouselock)&mousePressed&cursorbox(400,600,45,125)){
+				mouselock=1;
+				if(mouseButton==LEFT){
+					if(options.loadAudio){sfx.click.play();}
+					invselect=['',-1];
+					tooltipcache[0]=-1;
+					inventory=2;
+					if(!(player.intro.traits)&player.enableintro){
+						openhelpscreen();
+						player.intro.traits=1;
+					}
+					else{
+						helpscreen={active:0,help:0};
+					}
+					if(options.disablespritecache){
+						inventorysprites={};
+					}
+					gettraits();
 				}
-				else{
-					helpscreen={active:0,help:0};
-				}
-				if(options.disablespritecache){
-					inventorysprites={};
-				}
-				gettraits();
 			}
 		}
 		if(!(mouselock)&mousePressed&cursorbox(800,880,600,680)){
@@ -20707,7 +21301,7 @@ if(tick%30==0){
 				fill(255,0,255);
 				textFont(txtfont,34);
 				text("Enter",570,607,100,50);
-				if(cursorbox(570,670,607,657)){
+				if(cursorbox(550,700,595,645)){
 					if(mousePressed){
 						textinput=max(5,min(player.riftlv,round(Number(textinput)/5)*5));
 						enterrift(textinput);
