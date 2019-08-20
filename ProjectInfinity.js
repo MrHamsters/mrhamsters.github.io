@@ -1,4 +1,4 @@
-var version="0.9.1b";
+var version="0.9.1c";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -1376,6 +1376,10 @@ window.onkeydown=function(e){
 		if(!(ilock)){
 			ilock=1;
 			if(inventory>0){
+				if(needssfxu){
+					options.sfx=player.options.sfx;
+					adjustsfx();
+				}
 				invselect=['',-1];
 				keystonecache=0;
 				inventory=0;
@@ -10175,7 +10179,7 @@ var placeboss=[
 		tick=0;
 		bgmn="boss.mp3";
 		append(stateffects,{name:'delayed boss music',tick:0,run:function(){
-			if(stateffects[n].tick>180){
+			if(stateffects[n].tick>180&player.biomeID==13){
 				if(playertemp.inBossFight){
 				bgm=new Howl({
 				src: 'Data/Sound/music/boss.mp3',
@@ -10636,7 +10640,7 @@ var placeboss=[
 	},
 //1: The Bushes of Love
 	function(blv){
-		player.biomeID=13;
+		player.biomeID=2;
 		biomedata[2]=[255,225,0];
 		playertemp.y=150;
 		bg=loadImage('Data/Graphics/background/3.png');
@@ -10647,7 +10651,7 @@ var placeboss=[
 		bgmn="bushesOfLove.ogg";
 		append(stateffects,{name:'delayed boss music',tick:0,run:function(){
 			if(stateffects[n].tick>10){
-				if(playertemp.inBossFight){
+				if(playertemp.inBossFight&player.biomeID==2){
 				bgm=new Howl({
 				src: 'Data/Sound/music/bushesOfLove.ogg',
 				autoplay: true,
@@ -10759,7 +10763,7 @@ var placeboss=[
 							},
 							haste:1,
 							height:-100,
-							cds:{vinetrap:0,fly:300},
+							cds:{vinetrap:0,fly:420},
 							xp:700,
 							ppv:0,
 							ppd:0,
@@ -10996,7 +11000,7 @@ var placeboss=[
 										enemies[i].action.active=0;
 										enemies[i].action.tick=0;
 										enemies[i].action.id=3;
-										enemies[i].cds.fly=560;
+										enemies[i].cds.fly=720;
 										if(options.loadAudio){
 											sfx.jumpbig.play();
 										}
@@ -11041,7 +11045,7 @@ var placeboss=[
 											hits:new Array(999),
 										});
 									}
-									if(enemies[i].action.tick>300||pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)>pow(40+min(55,enemies[i].action.tick*0.7),2)){
+									if(enemies[i].cds.fly<=0||pow(playertemp.x-enemies[i].x,2)+pow(playertemp.y-enemies[i].y,2)>pow(40+min(40,enemies[i].action.tick*0.7),2)){
 										enemies[i].action.tick=0;
 										enemies[i].action.id=1;
 									}
@@ -11052,8 +11056,8 @@ var placeboss=[
 									if(enemies[i].action.tick<50){
 										enemies[i].height+=2;
 									}
-									else if(enemies[i].action.tick<230){
-										nmesa.displace(i,2);
+									else if(enemies[i].action.tick<350){
+										nmesa.displace(i,2.8-(enemies[i].hp/enemies[i].mhp));
 										if(enemies[i].action.active){
 											playertemp.x=enemies[i].x+sin(enemies[i].dir)*25;
 											playertemp.y=enemies[i].y-cos(enemies[i].dir)*25;
@@ -11073,7 +11077,7 @@ var placeboss=[
 											}
 										}
 									}
-									else if(enemies[i].action.tick<280){
+									else if(enemies[i].action.tick<400){
 										enemies[i].height-=2;
 									}
 									else{
@@ -13409,7 +13413,12 @@ var statpanel=function(){
 			append(stemp,'');
 			append(stemp,'Costs: 3PP');
 			append(stemp,'Hold shift to apply 10 per click.');
-			append(stemp,'Hold control to spend half of your PP per click.');
+			if(player.ppath==0){
+				append(stemp,'Hold control to spend all of your PP per click.');
+			}
+			else{
+				append(stemp,'Hold control to spend half of your PP per click.');
+			}
 			tooltipdraw={
 				type:1,
 				x:mouseX,
@@ -13426,13 +13435,18 @@ var statpanel=function(){
 				if(keyPressed&keyCode==16){
 					stemp=min(10,floor(player.pp/300));
 					if(stemp>0){
-							player.pp-=stemp*300;
-							player.passives[0]+=stemp;
-							recalstats();
+						player.pp-=stemp*300;
+						player.passives[0]+=stemp;
+						recalstats();
 					}
 				}
 				else if(keyPressed&keyCode==17){
-					stemp=floor(player.pp/600);
+					if(player.ppath==0){
+						stemp=floor(player.pp/300);
+					}
+					else{
+						stemp=floor(player.pp/600);
+					}
 					if(stemp>0){
 						player.pp-=stemp*300;
 						player.passives[0]+=stemp;
@@ -13492,7 +13506,12 @@ var statpanel=function(){
 			append(stemp,'');
 			append(stemp,'Costs: 3PP');
 			append(stemp,'Hold shift to apply 10 per click.');
-			append(stemp,'Hold control to spend half of your PP per click.');
+			if(player.ppath==1){
+				append(stemp,'Hold control to spend all of your PP per click.');
+			}
+			else{
+				append(stemp,'Hold control to spend half of your PP per click.');
+			}
 			tooltipdraw={
 				type:1,
 				x:mouseX,
@@ -13515,7 +13534,12 @@ var statpanel=function(){
 					}
 				}
 				else if(keyPressed&keyCode==17){
-					stemp=floor(player.pp/600);
+					if(player.ppath==1){
+						stemp=floor(player.pp/300);
+					}
+					else{
+						stemp=floor(player.pp/600);
+					}
 					if(stemp>0){
 						player.pp-=stemp*300;
 						player.passives[1]+=stemp;
@@ -13575,7 +13599,12 @@ var statpanel=function(){
 			append(stemp,'');
 			append(stemp,'Costs: 6PP');
 			append(stemp,'Hold shift to apply 10 per click.');
-			append(stemp,'Hold control to spend half of your PP per click.');
+			if(player.ppath==2){
+				append(stemp,'Hold control to spend all of your PP per click.');
+			}
+			else{
+				append(stemp,'Hold control to spend half of your PP per click.');
+			}
 			tooltipdraw={
 				type:1,
 				x:mouseX,
@@ -13598,7 +13627,12 @@ var statpanel=function(){
 					}
 				}
 				else if(keyPressed&keyCode==17){
-					stemp=floor(player.pp/1200);
+					if(player.ppath==2){
+						stemp=floor(player.pp/600);
+					}
+					else{
+						stemp=floor(player.pp/1200);
+					}
 					if(stemp>0){
 						player.pp-=stemp*600;
 						player.passives[2]+=stemp;
@@ -18254,7 +18288,7 @@ append(doaction,function(lv,hand){
 						for(i=0;i<enemies.length;i+=1){
 							if(pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*40,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*40,2)<pow(85+enemies[i].size,2)){
 								hits+=1;
-								damage("enemies",i,0,random(plsin(42)*1.4,plsin(46)*1.4),1,1,"melee","player",2.8,["void","impact","darknessrise"]);
+								damage("enemies",i,0,random(plsin(34)*1.4,plsin(38)*1.4),1,1,"melee","player",2.24,["void","impact","darknessrise"]);
 							}
 						}
 					}
@@ -18263,7 +18297,7 @@ append(doaction,function(lv,hand){
 						for(i=0;i<enemies.length;i+=1){
 							if(pow(enemies[i].x-playertemp.x+cos(playertemp.action.diro+PI/2)*40,2)+pow(enemies[i].y-playertemp.y+sin(playertemp.action.diro+PI/2)*40,2)<pow(85+enemies[i].size,2)){
 								hits+=1;
-								damage("enemies",i,0,random(plsin(42),plsin(46)),1,1,"melee","player",2,["void","impact","darknessrise"]);
+								damage("enemies",i,0,random(plsin(34),plsin(38)),1,1,"melee","player",1.6,["void","impact","darknessrise"]);
 							}
 						}
 					}
@@ -21235,8 +21269,8 @@ if(tick%30==0){
 					}
 					if(player.record.quests.shrek>0){
 						artisanmbox("hp",0);
-						artisanmbox("hpregen",40);
-						artisanmbox("mp",80);
+						artisanmbox("mp",40);
+						artisanmbox("hpregen",80);
 						artisanmbox("mpregen",120);
 						artisanmbox("str",160);
 						artisanmbox("intel",200);
@@ -21244,8 +21278,8 @@ if(tick%30==0){
 						artisanmbox("res",280);
 					}
 						artisanpbox("hp",0);
-						artisanpbox("hpregen",40);
-						artisanpbox("mp",80);
+						artisanpbox("mp",40);
+						artisanpbox("hpregen",80);
 						artisanpbox("mpregen",120);
 						artisanpbox("str",160);
 						artisanpbox("intel",200);
@@ -21254,8 +21288,8 @@ if(tick%30==0){
 					textFont(txtfont,19);
 					fill(0,0,0);
 					text("Health: "+round(1000*(player.inventory.bag[invselect[1]].rolls.hp))/10+"%",150,320);
-					text("Health Regen: "+round(1000*(player.inventory.bag[invselect[1]].rolls.hpregen))/10+"%",150,360);
-					text("Mana: "+round(1000*(player.inventory.bag[invselect[1]].rolls.mp))/10+"%",150,400);
+					text("Mana: "+round(1000*(player.inventory.bag[invselect[1]].rolls.mp))/10+"%",150,360);
+					text("Health Regen: "+round(1000*(player.inventory.bag[invselect[1]].rolls.hpregen))/10+"%",150,400);
 					text("Mana Regen: "+round(1000*(player.inventory.bag[invselect[1]].rolls.mpregen))/10+"%",150,440);
 					text("Strength: "+round(1000*(player.inventory.bag[invselect[1]].rolls.str))/10+"%",150,480);
 					text("Intelligence: "+round(1000*(player.inventory.bag[invselect[1]].rolls.intel))/10+"%",150,520);
@@ -21305,10 +21339,10 @@ if(tick%30==0){
 					}
 				}
 				if(cursorbox(775,925,200,500)){
-					if(player.reactant>=30){
-						text("Next rift: LV"+(player.riftlv+5)+". Costs 30 reactant.",775,275,150,300);
+					if(player.reactant>=200){
+						text("Next rift: LV"+(player.riftlv+5)+". Costs 200 reactant.",775,275,150,300);
 						if(mousePressed){
-							player.reactant-=30;
+							player.reactant-=200;
 							enterrift(player.riftlv+5);
 							inventory=0;
 							helpscreen={active:0,help:0};
@@ -21327,7 +21361,7 @@ if(tick%30==0){
 						}
 					}
 					else{
-						text("Next rift: LV"+(player.riftlv+5)+". You need "+(30-player.reactant)+" more reactant.",775,275,150,300);
+						text("Next rift: LV"+(player.riftlv+5)+". You need "+(200-player.reactant)+" more reactant.",775,275,150,300);
 					}
 				}
 				fill(255,255,255);
