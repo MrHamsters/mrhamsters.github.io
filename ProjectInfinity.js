@@ -1,4 +1,4 @@
-var version="0.9.1c";
+var version="0.9.1d";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -21610,7 +21610,7 @@ if(tick%30==0){
 				mouselock=1;
 				if(mouseButton==LEFT){
 					if(options.loadAudio){sfx.click.play();}
-					append(particles,new createparticle(max(275,mouseX),mouseY-30,0,0,0,0,'text','Equip an active trait by pressing Q, E, Shift, or Ctrl on it!',20,0,255,-1,255,255,0));
+					append(particles,new createparticle(max(275,mouseX),mouseY-30,0,0,0,0,'text','Equip an active trait by pressing Q, E, Shift, or Space on it!',20,0,255,-1,255,255,0));
 				}
 			}
 		}
@@ -22110,9 +22110,25 @@ else{
 				menuscreentemp[5]=1;
 			}
 		}
+		textFont(font,30);
 		fill(200,200,0);
-		textFont(font, 30); 
 		text("Name: "+textinput,75,220,700,90);
+		if(textinput==""){
+			fill(140,140,120);
+			if(menuscreentemp[5]){
+				text("Type a name",175,220,700,90);
+			}
+			else{
+				text("Click here",175,220,700,90);
+			}
+		}
+		else{
+			textFont(font,23);
+			fill(255,100,100);
+			text("Backspace usually doesn't work.",100,265,700,90);
+			text("Use DELETE to remove letters.",100,290,700,90);
+		}
+		textFont(font,30);
 		fill(255,255,abs(tick%120-60)*1.5);
 		rect(165,255,400,5);
 		fill(0,0,0);
