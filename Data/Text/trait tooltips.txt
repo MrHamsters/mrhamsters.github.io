@@ -235,7 +235,7 @@ Overload
 Augmented Thorns
 [Passive] Damage dealt by Thorns and Reflection is increased by {a0.02}.
 Bone Armor
-[Passive] Killing enemies grant you {ox6c3}% of their base armor and resistance, decaying over 30 seconds. Each active stack of Bone Armor also reduces damage taken from hits by 2% (multiplicative, capped at {ox0c3} stacks). [Active] Consume 10% of your maximum health to gain 3 stacks of Bone Armor, each worth {h0.2+s0.05+i0.05} (10 second cooldown).
+[Passive] Killing enemies grant you {ox2c1}% of their base armor and resistance, decaying over 30 seconds. Each active stack of Bone Armor also reduces damage taken from hits by {ox1c0.25}% (multiplicative, capped at {ox7c3} stacks). [Active] Consume 20% of your maximum health to gain 5 stacks of Bone Armor, each worth {h0.1+s0.01+i0.01} (15 second cooldown).
 Fire Mastery
 [Passive] Increases fire damage dealt by {ox0c1}%.
 Water Mastery
