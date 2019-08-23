@@ -1,4 +1,4 @@
-var version="0.9.1d";
+var version="0.9.1e";
 void setup(){
   size(1133,700);
   strokeWeight(10);
@@ -1584,12 +1584,17 @@ var openhelpscreen=function(introkey){
 				textAlign(CENTER);
 				text("It seems you have some SP and reactant to spend on enchantments. Visit the Enchanter to browse enchantments!",140,120,550,300);
 				ellipseMode(CENTER);
+				stroke(255,255,100,abs(tick%80-40)*3);
+				fill(255,220,100,100);
+				strokeWeight(20);
+				ellipse(400,300,175,175);
+				noStroke();
 				fill(40,0,50);
 				ellipse(400,300,60,60);
-				rect(375,275,30,30);
-				rect(425,275,30,30);
-				rect(375,325,30,30);
-				rect(425,325,30,30);
+				rect(360,260,30,30);
+				rect(410,260,30,30);
+				rect(360,310,30,30);
+				rect(410,310,30,30);
 				fill(min(255,max(0,255-pow(pow(playertemp.x-200,2)+pow(playertemp.y+350,2),0.5))),min(255,max(0,255-pow(pow(playertemp.x-200,2)+pow(playertemp.y+350,2),0.5)*2)),min(255,max(0,255-pow(pow(playertemp.x-200,2)+pow(playertemp.y+350,2),0.5))));
 				ellipse(400,300,35,35);
 				noStroke();
@@ -6206,13 +6211,41 @@ var loadtraits=function(){
 		append(traitfuncs.damagetaken,function(){
 			if(willhit){
 				if(playertemp.bonearmor>0){
-					pdmg*=pow(0.98,min(playertemp.traits[119]*3,playertemp.bonearmor));
-					mdmg*=pow(0.98,min(playertemp.traits[119]*3,playertemp.bonearmor));
+					pdmg*=pow(0.99-playertemp.traits[119]*0.0025,min(7+playertemp.traits[119]*3,playertemp.bonearmor));
+					mdmg*=pow(0.99-playertemp.traits[119]*0.0025,min(7+playertemp.traits[119]*3,playertemp.bonearmor));
 				}
 			}
 		});
 		append(traitfuncs.onkill,function(f){
-			ts.bonearmor((enemies[f].armor*(0.06+0.03*playertemp.traits[119])/enemies[f].boost),(enemies[f].res*(0.06+0.03*playertemp.traits[119])/enemies[f].boost));
+			ts.bonearmor((enemies[f].armor*(0.02+0.01*playertemp.traits[119])/enemies[f].boost),(enemies[f].res*(0.02+0.01*playertemp.traits[119])/enemies[f].boost));
+		});
+		append(traitfuncs.overlay,function(){
+			ellipseMode(CENTER);
+			translate(720,600);
+			fill(115,115,115,120);
+			rect(-40,-40,80,90,12);
+			triangle(-30,-39,-10,-39,-20,-59);
+			triangle(30,-39,10,-39,20,-59);
+			rect(-10,-50,20,100,9);
+			rotate(PI/2);
+			rect(-10,-50,20,100,9);
+			rotate(-PI/2);
+			fill(0,0,0);
+			textFont(txtfont,24);
+			if(playertemp.bonearmor>0){
+				text(playertemp.bonearmor,-35,-35,40,60);
+			}
+			else{
+				text("0",-35,-35,40,60);
+			}
+			text("/ "+(7+playertemp.traits[119]*3),-6,-35,40,70);
+			if(playertemp.bonearmor>0){
+				text(round((1-(pow(0.99-playertemp.traits[119]*0.0025,min(7+playertemp.traits[119]*3,playertemp.bonearmor))))*1000)/10+"%",-30,20,50,250);
+			}
+			else{
+				text("0%",-30,20,50,250);
+			}
+			resetMatrix();
 		});
 	}
 	if(playertemp.traits[25]>0){
@@ -10894,7 +10927,7 @@ var placeboss=[
 											}
 										}
 									}
-									if(!(player.biomeID==13)||playertemp.inBossFight==0){
+									if(!(player.biomeID==2)||playertemp.inBossFight==0){
 										stateffectsg.splice(n,1);
 										n-=1;
 									}
@@ -17511,8 +17544,8 @@ append(doaction,function(lv,hand){
 });
 //Bone Armor
 append(doaction,function(lv,hand){
-	if(player.hp>player.maxhp*0.1){
-		player.hp-=player.maxhp*0.1;
+	if(player.hp>player.maxhp*0.2){
+		player.hp-=player.maxhp*0.2;
 	playertemp.action={
 		name:'bone armor',
 		tick:0,
@@ -17523,9 +17556,9 @@ append(doaction,function(lv,hand){
 	playertemp.action.run=function(){
 		if(playertemp.action.tick==0){
 			if(options.loadAudio){sfx.hurt.play();}
-			ts.bonearmor(plshp(0.2)+plsst(0.05)+plsin(0.05),plshp(0.2)+plsst(0.05)+plsin(0.05));
-			ts.bonearmor(plshp(0.2)+plsst(0.05)+plsin(0.05),plshp(0.2)+plsst(0.05)+plsin(0.05));
-			ts.bonearmor(plshp(0.2)+plsst(0.05)+plsin(0.05),plshp(0.2)+plsst(0.05)+plsin(0.05));
+			for(aba=0;aba<5;aba+=1){
+				ts.bonearmor(plshp(0.1)+plsst(0.01)+plsin(0.01),plshp(0.1)+plsst(0.01)+plsin(0.01));
+			}
 		}
 		if(playertemp.action.tick>=20){
 			stopaction();
