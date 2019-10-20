@@ -4515,8 +4515,11 @@ var applymods=function(){
 	}
 	if(player.mods[15]){
 		append(player.modfuncs.passive,function(){
+			if(!(playertemp.withergae)){
+				playertemp.withergae=gametick;
+			}
 			if(player.wither>0){
-				if(gametick%30==0){
+				if(gametick%30==0&playertemp.nanogae<gametick){
 					takedamage({dmg:min(1,player.wither)*0.75,shieldpen:true});
 					player.wither=max(0,player.wither-1);
 				}
