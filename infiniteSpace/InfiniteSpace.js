@@ -4520,6 +4520,7 @@ var applymods=function(){
 			}
 			if(player.wither>0){
 				if(gametick%30==0&playertemp.withergae<gametick){
+					playertemp.withergae=gametick;
 					takedamage({dmg:min(1,player.wither)*0.75,shieldpen:true});
 					player.wither=max(0,player.wither-1);
 				}
