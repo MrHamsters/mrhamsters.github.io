@@ -1,4 +1,4 @@
-var version="v1.1.2";
+var version="v1.2";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -197,6 +197,9 @@ function cenemyproj(args){
 	}
 	if(args.misc){
 		this.misc=args.misc;
+	}
+	if(args.onhit){
+		this.onhit=args.onhit;
 	}
 }
 var biome={
@@ -1196,16 +1199,61 @@ function(){
 		bgm.volume((1-biome.timer/100)*options.music*bgmv);
 		if(biome.timer==100){
 			bgm.pause();
-			if(random(1)<0.5){
-				setbgmt[2]();
+			if(gametick>25200){
+				biome.temp.deep=1;
+				setbgmt[11]();
 			}
 			else{
-				setbgmt[3]();
+				if(random(1)<0.5){
+					setbgmt[2]();
+				}
+				else{
+					setbgmt[3]();
+				}
 			}
 			bgmt.play();
 		}
 	}
-	if((stagetemp.biomeprogress-10>biome.temp.leviathan*30-min(22,gametick/1200)||!(biome.temp.leviathan))&stagetemp.biomeprogress<80&stagetemp.biomeprogress>10){
+	if(biome.temp.deep){
+		biome.temp.obscurestars=min(12,biome.timer/30);
+		if(tick%10==0){
+			append(objects,{
+				x:random(100,900),
+				y:0,
+				size:random(7,13),
+				speed:random(0.1,3),
+				dur:random(300,900),
+				squeesh:round(random(29)),
+				draw:function(){
+					fill(50,50,50,min(50,objects[a].dur));
+					stroke(50,50,100,2*min(50,objects[a].dur));
+					strokeWeight(3);
+					ellipse(objects[a].x,objects[a].y,(15+abs((tick+objects[a].squeesh)%60-30)/4)+objects[a].size,(15+abs((tick+30+objects[a].squeesh)%60-30)/4)+objects[a].size);
+					noStroke();
+				},
+				run:function(){
+					if(biome.id!=3){
+						if(objects[a].dur>30){
+							objects[a].dur=30;
+						}
+						else{
+							objects[a].y-=10;
+						}
+					}
+					objects[a].y+=objects[a].speed;
+					objects[a].dur-=1;
+					if(objects[a].dur<60){
+						objects[a].size*=1.05;
+					}
+					if(objects[a].dur<1||objects[a].y>800){
+						objects.splice(a,1);
+						a-=1;
+					}
+				}
+			});
+		}
+	}
+	if(biome.temp.deep&(stagetemp.biomeprogress-10>biome.temp.leviathan*(30-min(22,(gametick-14400)/1200))||!(biome.temp.leviathan))&stagetemp.biomeprogress<85&stagetemp.biomeprogress>5){
 		if(!(biome.temp.leviathan)){
 			biome.temp.leviathan=0;
 		}
@@ -1222,6 +1270,9 @@ function(){
 				}
 			},
 			draw:function(){
+				if(objects[a].dur<120){
+					append(particles,{x:objects[a].dir==-1?890:110+random(-10,10),y:objects[a].y+random(-70,70),xvelo:objects[a].dir*random(2,4),yvelo:random(-2,2),size:random(11,15),op:random(100,140),opc:-7,exp:1,color:[0,0,0]});
+				}
 				fill(0,0,0,18-abs(objects[a].dur-180)/10);
 				for(b=0;b<5+options.graphics*10;b+=1){
 					ellipse(500-objects[a].dir*400,objects[a].y,b*27-options.graphics*18,b*45-options.graphics*30);
@@ -1229,12 +1280,14 @@ function(){
 				shape(sprites.leviathan,objects[a].x,objects[a].y,objects[a].dir*1400,1750);
 				fill(0,0,0);
 				if(objects[a].dir==-1){
-					rect(objects[a].x,objects[a].y-50,1000,100,60);
+					rect(objects[a].x,objects[a].y-50,900+abs(tick%90-45)/45*100,100,60);
 					rect(objects[a].x+400,objects[a].y,80,150,40);
+					triangle(objects[a].x+850+abs(tick%90-45)/45*100,objects[a].y,objects[a].x+920+abs(tick%90-45)/45*120,objects[a].y-90,objects[a].x+920+abs(tick%90-45)/45*120,objects[a].y+90);
 				}
 				else{
-					rect(objects[a].x-1000,objects[a].y-50,1000,100,60);
+					rect(objects[a].x-900+abs(tick%90-45)/45*100,objects[a].y-50,900-abs(tick%90-45)/45*100,100,60);
 					rect(objects[a].x-480,objects[a].y,80,150,40);
+					triangle(objects[a].x-850+abs(tick%90-45)/45*100,objects[a].y,objects[a].x-920+abs(tick%90-45)/45*120,objects[a].y-90,objects[a].x-920+abs(tick%90-45)/45*120,objects[a].y+90);
 				}
 				fill(255,0,0);
 				ellipse(objects[a].x,objects[a].y-40,18,12);
@@ -1263,7 +1316,7 @@ function(){
 									player.wither+=1.5;
 									takedamage({dmg:5});
 									append(objects,{
-										dur:6,
+										dur:9,
 										dir:objects[a].dir,
 										run:function(){
 											player.x+=objects[a].dir*8;
@@ -1287,6 +1340,14 @@ function(){
 									});
 								}
 							}
+							else if(hitboxr(objects[a].x-450*objects[a].dir,objects[a].y,player.x,player.y,450,50+player.size/2)){
+								if(player.y>objects[a].y){
+									player.y=objects[a].y+50+player.size/2;
+								}
+								else{
+									player.y=objects[a].y-50-player.size/2;
+								}
+							}
 						}
 					}
 				}
@@ -1298,11 +1359,277 @@ function(){
 			}
 		});
 	}
-	if(gametick%(round(38-min(12,max(0,gametick-7200)/1440))*2)==0){
-		if(random(1)<0.2&stagetemp.biomeprogress>=30&stagetemp.biomeprogress<85){
+	if(gametick%(round(38-min(10,max(0,gametick-7200)/3240))*(biome.temp.deep?3:2))==0){
+		if(biome.temp.deep&!(stagetemp.serpents>1)&random(1)<0.1){
+			if(!(stagetemp.serpents)){
+				stagetemp.serpents=0;
+			}
+			stagetemp.serpents+=1;
+			append(enemies,{
+				name:"Serpent",
+				hp:1000,
+				mhp:100,
+				size:35,
+				xvelo:random(-0.5,0.5),
+				yvelo:3,
+				xacc:0,
+				yacc:0,
+				x:random(100,900),
+				y:-20,
+				contactcd:30,
+				id:tick%6000,
+				ammo:0,
+				stdm:0.7,
+				dmgm:1.3,
+				tick:0,
+				atk:round(random(-0.49,2.19)),
+				color:[0,random(40,120),random(100,120)],
+				draw:function(){
+					ellipseMode(CENTER);
+					if(options.graphics){
+						fill(255,210,180,10);
+						for(b=0;b<32;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*4,b*4);
+						}
+					}
+					else{
+						fill(255,210,180,40);
+						for(b=0;b<8;b+=1){
+							ellipse(enemies[a].x,enemies[a].y,b*16,b*16);
+						}
+					}
+					noFill();
+					strokeWeight(30);
+					stroke(enemies[a].color[0],enemies[a].color[1],enemies[a].color[2]);
+					bezier(enemies[a].x-30+abs(enemies[a].tick%80-40)*1.5,enemies[a].y-52.5+abs(enemies[a].tick%100-50)/2,
+						enemies[a].x-90+abs(enemies[a].tick%40-20)*9,enemies[a].y-50+abs(enemies[a].tick%120-60),
+						enemies[a].x-90+abs((enemies[a].tick+20)%40-20)*9,enemies[a].y+50-abs(enemies[a].tick%120-60),
+						enemies[a].x-30+abs((enemies[a].tick+20)%80-40)*1.5,enemies[a].y+52.5-abs(enemies[a].tick%100-50)/2);
+					noStroke();
+				},
+				run:function(){
+					enemies[a].ammo+=1+min(0.5,(gametick-25200)/36000);
+					enemies[a].tick+=1;
+					if(enemies[a].atk==0){
+						if(enemies[a].ammo>30){
+							append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size)+5,xvelo:random(-2,2),yvelo:random(-2,2),
+							size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[0,random(200,255),random(150,255)]});
+							if(enemies[a].ammo>90){
+								enemies[a].ammo-=90;
+								enemyproj({size:20,speed:8,damage:16,dir:PI,source:a,draw:function(){
+									noFill();
+									strokeWeight(8);
+									stroke(0,100,90);
+									line(projectiles[a].x-20,projectiles[a].y+10,projectiles[a].x,projectiles[a].y+20);
+									line(projectiles[a].x+20,projectiles[a].y+10,projectiles[a].x,projectiles[a].y+20);
+									line(projectiles[a].x-20,projectiles[a].y,projectiles[a].x,projectiles[a].y+10);
+									line(projectiles[a].x+20,projectiles[a].y,projectiles[a].x,projectiles[a].y+10);
+									stroke(0,100,90,150);
+									line(projectiles[a].x,projectiles[a].y-15,projectiles[a].x,projectiles[a].y-5);
+									stroke(0,100,90);
+									line(projectiles[a].x-20,projectiles[a].y-20,projectiles[a].x+20,projectiles[a].y-20);
+									noStroke();
+									if(options.graphics){
+										if(projectiles[a].target){
+											fill(0,0,255,10);
+										}
+										else{
+											fill(255,0,0,10);
+										}
+										for(b=0;b<8;b+=1){
+											ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
+										}
+									}
+								},
+								run:function(){
+									projectiles[a].abyssslow=60;
+								}
+								});
+								enemies[a].atk=round(random(-0.49,2.19));
+							}
+						}
+					}
+					else if(enemies[a].atk==1){
+						if(enemies[a].ammo>60){
+							append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size)+5,xvelo:random(-2,2),yvelo:random(-2,2),
+							size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[0,0,0]});
+							if(enemies[a].ammo>120){
+								enemies[a].ammo-=120;
+								for(b=0;b<3;b++){
+									enemyproj({size:20,speed:0,damage:0,dir:PI,source:a,misc:{xvelo:random(-3,3),xacc:random(-0.1,0.1)},draw:function(){
+										fill(0,0,0);
+										ellipse(projectiles[a].x,projectiles[a].y,20,20);
+										fill(0,0,0,20);
+										for(b=0;b<8;b+=1){
+											ellipse(projectiles[a].x,projectiles[a].y,b*12,b*12);
+										}
+										if(options.graphics){
+											if(projectiles[a].target){
+												fill(0,0,100,10);
+											}
+											else{
+												fill(0,0,0,10);
+											}
+											for(b=0;b<16;b+=1){
+												ellipse(projectiles[a].x,projectiles[a].y,b*10,b*10);
+											}
+										}
+										else{
+											if(projectiles[a].target){
+												fill(0,0,100,10);
+											}
+											else{
+												fill(50,0,0,10);
+											}
+											for(b=0;b<8;b+=1){
+												ellipse(projectiles[a].x,projectiles[a].y,b*20,b*20);
+											}
+										}
+									},
+									onhit:function(){
+										if(projectiles[a].target){
+											projectiles[a].damage+=16;
+										}
+										else{
+											if(player.shielding){
+												projectiles[a].damage+=7;
+											}
+											else{
+												sfx.wither.rate(random(0.9,1.1));
+												sfx.wither.volume(options.sfx*2.5);
+												sfx.wither.play();
+												player.wither+=7;
+											}
+										}
+									},
+									run:function(){
+										projectiles[a].misc.xvelo+=projectiles[a].misc.xacc;
+										projectiles[a].x+=projectiles[a].misc.xvelo;
+										if(projectiles[a].target){
+											projectiles[a].y-=5;
+										}
+										else{
+											projectiles[a].y+=5;
+										}
+										projectiles[a].abyssslow=60;
+									}
+									});
+								enemies[a].atk=round(random(-0.49,2.19));
+								}
+							}
+						}
+					}
+					else{
+						if(enemies[a].ammo>120){
+							append(particles,{x:enemies[a].x+random(-enemies[a].size,enemies[a].size),y:enemies[a].y+random(enemies[a].size)+5,xvelo:random(-2,2),yvelo:random(-2,2),
+							size:random(9,12),op:random(160,200),opc:-7,exp:1,color:[random(180,210),random(180,210),255]});
+							if(enemies[a].ammo>180){
+								enemies[a].ammo-=180;
+								enemyproj({size:60,speed:10,damage:0,dir:PI,source:a,draw:function(){
+									noFill();
+									strokeWeight(11);
+									for(b=0;b<4;b++){
+										stroke(255-b*30,255-b*30,255);
+										arc(projectiles[a].x,projectiles[a].y-30+b*20,45+b*17,30+b*15,0,PI);
+									}
+									noStroke();
+								},
+								onhit:function(b){
+									if(projectiles[a].target){
+										enemies[b].y-=50;
+									}
+									else{
+										if(player.shielding){
+											projectiles[a].damage+=2;
+										}
+										else{
+											append(objects,{
+												dur:15,
+												dir:objects[a].dir,
+												run:function(){
+													player.y+=15;
+													objects[a].dur-=1;
+													if(objects[a].dur<=0){
+														objects.splice(a,1);
+														a-=1;
+													}
+												}
+											});
+										}
+									}
+								},
+								run:function(){
+									projectiles[a].abyssslow=60;
+								}
+								});
+								enemies[a].atk=round(random(-0.49,2.19));
+							}
+						}
+					}
+					enemies[a].contactcd=max(0,enemies[a].contactcd-1);
+					if(random(1)<0.03){
+						enemies[a].xacc=random(-0.03,0.03);
+					}
+					if(enemies[a].x<170){
+						enemies[a].xacc=random(0,0.03);
+					}
+					else if(enemies[a].x>830){
+						enemies[a].xacc=random(-0.03,0);
+					}
+					if(biome.id!=3){
+						enemies[a].yacc=0;
+						enemies[a].yvelo=-2;
+					}
+					else{
+						if(random(1)<0.03){
+							enemies[a].yacc=random(-0.03,0.03);
+						}
+						if(enemies[a].y<50){
+							enemies[a].yacc=random(0.01,0.03);
+						}
+						else if(enemies[a].y>150){
+							enemies[a].yacc=random(-0.03,-0.01);
+						}
+					}
+					enemies[a].xvelo=max(-0.5,min(0.5,enemies[a].xvelo+enemies[a].xacc));
+					enemies[a].yvelo=max(-0.5,min(0.5,enemies[a].yvelo+enemies[a].yacc));
+					enemies[a].x+=enemies[a].xvelo;
+					enemies[a].y+=enemies[a].yvelo;
+					if(!(playertemp.phasing>0)){
+						if(playerhitbox(enemies[a].x,enemies[a].y,enemies[a].size)){
+							if(enemies[a].contactcd<=0){
+								enemies[a].contactcd=60;
+								takedamage({dmg:9});
+							}
+						}
+					}
+					if(enemies[a].y>750||enemies[a].y<-100){
+						enemies[a].exp=1;
+					}
+				},
+				onend:function(){
+					stagetemp.serpents-=1;
+				},
+				ondeath:function(){
+					append(objects,{
+						timer:0,
+						run:function(){
+							objects[a].timer+=1;
+							stagetemp.biomeprogress+=0.12;
+							if(objects[a].timer>=100){
+								objects.splice(a,1);
+								a-=1;
+							}
+						}
+					});
+				},
+				exp:0,
+				score:400
+			});
+		}
+		else if(random(1)<(biome.temp.deep?0.4:0.2)&stagetemp.biomeprogress>=30&stagetemp.biomeprogress<85){
 			append(enemies,{
 				name:"abyssal demon",
-				isTerrain:1,
 				hp:250,
 				mhp:250,
 				size:14,
@@ -2964,14 +3291,7 @@ var shoot=[
 						for(b=0;b<enemies.length;b+=1){
 							if(hitbox(player.x,player.y,enemies[b].x,enemies[b].y,125+enemies[b].size)){
 								if(pow(enemies[b].x-player.x,2)+pow(enemies[b].y-player.y,2)<pow(125+enemies[b].size,2)){
-									enemies[b].hp-=dealdamage(14,b,{basicAttack:1});
-									sfx.hit.rate(random(0.8,1.2));
-									sfx.hit.volume(options.sfx*0.7);
-									sfx.hit.play();
-									for(cp=0;cp<7;cp+=1){
-										append(particles,{x:enemies[b].x+random(-enemies[b].size,enemies[b].size),y:enemies[b].y+random(-enemies[b].size,enemies[b].size),xvelo:random(-2,2),yvelo:random(-2,2),
-										size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(120,160),random(70,120)]});
-									}
+									dohit(b,14,dirgeneric(player.x,player.y,enemies[b].x,enemies[b].y),{basicAttack:1});
 								}
 							}
 						}
@@ -3165,7 +3485,7 @@ var special=[
 				if(tick%5==0){
 					for(b=0;b<enemies.length;b+=1){
 						if(enemies[b].x-player.x<55+enemies[b].size&enemies[b].x-player.x>-55-enemies[b].size&enemies[b].y<player.y){
-							dohit(20*(1+(playertemp.deathlaser-40)/90),b);
+							dohit(b,20*(1+(playertemp.deathlaser-40)/90),0);
 						}
 					}
 				}
@@ -3252,7 +3572,7 @@ var special=[
 				sfx.splat.play();
 				for(a=0;a<enemies.length;a+=1){
 					if(enemies[a].papershards){
-						dohit(enemies[a].papershards.length*35,a);
+						dohit(a,enemies[a].papershards.length*35,dirgeneric(player.x,player.y,enemies[a].x,enemies[a].y));
 						if(enemies[a].hp<=0){
 							player.ammo=min(100,player.ammo+enemies[a].papershards.length*2.25);
 						}
@@ -3389,7 +3709,7 @@ var special=[
 				for(b=0;b<enemies.length;b+=1){
 					if(hitbox(player.x,player.y,enemies[b].x,enemies[b].y,220+enemies[b].size)){
 						if(pow(enemies[b].x-player.x,2)+pow(enemies[b].y-player.y,2)<pow(220+enemies[b].size,2)){
-							dohit(20,b);
+							dohit(b,20,dirgeneric(player.x,player.y,enemies[b].x,enemies[b].y));
 						}
 					}
 				}
@@ -3597,7 +3917,7 @@ var applyshipstats=[
 					if(tick%6==0){
 						for(b=0;b<enemies.length;b+=1){
 							if(playerhitbox(enemies[b].x,enemies[b].y,enemies[b].size+95)){
-								dohit(12,b);
+								dohit(b,12,random(PI*2));
 							}
 						}
 					}
@@ -3703,7 +4023,7 @@ var applyshipstats=[
 									for(b=0;b<enemies.length;b+=1){
 										if(hitbox(objects[a].x,objects[a].y,enemies[b].x,enemies[b].y,enemies[b].size+20)){
 											objects[a].dur=0;
-											dohit(25,b);
+											dohit(b,25,objects[a].dir);
 											append(particles,{x:objects[a].x,y:objects[a].y,size:15,sizec:2,op:255,opc:-12,exp:1,color:[random(40,60),random(100,120),random(70,90)]});
 										}
 									}
@@ -4363,7 +4683,7 @@ var applymods=function(){
 							for(b=0;b<enemies.length;b+=1){
 								if(hitbox(objects[a].x,objects[a].y,enemies[b].x,enemies[b].y,enemies[b].size+objects[a].size/2)){
 									if(enemies[b].hp>0){
-										dohit(objects[a].dmg,b);
+										dohit(b,objects[a].dmg,dirgeneric(objects[a].x,objects[a].y,enemies[b].x,enemies[b].y));
 										objects[a].hashit=true;
 									}
 								}
@@ -4412,7 +4732,7 @@ var applymods=function(){
 				append(particles,{x:player.x,y:player.y,size:40+min(90,playertemp.emp)*6,op:150,opc:-12,exp:1,color:[random(200,255),random(200,255),random(150,200)]});
 				for(b=0;b<enemies.length;b+=1){
 					if(hitbox(player.x,player.y,enemies[b].x,enemies[b].y,enemies[b].size+20+min(90,playertemp.emp)*3)){
-						dohit(playertemp.emp,b);
+						dohit(b,playertemp.emp,dirgeneric(player.x,player.y,enemies[b].x,enemies[b].y));
 						if(!(enemies[b].stun)){
 							enemies[b].stun=0;
 						}
@@ -4990,7 +5310,7 @@ var setbgmt=[
 			src: 'Data/Sound/bgm/Inviolate.mp3',
 			autoplay: true,
 			loop: false,
-			volume: options.music*0.45,
+			volume: options.music*0.35,
 			onend:function(){setbgmt[5]();}
 		});
 	},
@@ -5002,7 +5322,7 @@ var setbgmt=[
 			src: 'Data/Sound/bgm/StrangeOccurrences.ogg',
 			autoplay: true,
 			loop: false,
-			volume: options.music*0.5,
+			volume: options.music*0.6,
 			onend:function(){setbgmt[4]();}
 		});
 	},
@@ -5063,6 +5383,17 @@ var setbgmt=[
 			autoplay: true,
 			loop: true,
 			volume: options.music*0.7
+		});
+	},
+	function(){
+		if(bgmt){
+			bgmt.stop();
+		}
+		bgmt=new Howl({
+			src: 'Data/Sound/bgm/Hadopelagic.ogg',
+			autoplay: true,
+			loop: true,
+			volume: options.music*0.6
 		});
 	},
 
@@ -5315,37 +5646,38 @@ var takedamage=function(dmgs){
 	}
 }
 var dtags;
-var dealdamage=function(dmgs,target,tags){
-	dmg=dmgs;
-	dtags=tags;
-	if(tags){
-		if(tags.singleTarget){
-			if(enemies[target].stdm){
-				dmg*=enemies[target].stdm;
-			}
+var dohit=function(target,damage,dir,tags){
+	dmg=damage;
+	if(!(tags)){
+		tags={};
+	}
+	if(tags.singleTarget){
+		if(enemies[target].stdm){
+			dmg*=enemies[target].stdm;
 		}
-		if(tags.reflected){
-			if(enemies[target].refdmgm){
-				dmg*=enemies[target].refdmgm;
-			}
+	}
+	if(tags.reflected){
+		if(enemies[target].refdmgm){
+			dmg*=enemies[target].refdmgm;
 		}
 	}
 	if(enemies[target].dmgm){
 		dmg*=enemies[target].dmgm;
 	}
 	for(z=0;z<player.modfuncs.damagedealt.length;z+=1){
-		player.modfuncs.damagedealt[z](min(enemies[target].hp,dmgs),target);
+		player.modfuncs.damagedealt[z](min(enemies[target].hp,dmg),target);
 	}
-	return(dmg);
-}
-var dohit=function(damage,target){
-	enemies[target].hp-=dealdamage(damage,target);
-	sfx.hit.rate(random(0.8,1.2));
-	sfx.hit.volume(options.sfx*min(1.5,damage/20));
-	sfx.hit.play();
-	for(cp=0;cp<damage/2;cp+=1){
-		append(particles,{x:enemies[target].x+random(-enemies[target].size,enemies[target].size),y:enemies[target].y+random(-enemies[target].size,enemies[target].size),xvelo:random(-2,2),yvelo:random(-2,2),
-		size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(120,160),random(70,120)]});
+	enemies[target].hp-=dmg;
+	if(!(tags.silent)){
+		sfx.hit.rate(random(0.8,1.2));
+		sfx.hit.volume(options.sfx*min(1.5,damage/20));
+		sfx.hit.play();
+	}
+	if(!(tags.hideparticles)){
+		for(cp=0;cp<dmg/2;cp+=1){
+			append(particles,{x:enemies[target].x+random(-enemies[target].size,enemies[target].size),y:enemies[target].y+random(-enemies[target].size,enemies[target].size),
+			xvelo:random(-1,1)+sin(dir+random(-0.1,0.1)*min(5,dmg/15))*min(15,dmg/5),yvelo:random(-1,1)-cos(dir+random(-0.1,0.1)*min(5,dmg/15))*min(15,dmg/5),size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(120,160),random(70,120)]});
+		}
 	}
 }
 var canhitenemy=function(){
@@ -5606,14 +5938,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 												if(projectiles[a].reflected){
 													temp.reflected=1;
 												}
-												enemies[b].hp-=dealdamage(projectiles[a].damage,b,temp);
-												sfx.hit.rate(random(0.8,1.2));
-												sfx.hit.volume(options.sfx*min(1.5,projectiles[a].damage/20));
-												sfx.hit.play();
-												for(cp=0;cp<projectiles[a].damage/2;cp+=1){
-													append(particles,{x:enemies[b].x+random(-enemies[b].size,enemies[b].size),y:enemies[b].y+random(-enemies[b].size,enemies[b].size),xvelo:random(-2,2),yvelo:random(-2,2),
-													size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(120,160),random(70,120)]});
-												}
+												dohit(b,projectiles[a].damage,projectiles[a].dir,temp);
 												if(projectiles[a].pierce<0){
 													projectiles[a].exp=1;
 												}
@@ -5683,6 +6008,31 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			sfx.destroy.rate(random(0.85,1.15));
 			sfx.destroy.volume(options.sfx*7);
 			sfx.destroy.play();
+			append(objects,{
+				x:enemies[a].x,
+				y:enemies[a].y,
+				size:min(3,max(1,enemies[a].mhp/150)),
+				dur:15,
+				dir:random(2*PI),
+				draw:function(){
+					fill(255,255,200,objects[a].dur*5);
+					ellipse(objects[a].x,objects[a].y,(20-objects[a].dur)*8*objects[a].size,(20-objects[a].dur)*8*objects[a].size);
+					noFill();
+					if(objects[a].dur>10){
+						stroke(255,255,200,150);
+						strokeWeight(14*objects[a].size);
+						line(objects[a].x+sin(objects[a].dir)*40*objects[a].size,objects[a].y-cos(objects[a].dir)*40*objects[a].size,objects[a].x-sin(objects[a].dir)*40*objects[a].size,objects[a].y+cos(objects[a].dir)*40*objects[a].size);
+						noStroke();
+					}
+				},
+				run:function(){
+					objects[a].dur-=1;
+					if(objects[a].dur<1){
+						objects.splice(a,1);
+						a-=1;
+					}
+				}
+			});
 			if(!(player.respawntimer>10)){
 				player.score+=enemies[a].score;
 			}
@@ -5972,6 +6322,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				text("Right Trigger to use special",300,430);
 				text("START to pause/unpause",300,460);
 			}
+			fill(255,150,150);
 			text("Shoot while in one of these circles to use it",270,500);
 			noFill();
 			strokeWeight(20+abs(tick%120-60)/6);
