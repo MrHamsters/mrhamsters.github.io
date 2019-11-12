@@ -1,4 +1,4 @@
-var version="v1.2";
+var version="v1.2.1";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -153,6 +153,7 @@ var getshipstatcolor=function(val){
 		fill(100,100,255);
 	}
 }
+var quit=0;
 var enemyproj=function(args){
 	append(projectiles,new cenemyproj(args));
 	/*if(args.run){
@@ -1214,45 +1215,7 @@ function(){
 			bgmt.play();
 		}
 	}
-	if(biome.temp.deep){
-		biome.temp.obscurestars=min(12,biome.timer/30);
-		if(tick%10==0){
-			append(objects,{
-				x:random(100,900),
-				y:0,
-				size:random(7,13),
-				speed:random(0.1,3),
-				dur:random(300,900),
-				squeesh:round(random(29)),
-				draw:function(){
-					fill(50,50,50,min(50,objects[a].dur));
-					stroke(50,50,100,2*min(50,objects[a].dur));
-					strokeWeight(3);
-					ellipse(objects[a].x,objects[a].y,(15+abs((tick+objects[a].squeesh)%60-30)/4)+objects[a].size,(15+abs((tick+30+objects[a].squeesh)%60-30)/4)+objects[a].size);
-					noStroke();
-				},
-				run:function(){
-					if(biome.id!=3){
-						if(objects[a].dur>30){
-							objects[a].dur=30;
-						}
-						else{
-							objects[a].y-=10;
-						}
-					}
-					objects[a].y+=objects[a].speed;
-					objects[a].dur-=1;
-					if(objects[a].dur<60){
-						objects[a].size*=1.05;
-					}
-					if(objects[a].dur<1||objects[a].y>800){
-						objects.splice(a,1);
-						a-=1;
-					}
-				}
-			});
-		}
-	}
+	
 	if(biome.temp.deep&(stagetemp.biomeprogress-10>biome.temp.leviathan*(30-min(22,(gametick-14400)/1200))||!(biome.temp.leviathan))&stagetemp.biomeprogress<85&stagetemp.biomeprogress>5){
 		if(!(biome.temp.leviathan)){
 			biome.temp.leviathan=0;
@@ -1260,7 +1223,7 @@ function(){
 		biome.temp.leviathan+=1;
 		append(objects,{
 			x:round(random(1))*1500-300,
-			y:random(100,600),
+			y:random(25,675),
 			dur:0,
 			dir:-1,
 			hitcd:0,
@@ -2909,6 +2872,53 @@ function(){
 	}
 }*/
 ];
+var cbiomescripts=[
+	false,
+	false,
+	false,
+	function(){
+		if(biome.temp.deep){
+			biome.temp.obscurestars=min(12,biome.timer/30);
+			if(tick%10==0){
+				append(objects,{
+					x:random(100,900),
+					y:0,
+					size:random(7,13),
+					speed:random(0.1,3),
+					dur:random(300,900),
+					squeesh:round(random(29)),
+					draw:function(){
+						fill(50,50,50,min(50,objects[a].dur));
+						stroke(50,50,100,2*min(50,objects[a].dur));
+						strokeWeight(3);
+						ellipse(objects[a].x,objects[a].y,(15+abs((tick+objects[a].squeesh)%60-30)/4)+objects[a].size,(15+abs((tick+30+objects[a].squeesh)%60-30)/4)+objects[a].size);
+						noStroke();
+					},
+					run:function(){
+						if(biome.id!=3){
+							if(objects[a].dur>30){
+								objects[a].dur=30;
+							}
+							else{
+								objects[a].y-=10;
+							}
+						}
+						objects[a].y+=objects[a].speed;
+						objects[a].dur-=1;
+						if(objects[a].dur<60){
+							objects[a].size*=1.05;
+						}
+						if(objects[a].dur<1||objects[a].y>800){
+							objects.splice(a,1);
+							a-=1;
+						}
+					}
+				});
+			}
+		}
+	},
+	false,
+];
 var shoot=[
 	function(){
 		if(playertemp.hawkblitz>0){
@@ -3148,7 +3158,7 @@ var shoot=[
 					}
 				},
 				x:player.x,
-				y:player.y-35,
+				y:player.y-player.size-3,
 				end:1,
 				pierce:1,
 				dir:0,
@@ -3174,7 +3184,7 @@ var shoot=[
 						}
 					},
 					x:player.x,
-					y:player.y-35,
+					y:player.y-player.size-3,
 					dur:30,
 					pierce:0,
 					dir:b*PI/4-PI/8+random(-PI/4,PI/4),
@@ -3188,7 +3198,7 @@ var shoot=[
 			}
 			if(options.graphics){
 				for(cp=0;cp<15;cp+=1){
-					append(particles,{x:player.x,y:player.y-45,xvelo:random(-6,6),yvelo:random(-12,-5),
+					append(particles,{x:player.x,y:player.y-player.size*1.4,xvelo:random(-6,6),yvelo:random(-12,-5),
 					size:6,op:random(200,255),opc:-16,exp:1,color:[255,random(40),random(40)]});
 				}
 			}
@@ -3433,7 +3443,7 @@ var special=[
 			sfx.distortion.rate(random(0.9,1.1));
 			sfx.distortion.volume(options.sfx*0.9);
 			sfx.distortion.play();
-			playertemp.crystalstorm=60;
+			playertemp.crystalstorm=75;
 		}
 		else{
 			sfx.click.rate(random(0.9,1.1));
@@ -3882,20 +3892,42 @@ var applyshipstats=[
 		player.parrytimer=8;
 		player.shipfuncs={
 			passive:function(){
+				if(!(playertemp.crystalbarrier)){
+					playertemp.crystalbarrier=0;
+				}
+				if(!(playertemp.crystalbarrierc)){
+					playertemp.crystalbarrierc=0;
+				}
+				playertemp.crystalbarrierc=min(300,playertemp.crystalbarrierc+1);
+				if(playertemp.crystalbarrierc>=300){
+					playertemp.crystalbarrier=1;
+				}
+				if(playertemp.crystalbarrier){
+					translate(player.x,player.y);
+					rotate(tick/400);
+					for(cp=0;cp<4;cp+=1){
+						fill(140+random(55),140+random(55),140+random(55),100);
+						triangle(-15,-25,15,-25,0,-45);
+						triangle(-15,-25,15,-25,0,-5);
+						rotate(PI/2);
+					}
+					resetMatrix();
+				}
 				if(playertemp.crystalstorm>0){
 					if(playertemp.crystalstorm<10){
 						fill(160+abs(tick%30-15)*5,40,60,255-playertemp.crystalstorm*25);
 						triangle(player.x-40,player.y,player.x+40,player.y,player.x,player.y-55);
 						triangle(player.x-40,player.y,player.x+40,player.y,player.x,player.y+55);
 					}
-					playertemp.crystalstorm-=0.1;
+					playertemp.crystalstorm-=0.25;
+					player.wither=max(0,player.wither-0.075);
 					append(objects,{
-						x1:player.x+random(-90,90),
-						y1:player.y+random(-90,90),
-						x2:player.x+random(-90,90),
-						y2:player.y+random(-90,90),
-						x3:player.x+random(-90,90),
-						y3:player.y+random(-90,90),
+						x1:player.x+random(-70,70),
+						y1:player.y+random(-70,70),
+						x2:player.x+random(-70,70),
+						y2:player.y+random(-70,70),
+						x3:player.x+random(-70,70),
+						y3:player.y+random(-70,70),
 						dur:6,
 						draw:function(){
 							fill(160+abs(tick%30-15)*5,210,255,objects[a].dur*15);
@@ -3914,9 +3946,9 @@ var applyshipstats=[
 							}
 						}
 					});
-					if(tick%6==0){
+					if(tick%3==0){
 						for(b=0;b<enemies.length;b+=1){
-							if(playerhitbox(enemies[b].x,enemies[b].y,enemies[b].size+95)){
+							if(playerhitbox(enemies[b].x,enemies[b].y,enemies[b].size+75)){
 								dohit(b,12,random(PI*2));
 							}
 						}
@@ -3925,7 +3957,7 @@ var applyshipstats=[
 				strokeWeight(12);
 				noFill();
 				stroke(110+abs(tick%110-55),120+abs(tick%120-60),140+abs(tick%146-73),180+abs(tick%100-50));
-				arc(player.x,player.y,70*player.sizemod,70*player.sizemod,0,(playertemp.crystalstorm/60)*2*PI);
+				arc(player.x,player.y,70*player.sizemod,70*player.sizemod,0,(playertemp.crystalstorm/75)*2*PI);
 				noStroke();
 			},
 			dmgtakenps:function(){
@@ -3942,6 +3974,35 @@ var applyshipstats=[
 					else{
 						dmg.dmg-=playertemp.crystalstorm;
 						playertemp.crystalstorm=0;
+					}
+				}
+				if(dmg.dmg>0){
+					playertemp.crystalbarrierc=0;
+					if(playertemp.crystalbarrier){
+						playertemp.crystalbarrier=0;
+						dmg.dmg*=0.25;
+						append(objects,{
+							dur:15,
+							draw:function(){
+								noFill();
+								stroke(abs(tick%10-5)*255/5,abs(tick%14-7)*255/7,abs(tick%18-9)*255/9,objects[a].dur*16);
+								ellipseMode(CENTER);
+								strokeWeight(70-objects[a].dur*3);
+								ellipse(player.x,player.y,player.size*2+100-objects[a].dur*4,player.size*2+125-objects[a].dur*5);
+								noStroke();
+								if(options.graphics){
+									fill(255,255,255,6+objects[a].dur*0.2);
+									rect(100,0,800,700);
+								}
+							},
+							run:function(){
+								objects[a].dur-=1;
+								if(objects[a].dur<=0){
+									objects.splice(a,1);
+									a-=1;
+								}
+							}
+						});
 					}
 				}
 			}
@@ -4730,7 +4791,7 @@ var applymods=function(){
 			else if(playertemp.emp>0){
 				if(playertemp.emp>30){
 					sfx.emp.rate(random(0.9,1.1));
-					sfx.emp.volume(10*options.sfx);
+					sfx.emp.volume(2*options.sfx);
 					sfx.emp.play();
 				}
 				append(particles,{x:player.x,y:player.y,size:40+min(90,playertemp.emp)*6,op:150,opc:-12,exp:1,color:[random(200,255),random(200,255),random(150,200)]});
@@ -4761,9 +4822,8 @@ var applymods=function(){
 		});
 	}
 	if(player.mods[23]){
-		player.menergy=max(1,player.menergy-1);
 		append(player.modfuncs.onheal,function(val){
-			healval*=0.5;
+			healval*=0.75;
 		});
 		append(player.modfuncs.damagedealt,function(edmg,target){
 			if(!(playertemp.essenceleech)){
@@ -4794,8 +4854,8 @@ var applymods=function(){
 						if(playerhitbox(objects[a].x,objects[a].y,objects[a].val/28+10)){
 							objects[a].val-=15;
 							if(player.hp<player.mhp){
-								regen(0.06+player.mhp*0.0004);
-								playertemp.slow=max(playertemp.slow,0.55);
+								regen(0.025+player.mhp*0.00015);
+								playertemp.slow=max(playertemp.slow,0.3);
 							}
 						}
 						objects[a].val-=1;
@@ -4845,7 +4905,7 @@ var mods={
 		{id:18,name:"Soul Eater",desc:"Makes your ship demonic. Your damage is now based on how many souls held.",pro:"Kill enemies and harvest their souls. Each soul increases damage by 1%.",con:"Your ship's base damage is halved. The more souls you have, the faster they are lost."},
 		{id:20,name:"Shockwave Generator",stab:-50,desc:"Adds a shockwave generator to your ship",pro:"Creates a delayed explosion on defeated enemies",con:"This effect costs ammo (refunded it doesn't hit anything). Additionally, reduces stability by 50 and maximum energy by 1"},
 		{id:21,name:"Stock Fabricator",desc:"Adds mass fabricators to your ship",pro:"Generates ammo when below 40%",con:"Uses energy"},
-		{id:23,name:"Essence Leech",stab:-90,desc:"Allows your ship to succ",pro:"Dealing damage spawns life pools which can be absorbed to heal",con:"Absorbing life pools slows you. Additionally, reduces healing recieved by 50%, stability by 90, and maximum energy by 1"},
+		{id:23,name:"Essence Leech",stab:-150,desc:"Allows your ship to succ",pro:"Dealing damage spawns life pools which can be absorbed to heal",con:"Absorbing life pools slows you slightly. Additionally, reduces healing recieved by 25% and stability by 150"},
 	],
 	ship:[
 		{id:0,name:"Reinforced Hull",stab:-50,desc:"Extra plating for survivability",pro:"Increases ship health by 50% and healing recieved by 20%",con:"Reduces stability by 50 and speed by 15%"},
@@ -4874,8 +4934,8 @@ var mods={
 	]
 };
 var ships=[
-	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Berserk for 2 seconds while emitting a screech which deals heavy damage to enemies caught in the AoE while dragging them. Also reflects enemy projectiles. Dissipates if it hits a boss.",misc:"A well-rounded ship."},
-	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which deal continuous damage to nearby enemies while absorbing damage taken.",misc:"Normal shots fragment on hit."},
+	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Berserk for 1.5 seconds while emitting a screech which deals heavy damage to enemies caught in the AoE while dragging them. Also reflects enemy projectiles. Dissipates if it hits a boss.",misc:"A well-rounded ship."},
+	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which shred nearby enemies and block incoming damage.",misc:"Normal shots fragment on hit. Passively charge a shield which blocks 75% of the next hit's damage."},
 	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Briefly phase through enemies and projectiles after blocking with shield. Gain health on kill. Immune to water-based slows. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
 	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:8,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
 	{name:"Paper Plane",unlocked:1,sprite:"paperplane",damage:10,health:1,shield:2,energy:10,speed:10,special:"Violently rips paper out of all enemies, sending it flying with triple the quantity. The fragments are more likely to fly away from you. Additionally, you are briefly shielded from all damage if used successfully.",misc:"Normal shots embed paper in foes, increasing damage taken by paper shots. Killing enemies with paper fragments restores ammo."},
@@ -5052,11 +5112,110 @@ var doshield=function(){
 		sfx.shieldon.play();
 	}
 }
+var quittext=[
+	["space","left click","right click"],
+	["B","V","N or M"],
+	["A","B","left or right trigger"],
+	["left trigger","right trigger","A or B"],
+];
+var controlmodepanel=function(){
+	if(mousePressed){
+		controlmode=0;
+	}
+	if(key){
+		if(keyPressed&(key.code==86||key.code==118)){
+			controlmode=1;
+		}
+	}
+	if(navigator.getGamepads()[0]){
+		if(navigator.getGamepads()[0].buttons[0].value>0||navigator.getGamepads()[0].buttons[1].value>0){
+			controlmode=2;
+		}
+	}
+	if(navigator.getGamepads()[0]){
+		if(navigator.getGamepads()[0].buttons[8].value>0||navigator.getGamepads()[0].buttons[9].value>0){
+			controlmode=3;
+		}
+	}
+	textFont(0,20);
+	if(controlmode==0){
+		fill(255,255,255);
+	}
+	else{
+		fill(80,80,80);
+	}
+	text("Keyboard and Mouse (click anywhere to select)",300,180);
+	if(controlmode==1){
+		fill(255,255,255);
+	}
+	else{
+		fill(80,80,80);
+	}
+	text("Keyboard Only (press V to select)",300,210);
+	if(controlmode==2){
+		fill(255,255,255);
+	}
+	else{
+		fill(80,80,80);
+	}
+	text("XBox Controller (press A or B to select)",300,240);
+	if(controlmode==3){
+		fill(255,255,255);
+	}
+	else{
+		fill(80,80,80);
+	}
+	textFont(0,16);
+	text("XBox Controller - Alternate (Left or Right Trigger to select)",285,270);
+	fill(255,255,255);
+	textFont(0,20);
+	if(controlmode==0){
+		if(!(ingame)){
+			player.staticspeed=50;
+		}
+		text("Mouse to move",300,340);
+		text("Left click to shoot",300,370);
+		text("Right click to shield",300,400);
+		text("Space to use special",300,430);
+		text("Esc to pause/unpause",300,460);
+	}
+	else if(controlmode==1){
+		if(!(ingame)){
+			player.staticspeed=13;
+		}
+		text("W,A,S,D to move",300,340);
+		text("V to shoot",300,370);
+		text("N or M to shield",300,400);
+		text("B to use special",300,430);
+		text("Esc to pause/unpause",300,460);
+	}
+	else if(controlmode==2){
+		if(!(ingame)){
+			player.staticspeed=15;
+		}
+		text("Left stick to move",300,340);
+		text("B to shoot",300,370);
+		text("Left or Right Trigger to shield",300,400);
+		text("A to use special",300,430);
+		text("START to pause/unpause",300,460);
+	}
+	else if(controlmode==3){
+		if(!(ingame)){
+			player.staticspeed=15;
+		}
+		text("Left stick to move",300,340);
+		text("Right Trigger to shoot",300,370);
+		text("A or B to shield",300,400);
+		text("Left Trigger to use special",300,430);
+		text("START to pause/unpause",300,460);
+	}
+}
 var doinputs=function(){
 	input={
 		shoot:0,
 		special:0,
-		shield:0
+		shield:0,
+		pause:0
 	};
 	if(controlmode==0){
 		if(mousePressed){
@@ -5070,6 +5229,9 @@ var doinputs=function(){
 		if(rawkeys.space){
 			input.special=1;
 		}
+		if(rawkeys.esc){
+			input.pause=1;
+		}
 	}
 	else if(controlmode==1){
 		if(rawkeys.v){
@@ -5080,6 +5242,9 @@ var doinputs=function(){
 		}
 		if(rawkeys.n||rawkeys.m){
 			input.shield=1;
+		}
+		if(rawkeys.esc){
+			input.pause=1;
 		}
 	}
 	else if(controlmode==2){
@@ -5093,6 +5258,9 @@ var doinputs=function(){
 			if(navigator.getGamepads()[0].buttons[8].value||navigator.getGamepads()[0].buttons[9].value){
 				input.shield=1;
 			}
+			if(navigator.getGamepads()[0].buttons[11].value>0){
+				input.pause=1;
+			}
 		}
 	}
 	else if(controlmode==3){
@@ -5105,6 +5273,9 @@ var doinputs=function(){
 			}
 			if(navigator.getGamepads()[0].buttons[0].value||navigator.getGamepads()[0].buttons[1].value){
 				input.shield=1;
+			}
+			if(navigator.getGamepads()[0].buttons[11].value>0){
+				input.pause=1;
 			}
 		}
 	}
@@ -5773,6 +5944,28 @@ var tinkerbutton=function(x,y,display,name){
 	fill(0,180,0);
 	triangle(x+212,y+10,x+212,y+30,x+230,y+20);
 }
+var restart=function(){
+	spawnplayer();
+	if(bgmt){
+		bgmt.stop();
+	}
+	biome.id=0;
+	applyshipstats[player.shipId]();
+	applymods();
+	ingame=0;
+	gametick=0;
+	bgm.stop();
+	bgmn="start";
+	bgm = new Howl({
+		src: 'Data/Sound/bgm/Mysterious.mp3',
+		autoplay: true,
+		loop: true,
+		volume: options.music*0.6,
+	});
+	objects=new Array();
+	enemies=new Array();
+	projectiles=new Array();
+}
 var gametick=0;
 var drawcount=0;
 var drawcap=8;
@@ -5783,52 +5976,44 @@ var mslast=0;
 var shootlock=0;
 var pauselock=0;
 void draw(){
+doinputs();
 if(player.modfuncs.fundamentals){
 	for(z=0;z<player.modfuncs.fundamentals.length;z+=1){
 		player.modfuncs.fundamentals[z]();
 	}
 }
-if(controlmode==0||controlmode==1){
-	if(rawkeys.esc){
-		if(!(pauselock)){
-			pauselock=1;
-			if(unpaused){
-				unpaused=0;
-				fill(0,0,0,100);
-				rect(0,0,1000,700);
-				textFont(0,40);
-				fill(255,160,40);
-				text("GAME PAUSED",350,300);
+if(input.pause){
+	if(!(pauselock)){
+		pauselock=1;
+		if(unpaused){
+			unpaused=0;
+			quit=0;
+			fill(0,0,0,100);
+			rect(0,0,1000,700);
+		}
+		else{
+			if(input.special){
+				quit=1;
 			}
 			else{
+				quit=0;
 				unpaused=1;
 			}
 		}
-	}
-	else{
-		pauselock=0;
 	}
 }
-else if(controlmode==2||controlmode==3){
-	if(navigator.getGamepads()[0].buttons[11].value>0){
-		if(!(pauselock)){
-			pauselock=1;
-			if(unpaused){
-				unpaused=0;
-				fill(0,0,0,100);
-				rect(0,0,1000,700);
-				textFont(0,40);
-				fill(255,160,40);
-				text("GAME PAUSED",350,300);
-			}
-			else{
-				unpaused=1;
-			}
-		}
+else{
+	pauselock=0;
+}
+if(input.shoot){
+	if(quit){
+		restart();
+		unpaused=1;
+		quit=0;
 	}
-	else{
-		pauselock=0;
-	}
+}
+else if(input.shield){
+	quit=0;
 }
 if(unpaused){
 textAlign(TOP,LEFT);
@@ -5883,13 +6068,13 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	playertemp.slow=0;
 	playertemp.speed=0;
 	for(a=0;a<objects.length;a+=1){
-		if(objects[a].startup){
-			if(!(objects[a].startedup)){
-				objects[a].startup();
-				objects[a].startedup=true;
-			}
-		}
 		if(objects[a]){
+			if(objects[a].startup){
+				if(!(objects[a].startedup)){
+					objects[a].startup();
+					objects[a].startedup=true;
+				}
+			}
 			if(render){
 				if(objects[a].draw){
 					objects[a].draw();
@@ -6009,7 +6194,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			if(enemies[a].ondeath){
 				enemies[a].ondeath();
 			}
-			sfx.destroy.rate(random(0.85,1.15));
+			sfx.destroy.rate(random(0.75,1.3));
 			sfx.destroy.volume(options.sfx*7);
 			sfx.destroy.play();
 			append(objects,{
@@ -6051,30 +6236,10 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		}
 	}
 	//Run player stuff
-	doinputs();
-	if(player.hp<=player.wither&!(playertemp.cannotdie)){
+	if(player.deathtimer>0||player.hp<=player.wither&!(playertemp.cannotdie)){
 		if(player.deathtimer>60){
 			if(input.shoot){
-				spawnplayer();
-				if(bgmt){
-					bgmt.stop();
-				}
-				biome.id=0;
-				applyshipstats[player.shipId]();
-				applymods();
-				ingame=0;
-				gametick=0;
-				bgm.stop();
-				bgmn="start";
-				bgm = new Howl({
-					src: 'Data/Sound/bgm/Mysterious.mp3',
-					autoplay: true,
-					loop: true,
-					volume: options.music*0.6,
-				});
-				objects=new Array();
-				enemies=new Array();
-				projectiles=new Array();
+				restart();
 			}
 		}
 		else{
@@ -6112,7 +6277,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		}
 		else{
 			domove();
-			engineparticles+=0.2+moveinf.scl*1.8;
+			engineparticles+=0.2+moveinf.scl*1.8*(1-options.graphics*0.6);
 			while(engineparticles>0){
 				engineparticles-=1;
 				if(player.mods[17]){
@@ -6232,24 +6397,6 @@ while(drawcount>=16.6&cdraw<=drawcap){
 	}
 	if(ingame==0){
 		if(menumode==0){
-			if(mousePressed){
-				controlmode=0;
-			}
-			if(key){
-				if(keyPressed&(key.code==86||key.code==118)){
-					controlmode=1;
-				}
-			}
-			if(navigator.getGamepads()[0]){
-				if(navigator.getGamepads()[0].buttons[0].value>0||navigator.getGamepads()[0].buttons[1].value>0){
-					controlmode=2;
-				}
-			}
-			if(navigator.getGamepads()[0]){
-				if(navigator.getGamepads()[0].buttons[8].value>0||navigator.getGamepads()[0].buttons[9].value>0){
-					controlmode=3;
-				}
-			}
 			if(!(input.shoot)){
 				shootlock=0;
 			}
@@ -6262,70 +6409,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			textFont(0,23);
 			fill(200,200,100);
 			text("Control Mode",400,150);
-			textFont(0,20);
-			if(controlmode==0){
-				fill(255,255,255);
-			}
-			else{
-				fill(80,80,80);
-			}
-			text("Keyboard and Mouse (click anywhere to select)",300,180);
-			if(controlmode==1){
-				fill(255,255,255);
-			}
-			else{
-				fill(80,80,80);
-			}
-			text("Keyboard Only (press V to select)",300,210);
-			if(controlmode==2){
-				fill(255,255,255);
-			}
-			else{
-				fill(80,80,80);
-			}
-			text("XBox Controller (press A or B to select)",300,240);
-			if(controlmode==3){
-				fill(255,255,255);
-			}
-			else{
-				fill(80,80,80);
-			}
-			textFont(0,16);
-			text("XBox Controller - Alternate (Left or Right Trigger to select)",270,270);
-			fill(255,255,255);
-			textFont(0,20);
-			if(controlmode==0){
-				player.staticspeed=50;
-				text("Mouse to move",300,340);
-				text("Left click to shoot",300,370);
-				text("Right click to shield",300,400);
-				text("Space to use special",300,430);
-				text("Esc to pause/unpause",300,460);
-			}
-			else if(controlmode==1){
-				player.staticspeed=13;
-				text("W,A,S,D to move",300,340);
-				text("V to shoot",300,370);
-				text("N or M to shield",300,400);
-				text("B to use special",300,430);
-				text("Esc to pause/unpause",300,460);
-			}
-			else if(controlmode==2){
-				player.staticspeed=15;
-				text("Left stick to move",300,340);
-				text("B to shoot",300,370);
-				text("Left or Right Trigger to shield",300,400);
-				text("A to use special",300,430);
-				text("START to pause/unpause",300,460);
-			}
-			else if(controlmode==3){
-				player.staticspeed=15;
-				text("Left stick to move",300,340);
-				text("Right Trigger to shoot",300,370);
-				text("A or B to shield",300,400);
-				text("Right Trigger to use special",300,430);
-				text("START to pause/unpause",300,460);
-			}
+			controlmodepanel();
 			fill(255,150,150);
 			text("Shoot while in one of these circles to use it",270,500);
 			noFill();
@@ -6979,6 +7063,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				});
 			}
 			biomescripts[biome.id]();
+			if(cbiomescripts[biome.id]){
+				cbiomescripts[biome.id]();
+			}
 		}
 	}
 	//PANELS
@@ -6992,6 +7079,9 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			fill(player.hpl*10,player.hpl*10,0);
 		}
 		rect(915,100,50,500);
+		fill(50,50,50,80);
+		rect(915,100,15,500);
+		rect(950,100,15,500);
 		fill(210+abs(tick%180-90)/2,abs(tick%180-90)/2,abs(tick%180-90)/2);
 		rect(915,600-(max(0,min(1,player.hp/player.mhp)))*500,50,(max(0,min(1,player.hp/player.mhp)))*500);
 		if(player.hp>0){
@@ -7022,7 +7112,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			}
 		}
 		if(player.wither>0){
-			fill(0,0,0,180);
+			fill(20,0,20,180);
 			rect(915,600,50,-(min(1,player.wither/player.mhp))*500);
 			for(cp=0;cp<1+(player.wither/player.mhp)*4;cp+=1){
 				append(particles,{x:random(915,965),y:random(595-(max(0,min(player.hp,player.wither))/player.mhp)*500,610),xvelo:random(-2,2),yvelo:random(-6,-3),
@@ -7159,5 +7249,34 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		loadassetscache();
 	}
 }
+}
+else{
+	fill(0,0,0);
+	rect(270,125,500,360,40);
+	textFont(0,40);
+	fill(255,160,40);
+	text("GAME PAUSED",350,300);
+	controlmodepanel();
+	if(quit){
+		fill(255,0,0);
+	}
+	else{
+		fill(255,0,255);
+	}
+	rect(350,550,340,165,25);
+	if(quit){
+		textFont(0,24);
+		fill(0,0,0);
+		text("Really quit?",380,580);
+		text(quittext[controlmode][1]+" to confirm",380,630);
+		text(quittext[controlmode][2]+" to cancel",380,680);
+	}
+	else{
+		textFont(0,24);
+		fill(0,0,0);
+		text("Hold "+quittext[controlmode][0]+" and",380,580);
+		text("unpause to quit",380,630);
+		text("and return to main menu",380,680);
+	}
 }
 }
