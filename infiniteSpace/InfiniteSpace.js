@@ -1,4 +1,4 @@
-var version="v1.2.1";
+var version="v1.2.2";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -3393,24 +3393,24 @@ var special=[
 							if(pow(projectiles[b].x-projectiles[a].x,2)+pow(projectiles[b].y-projectiles[a].y,2)<pow(45+projectiles[a].size+projectiles[b].size,2)){
 								projectiles[b].speed*=2;
 								projectiles[b].scans*=2;
-								projectiles[b].damage*=1.5;
+								projectiles[b].damage*=3;
 								projectiles[b].dir+=PI;
 								projectiles[b].reflected=1;
 								projectiles[b].target=1;
 							}
 						}
 					}
-					if(tick%5==0){
+					if(tick%3==0){
 						projectiles[a].hits=new Array();
 					}
 				},
 				onhit:function(target){
 					if(enemies[target].isBoss){
 						projectiles[a].exp=1;
-						projectiles[a].damage=100;
+						projectiles[a].damage=250;
 					}
 					else{
-						enemies[target].y-=10;
+						enemies[target].y-=6;
 					}
 				},
 				x:player.x,
@@ -3421,7 +3421,7 @@ var special=[
 				dir:0,
 				speed:2,
 				size:5,
-				damage:20
+				damage:25
 			});
 			sfx.hawk.rate(random(0.9,1.1));
 			sfx.hawk.volume(options.sfx);
@@ -4290,23 +4290,31 @@ var applymods=function(){
 	}
 	if(player.tinker.health>0){
 		player.mhp*=1+player.tinker.health/100;
-		player.hp*=1+player.tinker.health/100;
+		player.mhp=max(1,player.mhp+player.tinker.health/5);
+		player.hp=player.mhp;
 	}
 	else if(player.tinker.health<0){
+		player.mhp=max(1,player.mhp+player.tinker.health/5);
 		player.mhp/=1-player.tinker.health/50;
-		player.hp/=1-player.tinker.health/50;
+		player.hp=player.mhp;
 	}
 	if(player.tinker.shield>0){
 		player.mshield*=1+player.tinker.shield/130;
-		player.shield*=1+player.tinker.shield/130;
 		player.shieldregen*=1+player.tinker.shield/160;
 		player.shielddecay*=1+player.tinker.shield/220;
+		player.mshield=max(1,player.mshield+player.tinker.shield*0.12);
+		player.shieldregen=max(0.1,player.shieldregen+player.tinker.shield*0.02);
+		player.shielddecay=max(0.1,player.shielddecay+player.tinker.shield*0.015);
+		player.shield=player.mshield;
 	}
-	else if(player.tinker.health<0){
+	else if(player.tinker.shield<0){
+		player.mshield=max(1,player.mshield+player.tinker.shield*0.12);
+		player.shieldregen=max(0.1,player.shieldregen+player.tinker.shield*0.02);
+		player.shielddecay=max(0.1,player.shielddecay+player.tinker.shield*0.015);
 		player.mshield/=1-player.tinker.shield/65;
-		player.shield/=1-player.tinker.shield/65;
 		player.shieldregen/=1-player.tinker.shield/80;
 		player.shielddecay/=1-player.tinker.shield/110;
+		player.shield=player.mshield;
 	}
 	if(player.tinker.energy>0){
 		player.menergy*=1+player.tinker.energy/100;
@@ -4317,10 +4325,12 @@ var applymods=function(){
 		player.energy/=1-player.tinker.energy/50;
 	}
 	if(player.tinker.speed>0){
-		player.speed*=1+player.tinker.speed/100;
+		player.speed*=1+player.tinker.speed/130;
+		player.speed=max(1,player.speed+player.tinker.speed*0.015);
 	}
 	else if(player.tinker.speed<0){
-		player.speed/=1-player.tinker.speed/50;
+		player.speed=max(1,player.speed+player.tinker.speed*0.015);
+		player.speed/=1-player.tinker.speed/75;
 	}
 	if(player.tinker.compaction>0){
 		player.size/=1+player.tinker.compaction/50;
@@ -5733,7 +5743,7 @@ var takedamage=function(dmgs){
 		if(!(dmg.pure||dmg.shieldpen)&player.shielding){
 			player.shieldboing+=dmg.dmg;
 			append(objects,{
-				dur:player.parrytimer,
+				dur:player.parrytimer*(max(0.7,1.5-2*dmg.dmg/player.mshield)),
 				draw:function(){
 					noFill();
 					stroke(255,255,100+abs(tick%100-50),objects[a].dur*45);
@@ -6236,7 +6246,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 		}
 	}
 	//Run player stuff
-	if(player.deathtimer>0||player.hp<=player.wither&!(playertemp.cannotdie)){
+	if(player.deathtimer>0||(player.hp<=player.wither&!(playertemp.cannotdie))){
 		if(player.deathtimer>60){
 			if(input.shoot){
 				restart();
@@ -7063,9 +7073,10 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				});
 			}
 			biomescripts[biome.id]();
-			if(cbiomescripts[biome.id]){
-				cbiomescripts[biome.id]();
-			}
+		}
+		if(cbiomescripts[biome.id]){
+			console.log(1);
+			cbiomescripts[biome.id]();
 		}
 	}
 	//PANELS
@@ -7128,7 +7139,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				player.modfuncs.overlayus[z]();
 			}
 		}
-		fill(abs(tick%120-50),abs(tick%120-60),130+abs(tick%120-60),150+(player.shield/player.mshield)*50);
+		fill(abs(tick%120-50),abs(tick%120-60),130+abs(tick%120-60),100+min(100,player.mshield)+(player.shield/player.mshield)*50);
 		if(player.shielding){
 			rect(940,600-(player.shield/player.mshield)*500,45,(player.shield/player.mshield)*500);
 			if(options.graphics){
