@@ -1,4 +1,4 @@
-var version="v1.2.2";
+var version="v1.2.3";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -4271,10 +4271,15 @@ var applymods=function(){
 		onheal:new Array(),
 	};
 	recalinstability();
+	append(player.modfuncs.damagetaken,function(){
+		if(player.instability<0){
+			dmg.dmg/=1-player.instability/1000;
+		}
+	});
 	append(player.modfuncs.passive,function(){
 		if(ingame){
 			if(player.instability>100){
-				player.hp-=(player.instability-100)/2400;
+				player.hp-=(player.instability-100)/6000;
 			}
 		}
 	});
@@ -4357,9 +4362,9 @@ var applymods=function(){
 		append(player.modfuncs.damagetakenps,function(){
 			if(random(1)<0.4){
 				dmg.dmg*=2;
-				for(cp=0;cp<dmg.dmg*2.5;cp+=1){
-					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-2,2),yvelo:random(-2,2),
-					size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(160,190),random(70,120)]});
+				for(cp=0;cp<dmg.dmg*5;cp+=1){
+					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-3,3),yvelo:random(-3,3),
+					size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(100,130),random(20)]});
 				}
 			}
 		});
@@ -4371,12 +4376,14 @@ var applymods=function(){
 			}
 			if(playertemp.malleablehull>0){
 				playertemp.malleablehull-=1;
+				append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-3,3),yvelo:random(-3,3),
+				size:random(7,10),op:random(110,130),opc:-2.5,exp:1,color:[random(220,255),random(30),random(30)]});
 			}
 		});
 		append(player.modfuncs.damagetaken,function(){
 			if(playertemp.malleablehull>0){
 				dmg.dmg*=1.5;
-				for(cp=0;cp<dmg.dmg*5;cp+=1){
+				for(cp=0;cp<dmg.dmg*3;cp+=1){
 					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-3,3),yvelo:random(-3,3),
 					size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(100,130),random(20)]});
 				}
@@ -5104,7 +5111,7 @@ var domove=function(){
 var doshield=function(){
 	if(player.shield<=0){
 		player.shielddisable=15;
-		player.shield=0.1;
+		player.shield=0;
 	}
 	temp=player.shielding;
 	player.shielding=0;
@@ -6762,21 +6769,24 @@ while(drawcount>=16.6&cdraw<=drawcap){
 				}
 			}
 			textAlign(CENTER);
-			fill(255,170,255);
+			fill(255,player.instability>0?0:170,player.instability>0?0:255);
 			textFont(0,22);
 			text("Stability",610,10,80,50);
 			text(-player.instability,610,40,80,50);
 			textFont(0,25);
 			fill(255,255,255);
 			if(viewmodtype==0){
-				text("Don't over-do it! Reducing your ship's stability can cause effects such as reduced movement control and even health degeneration! Aim for a stability of 0, as excess stability provides no benefit.",660,130,240,400);
+				text("Don't over-do it! Reducing your ship's stability can cause effects such as reduced movement control and even health degeneration!",660,130,240,400);
 				fill(255,170,255);
 				textFont(0,22);
 				if(player.instability>0){
 					text("Currently reducing movement control at and below "+(min(100,player.instability))+"% health",660,490,240,120);
+					if(player.instability>100){
+						text("Currently losing "+((player.instability-100)/100)+" health per second",660,600,240,130);
+					}
 				}
-				if(player.instability>100){
-					text("Currently losing "+((player.instability-100)/40)+" health per second",660,600,240,130);
+				else if(player.instability<0){
+					text("Currently taking "+(round(100-100/(1-player.instability/1000)))+"% less damage",660,490,240,120);
 				}
 			}
 			else{
