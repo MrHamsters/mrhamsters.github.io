@@ -5750,7 +5750,7 @@ var takedamage=function(dmgs){
 		if(!(dmg.pure||dmg.shieldpen)&player.shielding){
 			player.shieldboing+=dmg.dmg;
 			append(objects,{
-				dur:player.parrytimer*(max(0.7,1.5-2*dmg.dmg/player.mshield)),
+				dur:player.parrytimer*(max(0.8,1.3-dmg.dmg/player.mshield)),
 				draw:function(){
 					noFill();
 					stroke(255,255,100+abs(tick%100-50),objects[a].dur*45);
@@ -5771,7 +5771,7 @@ var takedamage=function(dmgs){
 					}
 				}
 			});
-			append(parrymatrix,{dmg:dmg.dmg,timer:player.parrytimer});
+			append(parrymatrix,{dmg:dmg.dmg,timer:player.parrytimer*(max(0.8,1.3-dmg.dmg/player.mshield))});
 			dmg.dmg=0;
 		}
 	}
