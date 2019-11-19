@@ -1,4 +1,4 @@
-var version="v1.2.3";
+var version="v1.2.4";
 void setup(){
   size(1000,700);
   frameRate(60);  
@@ -1454,7 +1454,7 @@ function(){
 											projectiles[a].damage+=16;
 										}
 										else{
-											if(player.shielding){
+											if(player.shielding||playertemp.autoshield){
 												projectiles[a].damage+=7;
 											}
 											else{
@@ -1502,13 +1502,12 @@ function(){
 										enemies[b].y-=50;
 									}
 									else{
-										if(player.shielding){
+										if(player.shielding||playertemp.autoshield){
 											projectiles[a].damage+=2;
 										}
 										else{
 											append(objects,{
 												dur:15,
-												dir:objects[a].dir,
 												run:function(){
 													player.y+=15;
 													objects[a].dur-=1;
@@ -1646,7 +1645,7 @@ function(){
 							sfx.wither.rate(random(0.9,1.1));
 							sfx.wither.volume(options.sfx*2.5);
 							sfx.wither.play();
-							if(player.shielding){
+							if(player.shielding||playertemp.autoshield){
 								player.wither+=4;
 								takedamage({dmg:10});
 							}
@@ -3470,72 +3469,94 @@ var special=[
 		}
 	},
 	function(){
-		player.shootcd=5;
-		player.specialcd=15;
-		if(player.energy>=0.006){
-			player.shootcd=30;
-			player.specialcd=0;
-			player.energy-=0.006;
+		if(!(playertemp.deathlasermaint==0&playertemp.deathlaser>0)){
+			player.shootcd=5;
+			player.specialcd=15;
 			if(!(playertemp.deathlaser)){
 				playertemp.deathlaser=0;
 			}
-			if(playertemp.deathlaser==0){
-				sfx.deathlaser.rate(random(0.95,1.05));
-				sfx.deathlaser.volume(options.sfx*1.8);
-				sfx.deathlaser.play();
-			}
-			playertemp.deathlasermaint=4;
-			playertemp.deathlaser=min(220,playertemp.deathlaser+1);
-			append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-55,-25),xvelo:random(-2,2),yvelo:random(-2,2),
-			size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
-			if(playertemp.deathlaser>=40){
-				sfx.distortion.rate(1);
-				sfx.distortion.volume(options.sfx*0.12);
-				sfx.distortion.play();
-				if(tick%5==0){
-					for(b=0;b<enemies.length;b+=1){
-						if(enemies[b].x-player.x<55+enemies[b].size&enemies[b].x-player.x>-55-enemies[b].size&enemies[b].y<player.y){
-							dohit(b,20*(1+(playertemp.deathlaser-40)/90),0);
+			if(player.energy>=(1+max(0,playertemp.deathlaser-140)/75)*0.004){
+				player.shootcd=30;
+				player.specialcd=0;
+				player.energy-=(1+max(0,playertemp.deathlaser-140)/75)*0.004;
+				if(playertemp.deathlaser==0){
+					sfx.deathlaser.rate(random(0.95,1.05));
+					sfx.deathlaser.volume(options.sfx*1.8);
+					sfx.deathlaser.play();
+				}
+				playertemp.deathlasermaint=4;
+				playertemp.deathlaser=min(320,playertemp.deathlaser+1);
+				append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-55,-25),xvelo:random(-2,2),yvelo:random(-2,2),
+				size:random(7,10),op:random(120,180),opc:-7,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
+				if(render){
+					fill(180,180,255,playertemp.deathlaser*255/40);
+					rect(player.x-20-(min(140,playertemp.deathlaser)-20)*75/90,player.y-player.size*1.7-4,40+(min(140,playertemp.deathlaser)-20)*75/45,11,4);
+					fill(125,125,125,playertemp.deathlaser*255/40);
+					rect(player.x-25-(min(140,playertemp.deathlaser)-20)*75/90,player.y-player.size*1.7,50+(min(140,playertemp.deathlaser)-20)*75/45,15,5);
+					rect(player.x-25-(min(140,playertemp.deathlaser)-20)*75/90,player.y-player.size*1.7-15,10,20,5);
+					rect(player.x+15+(min(140,playertemp.deathlaser)-20)*75/90,player.y-player.size*1.7-15,10,20,5);
+				}
+				if(playertemp.deathlaser>=20){
+					sfx.distortion.rate(1);
+					sfx.distortion.volume(options.sfx*0.12);
+					sfx.distortion.play();
+					if(tick%5==0){
+						for(b=0;b<enemies.length;b+=1){
+							if(enemies[b].x-player.x<30+enemies[b].size+(min(140,playertemp.deathlaser)-20)*75/90&enemies[b].x-player.x>-30-enemies[b].size-(min(140,playertemp.deathlaser)-20)*75/90&enemies[b].y<player.y){
+								dohit(b,20*(1+(max(0,playertemp.deathlaser-140))/40),0);
+							}
+						}
+					}
+					playertemp.autoshield=1;
+					player.shield=min(player.mshield,player.shield+player.mshield*0.00004*(max(30,playertemp.deathlaser-140)));
+					player.wither=max(0,player.wither-0.000003*player.mhp*(max(30,playertemp.deathlaser-140)));
+					if(render){
+						fill(255,0,0,150+abs(tick%6-3)*40);
+						rect(player.x-15-(min(140,playertemp.deathlaser)-20)*75/90,0,30+(min(140,playertemp.deathlaser)-20)*75/45,player.y-player.size*1.7-4);
+						ellipseMode(CENTER);
+						fill(255,60,60,(player.shield/player.mshield)*(200+abs(tick%12-6)*5));
+						ellipse(player.x,player.y,120*player.sizemod,120*player.sizemod);
+					}
+					for(cp=0;cp<1+options.graphics*3;cp+=1){
+						append(particles,{x:player.x+random(-player.size,player.size),y:random(player.y),xvelo:random(-10,10),yvelo:random(-30,-7),
+						size:random(7,10),op:random(200,255),opc:-12,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
+					}
+					if(playertemp.deathlaser>=200){
+						for(b=0;b<projectiles.length;b+=1){
+							if(projectiles[b].target==0){
+								if(projectiles[b].x-player.x<30+projectiles[b].size+(min(140,playertemp.deathlaser)-20)*75/90&projectiles[b].x-player.x>-30-projectiles[b].size-(min(140,playertemp.deathlaser)-20)*75/90&projectiles[b].y<player.y){
+									projectiles.splice(b,1);
+									b-=1;
+								}
+							}
+						}
+						if(tick%5==0){
+							append(objects,{
+								dur:playertemp.deathlaser/20,
+								x:player.x,
+								y:player.y-player.size*1.7,
+								draw:function(){
+									fill(255,0,0,objects[a].dur*18);
+									rect(objects[a].x-35-(min(140,playertemp.deathlaser)-20)*75/90,objects[a].y-15,70+(min(140,playertemp.deathlaser)-20)*75/45,30,8);
+								},
+								run:function(){
+									objects[a].dur-=1;
+									objects[a].y-=40;
+									if(objects[a].dur<=0||objects[a].y<-30){
+										objects.splice(a,1);
+										a-=1;
+									}
+								}
+							});
 						}
 					}
 				}
-				playertemp.autoshield=1;
-				if(render){
-					fill(255,0,0,150+abs(tick%6-3)*40);
-					rect(player.x-50,0,100,player.y-30);
-					ellipseMode(CENTER);
-					fill(255,60,60,(player.shield/player.mshield)*(200+abs(tick%12-6)*5));
-					ellipse(player.x,player.y,120*player.sizemod,120*player.sizemod);
-				}
-				for(cp=0;cp<1+options.graphics*3;cp+=1){
-					append(particles,{x:player.x+random(-player.size,player.size),y:random(player.y),xvelo:random(-10,10),yvelo:random(-30,-7),
-					size:random(7,10),op:random(200,255),opc:-12,exp:1,color:[random(200,255),random(20,30),random(20,30)]});
-				}
-				if(tick%6==0){
-					append(objects,{
-						dur:playertemp.deathlaser/20,
-						x:player.x,
-						y:player.y-50,
-						draw:function(){
-							fill(255,0,0,objects[a].dur*18);
-							rect(objects[a].x-60,objects[a].y-15,120,30,8);
-						},
-						run:function(){
-							objects[a].dur-=1;
-							objects[a].y-=40;
-							if(objects[a].dur<=0||objects[a].y<-30){
-								objects.splice(a,1);
-								a-=1;
-							}
-						}
-					});
-				}
 			}
-		}
-		else{
-			sfx.click.rate(random(0.9,1.1));
-			sfx.click.volume(options.sfx*0.6);
-			sfx.click.play();
+			else{
+				sfx.click.rate(random(0.9,1.1));
+				sfx.click.volume(options.sfx*0.6);
+				sfx.click.play();
+			}
 		}
 	},
 	function(){
@@ -3767,7 +3788,7 @@ var shielddraw=[
 	function(){
 		ellipseMode(CENTER);
 		fill(200+abs(tick%40-20)*2,50,80,120+abs(tick%60-30));
-		ellipse(player.x,player.y,player.sizemod*(130+(abs(tick%12-6)-3)*min(20,player.shieldboing)/2),player.sizemod*(130+(abs((tick+6)%12-6)-3)*min(20,player.shieldboing)/2));
+		ellipse(player.x,player.y,player.sizemod*(130+(abs(tick%12-6)-3)*min(40,player.shieldboing)/4),player.sizemod*(130+(abs((tick+6)%12-6)-3)*min(40,player.shieldboing)/4));
 	},
 	function(){
 		fill(200+abs(tick%40-20)*3,200+abs(tick%40-20)*3,200+abs(tick%40-20)*3,190);
@@ -3808,6 +3829,11 @@ var playerdraw=[
 		}
 	},
 	function(){
+		if(playertemp.deathlasermaint==0&playertemp.deathlaser>0){
+			fill(0,0,0,100+abs(tick%30-15)*7);
+			ellipseMode(CENTER);
+			ellipse(player.x,player.y,140*player.sizemod,140*player.sizemod);
+		}
 		shape(sprites.cybersphere,player.x,player.y,450*player.sizemod,600*player.sizemod);
 	},
 	function(){
@@ -4150,12 +4176,12 @@ var applyshipstats=[
 		player.shipName="Cyber Sphere";
 		player.hp=200;
 		player.mhp=200;
-		player.shield=60;
-		player.mshield=60;
+		player.shield=110;
+		player.mshield=110;
 		player.energy=12;
 		player.menergy=12;
-		player.shieldregen=10.5;
-		player.shielddecay=12.5;
+		player.shieldregen=4.5;
+		player.shielddecay=4.5;
 		player.speed=2.7;
 		player.ammor=18;
 		player.size=32;
@@ -4165,18 +4191,18 @@ var applyshipstats=[
 				if(playertemp.deathlaser>0){
 					if(playertemp.deathlasermaint>0){
 						playertemp.deathlasermaint-=1;
+						playertemp.slow=1
 					}
 					else{
-						playertemp.deathlaser=max(0,playertemp.deathlaser*0.9-1);
-					}
-					if(playertemp.deathlaser>40){
-						playertemp.speed=max(playertemp.speed,(playertemp.deathlaser-40)/180);
-						player.shield-=(min(160,playertemp.deathlaser)-40)/400;
-					}
-					if(playertemp.deathlaser<=0){
-						playertemp.autoshield=0;
 						sfx.deathlaser.stop();
+						playertemp.deathlaser=max(0,playertemp.deathlaser*0.94-0.4);
+						playertemp.autoshield=0;
 					}
+					/*if(playertemp.deathlaser>0){;
+						if(playertemp.deathlaser>20){
+							player.shield-=(playertemp.deathlaser-140)/1000;
+						}
+					}*/
 				}
 			}
 		};
@@ -4437,17 +4463,9 @@ var applymods=function(){
 			if(player.shield<player.mshield*0.5){
 				if(player.energy>=0.002){
 					player.energy-=0.002;
-					player.shield+=0.06+player.mshield*0.0015;
+					player.shield+=0.1+player.mshield*0.0005+player.shieldregen*0.005;
 					append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-2,2),yvelo:random(-2,2),
 					size:random(7,10),op:random(120,180),opc:-10,exp:1,color:[random(60,100),random(150,200),random(200,255)]});
-				}
-				if(!(player.shielding)){
-					if(player.energy>=0.001){
-						player.energy-=0.001;
-						player.shield+=0.06+player.mshield*0.0015;
-						append(particles,{x:player.x+random(-player.size,player.size),y:player.y+random(-player.size,player.size),xvelo:random(-2,2),yvelo:random(-2,2),
-						size:random(7,10),op:random(120,180),opc:-10,exp:1,color:[random(60,100),random(150,200),random(200,255)]});
-					}
 				}
 			}
 		});
@@ -4954,7 +4972,7 @@ var ships=[
 	{name:"Astrohawk",unlocked:1,sprite:"astrohawk",damage:6,health:5,shield:5,energy:10,speed:6,special:"Berserk for 1.5 seconds while emitting a screech which deals heavy damage to enemies caught in the AoE while dragging them. Also reflects enemy projectiles. Dissipates if it hits a boss.",misc:"A well-rounded ship."},
 	{name:"Crystal Vanguard",unlocked:1,sprite:"crystalvanguard",damage:7,health:2,shield:4,energy:8,speed:5,special:"Surrounds your ship with razor-sharp crystals which shred nearby enemies and block incoming damage.",misc:"Normal shots fragment on hit. Passively charge a shield which blocks 75% of the next hit's damage."},
 	{name:"Fairgrave's Vessel",unlocked:1,sprite:"fairgravesvessel",damage:5,health:4,shield:3,energy:7,speed:7,special:"Unleashes raging spirits which fly at random enemies.",misc:"Briefly phase through enemies and projectiles after blocking with shield. Gain health on kill. Immune to water-based slows. Additionally, you cannot die while you have energy (lose energy based on health below 0)."},
-	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:8,health:9,shield:7,energy:12,speed:2,special:"Fire a steady laser of death.",misc:"Basically a flying fortress of doom."},
+	{name:"Cyber Sphere",unlocked:1,sprite:"cybersphere",damage:8,health:9,shield:10,energy:12,speed:2,special:"Fire a steady laser of death while activating and recharging shields.",misc:"Basically a flying fortress of doom."},
 	{name:"Paper Plane",unlocked:1,sprite:"paperplane",damage:10,health:1,shield:2,energy:10,speed:10,special:"Violently rips paper out of all enemies, sending it flying with triple the quantity. The fragments are more likely to fly away from you. Additionally, you are briefly shielded from all damage if used successfully.",misc:"Normal shots embed paper in foes, increasing damage taken by paper shots. Killing enemies with paper fragments restores ammo."},
 	{name:"Blademaster",unlocked:1,sprite:"blademaster",damage:7,health:4,shield:5,energy:8,speed:7,special:"Rapidly strike nearby enemies while phasing through attacks and projectiles. Has a brief cooldown.",misc:"Normal shots are replaced by spinning, slicing nearby enemies. Parrying charges your next basic attack with a sword missile (can store up to 2 charges)."},
 ];
@@ -5095,18 +5113,20 @@ var domove=function(){
 		if(!(ingame)||player.instability<(player.hp/player.mhp)*100||player.instability<=0){
 			player.xvelo=0;
 			player.yvelo=0;
-			player.x=min(900,max(100,player.x+sin(moveinf.dir)*moveinf.scl*(1-playertemp.slow)*(1+playertemp.speed)*max(player.staticspeed,player.speed)));
-			player.y=min(700,max(25,player.y-cos(moveinf.dir)*moveinf.scl*(1-playertemp.slow)*(1+playertemp.speed)*max(player.staticspeed,player.speed)));
+			player.x+=sin(moveinf.dir)*moveinf.scl*(1-playertemp.slow)*(1+playertemp.speed)*max(player.staticspeed,player.speed);
+			player.y-=cos(moveinf.dir)*moveinf.scl*(1-playertemp.slow)*(1+playertemp.speed)*max(player.staticspeed,player.speed);
 		}
 		else{
 			player.xvelo*=0.93;
 			player.yvelo*=0.93;
 			player.xvelo+=sin(moveinf.dir)*moveinf.scl*(1-playertemp.slow)*(1+playertemp.speed)*max(player.staticspeed,player.speed);
 			player.yvelo-=cos(moveinf.dir)*moveinf.scl*(1-playertemp.slow)*(1+playertemp.speed)*max(player.staticspeed,player.speed);
-			player.x=min(900,max(100,player.x+player.xvelo/20));
-			player.y=min(700,max(25,player.y+player.yvelo/20));
+			player.x+=player.xvelo/20;
+			player.y+=player.yvelo/20;
 		}
 	}
+	player.x=min(900,max(100,player.x));
+	player.y=min(700,max(25,player.y));
 }
 var doshield=function(){
 	if(player.shield<=0){
@@ -7085,7 +7105,6 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			biomescripts[biome.id]();
 		}
 		if(cbiomescripts[biome.id]){
-			console.log(1);
 			cbiomescripts[biome.id]();
 		}
 	}
