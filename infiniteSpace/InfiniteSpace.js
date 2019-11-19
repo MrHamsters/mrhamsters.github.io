@@ -7052,7 +7052,7 @@ while(drawcount>=16.6&cdraw<=drawcap){
 			player.y=-999;
 			fill(255,0,0);
 			textFont(0,30);
-			text("GAVE OVER",400,150);
+			text("GAME OVER",400,150);
 			fill(255,100,0);
 			textFont(0,25);
 			text("Shoot to respawn",380,200);
