@@ -1,0 +1,42 @@
+Who has the highest achievable AP scaling on a shield?
+Neeko,Shen,Janna,Yuumi,Mordekaiser
+200
+Out of the following, who has an execute ability?
+Pyke,Jayce,Karma,Renekton,Nami
+200
+Out of the following, who is a ranged champion?
+Thresh,Alistar,Illaoi,Jax,Skarner
+200
+Out of the following, who can blind opponents?
+Teemo,Lee Sin,Galio,Zoe,Maokai
+200
+Out of the following, who does not have a hooking ability?
+Rakan,Thresh,Pyke,Nautilus,Blitzcrank
+200
+Who has the highest base attack speed?
+Maokai,Shen,Annie,Jinx
+200
+Out of the following, who does NOT have a slowing ability?
+Riven,Ashe,Teemo,Orianna
+200
+Who has the highest base health at level 1?
+Tryndamere,Yuumi,Sona,Garen,Zac
+200
+Who has the highest base health at level 18?
+Galio,Tahm Kench,Tryndamere,Janna,Heimerdinger
+200
+Who has the highest base AD at level 1?
+Lee Sin,Sion,Volibear,Janna,Master Yi
+200
+Who has the lowest base AD at level 1?
+Orianna,Janna,Lulu,Shaco,Thresh
+200
+Who has the highest base AD at level 18?
+Illaoi,Lux,Yorick,Udyr,Shyvana
+200
+Who has the lowest base AD at level 18?
+Senna,Nami,Darius,Neeko,Aphelios
+200
+Out of the following, who does NOT have an ability that charms?
+Sona,Rakan,Ahri,Evelynn
+200

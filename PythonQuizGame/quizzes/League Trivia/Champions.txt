@@ -1,0 +1,39 @@
+Who is the Darkin Blade?
+Aatrox,Garen,LeBlanc,Katarina,Graves
+200
+Who is the Lady of Luminosity?
+Lux,Xayah,Soraka,Kayle,Sona
+500
+Who is the Redeemer?
+Senna,Lucian,Sylas,Fiora,Elise
+200
+Who is the Fae Sorceress?
+Lulu,Elise,Kindred,Soraka
+200
+Who is the Fire Below the Mountain?
+Ornn,Ryze,Skarner,Brand
+200
+Who is the Weapon of the Faithful?
+Aphelios,Anivia,Mordekaiser,Master Yi
+200
+Who is the Storm's Fury?
+Janna,Jayce,Anivia,Zoe
+200
+Who is the River King?
+Tahm Kench,Xerath,Fizz,Jarvan IV
+200
+Who is the Great Steam Golem?
+Blitzcrank,Grabshock,Kha'Zix,Veigar,Zac,Pantheon
+200
+What is Vayne's title?
+the Night Hunter,the Dragon Slayer,the Black Magic Tracker,the Marksman
+200
+What is Swain's title?
+the Noxian Grand General,the Hand of Noxus,the Great Noxian Commander,the Eldritch Arm
+200
+What is Soraka's title?
+the Starchild,the Banana Slinger,the Mystic Unicorn,the Cosmic Healer
+200
+What is Shaco's title?
+the Demon Jester,the Clown,the Haunted Marionette,the Trickster
+200

@@ -1,0 +1,30 @@
+Who is Katarina's sister?
+Cassiopeia,Morgana,Lux,Akali
+100
+What faction is Karma a part of?
+Ionia,Demacia,Freljord,Piltover
+100
+What faction is Ekko a part of?
+Zaun,Shadow Isles,Shurima,Bilgewater
+100
+Out of the following, who is NOT Demacian?
+Caitlyn,Garen,Lux,Galio,Jarvan IV,Fiora
+100
+Who killed Miss Fortune's mother?
+Gangplank,Twisted Fate,Tahm Kench,Pyke
+100
+Who is Darius's brother?
+Draven,Swain,Aphelios,Lucian
+100
+What faction is Sivir a part of?
+Shurima,Mount Targon,Blessed Isles,Buhru
+100
+Out of the following, who is part of the Void?
+Cho'Gath,Zed,Karthus,Maokai
+100
+Who is Morgana's sister?
+Kayle,Neeko,Jinx,Kai'Sa
+100
+Who is Lux's brother?
+Garen,Darius,Pantheon,Azir
+100

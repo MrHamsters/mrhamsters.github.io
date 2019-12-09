@@ -1,0 +1,39 @@
+When did league first launch?
+2009,2012,2007,2016,2014
+500
+When was turret plating introduced?
+preseason 9,preseason 8,patch 8.10,patch 9.15
+200
+What does the mountain dragon soul grant?
+a passive shield,increased size,additional resistances,ability to create mountains
+200
+What does the infernal dragon soul grant?
+AoE explosions,damage reduction,flamethrower,increased movement speed
+200
+What does the ocean dragon soul grant?
+restoration on damaging,passive shield,increased AD/AP,ability to surf
+200
+What does the cloud dragon soul grant?
+movement speed,attack speed,temporary flight,additional resistances
+200
+When was Zz'Rot Portal (item) revomed from the game?
+patch 9.23,patch 7.12, preseason 8, patch 6.14
+200
+When was Tracker's Knife removed from the game?
+patch 8.4,patch 6.22,preseason 7,patch 7.15
+200
+What year was Lux released?
+2010,2009,2014,2017
+500
+What year was Kalista released?
+2014,2012,2011,2018
+200
+What year were Xayah and Rakan released?
+2017,2019,2012,2013
+200
+What year was Qiyana released?
+2019,2009,2014,2016
+200
+What does Aspect of the Dragon (Elder dragon buff) grant?
+burn and execute targets,empower nearby minions,empower elemental buffs,hastened recall
+200
